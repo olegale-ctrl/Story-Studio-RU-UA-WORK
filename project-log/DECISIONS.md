@@ -39,3 +39,10 @@ Date: 2026-10-30. Decision: report same-track overlap as warning, attach SHA-256
 
 ## Sprint 17
 Кэш TTS должен учитывать голос и текст; разные голоса не разделяют медиа. MP4 никогда не перезаписывается автоматически.
+
+## ADR-2026-11-03 — Preserve original upstream as pinned Git submodule
+- Decision: RU/UA code remains primary working tree. Complete Chinese original is pinned as an isolated Git submodule; 40 original technical files are also kept in an isolated reference directory.
+- Rationale: preserve proven video production workflow and all original materials without overwriting RU/UA adaptations or bloating ZIP releases.
+- Legal gate: CC BY-NC-SA 4.0 on current upstream; historical MIT copy is not adequate evidence to green-light commercialization.
+- Sprint releases remain incremental ZIPs; each release's exact files are committed to GitHub.
+

@@ -1,43 +1,30 @@
-import importlib.util
-import pathlib
+"""Regression gate for the current Sprint 23.2 ASCII-path Silero policy.
+
+The old Sprint 23.1 Unicode temporary-copy tests were superseded in Sprint 23.2.
+Do not silently restore a 90 MB model copy to a temporary location.
+"""
 import tempfile
 import unittest
-from unittest.mock import patch
-
-ROOT = pathlib.Path(__file__).resolve().parents[1]
-spec = importlib.util.spec_from_file_location('silero_local', ROOT / 'integrations' / 'silero_local.py')
-module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(module)
+from pathlib import Path
+from integrations.silero_local import SileroLocalProvider
 
 
-class Sprint231Tests(unittest.TestCase):
-    def test_non_windows_uses_original(self):
-        source = pathlib.Path('some/модель.pt')
-        with patch.object(module.os, 'name', 'posix'):
-            with module.SileroLocalProvider._compatible_model_path(source) as path:
-                self.assertEqual(path, source)
+class Sprint231CurrentPolicyTests(unittest.TestCase):
+    def test_missing_trusted_model_rejected(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / 'v5_cis_base_nostress.pt'
+            with self.assertRaises(FileNotFoundError):
+                SileroLocalProvider(path, trusted=True)
 
-    def test_windows_ascii_uses_original(self):
-        source = pathlib.Path('C:/models/model.pt')
-        with patch.object(module.os, 'name', 'nt'):
-            with module.SileroLocalProvider._compatible_model_path(source) as path:
-                self.assertEqual(path, source)
+    def test_unexpected_model_filename_rejected(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / 'wrong-model.pt'
+            path.write_bytes(b'placeholder')
+            with self.assertRaisesRegex(ValueError, 'Unexpected model filename'):
+                SileroLocalProvider(path, trusted=True)
 
-    @unittest.skipUnless(__import__('os').name == 'nt', 'Windows-specific integration test')
-    def test_windows_unicode_path_uses_ascii_copy_and_cleans_up(self):
-        import hashlib
-        import os
-        with tempfile.TemporaryDirectory() as directory:
-            source = pathlib.Path(directory) / 'Олег' / 'model.pt'
-            source.parent.mkdir()
-            source.write_bytes(b'test bytes')
-            with patch.object(module, 'KNOWN_SHA256', hashlib.sha256(b'test bytes').hexdigest()):
-                with module.SileroLocalProvider._compatible_model_path(source) as copied:
-                    self.assertTrue(copied.exists())
-                    self.assertEqual(copied.read_bytes(), b'test bytes')
-                    self.assertTrue(str(copied).isascii())
-                    temporary = copied
-                self.assertFalse(temporary.exists())
+    def test_no_implicit_temporary_model_copy(self):
+        self.assertFalse(hasattr(SileroLocalProvider, '_compatible_model_path'))
 
 
 if __name__ == '__main__':

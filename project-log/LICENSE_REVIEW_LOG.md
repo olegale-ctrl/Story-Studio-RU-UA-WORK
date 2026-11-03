@@ -24,3 +24,10 @@
 - `edge-tts` Python package invokes the Microsoft Edge consumer Read Aloud endpoint. Package licensing and voice-output usage rights are separate issues.
 - Microsoft does not publicly confirm commercial redistribution rights for Edge Read Aloud output. No commercial grant is inferred. See https://learn.microsoft.com/en-us/answers/questions/6007729/commercial-use-of-microsoft-edge-text-to-speech-vi and https://www.microsoft.com/licensing/terms/product/MicrosoftAzure/all .
 - Experimental personal prototype only pending legal/provider review. For paid commercial use, evaluate Azure Speech paid tier or appropriately licensed local voices.
+
+## 2026-11-03 — Upstream source license inconsistency
+- The currently pinned upstream revision of `konlu/story-studio` carries CC BY-NC-SA 4.0, with noncommercial and share-alike terms.
+- The local Sprint 25 archive carried an MIT license copy. Archived as historical evidence in `LICENSES/ARCHIVED_UPSTREAM_MIT_LICENSE.txt`; it is **not** a clearance for the pinned current upstream revision.
+- Decision: isolate full upstream as Git submodule, keep separately imported technology files and provenance, BLOCKED for Professional/Cloud commercialization until valid rights are documented or new implementation replaces them.
+- Third-party dependencies, model weights and output rights remain separately reviewable.
+

@@ -40,3 +40,16 @@ Sprint 11: Windows user confirmed Sprint10 playback; local FFmpeg auto-detection
 
 ## Sprint 17
 Реализованы изоляция голосов и версионирование MP4; Windows интеграционный тест ожидается.
+
+## 2026-11-03 — Sprint 25.1
+- **Source repository baseline:** imported current RU/UA Sprint 25 source (148 text files) to GitHub, plus full upstream as pinned Git submodule. Upstream engineering snapshot isolated.
+- **Audio GUI:** Unicode-safe preview path discovery and synthesis timing implemented, tests green; Windows physical model test outstanding.
+- **QA:** 106/106 unit tests successful in Linux Python 3.13 after generating portable temporary test media; no declaration of Windows CI success.
+- **License gate:** current upstream CC BY-NC-SA 4.0 vs archived MIT; cannot approve commercial rights until per-component provenance is verified.
+
+
+- **CI workflow:** Ubuntu Python 3.10/3.13 test matrix configured; no claim of successful GitHub Actions run until checked.
+
+- CI setup correction: a historical `tests/test_sprint20.py` imports `pytest`, so GitHub Actions installs pytest explicitly and runs the full pytest suite. Local project tests (`python -m pytest -q tests`): 119 passed, 15 subtests passed (Linux Python 3.13); remote CI result pending.
+
+- GitHub Actions follow-up: full-repository pytest collection also found intentionally isolated upstream tests. Added `pytest.ini` and restrict CI test discovery to our `tests/` directory; upstream tests require their own separate dependency and legal audit.

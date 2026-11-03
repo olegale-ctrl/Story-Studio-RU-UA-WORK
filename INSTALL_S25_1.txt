@@ -1,0 +1,17 @@
+Story Studio RU/UA — Sprint 25.1 install (Windows PowerShell 5.1)
+
+1. Back up your current Story-Studio-RU-UA folder.
+2. Unpack this ZIP INTO the ROOT of the existing project with replacement.
+   IMPORTANT: do not remove .venv, FFmpeg, model weights, media or local configurations.
+3. Open PowerShell in the Story-Studio-RU-UA project folder.
+4. Run:
+   python -m unittest discover -s tests -v
+5. Open Voice Studio:
+   powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_voice_studio.ps1
+6. Select Silero Local / uk / ukr_igor, trust YOUR OWN local model, enter a test phrase, Generate preview.
+   Verify the status becomes "Preview ready", the Play audio button works, and time/audio/RTF metrics appear under the buttons and in the log.
+7. Optional: test Russian Silero and Edge TTS as well.
+8. If unsuccessful, send the exact Voice Studio log and output of the test command; do not send API keys or model files.
+
+This update neither installs nor redistributes Silero model weights. Do not replace your working .venv or downloaded FFmpeg.
+GitHub: https://github.com/olegale-ctrl/Story-Studio-RU-UA-WORK
