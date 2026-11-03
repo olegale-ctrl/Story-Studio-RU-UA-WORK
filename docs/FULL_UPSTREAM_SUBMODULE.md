@@ -18,4 +18,4 @@ git submodule update --init --recursive
 git -C upstream/konlu-full rev-parse HEAD
 ```
 
-The RU/UA Sprint 25 local source was not in the destination repository at the moment this note was written. It must be imported separately, while preserving original upstream licenses and our `MASTER_PROMPT.md`.
+Update (2026-11-03): The RU/UA Sprint 25 source baseline is now imported in the root project and the Sprint 25.1 Voice Studio fix is being integrated. The complete upstream original remains isolated in its pinned submodule; licensing gates remain in effect.
