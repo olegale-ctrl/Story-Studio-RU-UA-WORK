@@ -23,4 +23,6 @@ Date: 2026-11-03
 ## Next
 - Windows validate Silero/Edge Voice Studio and synthesis metrics; next Sprint 26 should review reuse of original editing/audio-alignment/rendering technology with license and integration gates.
 
-- CI setup correction: a historical `tests/test_sprint20.py` imports `pytest`, so GitHub Actions installs pytest explicitly and runs the full pytest suite. Local result: 176 passed, 2 skipped, 22 subtests passed (Linux Python 3.13); remote CI result pending.
+- CI setup correction: a historical `tests/test_sprint20.py` imports `pytest`, so GitHub Actions installs pytest explicitly and runs the full pytest suite. Local project tests (`python -m pytest -q tests`): 119 passed, 15 subtests passed (Linux Python 3.13); remote CI result pending.
+
+- GitHub Actions follow-up: full-repository pytest collection also found intentionally isolated upstream tests. Added `pytest.ini` and restrict CI test discovery to our `tests/` directory; upstream tests require their own separate dependency and legal audit.
