@@ -1,0 +1,22 @@
+Linux Python 3.13.5: unittest discover -s tests -v
+.Sprint11Tests.test_crf_range) ... ok
+test_find_ffmpeg_path_or_error (test_sprint11.Sprint11Tests.test_find_ffmpeg_path_or_error) ... ok
+test_audio_outside_video_rejected (test_sprint12.Sprint12Tests.test_audio_outside_video_rejected) ... ok
+test_two_audio_clips_and_burn (test_sprint12.Sprint12Tests.test_two_audio_clips_and_burn) ... ok
+test_hd_burn_without_sidecar (test_sprint13.Sprint13Tests.test_hd_burn_without_sidecar) ... ok
+test_odd_dimension_rejected (test_sprint13.Sprint13Tests.test_odd_dimension_rejected) ... ok
+test_optional_sidecar (test_sprint13.Sprint13Tests.test_optional_sidecar) ... ok
+test_build_both_locales (test_sprint14.Sprint14Tests.test_build_both_locales) ... ok
+test_missing_voice_fails (test_sprint14.Sprint14Tests.test_missing_voice_fails) ... ok
+test_inspection_generated_demo (test_sprint15.Sprint15Tests.test_inspection_generated_demo) ... ok
+test_wrong_locale_rejected (test_sprint15.Sprint15Tests.test_wrong_locale_rejected) ... ok
+test_empty_track (test_subtitles.SrtTests.test_empty_track) ... ok
+test_export_unicode_and_order (test_subtitles.SrtTests.test_export_unicode_and_order) ... ok
+test_unknown_track (test_subtitles.SrtTests.test_unknown_track) ... ok
+
+----------------------------------------------------------------------
+Ran 68 tests in 1.473s
+
+OK
+
+Windows PowerShell and SAPI not tested here.

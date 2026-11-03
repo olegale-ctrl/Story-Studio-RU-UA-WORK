@@ -1,0 +1,134 @@
+{
+  "title": "Story Studio — narrated demo",
+  "content_locale": "ru",
+  "scenes": [],
+  "fps": 25,
+  "width": 640,
+  "height": 360,
+  "schema_version": 3,
+  "tracks": [
+    {
+      "id": "v",
+      "kind": "video",
+      "label": "Images"
+    },
+    {
+      "id": "a",
+      "kind": "audio",
+      "label": "Voice"
+    },
+    {
+      "id": "s",
+      "kind": "subtitle",
+      "label": "Captions"
+    }
+  ],
+  "subtitles": [
+    {
+      "id": "s1",
+      "track_id": "s",
+      "start_ms": 0,
+      "duration_ms": 6288,
+      "text": "Добро пожаловать в Story Studio. Здесь начинается ваша история.",
+      "locale": "ru"
+    },
+    {
+      "id": "s2",
+      "track_id": "s",
+      "start_ms": 6800,
+      "duration_ms": 4344,
+      "text": "Добавляйте изображения, озвучивание и субтитры.",
+      "locale": "ru"
+    },
+    {
+      "id": "s3",
+      "track_id": "s",
+      "start_ms": 11680,
+      "duration_ms": 4008,
+      "text": "Создавайте видео на русском или украинском языке.",
+      "locale": "ru"
+    }
+  ],
+  "media": [
+    {
+      "id": "i1",
+      "kind": "image",
+      "path": "frame1.ppm"
+    },
+    {
+      "id": "a1",
+      "kind": "audio",
+      "path": "voice1.wav"
+    },
+    {
+      "id": "i2",
+      "kind": "image",
+      "path": "frame2.ppm"
+    },
+    {
+      "id": "a2",
+      "kind": "audio",
+      "path": "voice2.wav"
+    },
+    {
+      "id": "i3",
+      "kind": "image",
+      "path": "frame3.ppm"
+    },
+    {
+      "id": "a3",
+      "kind": "audio",
+      "path": "voice3.wav"
+    }
+  ],
+  "clips": [
+    {
+      "id": "v1",
+      "track_id": "v",
+      "media_id": "i1",
+      "start_ms": 0,
+      "duration_ms": 6800,
+      "source_in_ms": 0
+    },
+    {
+      "id": "c1",
+      "track_id": "a",
+      "media_id": "a1",
+      "start_ms": 0,
+      "duration_ms": 6288,
+      "source_in_ms": 0
+    },
+    {
+      "id": "v2",
+      "track_id": "v",
+      "media_id": "i2",
+      "start_ms": 6800,
+      "duration_ms": 4880,
+      "source_in_ms": 0
+    },
+    {
+      "id": "c2",
+      "track_id": "a",
+      "media_id": "a2",
+      "start_ms": 6800,
+      "duration_ms": 4344,
+      "source_in_ms": 0
+    },
+    {
+      "id": "v3",
+      "track_id": "v",
+      "media_id": "i3",
+      "start_ms": 11680,
+      "duration_ms": 4520,
+      "source_in_ms": 0
+    },
+    {
+      "id": "c3",
+      "track_id": "a",
+      "media_id": "a3",
+      "start_ms": 11680,
+      "duration_ms": 4008,
+      "source_in_ms": 0
+    }
+  ]
+}

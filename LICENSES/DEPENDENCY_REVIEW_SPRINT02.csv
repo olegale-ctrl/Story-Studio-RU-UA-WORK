@@ -1,0 +1,9 @@
+component,declared_version_or_range,source_in_project,license_verified,redistribution_verified,commercial_use_verified,status,next_action
+pyJianYingDraft,==0.3.1,scripts/setup_dependencies.py,no,no,no,REVIEW REQUIRED,verify release metadata and bundled notices
+Pillow,>=10 <13,scripts/setup_dependencies.py,no,no,no,REVIEW REQUIRED,pin exact version and verify license
+numpy,>=1.24 <3,scripts/setup_dependencies.py,no,no,no,REVIEW REQUIRED,pin exact version and verify license
+websockets,==15.0.1,scripts/setup_dependencies.py,no,no,no,REVIEW REQUIRED,verify exact version license
+@marswave/coli,@0.0.20,scripts/setup_dependencies.py,no,no,no,REVIEW REQUIRED,verify npm metadata and model licenses
+pymediainfo,unresolved,scripts/setup_dependencies.py,no,no,no,REVIEW REQUIRED,inspect installation path and dependency chain
+libmediainfo,unresolved,scripts/setup_dependencies.py,no,no,no,REVIEW REQUIRED,inspect system library distribution
+ffmpeg/ffprobe,unresolved,scripts/setup_dependencies.py,no,no,no,REVIEW REQUIRED,verify actual build configuration and license

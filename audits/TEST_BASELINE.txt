@@ -1,0 +1,16 @@
+$ python -m unittest discover -s scripts -p test_*.py
+exit=0
+.s.s.......................................................
+----------------------------------------------------------------------
+Ran 59 tests in 0.284s
+
+OK (skipped=2)
+
+
+$ python -m unittest discover -s modules/render-history-video/scripts -p test_*.py
+exit=0
+..........s
+----------------------------------------------------------------------
+Ran 11 tests in 0.001s
+
+OK (skipped=1)

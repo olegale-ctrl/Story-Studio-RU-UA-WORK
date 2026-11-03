@@ -1,0 +1,7 @@
+Sprint 04 isolated tests
+Date: 2026-10-30
+Environment: Linux, Python 3.13, stdlib unittest
+Command: PYTHONPATH=/mnt/data/Story_Studio_RU_UA_Sprint_04_UPDATE python -m unittest discover -s /mnt/data/Story_Studio_RU_UA_Sprint_04_UPDATE/tests -q
+Result: 24 tests, OK
+Includes: 7 legacy schema tests, 14 new schema/migration tests, 3 SRT tests.
+Not tested: Windows, actual editor import, ffmpeg rendering, full original repository, dependencies and license compliance.

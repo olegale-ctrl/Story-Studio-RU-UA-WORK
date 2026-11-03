@@ -1,0 +1,636 @@
+file,line,type,keyword,source_line
+install.ps1,10,node,@,$targetCandidates = @(
+README.md,53,python,pyJianYingDraft,- 🎞️ **真正可二次编辑的剪映专业版草稿**：基于 `pyJianYingDraft` 直接生成剪映工程文件。自动将 9:16 竖屏图片、完整配音铺上时间轴，并**自动写入覆盖全镜的慢推拉关键帧与切点冲击缩放（Punch Zoom）**，打开剪映即可预览微调并导出成片。
+README.md,177,python,pyJianYingDraft,> 💡 **智能按需初始化**：如果你只用它写文案，它不会安装任何多媒体组件；当需要配音、转录和导出剪映草稿时，原生启动器（`bootstrap.ps1` / `bootstrap.sh`）会自动在用户独立数据目录配置好 Python 3.11 (`uv`)、Node.js LTS、`Coli`、`FFmpeg`、`pyJianYingDraft` 等全部依赖。
+README.md,276,python,pyJianYingDraft,- **Python 3.11**（通过 `uv` 自动管理独立虚拟环境，安装 `websockets==15.0.1`、`pyJianYingDraft==0.3.1`、`Pillow`、`NumPy`、`pymediainfo` 等）
+README.md,292,python,pyJianYingDraft,- **[GuanYixuan / pyJianYingDraft](https://github.com/GuanYixuan/pyJianYingDraft)** (Apache-2.0)：提供强大的剪映专业版草稿数据结构、轨道、关键帧与工程生成能力。
+README.md,332,python,pyJianYingDraft,- **第三方生态**：第三方依赖库（如 `pyJianYingDraft`、`Coli`、`websockets` 等）均遵循其各自的开源许可证分发，本仓库不内嵌或重新分发上述外部库源码。
+README.md,276,python,Pillow,- **Python 3.11**（通过 `uv` 自动管理独立虚拟环境，安装 `websockets==15.0.1`、`pyJianYingDraft==0.3.1`、`Pillow`、`NumPy`、`pymediainfo` 等）
+README.md,295,python,Pillow,- **[Astral / uv](https://github.com/astral-sh/uv)**、**[Node.js](https://nodejs.org/)**、**[FFmpeg](https://ffmpeg.org/)**、**[python-websockets](https://github.com/python-websockets/websockets)**、**[Pillow](https://python-pillow.github.io/)**、**[NumPy
+README.md,276,python,numpy,- **Python 3.11**（通过 `uv` 自动管理独立虚拟环境，安装 `websockets==15.0.1`、`pyJianYingDraft==0.3.1`、`Pillow`、`NumPy`、`pymediainfo` 等）
+README.md,295,python,numpy,- **[Astral / uv](https://github.com/astral-sh/uv)**、**[Node.js](https://nodejs.org/)**、**[FFmpeg](https://ffmpeg.org/)**、**[python-websockets](https://github.com/python-websockets/websockets)**、**[Pillow](https://python-pillow.github.io/)**、**[NumPy
+README.md,323,node,@,- **电子邮箱**：`lukonn@163.com`
+README.md,54,tool,ffmpeg,- ⚡ **零门槛自动环境初始化**：无需手动折腾 Python、Node.js、FFmpeg 或语音识别环境。首次调用时，告诉 Agent 一键配置，即可在用户独立数据目录完成便携环境搭建。
+README.md,104,tool,ffmpeg,- **防重复扣费与完整性核验**：合成前确认音色与语速，合成后自动通过 `ffprobe/ffmpeg` 校验音频完整性，并记录文本与音频哈希，同稿同音色绝不重复发起收费请求。
+README.md,124,tool,ffmpeg,- **可选本地 FFmpeg 渲染**：如果你不需要进剪映微调，也可以明确要求使用内置的高精度亚像素仿射变换脚本，直接在本地渲染输出 `final.mp4`。
+README.md,171,tool,ffmpeg,无需自己手动折腾 Python、Node.js、FFmpeg 或配置剪映路径！安装后直接对 Agent 发送：
+README.md,177,tool,ffmpeg,> 💡 **智能按需初始化**：如果你只用它写文案，它不会安装任何多媒体组件；当需要配音、转录和导出剪映草稿时，原生启动器（`bootstrap.ps1` / `bootstrap.sh`）会自动在用户独立数据目录配置好 Python 3.11 (`uv`)、Node.js LTS、`Coli`、`FFmpeg`、`pyJianYingDraft` 等全部依赖。
+README.md,278,tool,ffmpeg,- **FFmpeg & ffprobe**：用于音频完整性解码校验与可选的本地视频渲染
+README.md,295,tool,ffmpeg,- **[Astral / uv](https://github.com/astral-sh/uv)**、**[Node.js](https://nodejs.org/)**、**[FFmpeg](https://ffmpeg.org/)**、**[python-websockets](https://github.com/python-websockets/websockets)**、**[Pillow](https://python-pillow.github.io/)**、**[NumPy
+README.md,104,tool,ffprobe,- **防重复扣费与完整性核验**：合成前确认音色与语速，合成后自动通过 `ffprobe/ffmpeg` 校验音频完整性，并记录文本与音频哈希，同稿同音色绝不重复发起收费请求。
+README.md,278,tool,ffprobe,- **FFmpeg & ffprobe**：用于音频完整性解码校验与可选的本地视频渲染
+README.md,276,tool,mediainfo,- **Python 3.11**（通过 `uv` 自动管理独立虚拟环境，安装 `websockets==15.0.1`、`pyJianYingDraft==0.3.1`、`Pillow`、`NumPy`、`pymediainfo` 等）
+README.md,38,asr,Coli,C --> D[⏱️ Coli 本地转录对齐]
+README.md,52,asr,Coli,- 🎙️ **双路径灵活配音 + 本地高精度时间戳对齐**：推荐直接接入 **豆包语音大模型（V3 双向流式）** 一键合成高表现力旁白；也支持**将自己提前准备好的配音 MP3 放入项目文件夹让 Agent 直接读取**。配合本地 **Coli（基于 sherpa-onnx）** 离线识别生成精准到字句的 SRT 时间轴，绝不按字数瞎猜时间。
+README.md,110,asr,Coli,#### ⏱️ Coli 本地离线语音识别与音文核验
+README.md,111,asr,Coli,- 无论采用哪种配音方式，Agent 都会调用本地 **Coli（基于 sherpa-onnx）** 离线生成带精准时间戳的 `.srt` 字幕，并**自动对照你的定稿原文核对人名、地名与专有名词**，为后续分镜提供毫秒级的时间依据。
+README.md,177,asr,Coli,> 💡 **智能按需初始化**：如果你只用它写文案，它不会安装任何多媒体组件；当需要配音、转录和导出剪映草稿时，原生启动器（`bootstrap.ps1` / `bootstrap.sh`）会自动在用户独立数据目录配置好 Python 3.11 (`uv`)、Node.js LTS、`Coli`、`FFmpeg`、`pyJianYingDraft` 等全部依赖。
+README.md,194,asr,Coli,| **文件夹里已有配音和图片，直接排剪映草稿** | ❌ 关  | ❌ 关  |   ✅ 开   | 自动用 Coli 跑时间轴对齐、加推拉运镜并写入剪映   |
+README.md,206,asr,Coli,3. 配图：用 Coli 对齐时间轴后拆成 20 镜，采用「厚涂历史漫画风」，9:16 竖屏生成配图，并带 3:4 和 4:3 封面。
+README.md,221,asr,Coli,请直接读取我的配音文件，用本地 Coli 生成字幕对齐时间轴，按「黑白叙事风」拆 18 个分镜并生成配图，最后直接导出到我的剪映草稿箱。
+README.md,266,asr,Coli,| **🎙️ 配音与转录** | `narration.mp3`（最终配音）、配音参数与哈希校验记录、Coli 本地识别 `.srt` 字幕与核对文件                                                                                  |
+README.md,277,asr,Coli,- **Node.js 20+ LTS & Coli**：用于本地离线语音转字幕（基于 `sherpa-onnx`），**无需调用任何收费云端字幕 API**
+README.md,293,asr,Coli,- **[MarsWave / Coli](https://github.com/marswaveai/coli)** & **[k2-fsa / sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx)**：提供快速、精准的本地离线语音识别 CLI 与底层推理引擎。
+README.md,332,asr,Coli,- **第三方生态**：第三方依赖库（如 `pyJianYingDraft`、`Coli`、`websockets` 等）均遵循其各自的开源许可证分发，本仓库不内嵌或重新分发上述外部库源码。
+README.md,52,asr,sherpa-onnx,- 🎙️ **双路径灵活配音 + 本地高精度时间戳对齐**：推荐直接接入 **豆包语音大模型（V3 双向流式）** 一键合成高表现力旁白；也支持**将自己提前准备好的配音 MP3 放入项目文件夹让 Agent 直接读取**。配合本地 **Coli（基于 sherpa-onnx）** 离线识别生成精准到字句的 SRT 时间轴，绝不按字数瞎猜时间。
+README.md,111,asr,sherpa-onnx,- 无论采用哪种配音方式，Agent 都会调用本地 **Coli（基于 sherpa-onnx）** 离线生成带精准时间戳的 `.srt` 字幕，并**自动对照你的定稿原文核对人名、地名与专有名词**，为后续分镜提供毫秒级的时间依据。
+README.md,277,asr,sherpa-onnx,- **Node.js 20+ LTS & Coli**：用于本地离线语音转字幕（基于 `sherpa-onnx`），**无需调用任何收费云端字幕 API**
+README.md,293,asr,sherpa-onnx,- **[MarsWave / Coli](https://github.com/marswaveai/coli)** & **[k2-fsa / sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx)**：提供快速、精准的本地离线语音识别 CLI 与底层推理引擎。
+README.md,249,tts,Doubao,│   ├── doubao_tts.py               # 豆包语音 V3 双向 WebSocket 合成客户端
+README.md,283,tts,Doubao,- **密钥安全存储**：豆包语音 `API Key` 仅从环境变量 `DOUBAO_TTS_API_KEY` 或系统级安全凭据文件读取（Windows 采用当前用户 DPAPI 加密，macOS/Linux 采用 `0600` 权限私密文件），**绝不写入对话日志、项目 JSON 或 Git 仓库**。
+README.md,296,tts,Doubao,- **[火山引擎 / 豆包语音大模型](https://docs.volcengine.com/docs/DoubaoVoice/bidirectional-streaming-text-to-speech-websocket?lang=zh)**：提供自然流畅的中文语音合成服务支持。
+install.bat,1,node,@,@echo off
+SKILL.md,18,python,pyJianYingDraft,草稿导出直接使用Python库 `pyJianYingDraft==0.3.1`，无需安装额外草稿技能。实际生图可用宿主图像工具，`imagegen` 是可选指导技能；Coli是本地转录CLI。依赖与作者见 [README](README.md)。
+SKILL.md,102,python,pyJianYingDraft,- 剪映导出直接调用 `pyJianYingDraft==0.3.1`。草稿目录优先使用 `--drafts-root`，其次 `JY_PROJECTS_ROOT` 或外部runtime配置，再读取剪映的草稿位置设置；新安装使用标准目录。已有自定义配置仍无法识别时由Agent查看剪映设置核对，不先要求用户复制路径。依赖缺失按自动初始化流程补齐。
+SKILL.md,16,tool,ffmpeg,启动器支持缺Python时配置用户专用Python，再按需安装Node.js、FFmpeg、媒体库及Coli；Windows草稿用户可一并安装缺少的剪映。安装失败由Agent查看原因并修复，实际缺少操作系统授权、账户登录或工具权限时才向用户说明所需操作，不能把失败转换成一串手动命令。生图工具授权单独验证，不把说明文件存在当作工具可用。复制目录本身不会执行安装，首次调用才触发检查。
+SKILL.md,101,tool,ffmpeg,- 默认只出剪映草稿。除非用户明确要求本地 MP4，不因剪映不可用自动改走 ffmpeg 成片。
+SKILL.md,16,asr,Coli,启动器支持缺Python时配置用户专用Python，再按需安装Node.js、FFmpeg、媒体库及Coli；Windows草稿用户可一并安装缺少的剪映。安装失败由Agent查看原因并修复，实际缺少操作系统授权、账户登录或工具权限时才向用户说明所需操作，不能把失败转换成一串手动命令。生图工具授权单独验证，不把说明文件存在当作工具可用。复制目录本身不会执行安装，首次调用才触发检查。
+SKILL.md,18,asr,Coli,草稿导出直接使用Python库 `pyJianYingDraft==0.3.1`，无需安装额外草稿技能。实际生图可用宿主图像工具，`imagegen` 是可选指导技能；Coli是本地转录CLI。依赖与作者见 [README](README.md)。
+SKILL.md,64,asr,Coli,2. **用户自备本期最终MP3。** 接收文件或本地路径，由Agent核验音频、用本机Coli转录并核对全文，再接续带时间分镜、配图和草稿；不要求用户手工制作SRT。
+SKILL.md,70,asr,Coli,配音前确认本期准确音色、资源、语速和朗读范围；本次已明确确认的参数不重问。Key只从宿主安全配置或技能目录之外的专用凭据存储读取，不写入项目或开源文件。用户需完成服务开通、Key获取及音色授权；依赖安装和本地配置由Agent完成。配置后用定稿生成MP3，再执行Coli转录、分镜、配图和草稿。已有最终音频优先复用。配音配置不自动开启未请求的配图或草稿，也不恢复火山字幕服务。
+SKILL.md,88,asr,Coli,口播项目遵守 **定稿 → 豆包配音或已有最终配音 → 本机Coli转录并核对 → 带时间分镜 → 生图 → 按同表剪辑**。已有且已核验的当前配音字幕可复用。缺音频时按配音衔接规则引导；尚未配置或未确认音色时只准备待对齐草稿，不编造时间。明确的独立插图、封面、静态图文或纯文本分镜按模块例外完成。
+SKILL.md,96,asr,Coli,- 复用已有文稿、音频、SRT、分镜和图片；关闭配图仍可为既有图片补做必要的 Coli 转录、音文与语义核验，不另写新稿或生新图。
+SKILL.md,107,asr,Coli,- 本机 Coli 是字幕路径；不调用火山字幕 API，不恢复其凭据，不用字符比例伪造精确时间。
+SKILL.md,123,asr,Coli,使用 $story-studio，把这篇定稿生成豆包MP3，再做Coli字幕、20张历史写实配图和竖屏剪映草稿。缺少语音配置时引导我提供API Key、音色ID和模型资源。
+SKILL.md,61,tts,Doubao,凡口播任务需要音频对齐而当前没有可用的本期最终配音，必须在首次发现缺口时读取[豆包配置与配音](references/doubao-voice.md)，主动提示用户选择以下方式。**用户只说“按这篇文稿配图并做剪映草稿”、没有明确说“配音”，也触发本规则。不得仅回复“缺音频，请提供MP3”便结束。**
+MASTER_PROMPT.md,25,tool,ffmpeg,"- Редакторы: Kdenlive и DaVinci Resolve приоритетно, CapCut International как исследуемый адаптер, Premiere Pro позже; FFmpeg + MP4/SRT как fallback."
+MASTER_PROMPT.md,52,tool,ffmpeg,"6. **Монтаж и экспорт.** JSON timeline → Kdenlive/DaVinci, FFmpeg MP4/SRT; CapCut feasibility, Premiere позже. Gate: реальные импорт/рендер и синхронизация проверены."
+scripts/studio_runtime.py,122,asr,Coli,"if name == ""coli"":"
+scripts/studio_runtime.py,123,asr,Coli,"selected = os.environ.get(""COLI_BIN"") or load_config().get(""coli_bin"")"
+scripts/studio_runtime.py,127,asr,Coli,"if os.environ.get(""COLI_BIN""):"
+scripts/studio_runtime.py,128,asr,Coli,"raise FileNotFoundError(""Explicit COLI_BIN executable is missing; Agent must repair the override"")"
+scripts/studio_runtime.py,129,asr,Coli,"return shutil.which(""coli.cmd"") or shutil.which(""coli"")"
+scripts/doubao_tts.py,37,node,@,@dataclass
+scripts/doubao_tts.py,186,tool,ffmpeg,"def validate_audio(path: Path, ffprobe: str, ffmpeg: str) -> float:"
+scripts/doubao_tts.py,193,tool,ffmpeg,"subprocess.run([ffmpeg, ""-v"", ""error"", ""-xerror"", ""-i"", str(path), ""-f"", ""null"", ""-""],"
+scripts/doubao_tts.py,227,tool,ffmpeg,"ffmpeg, ffprobe = find_executable(""ffmpeg""), find_executable(""ffprobe"")"
+scripts/doubao_tts.py,228,tool,ffmpeg,if not ffmpeg or not ffprobe:
+scripts/doubao_tts.py,230,tool,ffmpeg,"for tool in (ffmpeg, ffprobe):"
+scripts/doubao_tts.py,238,tool,ffmpeg,"duration = validate_audio(partial, ffprobe, ffmpeg)"
+scripts/doubao_tts.py,186,tool,ffprobe,"def validate_audio(path: Path, ffprobe: str, ffmpeg: str) -> float:"
+scripts/doubao_tts.py,187,tool,ffprobe,"result = subprocess.run([ffprobe, ""-v"", ""error"", ""-show_format"", ""-show_streams"", ""-of"", ""json"", str(path)],"
+scripts/doubao_tts.py,227,tool,ffprobe,"ffmpeg, ffprobe = find_executable(""ffmpeg""), find_executable(""ffprobe"")"
+scripts/doubao_tts.py,228,tool,ffprobe,if not ffmpeg or not ffprobe:
+scripts/doubao_tts.py,230,tool,ffprobe,"for tool in (ffmpeg, ffprobe):"
+scripts/doubao_tts.py,238,tool,ffprobe,"duration = validate_audio(partial, ffprobe, ffmpeg)"
+scripts/doubao_tts.py,1,tts,Doubao,"""""""Doubao V3 bidirectional WebSocket TTS to a verified MP3; no automatic retries."""""""
+scripts/doubao_tts.py,216,tts,Doubao,"""characters"": len(text), ""protocol"": ""doubao-v3-bidirectional-websocket""}"
+scripts/test_setup_dependencies.py,84,node,@,"address = ""https://"" + ""fixture-user"" + "":"" + ""fixture-value"" + ""@example.invalid/repo"""
+scripts/test_setup_dependencies.py,43,asr,Coli,def test_private_coli_prefix_does_not_need_path(self):
+scripts/test_setup_dependencies.py,45,asr,Coli,"binary = Path(temporary) / ""coli"""
+scripts/test_setup_dependencies.py,47,asr,Coli,"with patch.dict(os.environ, {""COLI_BIN"": """"}), patch.object(runtime, ""load_config"", return_value={""coli_bin"": str(binary)}), patch.object(runtime.shutil, ""which"", return_value=None):"
+scripts/test_setup_dependencies.py,48,asr,Coli,"self.assertEqual(runtime.find_executable(""coli""), str(binary.resolve()))"
+scripts/test_bootstrap_native.ps1,21,node,@,$result = @(Invoke-StudioBootstrap)
+scripts/test_bootstrap_native.ps1,28,node,@,"Set-Content -LiteralPath $fakePython -Encoding Ascii -Value ""@echo off`r`necho {`""ready`"":true}`r`nexit /b 0"""
+scripts/test_bootstrap_native.ps1,32,node,@,return @{ Executable = $fakePython; Prefix = @() }
+scripts/test_bootstrap_native.ps1,35,node,@,$result = @(Invoke-StudioBootstrap)
+scripts/test_bootstrap_native.ps1,54,node,@,"if ($OutFile) { [IO.File]::WriteAllBytes($OutFile, [byte[]]@(1,2,3)); return }"
+scripts/test_bootstrap_native.ps1,55,node,@,return @{ Content = [Text.Encoding]::UTF8.GetBytes(('0' * 64)) }
+scripts/bootstrap.ps1,62,python,pyJianYingDraft,"if ($RequestedFeatures.Split(',') -contains 'draft') { $missing += 'pyJianYingDraft and media libraries' }"
+scripts/bootstrap.ps1,22,node,@,$value = (& $Executable @Prefix -c 'import sys; print(sys.version_info[0]*100+sys.version_info[1])' 2>$null | Select-Object -Last 1)
+scripts/bootstrap.ps1,33,node,@,if ($saved.python -and (Test-PythonVersion $saved.python @())) {
+scripts/bootstrap.ps1,34,node,@,return @{ Executable = $saved.python; Prefix = @() }
+scripts/bootstrap.ps1,40,node,@,"foreach ($selector in @('-3.11','-3')) {"
+scripts/bootstrap.ps1,41,node,@,if (Test-PythonVersion $launcher.Source @($selector)) {
+scripts/bootstrap.ps1,42,node,@,return @{ Executable = $launcher.Source; Prefix = @($selector) }
+scripts/bootstrap.ps1,46,node,@,"foreach ($name in @('python3','python')) {"
+scripts/bootstrap.ps1,48,node,@,if ($candidate -and $candidate.Source -notmatch 'WindowsApps' -and (Test-PythonVersion $candidate.Source @())) {
+scripts/bootstrap.ps1,49,node,@,return @{ Executable = $candidate.Source; Prefix = @() }
+scripts/bootstrap.ps1,56,node,@,$missing = @('Python 3.11 (managed)')
+scripts/bootstrap.ps1,58,node,@,"$missing += @('Node.js LTS and npm','Coli local ASR')"
+scripts/bootstrap.ps1,64,node,@,return @{ ready = $false; preliminary = $true; configuration_plan = $missing; agent_runs_installation = $true; manual_commands_required = $false }
+scripts/bootstrap.ps1,117,node,@,if (-not $python -or -not (Test-PythonVersion $python @())) { throw 'Managed Python could not be verified' }
+scripts/bootstrap.ps1,118,node,@,return @{ Executable = [string]$python; Prefix = @() }
+scripts/bootstrap.ps1,129,node,@,"$arguments = @('-X','utf8','-B',$script,$Action,'--features',$Features)"
+scripts/bootstrap.ps1,130,node,@,"if ($DraftsRoot) { $arguments += @('--drafts-root',$DraftsRoot) }"
+scripts/bootstrap.ps1,135,node,@,& $executable @prefix @arguments
+scripts/bootstrap.ps1,142,node,@,$result = @(Invoke-StudioBootstrap)
+scripts/bootstrap.ps1,146,node,@,"@{ ready = $false; agent_action_required = 'Native bootstrap failed; Agent should inspect download access, platform support or OS permissions'; manual_commands_required = $false } | ConvertTo-Json"
+scripts/bootstrap.ps1,60,tool,ffmpeg,if ($RequestedFeatures -match 'draft|asr|tts') { $missing += 'FFmpeg and ffprobe' }
+scripts/bootstrap.ps1,60,tool,ffprobe,if ($RequestedFeatures -match 'draft|asr|tts') { $missing += 'FFmpeg and ffprobe' }
+scripts/bootstrap.ps1,58,asr,Coli,"$missing += @('Node.js LTS and npm','Coli local ASR')"
+scripts/test_doubao_voice.py,277,python,pyJianYingDraft,"self.assertIn(""pyJianYingDraft==0.3.1"", packages)"
+scripts/test_doubao_voice.py,152,python,requests,requests = []
+scripts/test_doubao_voice.py,160,python,requests,"requests.append(body[""req_params""][""text""])"
+scripts/test_doubao_voice.py,161,python,requests,"self.assertEqual("""".join(requests), text)"
+scripts/test_doubao_voice.py,282,tool,ffmpeg,"self.assertEqual(tts.validate_audio(Path(""fixture.partial""), ""ffprobe"", ""ffmpeg""), 1.0)"
+scripts/test_doubao_voice.py,287,tool,ffmpeg,"tts.validate_audio(Path(""fixture.partial""), ""ffprobe"", ""ffmpeg"")"
+scripts/test_doubao_voice.py,290,tool,ffmpeg,"ffmpeg, ffprobe = runtime.find_executable(""ffmpeg""), runtime.find_executable(""ffprobe"")"
+scripts/test_doubao_voice.py,291,tool,ffmpeg,if not ffmpeg or not ffprobe:
+scripts/test_doubao_voice.py,292,tool,ffmpeg,"self.skipTest(""Optional local media integration requires FFmpeg"")"
+scripts/test_doubao_voice.py,295,tool,ffmpeg,"subprocess.run([ffmpeg, ""-v"", ""error"", ""-f"", ""lavfi"", ""-i"", ""sine=frequency=440:duration=0.3"", ""-c:a"", ""libmp3lame"", str(source)], capture_output=True, check=True)"
+scripts/test_doubao_voice.py,303,tool,ffmpeg,"self.assertGreater(tts.validate_audio(target, ffprobe, ffmpeg), 0)"
+scripts/test_doubao_voice.py,282,tool,ffprobe,"self.assertEqual(tts.validate_audio(Path(""fixture.partial""), ""ffprobe"", ""ffmpeg""), 1.0)"
+scripts/test_doubao_voice.py,287,tool,ffprobe,"tts.validate_audio(Path(""fixture.partial""), ""ffprobe"", ""ffmpeg"")"
+scripts/test_doubao_voice.py,290,tool,ffprobe,"ffmpeg, ffprobe = runtime.find_executable(""ffmpeg""), runtime.find_executable(""ffprobe"")"
+scripts/test_doubao_voice.py,291,tool,ffprobe,if not ffmpeg or not ffprobe:
+scripts/test_doubao_voice.py,303,tool,ffprobe,"self.assertGreater(tts.validate_audio(target, ffprobe, ffmpeg), 0)"
+scripts/test_doubao_voice.py,274,asr,Coli,def test_tts_dependency_profile_does_not_install_draft_or_coli(self):
+scripts/test_doubao_voice.py,17,tts,Doubao,import doubao_tts as tts
+scripts/test_doubao_voice.py,65,tts,Doubao,"with patch.object(settings, ""data_dir"", return_value=Path(temporary)), patch.dict(os.environ, {""DOUBAO_TTS_API_KEY"": """"}), patch.object(sys, ""argv"", [""voice_settings.py"", ""configure"", ""--speaker"", ""fixture-voice"", ""--resource-id"", ""seed-tts-2.0"", ""--"
+scripts/test_doubao_voice.py,83,tts,Doubao,"with patch.dict(os.environ, {""DOUBAO_TTS_API_KEY"": ""fixture-env-value""}), patch.object(settings, ""secret_path"") as stored:"
+scripts/test_doubao_voice.py,89,tts,Doubao,"with patch.object(settings, ""data_dir"", return_value=Path(temporary)), patch.dict(os.environ, {""DOUBAO_TTS_API_KEY"": """"}), patch.object(sys, ""argv"", [""voice_settings.py"", ""check""]), contextlib.redirect_stdout(io.StringIO()) as output:"
+scripts/test_doubao_voice.py,197,tts,Doubao,"stack.enter_context(patch.object(sys, ""argv"", [""doubao_tts.py"", ""--text-file"", str(text), ""--output"", str(output), *extra]))"
+scripts/voice_settings.py,1,tts,Doubao,"""""""Local Doubao voice profile and optional protected credential storage."""""""
+scripts/voice_settings.py,33,tts,Doubao,"return outside_source(data_dir() / (""doubao-key.dpapi"" if os.name == ""nt"" else ""doubao-key.secret""))"
+scripts/voice_settings.py,112,tts,Doubao,"return bool(os.environ.get(""DOUBAO_TTS_API_KEY"", """").strip()) or secret_path().is_file()"
+scripts/voice_settings.py,116,tts,Doubao,"value = os.environ.get(""DOUBAO_TTS_API_KEY"", """").strip()"
+scripts/voice_settings.py,121,tts,Doubao,"raise VoiceConfigError(""Configure DOUBAO_TTS_API_KEY or a local speech credential"")"
+scripts/voice_settings.py,144,tts,Doubao,"key = sys.stdin.readline(65538) if args.key_stdin else getpass.getpass(""Doubao speech API key: "")"
+scripts/test_bootstrap_environment.py,62,node,@,"@unittest.skipIf(os.name == ""nt"", ""POSIX npm file symlinks"")"
+scripts/test_bootstrap_environment.py,180,node,@,"@unittest.skipUnless(os.name == ""nt"", ""Windows settings"")"
+scripts/test_bootstrap_environment.py,96,tool,ffmpeg,def test_ffmpeg_archive_must_also_include_ffprobe(self):
+scripts/test_bootstrap_environment.py,101,tool,ffmpeg,"(destination / ""ffmpeg.exe"").touch()"
+scripts/test_bootstrap_environment.py,104,tool,ffmpeg,bootstrap.install_windows_ffmpeg()
+scripts/test_bootstrap_environment.py,107,tool,ffmpeg,"report = {""checks"": [{""dependency"": name, ""required"": True, ""ready"": False} for name in (""ffmpeg"", ""Coli"", ""draft Python imports"")]}"
+scripts/test_bootstrap_environment.py,127,tool,ffmpeg,"with patch.object(sys, ""argv"", [""bootstrap_environment.py"", ""install"", ""--features"", ""draft,asr""]), patch.object(bootstrap, ""prepare_tool_paths""), patch.object(bootstrap, ""data_dir"", return_value=data), patch.object(bootstrap, ""load_config"", return_v"
+scripts/test_bootstrap_environment.py,132,tool,ffmpeg,ffmpeg.assert_called_once()
+scripts/test_bootstrap_environment.py,133,tool,ffmpeg,"self.assertEqual(saved[-1][""tool_dirs""], [str(data / ""node""), str(data / ""ffmpeg"")])"
+scripts/test_bootstrap_environment.py,138,tool,ffmpeg,"with patch.object(sys, ""argv"", [""bootstrap_environment.py"", ""install"", ""--features"", ""draft,asr""]), patch.object(bootstrap, ""prepare_tool_paths""), patch.object(bootstrap, ""load_config"", return_value={""python"": sys.executable}), patch.object(bootstrap"
+scripts/test_bootstrap_environment.py,140,tool,ffmpeg,"for unused in (node, ffmpeg, request):"
+scripts/test_bootstrap_environment.py,96,tool,ffprobe,def test_ffmpeg_archive_must_also_include_ffprobe(self):
+scripts/test_bootstrap_environment.py,103,tool,ffprobe,"with self.assertRaisesRegex(RuntimeError, ""ffprobe""):"
+scripts/test_bootstrap_environment.py,107,asr,Coli,"report = {""checks"": [{""dependency"": name, ""required"": True, ""ready"": False} for name in (""ffmpeg"", ""Coli"", ""draft Python imports"")]}"
+scripts/test_bootstrap_environment.py,163,asr,Coli,def test_removed_private_coli_is_discovered_as_missing(self):
+scripts/test_bootstrap_environment.py,164,asr,Coli,"with patch.dict(os.environ, {""COLI_BIN"": """"}), patch.object(runtime, ""load_config"", return_value={""coli_bin"": ""missing-private-coli""}), patch.object(runtime.shutil, ""which"", return_value=None):"
+scripts/test_bootstrap_environment.py,165,asr,Coli,"self.assertIsNone(runtime.find_executable(""coli""))"
+scripts/bootstrap_environment.py,128,tool,ffmpeg,def install_windows_ffmpeg() -> Path:
+scripts/bootstrap_environment.py,129,tool,ffmpeg,"prefix = ""https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"""
+scripts/bootstrap_environment.py,131,tool,ffmpeg,"archive = checked_download(prefix, checksum, data_dir() / ""downloads/ffmpeg-essentials.zip"")"
+scripts/bootstrap_environment.py,132,tool,ffmpeg,"destination = data_dir() / ""tools/ffmpeg"" / checksum[:16]"
+scripts/bootstrap_environment.py,134,tool,ffmpeg,"binary = next(destination.rglob(""ffmpeg.exe""))"
+scripts/bootstrap_environment.py,136,tool,ffmpeg,"raise RuntimeError(""FFmpeg download did not contain ffprobe"")"
+scripts/bootstrap_environment.py,143,tool,ffmpeg,"packages = [""brew"", ""install"", ""ffmpeg"", ""libmediainfo""]"
+scripts/bootstrap_environment.py,151,tool,ffmpeg,"packages = prefix + [""apt-get"", ""install"", ""-y"", ""ffmpeg"", ""libmediainfo0v5""]"
+scripts/bootstrap_environment.py,252,tool,ffmpeg,"if features & {""tts"", ""asr"", ""draft""} and (not find_executable(""ffmpeg"") or not find_executable(""ffprobe"")):"
+scripts/bootstrap_environment.py,254,tool,ffmpeg,directories.append(str(install_windows_ffmpeg()))
+scripts/bootstrap_environment.py,135,tool,ffprobe,"if not binary.with_name(""ffprobe.exe"").is_file():"
+scripts/bootstrap_environment.py,136,tool,ffprobe,"raise RuntimeError(""FFmpeg download did not contain ffprobe"")"
+scripts/bootstrap_environment.py,252,tool,ffprobe,"if features & {""tts"", ""asr"", ""draft""} and (not find_executable(""ffmpeg"") or not find_executable(""ffprobe"")):"
+scripts/bootstrap_environment.py,143,tool,mediainfo,"packages = [""brew"", ""install"", ""ffmpeg"", ""libmediainfo""]"
+scripts/bootstrap_environment.py,151,tool,mediainfo,"packages = prefix + [""apt-get"", ""install"", ""-y"", ""ffmpeg"", ""libmediainfo0v5""]"
+scripts/bootstrap_environment.py,271,tool,mediainfo,"if result.returncode and os.name != ""nt"" and ""libmediainfo is missing"" in result.stdout:"
+scripts/bootstrap_environment.py,211,asr,Coli,"report = inspect(features, python, find_executable(""coli"") if ""asr"" in features else None,"
+scripts/setup_dependencies.py,19,python,pyJianYingDraft,"DRAFT_PACKAGE = ""pyJianYingDraft==0.3.1"""
+scripts/setup_dependencies.py,129,python,pyJianYingDraft,"""import PIL,numpy,pyJianYingDraft as d;"""
+scripts/setup_dependencies.py,131,python,pyJianYingDraft,"""assert version('pyJianYingDraft')=='0.3.1','Unsupported package version';"""
+scripts/setup_dependencies.py,132,python,pyJianYingDraft,"""assert Path(d.__file__).resolve().is_relative_to(Path(distribution('pyJianYingDraft').locate_file('pyJianYingDraft')).resolve()),'Unexpected module source';"""
+scripts/setup_dependencies.py,133,python,pyJianYingDraft,"""from pyJianYingDraft import DraftFolder,TrackSpec,VideoSegment,AudioSegment,TextSegment;"""
+scripts/setup_dependencies.py,138,python,pyJianYingDraft,"add(""draft Python imports"", True, True, ""Upstream pyJianYingDraft 0.3.1, media libraries and libmediainfo are available"")"
+scripts/setup_dependencies.py,33,python,Pillow,"packages = [DRAFT_PACKAGE, ""Pillow>=10,<13"", ""numpy>=1.24,<3""]"
+scripts/setup_dependencies.py,33,python,numpy,"packages = [DRAFT_PACKAGE, ""Pillow>=10,<13"", ""numpy>=1.24,<3""]"
+scripts/setup_dependencies.py,129,python,numpy,"""import PIL,numpy,pyJianYingDraft as d;"""
+scripts/setup_dependencies.py,20,node,@,"COLI_PACKAGE = ""@marswave/coli@0.0.20"""
+scripts/setup_dependencies.py,92,tool,ffmpeg,"for executable in (""ffmpeg"", ""ffprobe""):"
+scripts/setup_dependencies.py,92,tool,ffprobe,"for executable in (""ffmpeg"", ""ffprobe""):"
+scripts/setup_dependencies.py,134,tool,mediainfo,"""from pymediainfo import MediaInfo;assert MediaInfo.can_parse(),'System libmediainfo is missing'"""
+scripts/setup_dependencies.py,138,tool,mediainfo,"add(""draft Python imports"", True, True, ""Upstream pyJianYingDraft 0.3.1, media libraries and libmediainfo are available"")"
+scripts/setup_dependencies.py,20,asr,Coli,"COLI_PACKAGE = ""@marswave/coli@0.0.20"""
+scripts/setup_dependencies.py,84,asr,Coli,"coli: str | None, imagegen: Path | None) -> dict:"
+scripts/setup_dependencies.py,104,asr,Coli,if coli:
+scripts/setup_dependencies.py,106,asr,Coli,"help_result = run([coli, ""--help""])"
+scripts/setup_dependencies.py,110,asr,Coli,"add(""Coli"", True, ready, ""Local ASR CLI must run; first transcription may download the model"")"
+scripts/setup_dependencies.py,180,asr,Coli,"config = {key: value for key, value in config.items() if key in {""python"", ""coli_bin"", ""drafts_root"", ""tool_dirs""}}"
+scripts/setup_dependencies.py,185,asr,Coli,"coli = find_executable(""coli"") if ""asr"" in features else None"
+scripts/setup_dependencies.py,199,asr,Coli,"current = inspect(features & {""draft"", ""tts""}, python, coli, imagegen)"
+scripts/setup_dependencies.py,208,asr,Coli,"if ""asr"" in features and coli is None:"
+scripts/setup_dependencies.py,211,asr,Coli,"raise RuntimeError(""Node.js 20+ and npm are required to install Coli"")"
+scripts/setup_dependencies.py,214,asr,Coli,"raise RuntimeError(""Coli requires Node.js 20+ for this dependency profile"")"
+scripts/setup_dependencies.py,216,asr,Coli,"run([npm, ""install"", ""--global"", ""--prefix"", str(prefix), COLI_PACKAGE])"
+scripts/setup_dependencies.py,217,asr,Coli,"coli_path = prefix / (""coli.cmd"" if os.name == ""nt"" else ""bin/coli"")"
+scripts/setup_dependencies.py,218,asr,Coli,if not coli_path.is_file():
+scripts/setup_dependencies.py,219,asr,Coli,"raise RuntimeError(""Coli installation did not produce its CLI executable"")"
+scripts/setup_dependencies.py,220,asr,Coli,coli = str(coli_path)
+scripts/setup_dependencies.py,221,asr,Coli,if coli:
+scripts/setup_dependencies.py,222,asr,Coli,"config[""coli_bin""] = coli"
+scripts/setup_dependencies.py,228,asr,Coli,"report = inspect(features, python, coli, imagegen)"
+scripts/setup_dependencies.py,149,tts,Doubao,"voice_configuration_required.append(""Doubao speech API key (secure input)"")"
+scripts/bootstrap.sh,62,node,@,"exec ""$studio_python"" -X utf8 -B ""$studio_script_dir/bootstrap_environment.py"" ""$studio_action"" ""$@"""
+references/extending.md,28,python,pyJianYingDraft,内置的是使用资源，不包含原目录的 Git 历史、缓存或原技能发现入口。`GUIDE.md` 所在目录就是模块的脚本与资源基准。原技能目录删除后，内置规则与语料仍可读取。外部依赖按 [初始化流程](setup.md) 选择性配置：Python3.10+、媒体库、ffmpeg/ffprobe、本地Coli及草稿所需pyJianYingDraft。生图复用当前可用工具，可选imagegen指导；不保存密钥或重复实现客户端。
+references/extending.md,28,tool,ffmpeg,内置的是使用资源，不包含原目录的 Git 历史、缓存或原技能发现入口。`GUIDE.md` 所在目录就是模块的脚本与资源基准。原技能目录删除后，内置规则与语料仍可读取。外部依赖按 [初始化流程](setup.md) 选择性配置：Python3.10+、媒体库、ffmpeg/ffprobe、本地Coli及草稿所需pyJianYingDraft。生图复用当前可用工具，可选imagegen指导；不保存密钥或重复实现客户端。
+references/extending.md,28,tool,ffprobe,内置的是使用资源，不包含原目录的 Git 历史、缓存或原技能发现入口。`GUIDE.md` 所在目录就是模块的脚本与资源基准。原技能目录删除后，内置规则与语料仍可读取。外部依赖按 [初始化流程](setup.md) 选择性配置：Python3.10+、媒体库、ffmpeg/ffprobe、本地Coli及草稿所需pyJianYingDraft。生图复用当前可用工具，可选imagegen指导；不保存密钥或重复实现客户端。
+references/extending.md,25,asr,Coli,| modules/history-image/ | 分镜与三种画风、封面参考图、Coli转录及分配检查 |
+references/extending.md,28,asr,Coli,内置的是使用资源，不包含原目录的 Git 历史、缓存或原技能发现入口。`GUIDE.md` 所在目录就是模块的脚本与资源基准。原技能目录删除后，内置规则与语料仍可读取。外部依赖按 [初始化流程](setup.md) 选择性配置：Python3.10+、媒体库、ffmpeg/ffprobe、本地Coli及草稿所需pyJianYingDraft。生图复用当前可用工具，可选imagegen指导；不保存密钥或重复实现客户端。
+references/doubao-voice.md,35,tool,ffmpeg,"先按[初始化流程](setup.md)检查/配置features=tts；后面还需转录和草稿时用tts,asr,draft,images。缺少的Python、websockets和FFmpeg由Agent安装，不要求用户执行命令。依赖安装不需要语音Key，也不会发送收费测试。"
+references/doubao-voice.md,61,tool,ffmpeg,脚本以不丢字符的文本流发送全文，等到SessionFinished并收到音频后才视为服务完成，再用ffprobe和ffmpeg完整解码校验，保留失败的partial供排查。输出MP3及同名.voice.json，记录文本哈希、音色、协议、音频哈希和时长，不写Key。默认不覆盖已有MP3；同稿同音色先检查已有成功文件，避免再次收费。
+references/doubao-voice.md,63,tool,ffmpeg,传输分块不是服务总长度承诺。超长文案先核对当前官方限制；确需多会话时由Agent按句/段拆分，保存顺序、正文及哈希，只续做尚未成功的片段，不能摘要、漏句或截断。独立MP3片段使用ffmpeg concat demuxer合并，不能二进制拼接文件；对最终合并音频重新完整解码，并且Coli只识别最终版本。
+references/doubao-voice.md,61,tool,ffprobe,脚本以不丢字符的文本流发送全文，等到SessionFinished并收到音频后才视为服务完成，再用ffprobe和ffmpeg完整解码校验，保留失败的partial供排查。输出MP3及同名.voice.json，记录文本哈希、音色、协议、音频哈希和时长，不写Key。默认不覆盖已有MP3；同稿同音色先检查已有成功文件，避免再次收费。
+references/doubao-voice.md,7,asr,Coli,文案定稿 → 选择豆包配音或提供已有配音 → 配置并确认音色 → MP3 → Coli本地SRT与音文核对 → 带时间分镜 → 配图 → 剪映草稿。
+references/doubao-voice.md,13,asr,Coli,选择豆包后进入以下配置步骤，不要求用户先在其他软件生成文件；选择自备配音后接收文件或路径，由Agent完成Coli转录。等待选择期间只继续不依赖音频的工作，不默认同意合成。已有最终MP3且允许用于本期时直接核验并转录，不重复付费合成。
+references/doubao-voice.md,31,asr,Coli,> 文案已定稿，可以继续生成豆包配音。请在语音控制台开通对应服务，并通过宿主的安全输入/密钥配置入口提供语音API Key；同时告诉我音色speaker ID和模型资源（普通2.0或复刻2.0）。我会配置并生成MP3，然后接续Coli转录、配图和剪映草稿。已有最终配音也可以直接复用。
+references/doubao-voice.md,63,asr,Coli,传输分块不是服务总长度承诺。超长文案先核对当前官方限制；确需多会话时由Agent按句/段拆分，保存顺序、正文及哈希，只续做尚未成功的片段，不能摘要、漏句或截断。独立MP3片段使用ffmpeg concat demuxer合并，不能二进制拼接文件；对最终合并音频重新完整解码，并且Coli只识别最终版本。
+references/doubao-voice.md,69,asr,Coli,1. 检查MP3完整解码、正文开头结尾、专名发音与漏读；未试听不称听过。再调用内置[配图模块](../modules/history-image/GUIDE.md)的Coli脚本，识别最终MP3，保留音频哈希与原始结果，对照文案修正错字。
+references/doubao-voice.md,73,asr,Coli,豆包这里只负责TTS，始终enable_subtitle=false。字幕使用本机Coli，不调用或恢复已停用的火山字幕API及其凭据。交付MP3、SRT、图片和草稿时区分实际生成、结构验证、试听和剪映预览范围。
+references/doubao-voice.md,9,tts,Doubao,保留写作、配图、剪映草稿三个主开关；配音是可独立调用的衔接步骤，记录voice_mode=doubao、provided或none。只写稿时交付稿件，并提示可继续豆包配音，不发送付费请求；用户明确不要配音时不追问。
+references/doubao-voice.md,37,tts,Doubao,API Key优先从宿主安全配置的DOUBAO_TTS_API_KEY读取。只检查存在性，不显示值；不要要求在公开聊天中粘贴Key。若用户已经通过可用的保密渠道提供Key，且同意在当前电脑保存，Agent可用voice_settings.py的--key-stdin从标准输入写入专用凭据文件，不把Key放到命令参数、shell历史、项目JSON或日志。--prompt-key仅用于宿主能直接提供隐藏输入的交互终端，不要求用户自行打开终端。没有保密输入能力时引导到宿主密钥/环境变量面板，不能伪称已
+references/doubao-voice.md,55,tts,Doubao,"""<配置的Python>"" ""<技能绝对路径>/scripts/doubao_tts.py"" --text-file ""<项目>/narration.txt"" --output ""<项目>/narration.mp3"" --dry-run"
+references/doubao-voice.md,56,tts,Doubao,"""<配置的Python>"" ""<技能绝对路径>/scripts/doubao_tts.py"" --text-file ""<项目>/narration.txt"" --output ""<项目>/narration.mp3"" --voice-confirmed"
+references/doubao-voice.md,75,tts,Doubao,协议及参数依据：[用户指定的豆包双向WebSocket官方文档](https://docs.volcengine.com/docs/DoubaoVoice/bidirectional-streaming-text-to-speech-websocket?lang=zh)、[官方协议附件](https://portal.volccdn.com/obj/volcfe/cloud-universal-doc/upload_5ec6e28945592c909158dc1e2cf9a89c.zip)、[w
+references/project-state.md,40,tts,Doubao,- voice_mode可为doubao、provided、none。音色参数、确认依据、正文与音频哈希保存在项目voice.json或音频同名.voice.json，artifacts.audio只引用真实生成或已提供的文件；不保存API Key或凭据文件副本。
+references/project-state.md,62,tts,Doubao,- 全流程：写完若没有最终配音，按[豆包配音](doubao-voice.md)引导配置并确认音色，生成MP3后再推进真实时间轴；配音尚未就绪时保留正文、可做的分镜草稿与缺口。已有MP3时复用，不重复收费，不按估算时间制作“精确草稿”。
+references/setup.md,14,python,pyJianYingDraft,| draft | 已有素材生成剪映草稿 | Python、pyJianYingDraft==0.3.1、Pillow、NumPy、原生libmediainfo、FFmpeg与ffprobe、草稿目录 |
+references/setup.md,62,python,pyJianYingDraft,来源：[uv管理Python](https://docs.astral.sh/uv/guides/install-python/)、[Node.js](https://nodejs.org/en/download)、[FFmpeg](https://ffmpeg.org/download.html)、[Gyan构建](https://www.gyan.dev/ffmpeg/builds/)、[WinGet清单](https://github.com/microsoft/winget-pkgs/t
+references/setup.md,14,python,Pillow,| draft | 已有素材生成剪映草稿 | Python、pyJianYingDraft==0.3.1、Pillow、NumPy、原生libmediainfo、FFmpeg与ffprobe、草稿目录 |
+references/setup.md,14,python,numpy,| draft | 已有素材生成剪映草稿 | Python、pyJianYingDraft==0.3.1、Pillow、NumPy、原生libmediainfo、FFmpeg与ffprobe、草稿目录 |
+references/setup.md,43,node,@,2. asr需要Node.js20+及npm；缺失时从Node.js官方下载LTS便携版本，核验官方SHA-256，再安装到专用目录。Coli固定@marswave/coli@0.0.20，使用专用npm前缀。仅对当前子进程设置工具PATH。
+references/setup.md,12,tool,ffmpeg,| tts | 豆包MP3配音 | Python、websockets==15.0.1、FFmpeg/ffprobe；用户的Key、音色和模型资源另按[配音配置](doubao-voice.md)引导 |
+references/setup.md,13,tool,ffmpeg,| asr | 最终配音转录 | Python、Node.js LTS及npm、Coli、FFmpeg与ffprobe |
+references/setup.md,14,tool,ffmpeg,| draft | 已有素材生成剪映草稿 | Python、pyJianYingDraft==0.3.1、Pillow、NumPy、原生libmediainfo、FFmpeg与ffprobe、草稿目录 |
+references/setup.md,16,tool,ffmpeg,"“一键配置全部功能”选draft,asr,images,tts；只生成已有素材草稿选draft，需要转录再加asr。只写稿不安装剪映、Node或FFmpeg。初始化只安装软件依赖，不获取Key、不开通付费资源，不生成配音、图片或实际工程。"
+references/setup.md,44,tool,ffmpeg,3. Windows缺FFmpeg/ffprobe时使用FFmpeg官网列出的Gyan essentials构建，核验发布方SHA-256。媒体Python包安装到专用venv，已兼容的解释器可直接复用，不全局pip安装。原库会带入pymediainfo、imageio等运行依赖，实际检查MediaInfo.can_parse()。
+references/setup.md,45,tool,ffmpeg,4. macOS复用Homebrew安装ffmpeg、libmediainfo；Debian/Ubuntu复用apt安装ffmpeg、libmediainfo0v5。没有包管理器或其他系统时由Agent选择官方安装方式并继续配置。系统权限不足时按宿主提供的授权流程申请；不要求用户自行运行sudo或安装命令。无法获得授权则保留已完成部分并准确说明阻塞，不宣称全部就绪。
+references/setup.md,48,tool,ffmpeg,7. 完成后重跑同一原生入口check及setup_dependencies.py check。检查Python库版本、模块来源、API、libmediainfo、FFmpeg/ffprobe、Coli位置及所需应用。asr实际执行前核验Coli能运行；首次转录可下载模型，初始化不下载模型、不上传音频，不调用火山字幕API。
+references/setup.md,54,tool,ffmpeg,专用Python、venv、Node、FFmpeg、Coli、缓存和runtime.json保存在技能目录之外的用户数据目录story-studio中。Windows基于LOCALAPPDATA，其他系统基于XDG_DATA_HOME或用户数据目录约定。runtime.json仅记录python、coli_bin、drafts_root、tool_dirs；STORY_STUDIO_CONFIG可改配置位置，但禁止写进技能源码。
+references/setup.md,62,tool,ffmpeg,来源：[uv管理Python](https://docs.astral.sh/uv/guides/install-python/)、[Node.js](https://nodejs.org/en/download)、[FFmpeg](https://ffmpeg.org/download.html)、[Gyan构建](https://www.gyan.dev/ffmpeg/builds/)、[WinGet清单](https://github.com/microsoft/winget-pkgs/t
+references/setup.md,12,tool,ffprobe,| tts | 豆包MP3配音 | Python、websockets==15.0.1、FFmpeg/ffprobe；用户的Key、音色和模型资源另按[配音配置](doubao-voice.md)引导 |
+references/setup.md,13,tool,ffprobe,| asr | 最终配音转录 | Python、Node.js LTS及npm、Coli、FFmpeg与ffprobe |
+references/setup.md,14,tool,ffprobe,| draft | 已有素材生成剪映草稿 | Python、pyJianYingDraft==0.3.1、Pillow、NumPy、原生libmediainfo、FFmpeg与ffprobe、草稿目录 |
+references/setup.md,44,tool,ffprobe,3. Windows缺FFmpeg/ffprobe时使用FFmpeg官网列出的Gyan essentials构建，核验发布方SHA-256。媒体Python包安装到专用venv，已兼容的解释器可直接复用，不全局pip安装。原库会带入pymediainfo、imageio等运行依赖，实际检查MediaInfo.can_parse()。
+references/setup.md,48,tool,ffprobe,7. 完成后重跑同一原生入口check及setup_dependencies.py check。检查Python库版本、模块来源、API、libmediainfo、FFmpeg/ffprobe、Coli位置及所需应用。asr实际执行前核验Coli能运行；首次转录可下载模型，初始化不下载模型、不上传音频，不调用火山字幕API。
+references/setup.md,14,tool,mediainfo,| draft | 已有素材生成剪映草稿 | Python、pyJianYingDraft==0.3.1、Pillow、NumPy、原生libmediainfo、FFmpeg与ffprobe、草稿目录 |
+references/setup.md,44,tool,mediainfo,3. Windows缺FFmpeg/ffprobe时使用FFmpeg官网列出的Gyan essentials构建，核验发布方SHA-256。媒体Python包安装到专用venv，已兼容的解释器可直接复用，不全局pip安装。原库会带入pymediainfo、imageio等运行依赖，实际检查MediaInfo.can_parse()。
+references/setup.md,45,tool,mediainfo,4. macOS复用Homebrew安装ffmpeg、libmediainfo；Debian/Ubuntu复用apt安装ffmpeg、libmediainfo0v5。没有包管理器或其他系统时由Agent选择官方安装方式并继续配置。系统权限不足时按宿主提供的授权流程申请；不要求用户自行运行sudo或安装命令。无法获得授权则保留已完成部分并准确说明阻塞，不宣称全部就绪。
+references/setup.md,48,tool,mediainfo,7. 完成后重跑同一原生入口check及setup_dependencies.py check。检查Python库版本、模块来源、API、libmediainfo、FFmpeg/ffprobe、Coli位置及所需应用。asr实际执行前核验Coli能运行；首次转录可下载模型，初始化不下载模型、不上传音频，不调用火山字幕API。
+references/setup.md,13,asr,Coli,| asr | 最终配音转录 | Python、Node.js LTS及npm、Coli、FFmpeg与ffprobe |
+references/setup.md,43,asr,Coli,2. asr需要Node.js20+及npm；缺失时从Node.js官方下载LTS便携版本，核验官方SHA-256，再安装到专用目录。Coli固定@marswave/coli@0.0.20，使用专用npm前缀。仅对当前子进程设置工具PATH。
+references/setup.md,48,asr,Coli,7. 完成后重跑同一原生入口check及setup_dependencies.py check。检查Python库版本、模块来源、API、libmediainfo、FFmpeg/ffprobe、Coli位置及所需应用。asr实际执行前核验Coli能运行；首次转录可下载模型，初始化不下载模型、不上传音频，不调用火山字幕API。
+references/setup.md,54,asr,Coli,专用Python、venv、Node、FFmpeg、Coli、缓存和runtime.json保存在技能目录之外的用户数据目录story-studio中。Windows基于LOCALAPPDATA，其他系统基于XDG_DATA_HOME或用户数据目录约定。runtime.json仅记录python、coli_bin、drafts_root、tool_dirs；STORY_STUDIO_CONFIG可改配置位置，但禁止写进技能源码。
+references/setup.md,56,asr,Coli,JY_PROJECTS_ROOT、COLI_BIN可覆盖对应工具与目录。导出、渲染和交接检查入口自动启动配置的Python并设置当前进程工具PATH；不修改用户或系统全局环境变量，不修改其他技能源码。
+references/setup.md,62,asr,Coli,来源：[uv管理Python](https://docs.astral.sh/uv/guides/install-python/)、[Node.js](https://nodejs.org/en/download)、[FFmpeg](https://ffmpeg.org/download.html)、[Gyan构建](https://www.gyan.dev/ffmpeg/builds/)、[WinGet清单](https://github.com/microsoft/winget-pkgs/t
+references/setup.md,12,tts,Doubao,| tts | 豆包MP3配音 | Python、websockets==15.0.1、FFmpeg/ffprobe；用户的Key、音色和模型资源另按[配音配置](doubao-voice.md)引导 |
+references/setup.md,60,tts,Doubao,tts依赖就绪也不代表豆包Key、额度和音色已可用；继续执行[语音配置引导](doubao-voice.md)，不能把安装成功当作一次收费API验证已通过。
+modules/history-image/GUIDE.md,9,asr,Coli,必须执行 [先音频后分镜](references/audio-first-storyboard.md)：确定指定 N 张或自动拆分方式 → 本机 Coli 转录最终配音并输出 SRT → 核对全文与时间 → 定稿带时间、原文和明确画面内容的分镜表 → 按表生图并核验 → 按同一表剪辑。三种画风共用此顺序。没有音频时仅准备待对齐草稿；明确的独立插图、封面或纯文本分镜请求按文档中的例外执行。
+modules/history-image/GUIDE.md,34,asr,Coli,| “根据文稿拆分分镜”“在这个文件夹生成分镜表”“拆镜后交给别的 AI 生图” | storyboard | 口播项目先 Coli 转录并核验，再按全文与实际时间拆镜、写出分镜表和独立完整提示词；无音频只写草稿，明确纯文本请求除外；不调用生图工具 |
+modules/history-image/GUIDE.md,38,asr,Coli,“分镜表中包含生图提示词”“后续交给别的 AI 生成图片”都不等于要求当前助手生图；generate 必须是要求当前助手实际出图。只给全文而没有拆镜或具体画面意图时，先分析时代，再澄清当前需要哪类产物。要求从全文直接配图且没有镜头划分时，先建立拆镜结果作为图片输入；只有本次已明确要求生成的图片才进入 generate。组合请求也按阶段区分文本产物与实际图片状态；为口播配图执行本机 Coli 转录是前置工作，不生成配音，不调用云字幕 API，不自动进入视频渲染。
+modules/render-history-video/GUIDE.md,9,python,pyJianYingDraft,用户只需调用 `story-studio` 并开启剪映草稿。草稿导出由 `scripts/export_jianying.py` 直接调用pyJianYingDraft，说明见 [references/jianying.md](references/jianying.md)。
+modules/render-history-video/GUIDE.md,37,python,pyJianYingDraft,依赖Python3.10+、`pyJianYingDraft==0.3.1`、Pillow、NumPy与ffmpeg/ffprobe；原库还需要可用的libmediainfo。无SRT时需Coli。按 [初始化流程](../../references/setup.md) 配置，运行环境保存在技能目录之外。Coli在本地转录，不调用火山或其他云端字幕服务。
+modules/render-history-video/GUIDE.md,37,python,Pillow,依赖Python3.10+、`pyJianYingDraft==0.3.1`、Pillow、NumPy与ffmpeg/ffprobe；原库还需要可用的libmediainfo。无SRT时需Coli。按 [初始化流程](../../references/setup.md) 配置，运行环境保存在技能目录之外。Coli在本地转录，不调用火山或其他云端字幕服务。
+modules/render-history-video/GUIDE.md,37,python,numpy,依赖Python3.10+、`pyJianYingDraft==0.3.1`、Pillow、NumPy与ffmpeg/ffprobe；原库还需要可用的libmediainfo。无SRT时需Coli。按 [初始化流程](../../references/setup.md) 配置，运行环境保存在技能目录之外。Coli在本地转录，不调用火山或其他云端字幕服务。
+modules/render-history-video/GUIDE.md,37,tool,ffmpeg,依赖Python3.10+、`pyJianYingDraft==0.3.1`、Pillow、NumPy与ffmpeg/ffprobe；原库还需要可用的libmediainfo。无SRT时需Coli。按 [初始化流程](../../references/setup.md) 配置，运行环境保存在技能目录之外。Coli在本地转录，不调用火山或其他云端字幕服务。
+modules/render-history-video/GUIDE.md,54,tool,ffmpeg,### 可选：本地 ffmpeg 成片
+modules/render-history-video/GUIDE.md,70,tool,ffmpeg,- 分镜并行只用于本地 ffmpeg；剪映草稿单进程写入即可。
+modules/render-history-video/GUIDE.md,26,tool,ffprobe,- 有参考视频时用 ffprobe 读取画幅、帧率，并抽取同镜头内不同时间的画面对比运镜幅度。保留原图片风格；参考里的字幕、粒子、配乐不自动复制。
+modules/render-history-video/GUIDE.md,37,tool,ffprobe,依赖Python3.10+、`pyJianYingDraft==0.3.1`、Pillow、NumPy与ffmpeg/ffprobe；原库还需要可用的libmediainfo。无SRT时需Coli。按 [初始化流程](../../references/setup.md) 配置，运行环境保存在技能目录之外。Coli在本地转录，不调用火山或其他云端字幕服务。
+modules/render-history-video/GUIDE.md,37,tool,mediainfo,依赖Python3.10+、`pyJianYingDraft==0.3.1`、Pillow、NumPy与ffmpeg/ffprobe；原库还需要可用的libmediainfo。无SRT时需Coli。按 [初始化流程](../../references/setup.md) 配置，运行环境保存在技能目录之外。Coli在本地转录，不调用火山或其他云端字幕服务。
+modules/render-history-video/GUIDE.md,16,asr,Coli,新项目由内置配图模块按 [先音频后分镜](../history-image/references/audio-first-storyboard.md) 完成 Coli 转录 → SRT 核验 → 带时间与原文的分镜表 → 按表生图。渲染直接复用该表 start/end、时间依据与实际图片映射，不重新均分时间、不以模糊匹配覆盖已核验切点。配音或文稿变更先回到音文核验。
+modules/render-history-video/GUIDE.md,28,asr,Coli,"- **旧项目有配音但没有 SRT 时，先独立转录再核对现有分镜。** 使用 `py -3.11 ""<story-studio目录>/modules/history-image/scripts/transcribe_with_coli.py"" --audio ""<配音>"" --out-dir ""<新转录版本目录>""`，无需分镜表即可产出原始 SRT 和时间戳。原有 `py -3.11 ""<story-studio目录>/modules/render-history-video/scripts/a"
+modules/render-history-video/GUIDE.md,29,asr,Coli,- 优先使用上游已核验分镜表的显示 `start/end` 生成 `plan.json`。旧项目需要补做边界核验时，才使用 `alignment.json` 的显示 `start/end`；两条路径都保留真实发声 `audio_start` 与边界证据并完成语义复核。若 Coli 不存在、转录失败或没有可用时间戳，必须报告阻塞并停止精确渲染，不能静默退回字符比例估算。不要调用火山字幕 API，也不要配置或恢复 `VOLCENGINE_SUBTITLE_APP_ID`、`VOLCENGINE_SU
+modules/render-history-video/GUIDE.md,37,asr,Coli,依赖Python3.10+、`pyJianYingDraft==0.3.1`、Pillow、NumPy与ffmpeg/ffprobe；原库还需要可用的libmediainfo。无SRT时需Coli。按 [初始化流程](../../references/setup.md) 配置，运行环境保存在技能目录之外。Coli在本地转录，不调用火山或其他云端字幕服务。
+modules/render-history-video/scripts/render.py,1,python,Pillow,"""""""Render a reviewed image timeline. Python 3.10+, Pillow, NumPy, ffmpeg."""""""
+modules/render-history-video/scripts/render.py,1,python,numpy,"""""""Render a reviewed image timeline. Python 3.10+, Pillow, NumPy, ffmpeg."""""""
+modules/render-history-video/scripts/render.py,18,python,numpy,import numpy as np
+modules/render-history-video/scripts/render.py,1,tool,ffmpeg,"""""""Render a reviewed image timeline. Python 3.10+, Pillow, NumPy, ffmpeg."""""""
+modules/render-history-video/scripts/render.py,107,tool,ffmpeg,"cmd = ['ffmpeg', '-v', 'error', '-y', '-i', shot['video'], '-an',"
+modules/render-history-video/scripts/render.py,117,tool,ffmpeg,"raise RuntimeError(f'{shot[""id""]}: ffmpeg failed; inspect log')"
+modules/render-history-video/scripts/render.py,132,tool,ffmpeg,"cmd = ['ffmpeg', '-v', 'error', '-y', '-f', 'rawvideo', '-pixel_format', 'rgb24',"
+modules/render-history-video/scripts/render.py,145,tool,ffmpeg,"raise RuntimeError(f'{shot[""id""]}: ffmpeg failed; inspect log')"
+modules/render-history-video/scripts/render.py,159,tool,ffmpeg,"data = run(['ffmpeg', '-v', 'error', '-i', str(path), '-vf', vf, '-frames:v', '1',"
+modules/render-history-video/scripts/render.py,173,tool,ffmpeg,"run(['ffmpeg', '-v', 'error', '-i', str(out/'final.mp4'), '-f', 'null', '-'])"
+modules/render-history-video/scripts/render.py,187,tool,ffmpeg,"raw = run(['ffmpeg', '-v', 'error', '-i', str(path), '-vf', vf,"
+modules/render-history-video/scripts/render.py,236,tool,ffmpeg,"cmd = ['ffmpeg', '-v', 'error', '-y', '-f', 'concat', '-safe', '1', '-i', str(out/'concat.txt')]"
+modules/render-history-video/scripts/render.py,29,tool,ffprobe,"return json.loads(run(['ffprobe', '-v', 'error', '-show_format', '-show_streams',"
+modules/render-history-video/scripts/export_jianying.py,1,python,pyJianYingDraft,"""""""Create a self-contained Jianying draft with upstream pyJianYingDraft."""""""
+modules/render-history-video/scripts/export_jianying.py,24,python,pyJianYingDraft,import pyJianYingDraft as draft
+modules/render-history-video/scripts/export_jianying.py,264,python,pyJianYingDraft,"""backend"": ""pyJianYingDraft"","
+modules/render-history-video/scripts/export_jianying.py,265,python,pyJianYingDraft,"""backend_version"": importlib.metadata.version(""pyJianYingDraft""),"
+modules/render-history-video/scripts/align_with_coli.py,1,asr,Coli,"""""""Run local Coli ASR and align storyboard boundaries to token timestamps."""""""
+modules/render-history-video/scripts/align_with_coli.py,101,asr,Coli,"""alignment_source"": ""coli-token-timestamps-full-text"","
+modules/render-history-video/scripts/align_with_coli.py,111,asr,Coli,"ap.add_argument(""--asr-json"", help=""Reuse a previously saved Coli JSON result"")"
+modules/render-history-video/scripts/align_with_coli.py,120,asr,Coli,"if any((out / name).exists() for name in (""alignment.json"", ""coli_aligned.srt"", ""alignment_review.json"")):"
+modules/render-history-video/scripts/align_with_coli.py,125,asr,Coli,"coli = find_executable(""coli"")"
+modules/render-history-video/scripts/align_with_coli.py,126,asr,Coli,if not coli:
+modules/render-history-video/scripts/align_with_coli.py,127,asr,Coli,"raise SystemExit(""Local Coli CLI not found on PATH; install/enable coli before rendering without SRT."")"
+modules/render-history-video/scripts/align_with_coli.py,128,asr,Coli,"cmd = [coli, ""asr"", ""-j"", ""--model"", args.model, ""--language"", args.language, str(audio)]"
+modules/render-history-video/scripts/align_with_coli.py,131,asr,Coli,"raise SystemExit(f""Coli ASR failed ({proc.returncode}): {proc.stderr.strip()}"")"
+modules/render-history-video/scripts/align_with_coli.py,135,asr,Coli,"raise SystemExit(f""Coli ASR did not return JSON: {exc}"") from exc"
+modules/render-history-video/scripts/align_with_coli.py,136,asr,Coli,"(out / ""coli_asr.json"").write_text(json.dumps(asr, ensure_ascii=False, indent=2), encoding=""utf-8"")"
+modules/render-history-video/scripts/align_with_coli.py,145,asr,Coli,"""duration"": duration, ""source"": ""local-coli"", ""semantic_review_status"": ""pending"", ""shots"": aligned}, ensure_ascii=False, indent=2), encoding=""utf-8"")"
+modules/render-history-video/scripts/align_with_coli.py,156,asr,Coli,"(out / ""coli_aligned.srt"").write_text(""\n"".join(srt), encoding=""utf-8"")"
+modules/render-history-video/scripts/align_with_coli.py,157,asr,Coli,"print(json.dumps({""source"": ""local-coli"", ""shots"": len(aligned), ""duration"": duration,"
+modules/render-history-video/scripts/align_with_coli.py,158,asr,Coli,"""alignment"": str(out / ""alignment.json""), ""srt"": str(out / ""coli_aligned.srt"")}, ensure_ascii=False))"
+modules/render-history-video/scripts/test_export_jianying.py,11,python,pyJianYingDraft,"if importlib.util.find_spec(""pyJianYingDraft"") is None:"
+modules/render-history-video/scripts/test_alignment.py,3,asr,Coli,"from align_with_coli import align_storyboard, norm"
+modules/render-history-video/references/jianying.md,3,python,pyJianYingDraft,导出脚本直接调用上游Python库 `pyJianYingDraft==0.3.1`，无需外部草稿技能。
+modules/render-history-video/references/jianying.md,35,python,pyJianYingDraft,出错时检查库版本、系统libmediainfo、素材解析和目录权限；不要自动更换实现或修改其他技能。参考 [上游文档](https://github.com/GuanYixuan/pyJianYingDraft)。
+modules/render-history-video/references/jianying.md,7,tool,ffmpeg,先按 [依赖初始化](../../../references/setup.md) 检查Python库、libmediainfo及ffmpeg/ffprobe。运行环境与本地配置在技能目录之外。
+modules/render-history-video/references/jianying.md,7,tool,ffprobe,先按 [依赖初始化](../../../references/setup.md) 检查Python库、libmediainfo及ffmpeg/ffprobe。运行环境与本地配置在技能目录之外。
+modules/render-history-video/references/jianying.md,7,tool,mediainfo,先按 [依赖初始化](../../../references/setup.md) 检查Python库、libmediainfo及ffmpeg/ffprobe。运行环境与本地配置在技能目录之外。
+modules/render-history-video/references/jianying.md,35,tool,mediainfo,出错时检查库版本、系统libmediainfo、素材解析和目录权限；不要自动更换实现或修改其他技能。参考 [上游文档](https://github.com/GuanYixuan/pyJianYingDraft)。
+modules/render-history-video/references/pacing-review.md,3,asr,Coli,全部画风执行相同时间规则。先根据真实音频与已核验 SRT/Coli 对齐建立 start/end，再检查节奏，不把全片等分当作对齐。无音频但已有可靠 SRT 可制作静音草稿并说明依据；两者均无则只做待对齐计划，不能运行无输入的转录或声称精确对齐。
+modules/render-history-video/references/plan.md,30,python,pyJianYingDraft,- 默认把同一份 plan 写成剪映草稿，不生成 final.mp4。草稿由内置脚本直接使用pyJianYingDraft生成。
+modules/render-history-video/references/semantic-alignment.md,12,asr,Coli,- Coli 自动路径使用全文顺序匹配和切点两侧上下文，完整 token 时间戳才可使用；不跳过句首、不按字数插值、不将缺失时间当 0。数字写法或人名转录不同会进入 review_required：可核听局部音频，或对照已核验 SRT，建立有记录的纠错/手工对齐版本后重跑；不改配音和原稿迁就 ASR。记录原始转录、纠错文本、时间证据及理由，不能仅为让脚本通过而改字。
+modules/characterstory-writing/corpus/红颜旧事志/1938年最黑暗的会场上，一个隔着几千里的南洋商人发来十一个字，封死了'和谈'两字。他给国家的，比任何人都多：钱、人、还_e16b1cb756ee_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/上海滩最红的锦江饭店，她16年挣下的家业，价值15万美元。1951年她全捐给国家，只给自己留了一幅字和一套笔。这是董竹君_b51aed168259_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/9岁差点被卖做童养媳，皮鞭下学戏成豫剧一代宗师。抗美援朝她卖车摘戒指，带着59人义演180场，一分一分攒出一架战斗机。#_0d84cd6a428a_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/守寡54年。13个孩子全成博士。活到106岁，跨越三个世纪。她叫王淑珍，李昌钰的妈妈。用一双裹过又放开的小脚，踏遍了近代_35478710218f_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/全团禁止恋爱，她偏偏当面表白追到手。旧旗袍当婚纱，一走就是六十五年。他先走了，她对着照片再没人可说。#人物故事 #谢芳_7c9983332af5_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/她是共产党员，奉命色诱国民党中将。十二年地下夫妻，一同策反上海守军。解放前8天，她挺着六个月身孕和他一起走向刑场，喊出了_02ec79b377a2_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/暴雨夜，70岁老太太想躲雨被米其林经理赶出门。一周后宾利停在餐厅门口，下来的老太太让所有人震惊跪地。#人物故事 #温暖故_7dd5aa2d2c9c_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/印尼首富千金嫁民国第一外交官，花36年拿金山银山把丈夫推上神坛，结果63岁被踢开。100岁独自走了，身边没有一个亲人。#_028b0aad4364_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/15岁德国公主远嫁俄国，丈夫冷眼、婆婆监视、满宫孤立。别人熬日子等死，她把18年活成了一场苦学——赤脚背俄语、病床改信仰_d490146b8adc_project.md,24,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/澳门第一美人何婉琪，拿两百万帮亲哥何鸿燊打下赌业帝国，满城敬她三分。可她心里藏着天大秘密——儿子的身世，成了后来哥哥手里_d926038edeca_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/她在炮火中不下台，在延安窑洞里演戏，拿了百花奖把奖杯锁进柜子。临终前把所有钱捐给国家，存折只剩2000块。墓碑上只有五个_f872ee38442d_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/她是张爱玲的姑姑张茂渊。1925年在远渡英国的船上爱上李开第，回国后等来的是别人的结婚请帖。她说：今生等不到，我等来生。_45d7efae66e9_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/丈夫牺牲，她接回他与江竹筠的儿子。为躲追捕，她必须做出选择——把亲生儿子送进孤儿院，用一个母亲的狠心，守住另一个母亲托付_687c42e6f1b4_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/日本心理医生中村恒子，干了70年，91岁还在出诊。她写的《人间值得》劝人别太努力，这话从别人嘴里是鸡汤，从她嘴里是医嘱。_503bcab6b3f1_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/1983年，82岁的她在弥留之际突然喊出「产钳」——她梦里还在接生。5岁失去母亲，她用一辈子当了五万个孩子的妈妈。她亲手_ddee1ed93b0f_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/丈夫牺牲、托孤的母亲也走了，谭正伦一个人守着两个孩子和那句千斤重的承诺。她拒绝安稳工作只为离孩子近点，把哥俩都培养成国家_f66848286603_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/赵丹遗孀、上海影星，本可安享晚年。70岁她带着糖尿病三进藏，昏迷两天两夜皮肤发蓝，醒来笑说：去阎王殿转了一圈。#人物故事_e91200a4ce1f_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/永安百货创办人之女，生于悉尼长于上海，从豪门千金到一贫如洗。穿旗袍刷马桶，煤球炉上烤蛋糕——三十年苦难，没磨掉她一分优雅_bb21933a5d7f_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/十姑娘何婉琪拿200万帮哥哥撑起百亿家业，却因儿子身世被拿捏几十年。60多岁那年，她做了件震动港澳的事——亲手公开守了一_430f9bc31e23_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/上海滩88小姐严幼韵，丈夫杨光泩拒降殉国，她一夜从名门贵妇变成异乡寡妇。带着三个女儿和几十个孤儿寡母，开荒种菜养猪，硬是_48c98a072aa3_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/从大小姐到翻译教师，她60多岁凭本事挣饭钱，80多岁依然妆容整洁待客有礼。89岁安然离世，遗体捐给医学事业。上海滩最后的_1694cb930b48_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/15岁德国公主远嫁俄国，丈夫冷眼、婆婆监视、满宫孤立。别人熬日子等死，她把18年活成了一场苦学——赤脚背俄语、病床改信仰_53f8cde83c0c_project.md,24,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/丧夫、逃难、异乡重来，她嫁给亡夫故交顾维钧，活到112岁。不运动爱红烧肉，百岁还踩高跟鞋打麻将，她的长寿秘诀只有四个字—_d1c468a191b4_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/22岁的保姆，工钱一分没拿到，却把雇主丢下的两个弃婴养大送进了大学。她不是亲妈，却做了亲妈都未必能做到的事。#人物故事 _a7491bafeabd_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/京剧史上唯一的冬皇，女扮男装唱遍天下，三次谢幕后永别舞台，一把嗓子撑起整个时代的敬畏。#人物故事 #孟小冬_96562f21b3a5_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/24岁横扫四大奖的中国影后，在最红的1985年放下一切赴美留学，给白人家庭擦桌带孩子。她用十年换来柏林银熊，却也失去了婚_12e352b30014_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/华表奖影后谢兰，生在无声家庭，父母聋哑一生未听过她的台词与掌声。丈夫婚后专门学手语，只为用岳父母的语言跟他们说话。最响亮_e6cf35f44edf_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/新中国第一位女指挥家，三次患癌三次复出，68岁化疗出院一个月就出国指挥，97岁还在给学生上课。她说最浪漫的事，是倒在指挥_8789e3ed35e4_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/因为脚没缠过，没人敢娶她。她自己提着嫁妆走进宋家门，去首富家当教师赚第一桶金，把六个孩子全送出国留学。六个孩子六条路，条_6ccd1c001059_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/从十指不沾阳春水的永安四小姐，到蹲在公厕刷马桶的清洁工。她用一身旧旗袍、一口煤球炉，把最苦的日子活成了体面。十年还清巨债_b97de8f5eb2d_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/她是银幕上的喜儿，也是银幕下的喜儿。一家四口患癌，八十多岁婚礼站台挣钱，拒掉两百万代言，却笑着说自己是幸运儿。#人物故事_676f80f78dcd_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/五十多岁还在剧组管道具，一句顺口溜让导演当场拍板。87版刘姥姥沙玉华，熬了三十年无名岁月，用一个角色让全中国记了她四十年_5a7ded30213a_project.md,25,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/28岁名刻航空史，却被美国软禁五年。他把一封信藏进香烟纸，只为回到那片土地。回来后二十年，他用导弹和卫星，给出了答案。#_74c180e11eca_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/徐志摩骂她乡下土包子，逼她打胎，把她一个人扔在欧洲。她在柏林独自生子、签下中国第一桩西式离婚书。几年后，她成了上海滩的女_9a27278581e8_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/他是「中国百校之父」，把总资产80%捐给教育。卖掉住了37年的亿元豪宅，年近八十租房度日，只为兑现16岁那个誓言：不让任_6929119c8a1d_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/民国歌后周璇3岁被拐卖，一辈子不知道自己是谁的孩子。34年后亲生母亲找到她时，她躺在精神病院的床上，已经认不出眼前的人。_c31e4bd5e3c5_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/上海滩最后一位名媛，105岁穿旗袍跳华尔兹，112岁离世。丈夫被日军杀害，她在战火里撑起40多口人，把苦难活成了传奇。#_f32c04ee1e81_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/远东最美丽的珍珠，用娘家陪嫁撑起中国使馆体面。可婚姻里一个要排面一个要俭朴，36年热脸贴冷心，最后只带几件衣服走出官邸。_9a04a068fbd6_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/100年前的520，没有红包，没有截图。他是耶鲁高材生，娶了大字不识的村姑，一生没说过我爱你，却为她造了一只铁皮饭盒。#_61e9fdd9d0ea_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/南洋糖王之女黄蕙兰，三岁戴80克拉钻石，27岁嫁给顾维钧。求婚没有一个'爱'字，她却嫁了。这一嫁36年，她替三个人买过单_a00ea79e936f_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/31岁的母亲在刑场写下一封信，却二十年后才被儿子读到。她叫赵一曼，离胜利还有九年，她没能等到。那封信，只写了一件事：妈妈_389c2c8be13d_project.md,29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/母亲高位截瘫一字不识，摇轮椅挨家挨户借来3万救命钱。她只会说一句话：书是给你自己念的。儿子考上清华读到博士，拒绝国外20_b502f2be0ab0_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/她17岁守寡，红遍上海滩，是万众追捧的甜姐儿。可快60岁，为采访高原科学家，她出发前悄悄写下三封遗书，跟着上了青藏高原无_fb22936d6ede_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/24岁放弃歌唱家前途主动参军，失去一条腿登上春晚感动全中国，却被一篇假报道毁掉名誉。他打赢了官司，却输给了沉默。这个名字_3a575015b4f6_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/民国外交官夫人黄蕙兰，36年婚姻平静收场。66岁离婚独居纽约37年，自己买菜坐地铁，衣服熨得笔挺。墙上挂满的，却是他们年_da4b55198c97_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/张作霖新婚夜问姨太太要什么，十八岁穷丫头不要金银不要绸缎，只说了三个字：我想读书。她自己没念成书，却把四个孩子托举到联合_62507e14a36b_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/4岁被通缉，8岁进监狱，9岁爬行15公里讨饭。40年后，他给中国造了第一艘核潜艇。我命是捡来的——他记了一辈子。#人物故_72d3cdc2f315_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/29岁那年，董竹君做了个石破天惊的决定：副都督夫人不当了，家产一分不要，只带四个女儿走。从亭子间到锦江饭店，她用十年证明_db3b5a4de506_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/济南银行家千金辛树荷，十五岁义卖画作捐前线。改名辛锐投身八路军，刻报头、演话剧。怀孕五月遭铁壁合围，丈夫牺牲同日身负重伤_e507e2a6deaf_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/13岁被抵押入青楼，月夜翻墙出逃。嫁入豪门却被丈夫拿枪逼迫，净身出户带四女创办锦江饭店，最后无偿捐给国家。97岁留下遗言_d20742d62ef3_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/15岁青楼逃出不要赎身，29岁离开副都督府不要家产，51岁捐掉15万美元饭店。董竹君的三次'不要'，写就了一个世纪的传奇_48a99b61bc7d_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/被鲁迅盛赞的民国女作家白薇，16岁脚筋被断雪地爬行，从粪坑中爬向自由，35岁穿白婚纱被全上海看笑话，94岁孤独离世，一辈_35a63fafa2c4_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/大清首富胡雪岩，家业散尽时分掉了所有金银地契，唯独一罐黑膏攥到临终不撒手。那是渔家女罗四姐为他熬的——里头装着这个算计了_0ce41e745b18_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/宋家三姐妹能搅动整个中国，丈夫宋子文一度被称为世界首富。可她嫁进去后，花一辈子只做一件事——把三个女儿都养成了普通人。#_3725d23213d7_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/1919年，一位54岁的小脚老太太登上了去法国的轮船。她苦学法语成优等生，靠刺绣接济留学生，走在请愿队伍最前面。她养出的_7a43dd66ea44_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/四川地主千金入党参军，化名赵一曼持双枪抗日。被俘九月酷刑不屈，临刑火车上给七岁儿子留绝笔信，儿子二十年后才知母亲是谁。#_dfb45c0b535a_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/永安百货四小姐，从云端跌进泥里，住过七平米小屋，刷过马桶卖过咸鸭蛋。她穿旗袍刷完厕所转身买蛋糕，用煤球炉把日子过出讲究。_4c8ac30b142d_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/河南95岁老太太，四个儿子轮流抢着接她回家，小儿子提前一个月偷偷接人被当场拦下。四个儿媳从无怨言，秘密藏在老太太七十年前_07ad034f637d_project.md,24,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/12岁剪断裹脚布，31岁自费办婚礼，留学行医开餐馆……她叫杨步伟，赵元任的妻子，但她这辈子，从来不靠任何人的名字活着。#_4869bd6a3a47_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/三家电影厂轮番抢她，红裙子风靡全国，她却在最红时嫁普通人、去读书、回家生孩子。四十年零绯闻，68岁还在演戏，这才是真正的_3b75f66292b2_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/丈夫36岁就义，她在莫斯科哭了很久，却把余生全变成了工作。从中央委员到铁窗囚徒，她从未以遗孀自居，只是默默把他没走完的路_22e2f76400b6_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/18岁参军，红遍全国，却在最好的年纪被迫下放林场抡了六年镐头。中年丧子，暮年丧夫，她把眼泪咽下去，把军装穿回来，最终扛起_e4e88ca46dce_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/上海滩最传奇的88小姐严幼韵，开敞篷车上大学，嫁青年外交官，活到112岁还踩高跟鞋涂口红。她说：我，从不回头。_#人物故_83e74c5cd92f_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/红颜旧事志/15岁德国公主远嫁俄国，丈夫冷眼、婆婆监视、满宫孤立。别人熬日子等死，她把18年活成了一场苦学——赤脚背俄语、病床改信仰_248e8b96ca97_project.md,24,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/你敢为我收尸，我敢为你赴死。秋瑾就义后娘家婆家都不敢收尸，只有她一介弱女子敢冒杀头风险，将秋瑾遗骨迁葬西湖岳飞墓附近，了_8a533c5d73ff_project.md,25,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/蒋介石四个女人中，她没名分没合影，死后连讣告都没登。却把蒋纬国养大，让这位蒋家二少爷喊了一辈子'姆妈'。_#人物故事 #_74b1d3864353_project.md,27,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/他们同乡同庚，同赴日本留学，却走上了不同的革命道路。他们一男一女，一文一刀，殊途同归，把那个吃人时代的真相，刻进了绍兴人_4bd64ce9207f_project.md,24,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/张作霖大女儿张首芳，为护弟弟敢把菜刀架在亲爹脖子上。帅府千金沦为缝补妇，却典当母亲金簪，为被囚弟弟寄去《明史》，至死未能_19bf879ca458_project.md,27,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/少帅夫人于凤至陪囚四年，患癌赴美后闯成华尔街股神，拼命赚钱只为给丈夫留个家。可等来的却是一纸离婚书，她买好双穴墓，到死没_2690dd76c760_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/蒋介石曾孙女蒋友梅一心逃出蒋家光环，可两蒋日记被三婶送出，她一封律师函寄回台北，开庭审理，只为守住九位继承人共同遗产。__8bcaed5ed6c1_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/他本可享受烈属待遇，却选择一生清贫。在母亲牺牲46周年的忌月，他选择自缢。陈掖贤用生命告诉我们：有些光环太重，重到让人无_5d30ba90c3a0_project.md,25,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/日军档案里，她是“精神异常”的疯子。可就是这个蓬头垢面的女囚，仅凭一张塞进丈夫裤腰的布条，就借鬼子的枪，崩了叛徒丈夫的脑_560b4726513c_project.md,26,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/日本贵族千金为郭沫若叛出家门，等来不告而别和十一年铁窗。她独自养大五个孩子，百岁临终捐出全部积蓄，只留一句我是中国人。__2804145b5961_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/文坛巨匠背后，是一对姐妹的宿命悲剧。姐姐25岁为他自缢，妹妹相守40年，却在整理遗物时发现，自己半生的婚姻从头到尾都是谎_a43271d55563_project.md,27,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/22岁两度守寡遁入空门，被骂克星扫把星。她偏卖尽首饰供'无赖小儿'读书留日，这个儿子后来叫蒋介石。命运踩她入泥，她托起参_432dfbb0e56d_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/被骂百年贪财势利的宋霭龄，才是四大家族幕后掌门。她三步棋缔造宋家王朝，又提前套现赴美，连宋庆龄都说她若为男，天下早改姓。_42f3a51317c0_project.md,27,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/这是一本不绕弯子的回忆录，作者把自己亲历的岁月摊开写，不粉饰也不哭惨。书里收录了两百多幅老照片，很多细节被完整保留。适合_5123b4e8922b_project.md,27,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/孔二小姐一生穿男装，敢当街开枪、赶高官下飞机，连西北王都不敢娶她。可96岁的宋美龄却专程飞回台湾送她最后一程。_#人物故_70cabdac0a67_project.md,27,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/张作霖被炸身亡，五姨太张寿懿浓妆开香槟骗过日本人，17天秘不发丧，为张学良抢出接盘缓冲，一杯香槟拖住整个关东军。_#人物_5c7745f17708_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/蒋经国的秘密恋人章亚若，29岁生下双胞胎后突遭毒针离奇暴亡。儿子蒋孝严追查60年，终于敢把母亲死亡的真相说出口。_#人物_7b59122e8ba0_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/九一八之夜全城撤退，他撕碎不抵抗电文，带两千警察硬刚关东军重炮。十二载牢狱不曾低头，倒在黎明前，却把火种埋进了国歌里。__772e90d9f171_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/她是张学良独女，张作霖捧在手心的千金，却拒了孔家三箱珠宝，嫁给一介穷书生。家族崩散后她读完博士，苦等27年再见父亲一面。_9d84caa52429_project.md,29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/她是蒋经国隐秘情人，拼死生下双胞胎，孩子被赐名归入蒋家，她却到死都是外姓人。29岁晚宴后一针夺命，死因成谜无人敢查。_#_1fec74031518_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/1927年蒋介石带宋美龄回溪口，原配毛福梅见到新欢竟松了口气。她让出丈夫，却没让出命运，57岁死于日军轰炸。_#人物故事_41bcae349f99_project.md,27,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/她替谢晋元，接回了八百壮士最后的孤军老兵。陈毅市长签发指令，把一栋别墅拨给她和那批老兵居住。这不仅是市长的照顾，更是一座_d3402bef7c67_project.md,25,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/她19岁嫁入蒋家，苦守半生只换离婚不离家。57岁死于轰炸，墓碑不见蒋字，原配被改义姐。旧时代女子命运残酷到窒息。_#人物_de2f8aaf7072_project.md,27,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/宋美龄非英雄不嫁，却嫁给了蒋介石和整个时代。西安事变她带枪登机救夫，活到106岁，从没把自己活成别人的注脚。这女人太传奇_459ff63864be_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/17岁被宋美龄笑称圆小姐，她嫁入蒋家；三个男丁相继凋零，她却独自扛了30年。不争虚名不改嫁，替亡夫年年返乡祭祖。_#人物_34da3e4aa130_project.md,27,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/29岁被丈夫出卖入狱，从文坛巨星沦为阶下囚。她用50年等来一纸平反，80岁说出六个字：「现在我可以死了」。_#人物故事 _2ea0b6ff5963_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/豪门千金赵一荻，甘愿无名无分，陪张学良被囚54年。她临终那句'我最放不下的就是你'，让百岁的他失声痛哭。_#人物故事 #_9a70fb83175e_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/她拎木箱嫁穷牧师，米缸空时却说保你富贵。做伴读女佣攒人脉，助夫成上海滩大老板，六个孩子全进时代中心，三个女儿嫁孔孙蒋。__d1848e7a12f4_project.md,29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/宋家三姐妹名满天下，却少有人记得宋子文身后那个不哭不闹的女人。她变卖嫁妆送往前线，用44年撑起一个家，温柔里全是铠甲。__69aaf3391067_project.md,27,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/孔令仪三拒豪门婚约，28岁赴美下嫁平民。被伤透后果断离婚，重新活过后收敛自持活到93岁。宋美龄的最后一程，是她陪伴守护的_3e6a1e7e12e3_project.md,29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/她是郭沫若的原配，新婚五天丈夫远走，她独守乐山老宅六十八年。一纸婚书困住一生，无爱无宠无后，却从未被正眼看过。_#人物故_259d92537c3f_project.md,27,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/她是西伯利亚工厂女工，19岁嫁给蒋经国，却活成蒋家最沉默的影子。丈夫出轨她不闹，晚年8年送走4位至亲，遗愿只求和丈夫合葬_f2d137e744d0_project.md,27,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/蒋介石唯一的孙女蒋孝章，从小被全家捧在手心，却执意嫁给年长14岁、离过两次婚的男人。她放下蒋姓光环，把日子过成了烟火，一_7a5d951101e9_project.md,29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/她是张作霖糟糠妻，一句“我信他”陪他打出东三省，但他风光后只叫她“老家的”。三十八岁病死，他骑马百里赶到，棺材已封钉。__f949ac74a824_project.md,27,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/她没当过一天官，却用金融权术赚走民国一年军费。从法币改革到五千万美元公债，她把国难当私账，宋家王朝也因她轰然倒塌。_#人_a504c849243e_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/策山读书/川大才女嫁给抗日名将王铭章，丈夫殉国后她散尽抚恤金办学。40岁流落澳门街头举牌乞讨，却守寡73年，每年摆一碗担担面。_#_eeb15d31be76_project.md,29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/飞虎队王延周，击落日军美军飞机，飞越开国大典天安门。却因政治迫害回乡种地烧水，默默无闻数十年。一条旧裤子，才让世人知晓他_b8557801c7b2_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/她是协和第一位中国女医生，亲手接生五万个孩子。批斗台上被人扔石头泼浓痰，却跪地洗便盆从不吭声。#人物故事 #林巧稚 #历_3cfe9e0d37e0_project.md,25,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/年薪万元、三次加薪，她却辞职回国，行李夹层藏着两瓶价值20万美元的晶体。那是中国半导体的火种，她分文未取，全捐国家，从零_6d0342b39948_project.md,24,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/一等功臣徐良25岁失去左腿，1987年坐轮椅上春晚唱哭全国。可两年后一篇捏造报道让他从英雄变成骗子。#徐良 #血染的风采_50c5c4181156_project.md,24,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/1938年，267名西南联大学子徒步3500里。湘西最凶悍的土匪头目，收到一封信后，亲自为他们保驾护航。那群被举过头顶的_079dc9fc7f86_project.md,25,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/12岁他一箭射杀亲弟，少年时戴枷游营受尽凌辱，却从死人堆里爬出来建起横跨欧亚的帝国。_#人物故事 #铁木真 #成吉思汗 _884ce233ae44_project.md,25,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/1979年对越作战，后勤兵肖家喜身中数弹，一人困于敌区密林。9天8夜，无粮无药，靠鱼腥草续命，用手肘爬行216小时回到祖_85af5f53b24c_project.md,22,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/12岁逃命，28岁被抛弃，两度身无分文带着孩子重头来过。这个被命运反复摔打的女人，硬是用一双血手托举出香港首富、赌王何鸿_6dd1c6f38b15_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/第一个写下“中国共产党”五个字的人，13岁当学徒被打骂，16岁才进学堂。他在法国破阁楼里翻烂词典，一笔一划给毛主席写信定_c641cdfd17a9_project.md,25,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/23岁当大学校长，上海滩赚下万贯家财，站上维也纳讲台向世界发声。她是民国四大才女之首，终身未嫁，61岁把骨灰搓成丸扔进南_6f89806addda_project.md,26,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/1937年，清华教授赵忠尧抹炉灰扮叫花子，怀抱咸菜坛子徒步三千里，胸口被辐射灼成血肉。坛子里那粒镭，后来点燃了两弹一星的_b837192bf694_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/17岁的湖南小伙陈启尧，在朝鲜战场孤军奋战14小时，一个人用207颗手榴弹击退美军加强营三次冲锋，消灭67名敌人。#人物_d209649da810_project.md,26,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/1938年，267名西南联大学子徒步3500里。湘西最凶悍的土匪头目，收到一封信后，亲自为他们保驾护航。那群被举过头顶的_55521a439e83_project.md,25,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/他的名字保密了几十年，你手机里的卫星导航背后有他铺的路。用自行车打气筒造火箭，105岁走完这一生，祖国没有忘记他。#人物_1b505984d49e_project.md,29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/一等功10次、二等功12次、奖章50余枚，四个儿子无一知晓。他把所有荣耀压了几十年，104岁离开，悄无声息，不留痕迹。档_51e0def5b015_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/她是官宦千金人妻人母，却把孩子塞进婆婆怀里，踏上革命路。三十二岁，她在刑场上眼睛睁着，只留下七个字：秋风秋雨愁煞人。#人_1b87872939a6_project.md,25,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/中国军队史上唯一两授上将军衔的人，1988年授衔时军委在吉林农场猪圈里找到他。从朝鲜战场让美军无计可施的后勤奇才，到被下_d2dcf6ded6b7_project.md,24,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/1942年秋，13岁孤儿王二小被鬼子逼着带路，他不哭不逃，故意引敌入伏击圈，最后高喊一声暴露自己。那一队鬼子全灭，他再没_01d98dacc19d_project.md,26,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/为什么有些人越努力越迷茫，有些人却越来越轻松_6be01c9c44ae_project.md,18,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/4岁成通缉犯，父母双双牺牲，靠二十多户穷苦百姓用命护大。他用胃穿孔换来中国第一艘核潜艇下水，隐姓埋名三十年，只为那片大海_ee7eda370b41_project.md,27,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/从秦岭山沟放羊娃到秦腔皇后，易青娥用几十年血与泪坐上主角之位，却换来亲人离散、爱人背叛、养女反目。张艺谋监制的茅盾文学奖_ebb056dac401_project.md,26,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/1872年，120名穷苦孩子被送往美国，他们后来考入耶鲁、麻省理工。但正要改变命运，清廷一纸命令将他们全部撤回。那些没答_493409e49939_project.md,24,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/守住自己的老窝才是晚年的底#人物故事 #上野千鹤子 #晚年生活 #养老__3dbde8378a6c_project.md,25,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/33岁丧夫，带两个孩子只身闯华盛顿。她自己搬椅子坐进会议室。此后三十年，八位美国总统，她都在那张桌子旁边。#陈香梅 #历_d530cc45a229_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/两广盐运使千金，17岁嫁落魄书生，三处房产万两白银全押上。一个人守家六年、养儿二十年，弥留之际还在写「一息尚存须努力」。_8ac6afaa08eb_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/清末女子倪桂珍，一双天足嫁不出去，却凭一己之力撑起宋家。三个女儿分别嫁给孙中山、蒋介石，她才是宋氏王朝真正的缔造者。#人_4a800ef30dbd_project.md,24,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/1960年大庆会战，他跪别老母奔赴荒原，零下四十度睡马棚，井喷危急时亲身跳入泥浆搅拌水泥。弥留之际，补助款一分未动。宁可_5cc847347d0d_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/1937年南京城破，9位将军全部战死，最小33岁，无一投降无一溜走。紫金山的泥土被血染成黑红色，那是320万军人用命换来_af26449faddc_project.md,25,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/4岁成通缉犯，父母双双牺牲，靠二十多户穷苦百姓用命护大。他用胃穿孔换来中国第一艘核潜艇下水，隐姓埋名三十年，只为那片大海_993dc30999c4_project.md,24,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/以八百人击溃日军、救出七千英军，英将单膝跪地致谢。却被罗织罪名软禁三十三年。临终留下八字遗愿，灵柩至今未落土，他还在等。_05be7660e82f_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/清华博士赵忠尧装成乞丐，怀抱中国唯一的镭，穿越三千里日占区。胸膛被辐射烧得见骨，却一秒没松手。那个臭坛子里，藏着中国核弹_1af9c77c6aa0_project.md,25,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/丈夫早逝，11张嘴等着吃饭，王淑珍靠树皮粥熬过饥荒，把孩子一个个送进学校。55岁那年，她只说：我这辈子，就做成了这一件事_637d875c99b1_project.md,24,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/13岁退婚、用玫瑰枝保住山东、替孟小冬打赢离婚官司——民国第一女律师郑毓秀，用一生把一夫一妻制硬写进了法律。#人物故事 _505a29927afa_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/台儿庄死守的二级上将，赴台后主动卖包子养家。不争权、不钻营、不弯腰，凭双手活到97岁，把八个儿女全送出了军政圈。#孙连仲_d24aee4752fd_project.md,22,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/他救下600万伤兵，《时代周刊》与白求恩并列，却被从历史里悄悄抹去。骨灰至今摆在孙子书桌上，连入土为安都没能等到。#林可_8342c420014a_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/通史观人物/脚没缠过，嫁不出去，她却自己找出路、自己挣钱、自己送孩子留学。宋氏三姐妹的传奇背后，是这个从未认命的女人用一双天足踩出来_d020669988d3_project.md,27,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/她一手扶起两个上海滩大亨，替丈夫打下半壁江山。丈夫却为十八岁戏子将她赶出家门。她只要五万块，头也不回——那扇门关上，才是_0d4442932c9c_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/47岁的三毛爱上77岁的王洛宾，千里奔赴两度登门，却始终等不来一个拥抱。她走后，他写下了一生最后一首歌。#人物故事 #三_d4ff67bca789_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/被黄金荣赶出家门，她拿五万块头也不回。一个人活了104年，把日子过成了诗。黄金荣扫大街时，她只说了三个字：都过去了。_#_4086f79f0319_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/全国最后一位长征女红军，14岁投奔红军，15岁只身翻越雪山追部队，冻掉一根脚趾。此后隐姓埋名数十年，新中国成立后改名「全_e262fe8057d2_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/17岁嫁给大15岁的将军，20岁披甲北伐。她是民国第二夫人，也是1000多名孤儿口中的郭妈妈。#人物故事 #郭德洁_5c7224a45bc5_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/名门小姐19岁守寡，撂下'不会再有第二个丈夫'，独自漂洋过海去美国。她读财会、挤地铁、做会计，拒绝所有富商求婚，用一双手_3fcf281090cb_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/她是张学良二姨太、中国第一位随军夫人。从豪门千金到被休下堂，败光家产卖貂换药。可40岁她重新读书，活成南开第一位女物理副_0ad1ad366e07_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/39岁带儿子考黄埔军校，当着考官扯开衣襟露满身伤疤。刺枪术全校冠军，常德会战中弹倒地还在喊守住了没有。抗战胜利，她推掉少_f31560c0f925_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/民国合肥张家，四个女儿个个才华横溢、嫁得其所、高寿善终。大姐96岁，二姐93岁，三姐93岁，小妹102岁还能写蝇头小楷。_cec813e6cbfb_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/她抽了100年烟，喝了80年红酒，活到122岁零164天，是人类有记录以来最长寿的人。她见过梵高，骗过律师30年，把岁月_0352646eef0e_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/她是最底层的疍家渔女，拖着九个孩子无依无靠。靠挖河泥供孩子读洋学堂，培养出香港首富和赌王的爷爷。染上鼠疫独自漂向大海，只_633cb6f65abe_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/三年麻将输掉2.1亿金圆券，她却用20根金条在敌人心脏织出一张情报网。渡江战役前夜，她赢回了一座完整的南京城。#人物故事_b2175c435d65_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/16岁被丈夫砸断脚筋爬回娘家。婚礼当天新郎逃婚留下一句我要惊艳一百个女人。她却把伤口熬成笔尖，被鲁迅赞为仙女。#人物故事_ac507459bb9c_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/她是鲁迅明媒正娶的妻子，却从未被当作妻子看待过一天。独守空房41年，无儿无女，临终只求合葬也被拒绝。#人物故事 #朱安_edf02fb663d4_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/周恩来赞她最美，施瓦辛格都崇拜她。家暴、出轨、绝症、丧夫、丧子——命运把所有的苦都给了她，她却活到100岁，活成了传奇。_674d1a30798f_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/她18岁新婚3个月丈夫暴毙，祖公公临终托付西周两尊大鼎。她从美国人、军阀、日本人手里守了84年，1951年全部捐给国家，_ca070ba0440f_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/12岁丧母被父亲抛弃，在孤儿院学缝纫，在酒馆卖唱讨生活。这个被全世界抛弃的女孩，最终让全世界的女人追着她的名字走。_#人_86320edeb932_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/1900年八国联军攻入北京。皇帝跑了，慈禧跑了，一个妓女留下了。她用一口流利的德语劝下联军统帅，救了整座北京城。老百姓跪_0751ff745ad3_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/16岁辍学混街头，18岁因违禁药品入狱。一位亿万富豪救了她，她19岁嫁给他。28岁年龄差，18年婚姻，她活成了俄罗斯四大_887f4d3e2e22_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/名门千金为爱私奔，坐牢、挨打、独自养大五个孩子。丈夫成了文坛巨匠，她却成了弃妇。四十年后，她只说了一句：我不怪你。#人物_6e10b7918290_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/合肥张家三小姐张兆和，把沈从文的情书编号'青蛙十三号'，拒绝四年。从'我顽固地不爱他'到'乡下人喝杯甜酒吧'，这段民国最_d9c4c71b508d_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/秋瑾牺牲时，女儿王灿芝才2岁，连母亲长什么样都不记得。可她用一生学武、办学、改姓，把自己活成了母亲的模样。_#人物故事 _9b3ca9231cb4_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/一个身高一米五的英国女佣，被所有人嘲笑，却独闯战火中的中国，带着一百个孤儿翻越秦岭、横渡黄河，用二十七天走出一条血路。#_1646bc9c2e7f_project.md,22,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/1951香港陋室，63岁的杜月笙临终前烧掉一保险箱借条——上海滩30年的人情银行。他用一把火告诉子女：杜家的路不能再靠人_dea52d4c73e9_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/他出身名门，却自幼痛失双亲，靠着乡里乡亲的接济，穿百家衣、吃百家饭长大。只因一句 “报恩” 的诺言，他隐姓埋名三十载，扎_ece72136762c_project.md,30,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/她是新西兰富家女，却42次穿越日军封锁线给八路军送药。白求恩喊她天使，老兵喊她姑姑，可她晚年却在异国洗衣房度过余生。#人_b8ba53c42af9_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/她嫁过四个男人，又把两个亲妹妹嫁给了前夫。电视剧都不敢这么演。可她养出的孩子，个个顶天立地。她叫李一纯。#人物故事 #李_967e95c3950e_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/黄金荣把钥匙全交给18岁新欢，三年后被卷走全部家底。他雨夜跪求林桂生回家，隔着门等了一整夜，她只回了一句话——我既然出来_bfaf16381c06_project.md,29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/竹签扎进她的手指，她一个字没吐。又用竹签写下给三岁儿子的托孤遗书。渣滓洞一年三个月，她用一句谎言保住二十多名同志。29岁_3d138ad0c277_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+"modules/characterstory-writing/corpus/人间人物志/她抽烟喝酒一辈子,却活成了地球上最长寿的人。见过梵高、耗死律师,让娜用122年告诉我们_活得自在,才是答案。#人物故事 _6350fbd45829_project.md",23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/15岁嫁军阀做小妾，丈夫死后留下30万银元她分文不取，只提了一个让所有人惊呆的要求。从穷苦丫头到湖南第一夫人，她的翻身仗_0ac36b6f83d3_project.md,24,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/1968年飞机失事，他用身体护住绝密文件。她收到电报没掉一滴泪，一个人又活了48年。先送走丈夫，再送走女儿，把勋章和全部_24c8189519df_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/敬一丹告别仪式，所有人都到了，唯独不见倪萍。直到凌晨，一封从新疆阿勒泰写来的信，才让人明白：67岁的她守在片场，用敬一丹_247d2e88c908_project.md,24,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/她是民国最耀眼的电影明星，却在巅峰时抛下一切去学飞行。她穿着旗袍站在纽约机场，用一架写着新中国之魂的飞机，打碎了全世界对_38ba3e0f2f6a_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/她20出头和两个男人住在一起，38岁嫁给小自己13岁的年轻人。世人笑她离经叛道，可那个年轻人陪了她一辈子，活到102岁。_0b66c0ebf3ca_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/她是江姐之子彭云的养母。1948年她把亲生儿子塞进孤儿院，抱回情敌的孩子。一生兑现承诺，59岁享福前夜骤然离世。#人物故_4837f638ed83_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/被退婚的小姑娘离家闯天津，23岁当上校长，35岁成上海女富豪，一辈子没嫁，47岁削发为尼。民国第一传奇女子。#人物故事 _415c235ef6ef_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/1872年清廷送120个10岁孩子赴美。9年后被强行撤回——论文写到一半，实验做到一半。可这群孩子，后来撑起了京张铁路、_f175dd1c8c66_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/16岁绝食争留学，22岁欧洲拿博士。二战中她用一条人情线从枪口下拉回一百多条命，比利时国葬送行，中国却五十年无人知晓。#_d84a03ae5ea8_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/22岁的保姆被雇主抛弃，不仅没拿到一分钱工资，还收养了雇主留下的两个弃女。二十年后，姐妹俩双双跪在她面前喊出了那声妈妈。_3d9ab85996c9_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/1911年生于呼兰，被父嫌弃，逃婚流浪，被困旅馆，被男人一次次辜负。她却写出了《生死场》《呼兰河传》，31岁病逝香港，金_4fa1a49753b5_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/名门闺秀17岁嫁给大她25岁的抗日名将，19岁守寡带着出生40天的儿子。所有人劝她改嫁，她一句话顶一万句：我这辈子，只爱_d435895d8861_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/18岁挑水路上被张作霖马上抢回家做四姨太。新婚夜她只提了一个要求——让我读书。最后她带四个儿女走出大帅府，葬入八宝山。#_d4867cb2889b_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/她本可以锦衣玉食过一生，却在31岁死在东北刑场上。临刑前她给7岁儿子写了一封信，儿子29岁才知道妈妈是谁，然后在手臂上刺_53b16382f0c1_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/五个孩子，四个父亲，三个妹妹嫁给了她的前夫。她叫李一纯，乱世里燃尽自己，却把每一个孩子都送上了光明的路。这样的女人，你敢_86214eea0f4f_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/1932年上海滩，19岁学霸校花张晓芳被母亲许配给52岁富商徐有才做二房。她抗拒到骨头里，可婚礼当天一首生日歌彻底破防—_1093f88d1d8d_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/巴黎女硕士卖掉塞纳河畔的公寓，住进苗寨漏雨的吊脚楼。十年写了2500封信，救回5186个失学女孩。最后一夜，她没有逃出那_1813a44df20c_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/她是谢晋元的妻子，更是自己的英雄！丈夫率八百壮士守四行仓库，她便以柔肩担起一切，养儿女、助老兵，在乱世里活成了一束光💪致_80b4d2c89ca3_project.md,27,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/她生在美国，一生却为中国而写。获诺奖、推动废除排华法案、临终穿旗袍下葬。墓碑上没有一个英文字母，只刻着三个汉字——赛珍珠_1e99b8824efa_project.md,24,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/她抽了100年烟，喝了80年红酒，活到122岁零164天，是人类有记录以来最长寿的人。她见过梵高，骗过律师30年，把岁月_f191cc646908_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/1918年嫁进陈家，她掏空嫁妆供丈夫考军校，换来的却是半生独守空房。临死前那个卑微心愿，到死都没能圆上。#人物故事 #吴_0a6a06468bb0_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/共产党员奉命痛骂自己的领袖，含泪写完登了报。北平和平解放他功不可没，却顶着「旧官僚」的帽子沉默一生。48岁带着秘密进了火_e27ed79d496d_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/名门闺秀嫁戏子、嫁穷书生、嫁乡下人、嫁外国人，桩桩被看衰。可四桩婚事全过成金婚，四个丈夫把她们捧了一辈子。不看行当看人品_0fd0b0e8f5ec_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/她曾是全港最美的女人，却因为骨子里的干净，被那个吃人的圈子活活折断。最后孤死家中，屋子却收拾得干干净净。#人物故事 #蓝_6f7aee974cd1_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/丈夫随太平轮沉没，她独自扛起13个孩子的命运。54年如一日，将他们全部培养成博士，最小的儿子成了震惊世界的华人神探。#人_36d0a8d4f6c1_project.md,22,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/1935年天津佛堂三声枪响，她杀了大军阀孙传芳，然后关保险、撒传单、等警察自首。十年里她托付过两个男人，全部落空——最后_88fb20c6f2df_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/同小区两个70岁老太太，退休金一样多，五年后一个是养老院床位号，一个还是自己家的女主人。差距只在一件事：谁守住了自己的窝_cdde7a1e6727_project.md,25,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/17岁嫁给孙中山，独自撑家、逃难、被尊为国母。可当丈夫爱上宋庆龄，她含泪写下一个可字，成全了一段传奇姻缘，自己却终身未再_a32c7cc4cb5c_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/22岁清华女研究生嫁给34岁技工，所有人等着看笑话。31年后她站上人民英雄领奖台，第一句话是：没有我丈夫就没有今天的我。_f9e1ee2823cb_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/两次嫁人，两次守寡。被骂克夫克子，被婆家扫地出门，出家又还俗。可她养出的儿子，叫蒋介石。她叫王采玉。#人物故事 #王采玉_d479285ecd88_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/她从义乌地摊起家，缔造八百亿饰品帝国，登顶浙江女首富。却因跨界房地产踩空，负债百亿，豪宅被拍卖，帝国轰然倒塌。#人物故事_92f5229e5022_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/20岁开妓院，30岁掌控青帮三千门徒。她一手捧出黄金荣和杜月笙，却在最辉煌时选择转身离去。上海滩最被低估的女教母。#人物_3604bb879a5e_project.md,24,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/从青楼女子到督军夫人，再到净身出户带四女逃离家暴。前夫嘲讽她会跳黄浦江，她却用2000元开创锦江饭店帝国，接待400多位_02321c05b00e_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/从被游街示众到下放扫厕所，从失去至亲到独自整理7万页手稿。这位活了105岁的先生，用一生诠释了什么叫坚韧。#人物故事 #_851a3de282b6_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/1958年丈夫消失，没地址没电话没消息。28年后他回来，头发全白身体里全是辐射，两年后离世。她是邓稼先的妻子许鹿希。#人_da427fcc3d6b_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/她的丈夫值十个师，她自己培养了半个中科院。中年丧夫，晚年丧女，却优雅了整整一生。这是李佩。#人物故事 #李佩_3df37695fa8d_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/1977年新疆街头，一个头上流脓的脏女孩无人敢靠近。唯独她蹲了下来。40年后，她成了183人大家庭的妈妈。#人物故事 #_8186d2ccc50c_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/沈从文去世后，89岁的张兆和整理他一生手稿，读着读着忽然发现：原来我从未真正懂过这个人。她在文稿后写下三个字——'太晚了_07477a820858_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/1928年茅盾爱上22岁女学生闹离婚，原配孔德沚一字不识，却用婆婆三招把丈夫硬生生拽回家。她去世后，茅盾把骨灰盒摆在床头_1a954dff49ef_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/她三岁被亲舅舅卖掉，十七岁成为上海滩顶流巨星，赚了无数金条却被男人骗光。三段感情三次崩溃，至死都没等到一个家。#人物故事_9e8605fc2cff_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/二姐80岁学电脑，90岁出书；小妹100岁办书法展，说'这辈子就是玩'。四姐妹用一个世纪告诉我们：老了不是往回缩，是换个_1289653cee97_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/13岁嫁给姑父，在后宫末位逆袭。她不争权不揽权，却亲手扶起顺治康熙两位帝王，在权臣虎口中守住了大清百年江山。#人物故事 _4485d97def24_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/四岁撕裹脚布，二十岁逃出夫家，四十岁打开南京城门。她是孙中山亲封的巾帼英雄，却被历史课本遗忘。一个用一辈子撕碎枷锁的女人_e17f98dbd1db_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/当年连情书都懒得回的三小姐张兆和，婚后带着孩子穿越战火寻夫，把旗袍换成蓝布衣裳种菜纳鞋底。他在屋里写传世文字，她在屋外把_fd54746fb9d4_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/她是通房丫头，在谭府站着吃了24年饭。直到儿子考中全国第一，她才被允许坐下。出殡那天族人不让走正门，儿子躺在棺材上大喊：_5820e1600b25_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/16岁私奔断绝父女，跪求原配给一个不要名分的机会。为爱被囚禁半生，等了36年才拿到一场婚礼。临终11个字，让张学良崩溃大_155e33586e86_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/1938年周恩来派24岁王曼霞潜伏接近蒋介石千里驹陈尔晋。三个月闪婚藏胶卷，丈夫秘密入党化身利刃。1949年5月19日双_bd951a8cff2a_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/她住着148间房的豪宅，丈夫在朝廷当官，自己是诰命夫人。可她偏偏抛下一切去闹革命，32岁被砍头，临终只留七个字。#人物故_0a877be93892_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/她是东北抗联职务最高的女性，丈夫出卖她入狱受尽酷刑，她却用一张字条借日军之手除掉叛徒。敌人叫她田疯子，可她比谁都清醒。#_be2a776965f5_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/人间人物志/美国丹佛儿童医院前院长、范德比尔特博士。82岁卖光美国家产飞回阔别69年的山东聊城——办学、坐诊、捐角膜，把全部留给中国_0162642ad63d_project.md,23,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/寡妇出身却凭一封自荐信打动权贵，生下双胞胎儿子获蒋介石亲自赐名。可一句'蒋太太'让她走上绝路，29岁，一针，一声喊，从此_b40bbde2b7e7_project.md,29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/从少林寺打出来的硬汉，战场上7次敢死队都活下来，毛泽东说他'打红了胶东半边天'。可这个开国上将，一生最放不下的是老家打柴_6e828e085e6c_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/永安百货四小姐，难产时丈夫与人私通，她换上旗袍笑着把丈夫接回家。丈夫死于狱中留下14万债务，她近60岁还在农场砸石头——_c61d65f874a6_project.md,29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/很多人没想过，大多数人最后都没能在自己家里离开。日本社会学学者上野千鹤子研究老龄问题近十年，这本书不是让人焦虑的，是帮你_b874705469e5_project.md,27,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/1989年春晚一曲封神，27岁站上事业巅峰。却在最红时为爱远赴瑞典，护照被没收、存款被控制，带着三个孩子逃离家暴，放弃全_01825980624a_project.md,29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/央视主持人朱迅，连续七年登上春晚舞台，笑容背后是17岁血管瘤、34岁甲状腺癌、16年抗癌路。术后48天戴着渗血颈托回到舞_ed7341a6ffae_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/8岁进少林寺学武，16岁打死地主儿子开始逃亡。7次敢死队都没死的硬汉，却在延安牢房里被妻子一刀两断。从穷苦农家到开国上将_60ccb6679aea_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+"modules/characterstory-writing/corpus/闲读人间往事/她是唯一入选世界七大女歌星的亚洲人,站在巅峰时连开6场演唱会创下香港纪录。可42岁那年,她猝死在泰国酒店,遗体布满红斑和_f47b396e61aa_project.md",28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/上世纪最大的明星孙道临，五官俊朗气质温润，往镜头前一站观众就移不开眼。可85岁那年，他抓着主持人的手颤抖着说：'你们认识_22109b1bfeca_project.md,29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/丈夫战死后独闯美国，拒绝权贵，苦读立业，74年床头从未撤下那张遗像。93岁辞世时，她留下的是一段无人能复刻的人生。_#人_fa3efbe42d43_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/12岁救母、20岁出逃、24岁当校长，她开创无数个「第一」，却一生未嫁。骨灰投入南海喂鱼，连墓碑都不留——这才是真正的吕_78ea7d3ddbe4_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/32岁双料影后，一句「龚姓女明星」的无名谣言，让她戴上墨镜走进上海机场，此去二十年。她从未喊冤，从未讨还，68岁再露面，_d0e9611d7d30_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/美国出生的他23岁只身来华，加入红军、入籍中国，被怀疑为间谍、家被抄、癌症缠身，却从未离开。55年，他把一生都押在了这片_5378e3b41682_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/民国最传奇的家族：合肥四姐妹全部活过90岁，最小的活到101岁，二姐的丈夫周有光更是活到112岁。她们嫁昆曲名伶、嫁穷书_02bb5d9ce91e_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+"modules/characterstory-writing/corpus/闲读人间往事/1950年代他冒着坐牢风险给前线运物资，船被炸沉无数次从不停手。发了财后投60亿建南沙,地价涨了却1块钱卖给国家。从舢板_83a9d66d2bde_project.md",29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+"modules/characterstory-writing/corpus/闲读人间往事/特务叫他'疯老头',以为他废了。谁能想到,这个蓬头垢面、牙齿掉光的人,竟然是白公馆唯一成功越狱的高级地下党员。更没想到的_f30a5e468ff9_project.md",29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/孔祥熙之女、宋美龄干女儿，一生男装雪茄横行无忌，打死交警无人敢追究，临终深夜却只对97岁的宋美龄说了一句'最放不下的还是_99580052f45b_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/北大教授王重民，一生整理五千余篇古籍提要，把流落海外的敦煌文献一点点拼回中国人的记忆。却因鉴定一本假书说了真话，在197_88dd47cb93cc_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/她29岁成为新中国最年轻的副部长，没读完大学却成了院士。从发誓不碰水利到用一生守护中国江河，她说：干水利工程，最后检查你_24ecf05c054e_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/28岁拿下百花影后，春晚首位双语主持，她是那个年代最耀眼的女人。却为爱变卖首饰、放弃事业，45岁净身出户，被年轻副导演问_2a19d4581080_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/何婉琪拿200万帮哥哥何鸿燊拿下赌牌，换来62%股份。可钱越多内斗越狠，何鸿燊眼红妹妹手里的股份，联手四太梁安琪一点点蚕_3eac279fab8b_project.md,29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/山东农民的儿子，德国医学博士，37岁放弃德国主任职位举家回国。他研发的国产心脏支架让8万患者用得起，每年省下12个亿，硬_c7b01d65c692_project.md,29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/飞虎队王牌飞行员，驾机三过天安门，击落敌机五架。抗战胜利后却悄然回乡务农二十年，从不提过去。直到一条空军旧裤缝出卖了他。_81e377ea6661_project.md,29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/1900年八国联军入京，百官噤声，无人敢出。一个妓女只身走进德军统帅营帐，凭一口德语和一段旧交情，让屠杀停了。她救了北京_cd3cd210aa96_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+"modules/characterstory-writing/corpus/闲读人间往事/内蒙古女人殷玉珍在毛乌素沙漠种树40年,把7万亩黄沙变成绿洲。1999年美国教师萨科尔斯基捐5000美元助她种树,26年_0f35ccbc9ecf_project.md",29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/民国四大才女之一，敢当面骂张爱玲是'黄浦江里的鸡汤'。怀孕时净身出户离婚，靠一支笔闯上海、战香港，还顺手给成龙取了名字。_bc700bd09597_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/她14岁成为影后胡蝶口中的'林妹妹'，17岁红透上海滩却嫁人息影，在欧洲学开飞机成为中国第一位女飞行员。淞沪会战爆发，她_9bffd6acdcc9_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/两任丈夫一个家暴一个出轨亲妹妹，儿子精神分裂打她38年，自己7次手术仍上高原拍戏。秦怡被命运反复摁倒，却活出了100岁的_afd3264dfe8c_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/31岁病逝，却被联合国列为世界最优秀女作家。被家族遗弃、被男人抛弃、接连失去两个孩子，她用贫病流离换来近百万字，让整个世_4232e3f47310_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/她两小时内传递情报，从死亡边缘拉回周恩来，毛主席称她'全党的恩人'。却因潜伏经历蒙冤入狱17年，73岁才得平反。她说：无_b57293957da5_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/18岁拒绝少帅张学良，转身嫁给大20岁带6孩的男人。张学良晚年说'最爱在纽约'，她却一生只印'贝 蒋士云'四个字。104_d0c37a50a9d4_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/1952年朝鲜战场，26岁的邱少云被燃烧弹点燃，身后几步就是救命的水沟，他却一动不动，让烈火烧了半个多小时。500多名战_cd5a5206c442_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/傅声去世后，甄妮用冷冻精子独自赴美生下女儿，父亲栏空白，沉默二十五年。七十三岁的她从未再嫁，把那份爱续成了一个独立自主的_4a47a0fa500f_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/她坐过军阀的监狱，站上过天安门城楼，是周恩来最倚重的笔杆子。却因一个丢失的笔记本，一场亲历的批斗，在1957年的深夜，悄_65ae4843eb56_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/糕点学徒考进黄埔，八年抗战打出'三李不如一王'的传说。可特赦出狱那天，妻子早已卷走家产跟副官跑了，口袋空空，功过两字，他_2cda9038dbb9_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/铁饭碗说辞就辞，感情说不将就就不将就。女儿国国王朱琳，丁克、二婚、73岁依然让全场掌声响起。她用一辈子证明：活给自己看，_b3a5c0bbe87b_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/父亲被刺，丈夫牺牲，她把每一笔账记得清清楚楚，却从不要求偿还。白天是宋庆龄最信任的秘书，深夜是周恩来的联络员，这个女人用_a2b2d285b045_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/晴格格王艳嫁入豪门20年，每天凌晨5点给婆婆请安洗脚，8岁儿子当众骂她猪头。丈夫破产后，她直播带货撑起整个家，51岁终于_dcfeebad3037_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/开国上将陈锡联，1980年被点名辞职，他猛拍桌子喊'服从安排'，从此从红头文件里消失。直到1999年病逝，对当年事只字不_8bc51a033123_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/36岁从容赴死，临终独饮一壶酒，高唱国际歌走向刑场。他写两万字剖开自己，被扣叛徒帽子数十年，却在枪口前说出'此地甚好'。_8282ef340160_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/两次授衔上将，中国军史唯一'六星上将'洪学智。可1970年，这位开国功臣正在东北农场喂猪挑粮。从将军到农民再回将军，他用_2395e75c89c0_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/一个地下党员，端着热饭坐在父亲对面，心里装着几百万条命。北平和平解放的背后，有一个名字几十年无人知晓。她放着父亲光环不用_335e9d665af4_project.md,25,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/95岁院士沈之荃，用60年把中国稀土从廉价出口品变成工业脊梁。她亲手给学生洗烧瓶，站着讲座两小时，却在10万吨级装置投产_f8c0b9e7f94d_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/父亲被枭首示众，所有男人都退缩了，她一个人放足练枪潜伏十年。1935年，三十岁的施剑翘在佛堂三枪击毙仇人，然后从容自首，_c950f659be5c_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/守寡32岁，与宋家决裂，押掉唯一住所换5万美元支援红军。她不属于任何党派，却用一生践行了最彻底的信仰。党龄15天，革命生_50bb4692a70a_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/一等功十次，二等功十二次，奖章五十余枚——四个儿子什么都不知道。这个104岁的老人，赢得了所有荣耀，却选择把它们全部压进_f7fc3e9e232f_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/巴黎女人方芳，本可在欧洲过精致一生，却为一句「家里没钱」扎根广西大苗山十年。穿坏三十双解放鞋，让五千七百余名女童重返课堂_3e4ed3463af8_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/日本女人佐佐木敦子放弃国籍嫁给落魄的世界冠军庄则栋，从东京白领变成北京胡同家庭妇女。陪他26年，送他离开后又独守13年，_4095ca2afbea_project.md,29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/大户千金周诒端，嫁给穷书生左宗棠，三次落第、两手空空，她借钱凑盘缠，陪他绘地图，写诗鼓励他。她没等来荣华，却托举出收复新_2efd169e4018_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+"modules/characterstory-writing/corpus/闲读人间往事/19岁的重庆女孩文燕被分配到海拔1800米的西藏吉隆口岸,13年间她从高原反应到荣立二等功,成为父亲最大的骄傲。2026_021034fd9bd8_project.md",29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/63岁老人穿旧背心，在废弃食堂里磨了二十年，造出中国第一台激光陀螺。他为国家造出数十亿重器，自己却穿补丁军装走完一生。#_1abd73cf86ed_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/6岁跳河、两次高考落榜、两次自杀未遂，她用一生写了1300万字爱情。86岁那年，她把身后事安排妥当，选择翩然离去，亲手为_63d4bb5e2589_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/新中国第一顶流，白毛女喜儿的扮演者，四位至亲同患癌症，八十岁仍登台挣钱填医药费。两百万广告费，她摇头说不。住着旧房子，眼_a650cc6b3b61_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/14岁少年解开母亲手腕上的线头参军，从此征战沙场。44年后白发将军跪在母亲坟前，声泪俱下：'娘，我对不起你。'_#人物故_ebd89f6c5ae7_project.md,29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/爱因斯坦私人研讨班里唯一的中国面孔，导师许诺送他诺贝尔奖，他却转身回国。冰路骑车一年救回妻子，每天扯着嗓门喊「我只爱你」_88d18c68b0aa_project.md,29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/为保护学生甘入土匪营，命运阴差阳错送她到少帅张学良身边。她随军奔赴前线、帮他圆梦南开，却在二十六岁那年收到离婚书。此后改_1cbe782a0939_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/春晚黄金搭档14年，一纸诉状告别央视，赔光家底转战话剧。72岁还在舞台站150分钟不休息，46年从艺零国家级大奖，他笑着_e22886f1ea40_project.md,29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/除夕车祸脊柱多处断裂，医生判终身瘫痪。她体重掉到80斤，却凌晨四点起床练康复，用六年时间从轮椅上站回舞台。三个儿子北大哥_f0fc5a1b3faa_project.md,29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/从银幕最耀眼的男人到老年痴呆认不出任何人，84岁的孙道临却颤巍巍抱着西瓜上楼喂妻子。记忆可以被抹去，刻进骨子里的爱，连疾_0ac13c41fd1e_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/身高一米四五的英国女佣，只身穿越西伯利亚来到山西，日军悬赏追捕时，她带着一百多个孤儿翻山越岭，肩上还有一颗子弹。进城点完_19c1aa3bbb27_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/1951年，他一人守住朴达峰防线，歼敌百余，却从此消失33年。两个国家以为他已牺牲，他却默默回乡种地，从不提功。1985_6cfac3f09b37_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/她5岁裹脚，18岁嫁给穷书生，替他打通军校关节，守空房七年。1925年以剪刀抵喉换来的，不过是他一个转身。离婚后仍守陈家_a20ce7d5efd7_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/1987年春晚那个穿红西装的混血男神费翔，从斯坦福退学追梦，被母亲逼签'五年不恋爱'保证书，错过挚爱叶倩文。如今65岁独_f81010036b0c_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/烫伤休学、高考进错系、法国学了半年建筑又回头，比同届同学晚五年拿博士。就是这样一个走了无数弯路的广西女孩，用127页纸，_0230c317d841_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/上海滩最红的'甜姐儿'，18岁就推着丈夫遗体说'他太冷了'。四段婚姻，三度丧夫，七个孩子，苦难从未停过，她却把每一段命运_26140a587508_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/七次坐牢，一次戴手铐走完两万五千里。革命名门之子，却被自己人打成'特务'。他活着是共产党员，死做共产党的鬼，一生铺就两岸_7e87b65d7e75_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/庶女出身被扫地出门，两次为爱吞药，24岁一夜爆红成为永恒黄蓉。可1985年5月14日，她穿着粉红睡袍倒在煤气中，再耀眼的_177482041f00_project.md,29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/17岁插队北大荒，考研三次才上岸，33岁进央视一坐《焦点访谈》主播台20年。她说'要让社会保持痛感，而不是给人痛苦'。7_c8c662a2d6f8_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/赌王何鸿燊的亲妹妹，澳门第一美人，拿200万帮哥哥拿下赌牌，持股62%联合执掌帝国。可临终前她用最后一口气说的只有两个字_da98006be797_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/长安文科第一考入北大，毕业后却落魄街头卖猪肉。嘲讽铺天盖地，他一刀一刀把猪肉卖成了年销18亿的品牌。知识分子里最懂猪肉的_7cf0b07caef4_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/洗衣工的女儿，被好莱坞用了又抛，被同胞骂作耻辱，在银幕上死过一千次。56岁孤身离世，60年后她的脸被刻上美国25美分硬币_b7dd1050ce87_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/儿子患骨肉瘤，素昧平生的人凑出四十万救命钱。儿子走后留下一句话，这对打工夫妻凌晨四点起床蒸包子、做保洁、搬货，六年省出四_c1a4602f596a_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/党龄比党龄还长的传奇老人，按资历稳拿大将，却主动找组织推掉军衔。从大巴山穷孩子到毛主席亲笔题词，他这83年，争来的散了，_a07f471e9d3f_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/丈夫29岁车祸离世，她崩溃了整整一年。四年后突然怀孕，拒绝解释，独身赴美生下女儿，父亲栏空白二十五年。铁肺歌后甄妮，把最_ef26810008ba_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/出生三个月摘除双眼，她问爸爸「看不见是不是没有用」。二十年后，她拿下七十个奖项，站上感动中国的舞台。黑暗关上了灯，她却活_855156da256c_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/19岁丧夫、拒领抚恤金、退回一万美元、独身赴美——王玉龄的故事不是苦情剧，是一个名门女子用骨气撑起的传奇人生。_#人物故_40c69cf41e83_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/金马影帝万梓良，当年《流氓大亨》里的大哥，如今68岁糖尿病缠身，在县城商场唱歌腿抖得像筛糠。一场三五万，挣来的钱七成捐出_065319e52f5a_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/从纽约穷孩子到好莱坞巨星，三段婚姻每段都留着伤。79岁离世，没有儿女，却把三亿美金的一切托付给了一个相差39岁的中国男人_957734f43426_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/57岁离世前三天，她发了条视频问粉丝'要接受现在的我呀'。没人知道那是告别。与红斑狼疮缠斗25年，血小板过低、无法生育，_18482f81cf06_project.md,29,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/characterstory-writing/corpus/闲读人间往事/他是解放军史上唯一的「大校营长」，七年连升三级。别人说击落U-2在技术上不可能，他硬是把15个动作压进8秒，打下了人类历_e66538aec2be_project.md,28,asr,Coli,来源：视频音轨转写（本地 SenseVoice（coli））
+modules/history-image/scripts/transcribe_with_coli.py,71,asr,Coli,"parser.add_argument(""--asr-json"", type=Path, help=""Reuse Coli result known to belong to this audio"")"
+modules/history-image/scripts/transcribe_with_coli.py,80,asr,Coli,"names = [""coli_asr.json"", ""transcript.srt"", ""transcript_timing.json"", ""transcription_review.json""]"
+modules/history-image/scripts/transcribe_with_coli.py,86,asr,Coli,"coli = find_executable(""coli"")"
+modules/history-image/scripts/transcribe_with_coli.py,87,asr,Coli,if not coli:
+modules/history-image/scripts/transcribe_with_coli.py,88,asr,Coli,"raise SystemExit(""Local Coli unavailable; no cloud or estimated-timing fallback"")"
+modules/history-image/scripts/transcribe_with_coli.py,89,asr,Coli,"result = subprocess.run([coli, ""asr"", ""-j"", ""--model"", args.model, ""--language"", args.language, str(audio)], capture_output=True, text=True, encoding=""utf-8"")"
+modules/history-image/scripts/transcribe_with_coli.py,91,asr,Coli,"raise SystemExit(f""Coli failed: {result.stderr.strip()}"")"
+modules/history-image/scripts/transcribe_with_coli.py,93,asr,Coli,"(out/""coli_asr.json"").write_text(json.dumps(asr, ensure_ascii=False, indent=2), encoding=""utf-8"")"
+modules/history-image/scripts/transcribe_with_coli.py,101,asr,Coli,"""duration"": asr[""duration""], ""source"": ""local-coli"", ""review_status"": ""pending"","
+modules/history-image/scripts/transcribe_with_coli.py,104,asr,Coli,"""asr_sha256"": file_hash(out/""coli_asr.json""), ""srt_sha256"": file_hash(out/""transcript.srt""),"
+modules/history-image/scripts/test_transcription.py,3,asr,Coli,"from transcribe_with_coli import build_cues, srt_text"
+modules/history-image/references/audio-first-storyboard.md,8,asr,Coli,2. **先用本机 Coli 转录，完全不依赖分镜表。** 在新版本目录运行：
+modules/history-image/references/audio-first-storyboard.md,10,asr,Coli,"`py -3.11 ""<story-studio目录>/modules/history-image/scripts/transcribe_with_coli.py"" --audio ""<最终配音>"" --out-dir ""<项目>/transcription/<版本>"" --model sensevoice --language zh`"
+modules/history-image/references/audio-first-storyboard.md,12,asr,Coli,输出原始 coli_asr.json、transcript.srt、transcript_timing.json，保留音频及字幕哈希。脚本从真实 token 起点分组字幕；字幕结束使用下一 token 起点或音频结束，是字幕显示边界，不冒充精确发声结束。没有标点时分组只为可读性，不能认为一条 SRT 就是一个完整句子或一个分镜。原始 tokens/timestamps 保留供句内事件定位。只接受可用时间戳，不按字数猜测。不得调用火山字幕 API 或恢复其凭据。
+modules/history-image/references/audio-first-storyboard.md,13,asr,Coli,3. **核对 SRT 与全文。** 比较全文顺序、人物、年份、否定词、重复语句及漏句。转录错字可依据原稿和实际音频纠正，并保存原始记录；真实口播与定稿不同则记录版本差异，不能把未读的原稿文字硬塞进字幕。纠错后需要维护文字与原始 token 时间的对应关系，不按新字符数重分时间。字幕及音频来源相同且已核验时复用，不重复转录；用户指定重新 Coli 转录时照做。无来源或只凭文件名不能认定是当前配音的字幕。
+modules/history-image/references/audio-first-storyboard.md,17,asr,Coli,7. **按同一张表剪辑。** 下游继承本表 start/end 和图片映射，只做帧量化与核验，不重新均分或模糊匹配找切点。重新配音、改稿、改边界后相应分镜回到待核验，不能沿用旧时间表。旧脚本 align_with_coli.py 可复用原始 Coli JSON 对定稿边界做保守复核，不作为先有分镜才能转录的前置条件；它输出的 coli_aligned.srt 是按镜诊断文件，不能代替原始转录字幕。
+modules/history-image/references/audio-first-storyboard.md,27,asr,Coli,口播工作流项目记录 workflow=audio_first、storyboard_status、timing_basis（音频/SRT/原始 Coli 路径及哈希）、text_audio_review（status、差异与处理证据）。逐镜追加 start/end、cue_ids、timing_evidence、visual_onset_anchor、semantic_event、must_depict、must_not_anticipate；audio_end 若只有显示上界，应记录 audi
+modules/history-image/references/manuscript-storyboard.md,11,asr,Coli,- 没有音频时 `timing_status` 为 `unavailable`，所有 `audio_start` / `audio_end` 为 `null`。不得根据字数或语速生成看似实测的时间戳。口播配图提供最终音频后，先调用本机 Coli 转录，已有对应且核验过的字幕可复用；只有确实完成对齐或核对时间表后才标记 `aligned`，并记录依据。未处理的音频不能解锁“精确时间”说法。
+modules/history-image/references/manuscript-storyboard.md,17,asr,Coli,0. **先完成转录与音文核验。** 按先音频后分镜流程获得 Coli SRT 与 token 时间；固定 N 或自动数量方式已确定。无音频的口播项目只生成 draft_waiting_audio，不能作为最终生图输入。
+modules/history-image/references/narration-pacing.md,23,asr,Coli,口播配图生图前必须已有核验过的音频/SRT 时间轴，再完成分镜定稿。没有音频不强制创建配音，先保留草稿并请求最终配音；音频后到时先 Coli 转录、核对全文，再重新确认分镜边界和画面，之后才生图。SRT 句级时间不能冒充逐字时间：切点落在字幕内部时优先选择有证据的边界，否则标记低精度，不能按字符插值后称精确对齐。

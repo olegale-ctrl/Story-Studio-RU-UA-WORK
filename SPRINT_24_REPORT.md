@@ -1,0 +1,3 @@
+# Sprint 24 — hardware capability detection, increment 1
+
+Added `core/hardware_profile.py` with a standard-library-only hardware probe and conservative CPU-first recommendations. On Windows it uses local CIM queries through PowerShell. Missing/blocked queries degrade gracefully; RAM and GPU may be unknown. Added a standalone diagnostic script and four unit tests. No network activity, no persistent hardware fingerprint, and no modifications to existing Voice Studio / TTS provider files. Future increment: wire the profile to the UI and add optional CPU performance calibration and model compatibility checks after user confirmation.

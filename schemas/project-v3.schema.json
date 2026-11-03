@@ -1,0 +1,226 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/story-studio/project-v3.schema.json",
+  "title": "Story Studio RU/UA project v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "title",
+    "content_locale",
+    "scenes",
+    "fps",
+    "width",
+    "height",
+    "schema_version",
+    "tracks",
+    "subtitles",
+    "media",
+    "clips"
+  ],
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "content_locale": {
+      "enum": [
+        "ru",
+        "uk"
+      ]
+    },
+    "fps": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 240
+    },
+    "width": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 16384
+    },
+    "height": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 16384
+    },
+    "schema_version": {
+      "const": 3
+    },
+    "scenes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "start_ms",
+          "duration_ms",
+          "text",
+          "image_path",
+          "audio_path"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "start_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "duration_ms": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "text": {
+            "type": "string"
+          },
+          "image_path": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "audio_path": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "tracks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "label"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "video",
+              "audio",
+              "subtitle"
+            ]
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "subtitles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "track_id",
+          "start_ms",
+          "duration_ms",
+          "text",
+          "locale"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "track_id": {
+            "type": "string"
+          },
+          "start_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "duration_ms": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "text": {
+            "type": "string"
+          },
+          "locale": {
+            "enum": [
+              "ru",
+              "uk"
+            ]
+          }
+        }
+      }
+    },
+    "media": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "path"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "image",
+              "video",
+              "audio"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "clips": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "track_id",
+          "media_id",
+          "start_ms",
+          "duration_ms",
+          "source_in_ms"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "track_id": {
+            "type": "string"
+          },
+          "media_id": {
+            "type": "string"
+          },
+          "start_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "duration_ms": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "source_in_ms": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    }
+  }
+}
