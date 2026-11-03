@@ -1,0 +1,15 @@
+Command: python -m unittest discover -s tests -v
+Environment: Linux container, Python 3.13.5
+test_duplicate_id (test_project_schema.ProjectSchemaTests.test_duplicate_id) ... ok
+test_float_timing_rejected (test_project_schema.ProjectSchemaTests.test_float_timing_rejected) ... ok
+test_negative_timing (test_project_schema.ProjectSchemaTests.test_negative_timing) ... ok
+test_roundtrip_unicode (test_project_schema.ProjectSchemaTests.test_roundtrip_unicode) ... ok
+test_ru_locale (test_project_schema.ProjectSchemaTests.test_ru_locale) ... ok
+test_unknown_field (test_project_schema.ProjectSchemaTests.test_unknown_field) ... ok
+test_unsupported_locale (test_project_schema.ProjectSchemaTests.test_unsupported_locale) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.001s
+
+OK
+Exit code: 0

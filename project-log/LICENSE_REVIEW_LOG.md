@@ -1,0 +1,26 @@
+# LICENSE REVIEW LOG
+
+| Компонент | Источник | Лицензия | Статус | Основание/следующий шаг |
+|---|---|---|---|---|
+| Корневой код Story Studio | https://github.com/konlu/story-studio | MIT, Copyright (c) 2026 konlu | PRELIMINARY | Сохранить notices, проверить охват и другие лицензии |
+| Китайские корпуса сценариев | Внутри исходного ZIP | Не подтверждена для каждого текста | BLOCKED — LICENSE REVIEW | Установить первоисточники и разрешения |
+| Изображения и референсы | Внутри исходного ZIP | Не подтверждена для каждого файла | BLOCKED — LICENSE REVIEW | Реестр и проверка происхождения |
+| Python/бинарные зависимости | Скрипты проекта | Не проверены | REVIEW REQUIRED | Извлечь manifests и версии |
+| AI модели/облачные сервисы | Скрипты проекта | ToS и лицензии не проверены | REVIEW REQUIRED | Проверить отдельно веса и API |
+
+## Sprint 04 update — 2026-10-30
+- New `core/project_schema.py` and `core/subtitles.py` require only Python standard library. No third-party runtime dependency introduced by Sprint 04.
+- No new APPROVED license decisions. `pyJianYingDraft`, `@marswave/coli`, `sherpa-onnx`, `websockets`, FFmpeg/MediaInfo and their transitive/downloaded components still require version-pinned primary-source evidence before redistribution.
+- Chinese Writing-DNA/corpora and media remain REPLACE or BLOCKED for release; no copying into this update.
+
+## Sprint 14
+- New Python/PowerShell code and gradient images are original project additions. Windows SAPI voices are accessed from the user installation; voice availability and use terms depend on Windows/voice provider.
+- Do not package third-party TTS voices, FFmpeg binaries or model weights. Commercial distribution remains gated on legal review.
+
+## Sprint 15
+- No third-party voice, FFmpeg binary, model weights or external media added. Existing release gates unchanged.
+
+## Sprint 16: Edge TTS provider — OPEN / COMMERCIAL BLOCKED
+- `edge-tts` Python package invokes the Microsoft Edge consumer Read Aloud endpoint. Package licensing and voice-output usage rights are separate issues.
+- Microsoft does not publicly confirm commercial redistribution rights for Edge Read Aloud output. No commercial grant is inferred. See https://learn.microsoft.com/en-us/answers/questions/6007729/commercial-use-of-microsoft-edge-text-to-speech-vi and https://www.microsoft.com/licensing/terms/product/MicrosoftAzure/all .
+- Experimental personal prototype only pending legal/provider review. For paid commercial use, evaluate Azure Speech paid tier or appropriately licensed local voices.

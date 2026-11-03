@@ -1,0 +1,37 @@
+Command: python -m unittest discover -s tests -v
+Environment: isolated combined Sprint04+05, Linux
+
+test_empty_manifest (test_media_manifest.MediaManifestTests.test_empty_manifest) ... ok
+test_invalid_scene_media_rejected (test_media_manifest.MediaManifestTests.test_invalid_scene_media_rejected) ... ok
+test_ru_uk_manifest (test_media_manifest.MediaManifestTests.test_ru_uk_manifest) ... ok
+test_unsafe_paths (test_media_manifest.MediaManifestTests.test_unsafe_paths) ... ok
+test_windows_relative_normalization (test_media_manifest.MediaManifestTests.test_windows_relative_normalization) ... ok
+test_duplicate_id (test_project_schema.ProjectSchemaTests.test_duplicate_id) ... ok
+test_float_timing_rejected (test_project_schema.ProjectSchemaTests.test_float_timing_rejected) ... ok
+test_negative_timing (test_project_schema.ProjectSchemaTests.test_negative_timing) ... ok
+test_roundtrip_unicode (test_project_schema.ProjectSchemaTests.test_roundtrip_unicode) ... ok
+test_ru_locale (test_project_schema.ProjectSchemaTests.test_ru_locale) ... ok
+test_unknown_field (test_project_schema.ProjectSchemaTests.test_unknown_field) ... ok
+test_unsupported_locale (test_project_schema.ProjectSchemaTests.test_unsupported_locale) ... ok
+test_bool_timing_rejected (test_project_schema.TimelineV2Tests.test_bool_timing_rejected) ... ok
+test_duplicate_subtitle (test_project_schema.TimelineV2Tests.test_duplicate_subtitle) ... ok
+test_duplicate_track (test_project_schema.TimelineV2Tests.test_duplicate_track) ... ok
+test_invalid_subtitle_locale (test_project_schema.TimelineV2Tests.test_invalid_subtitle_locale) ... ok
+test_migrate_v1 (test_project_schema.TimelineV2Tests.test_migrate_v1) ... ok
+test_migrate_v1_does_not_mutate_input (test_project_schema.TimelineV2Tests.test_migrate_v1_does_not_mutate_input) ... ok
+test_missing_subtitle_track (test_project_schema.TimelineV2Tests.test_missing_subtitle_track) ... ok
+test_negative_subtitle_duration (test_project_schema.TimelineV2Tests.test_negative_subtitle_duration) ... ok
+test_nonfinite_fps_rejected (test_project_schema.TimelineV2Tests.test_nonfinite_fps_rejected) ... ok
+test_unicode_srt_ready_text (test_project_schema.TimelineV2Tests.test_unicode_srt_ready_text) ... ok
+test_unknown_v2_field_rejected (test_project_schema.TimelineV2Tests.test_unknown_v2_field_rejected) ... ok
+test_v1_invalid_field_rejected (test_project_schema.TimelineV2Tests.test_v1_invalid_field_rejected) ... ok
+test_v2_roundtrip (test_project_schema.TimelineV2Tests.test_v2_roundtrip) ... ok
+test_wrong_subtitle_track (test_project_schema.TimelineV2Tests.test_wrong_subtitle_track) ... ok
+test_empty_track (test_subtitles.SrtTests.test_empty_track) ... ok
+test_export_unicode_and_order (test_subtitles.SrtTests.test_export_unicode_and_order) ... ok
+test_unknown_track (test_subtitles.SrtTests.test_unknown_track) ... ok
+
+----------------------------------------------------------------------
+Ran 29 tests in 0.002s
+
+OK

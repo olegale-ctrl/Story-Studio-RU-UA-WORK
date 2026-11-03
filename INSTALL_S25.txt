@@ -1,0 +1,13 @@
+SPRINT 25 - INSTALL (Windows PowerShell 5.1)
+
+1. Close Voice Studio.
+2. Back up scripts/voice_studio.py and core/hardware_profile.py.
+3. Unpack 25.zip into the project root, replacing files.
+4. From the project root run:
+   .\.venv\Scripts\python.exe -m unittest discover -s tests -p test_sprint25.py -v
+   .\.venv\Scripts\python.exe -m unittest discover -s tests -v
+   powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_voice_studio.ps1
+5. Check the hardware line and Refresh hardware button.
+6. Generate Silero WAV and check 'Real-time factor' in the log.
+
+No model binaries included. No CUDA requirement. No online hardware data collection.
