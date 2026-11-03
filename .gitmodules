@@ -1,0 +1,3 @@
+[submodule "upstream/konlu-full"]
+	path = upstream/konlu-full
+	url = https://github.com/konlu/story-studio.git
