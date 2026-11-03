@@ -35,7 +35,7 @@ Status: **UPSTREAM REFERENCE / NONCOMMERCIAL-ONLY / NOT APPROVED FOR PROFESSIONA
 All imported code is isolated inside `upstream/konlu-story-studio/`, **not automatically executed, installed, packaged or loaded** by the RU/UA application. In particular, bootstrap scripts may install/download external dependencies or use region-specific services; do not invoke without a separate review.
 
 Next steps:
-1. Import the verified complete local Sprint 25 RU/UA source into the main project tree, without overwriting it with upstream code.
+1. **DONE (2026-11-03):** Imported the verified local Sprint 25 RU/UA source into the main project tree without overwriting it with upstream code.
 2. Compare interfaces of FFmpeg rendering, JSON timeline, TTS, subtitle alignment, Jianying/CapCut, and identify reusable designs/allowed modules.
 3. Perform dependency/license review and implement RU/UA adapters with tests.
 4. Keep Sprint 25.1 Voice Studio preview fix independent from this upstream import.
