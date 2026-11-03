@@ -40,3 +40,10 @@ Sprint 11: Windows user confirmed Sprint10 playback; local FFmpeg auto-detection
 
 ## Sprint 17
 Реализованы изоляция голосов и версионирование MP4; Windows интеграционный тест ожидается.
+
+## 2026-11-03 — Sprint 25.1
+- **Source repository baseline:** imported current RU/UA Sprint 25 source (148 text files) to GitHub, plus full upstream as pinned Git submodule. Upstream engineering snapshot isolated.
+- **Audio GUI:** Unicode-safe preview path discovery and synthesis timing implemented, tests green; Windows physical model test outstanding.
+- **QA:** 106/106 unit tests successful in Linux Python 3.13 after generating portable temporary test media; no declaration of Windows CI success.
+- **License gate:** current upstream CC BY-NC-SA 4.0 vs archived MIT; cannot approve commercial rights until per-component provenance is verified.
+

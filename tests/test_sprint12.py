@@ -4,10 +4,14 @@ import unittest
 from pathlib import Path
 from core.project_schema import Project
 from core.mp4_render import render_mp4
+from demo_media_support import create_demo_media
 
 class Sprint12Tests(unittest.TestCase):
     def setUp(self):
         self.data = json.loads(Path('examples/demo_project.json').read_text(encoding='utf-8'))
+        self._media_temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._media_temp.cleanup)
+        self.media_root = create_demo_media(Path(self._media_temp.name) / 'media')
 
     def test_audio_outside_video_rejected(self):
         for c in self.data['clips']:
@@ -15,7 +19,7 @@ class Sprint12Tests(unittest.TestCase):
         project = Project.from_json(json.dumps(self.data))
         with tempfile.TemporaryDirectory() as tmp:
             with self.assertRaisesRegex(ValueError, 'exceeds video duration'):
-                render_mp4(project, 'examples/demo_media', Path(tmp)/'output.mp4')
+                render_mp4(project, self.media_root, Path(tmp)/'output.mp4')
 
     def test_two_audio_clips_and_burn(self):
         audio = next(c for c in self.data['clips'] if c['track_id']=='a')
@@ -24,6 +28,6 @@ class Sprint12Tests(unittest.TestCase):
         self.data['clips'].append(extra)
         project=Project.from_json(json.dumps(self.data))
         with tempfile.TemporaryDirectory() as tmp:
-            result=render_mp4(project,'examples/demo_media',Path(tmp)/'output.mp4',burn_subtitles=True)
+            result=render_mp4(project,self.media_root,Path(tmp)/'output.mp4',burn_subtitles=True)
             self.assertTrue(Path(result['video']).is_file())
             self.assertTrue(result['burned_subtitles'])

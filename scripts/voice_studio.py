@@ -3,6 +3,7 @@
 Runs Edge TTS or an explicitly trusted local Silero model in a child process.
 """
 from __future__ import annotations
+import hashlib
 import os
 import queue
 import re
@@ -66,6 +67,39 @@ def silero_preview_command(python: Path, locale: str, voice: str, text: str,
                 else str(ROOT / 'models' / 'silero' / 'v5_cis_base_nostress.pt')))),
             '--trust-local-model']
 
+def preview_output_path(provider: str, locale: str, voice: str,
+                        rate: str = '+0%', pitch: str = '+0Hz', text: str = '',
+                        *, root: Path = ROOT) -> Path:
+    """Determine the expected output without trusting subprocess console encoding.
+
+    The path calculation must stay in sync with the CLI preview scripts.
+    """
+    if provider == 'silero_local':
+        if voice not in SILERO_VOICES.get(locale, ()):
+            raise ValueError('Unsupported Silero voice for the selected language.')
+        return root / 'examples' / 'voice_previews' / f'silero-{locale}-{voice}.wav'
+    if provider == 'edge':
+        if voice not in VOICE_CATALOG.get(locale, {}):
+            raise ValueError('Unsupported Edge voice for the selected language.')
+        selected = VOICE_CATALOG[locale][voice]
+        voice_folder = re.sub(r'[^a-zA-Z0-9_-]', '_', selected).lower()
+        folder = root / 'examples' / f'narrated_{locale}' / voice_folder
+        if rate != '+0%' or pitch != '+0Hz':
+            settings_hash = hashlib.sha256(f'{rate}|{pitch}'.encode()).hexdigest()[:12]
+            folder = folder / f'settings-{settings_hash}'
+        text_hash = hashlib.sha256(text.encode('utf-8')).hexdigest()[:12]
+        return folder / 'media' / f'preview-{text_hash}.mp3'
+    raise ValueError(f'Unknown provider: {provider}')
+
+
+def preview_file_signature(path: Path) -> tuple[int, int] | None:
+    try:
+        stat = path.stat()
+        return stat.st_size, stat.st_mtime_ns
+    except OSError:
+        return None
+
+
 def hardware_summary(profile: dict, advice: dict) -> str:
     cpu = profile.get('cpu_name') or 'Unknown CPU'
     ram = profile.get('ram_gib')
@@ -102,7 +136,7 @@ def main() -> None:
         raise SystemExit('Tkinter is unavailable in this Python installation.') from exc
 
     root = tk.Tk()
-    root.title('Story Studio RU/UA — Voice Studio (Sprint 25)')
+    root.title('Story Studio RU/UA — Voice Studio (Sprint 25.1)')
     root.geometry('880x730')
     root.minsize(650, 450)
     root.columnconfigure(1, weight=1)
@@ -117,11 +151,15 @@ def main() -> None:
     voice_label = tk.StringVar()
     voice = tk.StringVar()
     status = tk.StringVar(value='Ready')
+    metrics_text = tk.StringVar(value='')
     hardware_text = tk.StringVar(value='Detecting hardware…')
     started_at: float | None = None
     events: queue.Queue[tuple[str, str]] = queue.Queue()
     busy = False
     last_preview: Path | None = None
+    expected_preview: Path | None = None
+    prior_signature: tuple[int, int] | None = None
+    active_provider: str = ''
 
     def update_voice(*_args):
         if provider.get() == 'edge':
@@ -163,9 +201,12 @@ def main() -> None:
 
     def worker(cmd: list[str]):
         try:
+            child_env = os.environ.copy()
+            child_env['PYTHONIOENCODING'] = 'utf-8'
+            child_env['PYTHONUTF8'] = '1'
             proc = subprocess.Popen(cmd, cwd=ROOT, stdout=subprocess.PIPE,
                                     stderr=subprocess.STDOUT, text=True, encoding='utf-8', errors='replace',
-                                    bufsize=1)
+                                    bufsize=1, env=child_env)
             assert proc.stdout is not None
             for line in proc.stdout:
                 events.put(('line', line.rstrip('\r\n')))
@@ -175,7 +216,7 @@ def main() -> None:
             events.put(('error', str(exc)))
 
     def start_preview():
-        nonlocal busy, last_preview, started_at
+        nonlocal busy, last_preview, started_at, expected_preview, prior_signature, active_provider
         if busy:
             return
         python = ROOT / '.venv' / 'Scripts' / 'python.exe' if sys.platform == 'win32' else ROOT / '.venv' / 'bin' / 'python'
@@ -183,17 +224,23 @@ def main() -> None:
             messagebox.showerror('Python missing', f'Project virtual environment not found:\n{python}')
             return
         try:
-            if provider.get() == 'edge':
+            active_provider = provider.get()
+            preview_text = phrase.get('1.0', 'end').strip()
+            if active_provider == 'edge':
                 cmd = preview_command(python, language.get(), voice.get(), rate.get(), pitch.get(),
-                                      phrase.get('1.0', 'end').strip(), strict.get())
+                                      preview_text, strict.get())
             else:
                 cmd = silero_preview_command(python, language.get(), voice.get(),
-                                             phrase.get('1.0', 'end').strip(), trusted=trust_local.get())
+                                             preview_text, trusted=trust_local.get())
+            expected_preview = preview_output_path(active_provider, language.get(), voice.get(),
+                                                   rate.get(), pitch.get(), preview_text)
+            prior_signature = preview_file_signature(expected_preview)
         except ValueError as exc:
             messagebox.showerror('Invalid settings', str(exc))
             return
         busy = True
         last_preview = None
+        metrics_text.set('')
         preview_button.configure(state='disabled')
         open_button.configure(state='disabled')
         status.set('Synthesizing…')
@@ -222,25 +269,35 @@ def main() -> None:
                     hardware_text.set(value)
                     add_line('Hardware: ' + value)
                 elif kind == 'line':
+                    # Console paths may contain mojibake on Windows. Log them,
+                    # but never rely on the printed path to locate output.
                     add_line(value)
-                    if value.startswith('PREVIEW: '):
-                        last_preview = Path(value[len('PREVIEW: '):].strip())
                 elif kind in ('done', 'error'):
                     busy = False
                     preview_button.configure(state='normal')
-                    good = kind == 'done' and value == '0' and last_preview is not None and last_preview.is_file() and last_preview.stat().st_size > 1024
+                    signature = preview_file_signature(expected_preview) if expected_preview else None
+                    valid_output = signature is not None and signature[0] > 1024
+                    # Silero must write a new WAV. Edge may reuse its valid MP3 cache.
+                    fresh = (active_provider == 'edge' or signature != prior_signature)
+                    good = kind == 'done' and value == '0' and valid_output and fresh
                     if good:
+                        last_preview = expected_preview
                         status.set('Preview ready')
                         if started_at is not None:
-                            add_line(synthesis_metrics(last_preview, time.monotonic() - started_at))
+                            metrics = synthesis_metrics(last_preview, time.monotonic() - started_at)
+                            metrics_text.set(metrics)
+                            add_line(metrics)
                         open_button.configure(state='normal')
                     else:
                         last_preview = None
+                        metrics_text.set('')
                         status.set('Preview failed — see log')
                         if kind == 'error':
                             add_line('ERROR: ' + value)
                         elif value != '0':
                             add_line('ERROR: synthesis exited with code ' + value)
+                        else:
+                            add_line('ERROR: Preview file missing, too small or unchanged: ' + str(expected_preview))
         except queue.Empty:
             pass
         root.after(150, poll)
@@ -279,6 +336,8 @@ def main() -> None:
     open_button = ttk.Button(buttons, text='Play audio', command=open_preview, state='disabled')
     open_button.pack(side='left', padx=4)
     ttk.Label(buttons, textvariable=status).pack(side='left', padx=12)
+    ttk.Label(root, textvariable=metrics_text).grid(row=12, column=0, columnspan=2,
+                                                    sticky='w', padx=14, pady=(0, 6))
     language.trace_add('write', update_voice)
     provider.trace_add('write', update_voice)
     voice.trace_add('write', update_voice)

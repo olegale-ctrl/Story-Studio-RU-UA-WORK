@@ -145,3 +145,14 @@
 - Выходные MP4 имеют уникальные имена и версии без перезаписи.
 - Добавлены пять регрессионных тестов.
 - Полный Windows/Edge TTS рендер требует проверки пользователем.
+
+## 2026-11-03 — Sprint 25.1: GitHub baseline + Unicode-safe Voice Studio preview
+- Imported 148 text source/test/docs files from the user-provided Sprint 25 snapshot into the private GitHub repository; no generated audio/video, model weights or `.venv`.
+- Full upstream Story Studio revision `87c2bbf7093d7817d28a0f2b32cf21bb857b7cc1` pinned as a Git submodule; 40 upstream engineering files preserved separately with their original CC BY-NC-SA license.
+- Fixed Voice Studio: Python child process uses UTF-8 I/O; output files are located deterministically instead of trusting mojibake-prone `PREVIEW:` output. Added check for fresh Silero WAV and displayed synthesis timing/RTF.
+- Tests generate their own small temporary demo images/audio; obsolete Sprint 23.1 tests replaced with current Sprint 23.2 model path/trust checks.
+- Validated Python syntax; `python -m unittest discover -s tests -v`: 106 tests OK, 0 failures, Linux Python 3.13. Windows GUI and actual Silero model still await local confirmation.
+- Modified: `scripts/voice_studio.py`, `tests/test_sprint25_1.py`, `tests/demo_media_support.py`, `tests/test_sprint11.py`, `tests/test_sprint12.py`, `tests/test_sprint13.py`, `tests/test_sprint23_1.py`, 5 project-log files, `SPRINT_25_1_REPORT.md` and `INSTALL_S25_1.txt`.
+- Blockers: licensing provenance (historical MIT snapshot vs current CC BY-NC-SA upstream), Windows end-to-end test, commercial provider rights.
+- Next: run Windows QA, incorporate feedback, then continue Sprint 26 with original video's reusable adapters, while preserving source attribution and licensing gate.
+
