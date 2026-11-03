@@ -1,3 +1,13 @@
+# Next session — Sprint 26 first-video pipeline (2026-11-03)
+
+Windows Sprint 25.1 Silero Ukrainian preview verified by user: Preview ready, WAV 2.2 s, synthesis 11.2 s, RTF 5.17, playback reported working.
+
+Current work: `scripts/first_video.py` builds an offline narrated MP4 from a RU/UA JSON scene plan with local Silero or existing WAVs, optional local images, generated gradient fallbacks, scene subtitles and existing FFmpeg renderer. See `docs/SPRINT26_FIRST_VIDEO_WINDOWS.md`.
+
+**Next user validation gate:** On Windows run `scripts/first_video.py --plan examples/first_video_plan_uk.json --silero-model C:\StoryStudioModels\v5_cis_base_nostress.pt --voice ukr_igor --output-dir output/first-video-uk`, then inspect `output/first-video-uk/first-video.mp4` for spoken audio, subtitles, picture and timing. Output directory must not exist already.
+
+No full Chinese original code was executed or included in the pipeline; upstream rights and provider terms remain gated. CI and local synthetic tests must be checked before claiming verified status.
+
 # Next session — after Sprint 25.1 (2026-11-03)
 
 Repository: https://github.com/olegale-ctrl/Story-Studio-RU-UA-WORK
