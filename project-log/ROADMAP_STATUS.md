@@ -47,3 +47,5 @@ Sprint 11: Windows user confirmed Sprint10 playback; local FFmpeg auto-detection
 - **QA:** 106/106 unit tests successful in Linux Python 3.13 after generating portable temporary test media; no declaration of Windows CI success.
 - **License gate:** current upstream CC BY-NC-SA 4.0 vs archived MIT; cannot approve commercial rights until per-component provenance is verified.
 
+
+- **CI workflow:** Ubuntu Python 3.10/3.13 test matrix configured; no claim of successful GitHub Actions run until checked.

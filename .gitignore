@@ -1,3 +1,4 @@
+# Python
 .venv/
 venv/
 __pycache__/
@@ -8,6 +9,8 @@ __pycache__/
 *.egg-info/
 build/
 dist/
+
+# Local environment, credentials and editor state
 .env
 .env.*
 !.env.example
@@ -19,26 +22,41 @@ dist/
 .secrets/
 .vscode/
 .idea/
-models/**/*.pt
-models/**/*.pth
-models/**/*.onnx
-models/**/*.bin
+
+# Large binaries, weights and user-managed tool installations
+.tools/
+tools/ffmpeg/
+models/
 *.pt
 *.pth
 *.onnx
 *.safetensors
+*.ckpt
+*.gguf
+
+# Generated voice/video files and test media
 examples/voice_previews/
+examples/demo_media/
+examples/**/media/
 *.mp3
 *.wav
+*.flac
+*.ogg
 *.mp4
 *.mov
 *.mkv
 *.avi
-*.flac
-*.ogg
+*.webm
+*.ppm
+
+# Archived installers and temporary outputs
 *.zip
+*.7z
+*.rar
+*.log
+*.bak
+*.tmp
 Thumbs.db
 .DS_Store
-*.log
 tmp/
 temp/

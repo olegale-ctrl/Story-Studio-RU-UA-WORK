@@ -9,6 +9,7 @@ Date: 2026-11-03
 - Subprocesses explicitly request UTF-8 I/O; completed Silero previews are checked for a new file and sufficient size; existing Edge MP3 cache remains supported.
 - Synthesis time, audio duration (for WAV) and real-time factor are displayed in the GUI and log.
 - Portable tests generate their own temporary PPM images and WAV, so large demo assets are no longer required in source control.
+- Replaced misleading original Chinese/MIT root README with the current RU/UA project README, strengthened source `.gitignore`, and added Linux GitHub Actions tests (Python 3.10/3.13).
 - The obsolete Sprint 23.1 temp-model-copy tests were corrected to match later Sprint 23.2 path policy, without adding unexpected model copies.
 
 ## Validation
