@@ -31,3 +31,10 @@
 - Decision: isolate full upstream as Git submodule, keep separately imported technology files and provenance, BLOCKED for Professional/Cloud commercialization until valid rights are documented or new implementation replaces them.
 - Third-party dependencies, model weights and output rights remain separately reviewable.
 
+
+
+## Sprint 26 first-video MVP (2026-11-03)
+- No additional Chinese upstream code, corpora or visual assets imported into RU/UA runtime. Original upstream remains isolated under the existing CC BY-NC-SA license gate.
+- Generated gradient PPM frames and RU/UA sample texts are new project material; user-provided local images remain user's responsibility to clear for distribution.
+- Local Silero weights and trusted PyTorch model execution remain subject to model provenance/terms; no model weights bundled. FFmpeg remains user-provided, not redistributed.
+- No new third-party Python runtime dependency in the scene/timeline/MP4 glue code.

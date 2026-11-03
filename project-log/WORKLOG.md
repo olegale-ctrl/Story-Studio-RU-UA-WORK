@@ -160,3 +160,12 @@
 - CI setup correction: a historical `tests/test_sprint20.py` imports `pytest`, so GitHub Actions installs pytest explicitly and runs the full pytest suite. Local project tests (`python -m pytest -q tests`): 119 passed, 15 subtests passed (Linux Python 3.13); remote CI result pending.
 
 - GitHub Actions follow-up: full-repository pytest collection also found intentionally isolated upstream tests. Added `pytest.ini` and restrict CI test discovery to our `tests/` directory; upstream tests require their own separate dependency and legal audit.
+
+
+## 2026-11-03 — Sprint 26 first-video implementation
+- User confirmed Windows Sprint 25.1 Silero ukr_igor preview and playback; screenshot shows Preview ready, 11.2 s synthesis, 2.2 s WAV, RTF 5.17.
+- Added `scripts/first_video.py`: a single command for offline local Silero or existing WAVs, per-scene local pictures or generated original gradients, editor-neutral v3 project, scene-level subtitles and FFmpeg MP4 burn-in.
+- Added RU/UA sample plans, five regression tests and Windows validation instructions. No Chinese corpora or additional upstream code loaded.
+- Validation: GitHub Actions CI pending at time of authoring; actual Windows MP4 not tested yet. User validation required before further video quality work.
+- Files: `scripts/first_video.py`, `examples/first_video_plan_ru.json`, `examples/first_video_plan_uk.json`, `tests/test_sprint26.py`, `docs/SPRINT26_FIRST_VIDEO_WINDOWS.md`, four project logs.
+- Next: verify CI; user runs real Silero end-to-end on Windows and checks exported video.
