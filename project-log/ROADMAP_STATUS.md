@@ -49,3 +49,5 @@ Sprint 11: Windows user confirmed Sprint10 playback; local FFmpeg auto-detection
 
 
 - **CI workflow:** Ubuntu Python 3.10/3.13 test matrix configured; no claim of successful GitHub Actions run until checked.
+
+- CI setup correction: a historical `tests/test_sprint20.py` imports `pytest`, so GitHub Actions installs pytest explicitly and runs the full pytest suite. Local result: 176 passed, 2 skipped, 22 subtests passed (Linux Python 3.13); remote CI result pending.

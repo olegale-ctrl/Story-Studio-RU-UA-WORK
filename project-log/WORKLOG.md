@@ -156,3 +156,5 @@
 - Blockers: licensing provenance (historical MIT snapshot vs current CC BY-NC-SA upstream), Windows end-to-end test, commercial provider rights.
 - Next: run Windows QA, incorporate feedback, then continue Sprint 26 with original video's reusable adapters, while preserving source attribution and licensing gate.
 
+
+- CI setup correction: a historical `tests/test_sprint20.py` imports `pytest`, so GitHub Actions installs pytest explicitly and runs the full pytest suite. Local result: 176 passed, 2 skipped, 22 subtests passed (Linux Python 3.13); remote CI result pending.
