@@ -169,3 +169,13 @@
 - Validation: GitHub Actions CI pending at time of authoring; actual Windows MP4 not tested yet. User validation required before further video quality work.
 - Files: `scripts/first_video.py`, `examples/first_video_plan_ru.json`, `examples/first_video_plan_uk.json`, `tests/test_sprint26.py`, `docs/SPRINT26_FIRST_VIDEO_WINDOWS.md`, four project logs.
 - Next: verify CI; user runs real Silero end-to-end on Windows and checks exported video.
+
+
+## 2026-11-04 — Codex onboarding and Chinese upstream audit handoff (documentation only)
+- Пользователь согласовал переход подготовки документации к Codex и приоритет глубокого исследования Discovery / Editorial Ranking / Narrative DNA. **Код и локальные установленные версии на паузе**; это не Sprint 27.
+- Подготовлены `AGENTS.md`, `project-log/CODEX_HANDOFF.md`, `docs/CODEX_ONBOARDING.md`, `docs/UPSTREAM_DEEP_AUDIT_2026-11-04.md`; обновлён `MASTER_PROMPT.md` до v1.2 и ссылки/статусы в журналах.
+- Исходные данные аудита: pinned китайский commit `87c2bbf...`; локальный поиск в `history_tool.py`, 57 исторических записей, 296 новых биографических файлов, описательные Writing-DNA/hook rules; отдельно перечислены инженерные сильные стороны и не воспроизведённые риски. Источники и оговорки включены в отчёт.
+- Лицензия: оригинал pinned CC BY-NC-SA 4.0; старый MIT-архив исторический, права на внешние корпуса и лицензии моделей/зависимостей не закрыты. Никаких APPROVED выдано.
+- Тесты: **не запускались** для документационных изменений; GitHub link/content review после записи. Реальный Windows end-to-end, TTS платные API, Wav2Lip CPU inference и внешний Jianying export не запускались.
+- GitHub: отдельная ветка `docs/codex-handoff-audit-20261104`; приёмка через PR, без merge в `main`. Не готовить новых ZIP-накладок, пока пользователь не попросит.
+- Следующий шаг: пользователь проверяет документационный PR; после его принятия передать Codex read-only запрос из `docs/CODEX_ONBOARDING.md`. При новых находках обновлять audit с file/line и tests, но не менять runtime без отдельной задачи.
