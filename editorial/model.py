@@ -501,3 +501,269 @@ class RightsDetails:
         if self.subject_kind not in (ObjectKind.SOURCE, ObjectKind.ASSET):
             _fail('subject_kind', 'must be source or asset')
         _optional_utc(self.expires_at, 'expires_at')
+
+
+def _refs(values, kind, field):
+    _tuple(values, RevisionRef, field)
+    for value in values:
+        _owner(value, kind, field)
+
+
+def _bounded_tuple(values, cls, field):
+    _tuple(values, cls, field)
+    if not 1 <= len(values) <= 1000:
+        _fail(field, 'must contain 1..1000 values')
+
+
+@dataclass(frozen=True)
+class BriefValue:
+    revision: int
+    audience: str
+    angle: str
+    promise: str
+    must_include_claim_refs: tuple[RevisionRef, ...]
+    must_avoid: tuple[str, ...]
+    profile_ref: RevisionRef
+
+    def __post_init__(self):
+        _positive(self.revision, 'revision')
+        for name in ('audience', 'angle', 'promise'):
+            _contract_text(getattr(self, name), name)
+        _refs(self.must_include_claim_refs, ObjectKind.CLAIM, 'must_include_claim_refs')
+        _tuple(self.must_avoid, str, 'must_avoid')
+        for text in self.must_avoid:
+            _contract_text(text, 'must_avoid')
+        _owner(self.profile_ref, ObjectKind.GENRE_PROFILE, 'profile_ref')
+
+
+@dataclass(frozen=True)
+class ScriptSegment:
+    id: str
+    text: str
+    role: str
+    claim_refs: tuple[RevisionRef, ...]
+    visual_notes: str | None
+    pronunciation_notes: str | None
+    disclosure_marker: str | None
+
+    def __post_init__(self):
+        _id(self.id, 'id')
+        _contract_text(self.text, 'text')
+        _choice(self.role, ('opening', 'body', 'closing', 'other'), 'role')
+        _refs(self.claim_refs, ObjectKind.CLAIM, 'claim_refs')
+        for name in ('visual_notes', 'pronunciation_notes', 'disclosure_marker'):
+            _optional_text(getattr(self, name), name)
+
+
+@dataclass(frozen=True)
+class ScriptRevision(EditorialRevision):
+    production_ref: RevisionRef
+    candidate_ref: RevisionRef
+    brief: BriefValue
+    locale: Locale
+    segments: tuple[ScriptSegment, ...]
+    claim_refs: tuple[RevisionRef, ...]
+
+    def __post_init__(self):
+        super().__post_init__()
+        _owner(self.ref, ObjectKind.SCRIPT, 'ref')
+        _owner(self.production_ref, ObjectKind.PRODUCTION, 'production_ref')
+        _owner(self.candidate_ref, ObjectKind.CANDIDATE, 'candidate_ref')
+        _instance(self.brief, BriefValue, 'brief')
+        _instance(self.locale, Locale, 'locale')
+        _bounded_tuple(self.segments, ScriptSegment, 'segments')
+        _unique(tuple(s.id for s in self.segments), 'segments.id')
+        _refs(self.claim_refs, ObjectKind.CLAIM, 'claim_refs')
+        expected = tuple(sorted({r for s in self.segments for r in s.claim_refs},
+                                key=lambda r: (r.kind.value, r.id, r.revision, r.content_hash)))
+        if self.claim_refs != expected:
+            _fail('claim_refs', 'must be the sorted unique union of segment claim refs')
+
+
+@dataclass(frozen=True)
+class Scene:
+    id: str
+    start: int
+    end: int
+    narration_text: str
+    visual_kind: str
+    visual_brief: str
+    asset_ref: RevisionRef | None
+    estimate_ms: int | None
+
+    def __post_init__(self):
+        _id(self.id, 'id')
+        if type(self.start) is not int or self.start < 0:
+            _fail('start', 'must be a nonnegative integer, not bool')
+        if type(self.end) is not int or self.end <= self.start:
+            _fail('end', 'must be an integer greater than start, not bool')
+        _contract_text(self.narration_text, 'narration_text')
+        _choice(self.visual_kind, ('still',), 'visual_kind')
+        _contract_text(self.visual_brief, 'visual_brief')
+        if self.asset_ref is not None:
+            _owner(self.asset_ref, ObjectKind.ASSET, 'asset_ref')
+        if self.estimate_ms is not None:
+            _positive(self.estimate_ms, 'estimate_ms')
+
+
+@dataclass(frozen=True)
+class ScenePlanRevision(EditorialRevision):
+    script_ref: RevisionRef
+    scenes: tuple[Scene, ...]
+
+    def __post_init__(self):
+        super().__post_init__()
+        _owner(self.ref, ObjectKind.SCENE_PLAN, 'ref')
+        _owner(self.script_ref, ObjectKind.SCRIPT, 'script_ref')
+        _bounded_tuple(self.scenes, Scene, 'scenes')
+        _unique(tuple(s.id for s in self.scenes), 'scenes.id')
+        cursor = 0
+        for scene in self.scenes:
+            if scene.start != cursor:
+                _fail('scenes', 'ranges must start at zero and be continuous in given order')
+            cursor = scene.end
+
+
+def _relative_path(value):
+    _contract_text(value, 'file_ref')
+    if len(value) > 240 or any(ord(c) < 32 or c in '<>:"|?*\\' for c in value):
+        _fail('file_ref', 'must be a safe relative POSIX path, at most 240 characters')
+    for part in value.split('/'):
+        stem = part.split('.')[0].upper()
+        reserved = stem in ('CON', 'PRN', 'AUX', 'NUL', 'CLOCK$') or re.fullmatch(r'(COM|LPT)[1-9¹²³]', stem)
+        if part in ('', '.', '..') or len(part) > 100 or part.endswith(('.', ' ')) or reserved:
+            _fail('file_ref', 'unsafe or reserved path component')
+
+
+@dataclass(frozen=True)
+class AssetRevision(EditorialRevision):
+    file_ref: str
+    sha256: str
+    kind: str
+    rights_ref: RevisionRef
+    scene_id: str | None
+    script_ref: RevisionRef | None
+    text_digest: str | None
+
+    def __post_init__(self):
+        super().__post_init__()
+        _owner(self.ref, ObjectKind.ASSET, 'ref')
+        _relative_path(self.file_ref)
+        _hash(self.sha256, 'sha256')
+        _choice(self.kind, ('image', 'audio', 'video'), 'kind')
+        _owner(self.rights_ref, ObjectKind.RIGHTS_REVIEW, 'rights_ref')
+        if self.scene_id is not None:
+            _id(self.scene_id, 'scene_id')
+        if (self.script_ref is None) != (self.text_digest is None):
+            _fail('script_ref/text_digest', 'both must be null or both present')
+        if self.script_ref is not None:
+            _owner(self.script_ref, ObjectKind.SCRIPT, 'script_ref')
+            _hash(self.text_digest, 'text_digest')
+
+
+@dataclass(frozen=True)
+class Event:
+    id: str
+    actor: str
+    at: str
+    action: str
+    refs: tuple[RevisionRef, ...]
+    reason: str
+    error_code: str | None
+
+    def __post_init__(self):
+        _id(self.id, 'id')
+        _contract_text(self.actor, 'actor')
+        _utc(self.at, 'at')
+        _choice(self.action, ('production_created', 'revision_added', 'active_selection_changed',
+                             'review_recorded', 'approval_recorded', 'recovery_recorded',
+                             'operation_failed'), 'action')
+        _tuple(self.refs, RevisionRef, 'refs')
+        _contract_text(self.reason, 'reason')
+        _optional_text(self.error_code, 'error_code')
+
+
+@dataclass(frozen=True)
+class ActiveSelections:
+    production: RevisionRef | None
+    candidate: RevisionRef | None
+    script: RevisionRef | None
+    scene_plan: RevisionRef | None
+
+    def __post_init__(self):
+        for name, kind in (('production', ObjectKind.PRODUCTION),
+                           ('candidate', ObjectKind.CANDIDATE),
+                           ('script', ObjectKind.SCRIPT),
+                           ('scene_plan', ObjectKind.SCENE_PLAN)):
+            value = getattr(self, name)
+            if value is not None:
+                _owner(value, kind, name)
+
+
+_REVISION_TYPES = (
+    (ObjectKind.PRODUCTION, ProductionRevision), (ObjectKind.GENRE_PROFILE, GenreProfile),
+    (ObjectKind.CANDIDATE, CandidateRevision), (ObjectKind.SOURCE, SourceRevision),
+    (ObjectKind.CLAIM, ClaimRevision), (ObjectKind.SCRIPT, ScriptRevision),
+    (ObjectKind.SCENE_PLAN, ScenePlanRevision), (ObjectKind.ASSET, AssetRevision),
+    (ObjectKind.RIGHTS_REVIEW, RightsReview),
+)
+
+
+@dataclass(frozen=True)
+class ContractSnapshot:
+    """Full in-memory aggregate; not a JSON schema or graph integrity proof.
+
+    Missing companions/targets and hash correctness belong to later integrity
+    validation. All supplied values are retained without sorting or inference.
+    """
+
+    base: EditorialSnapshot
+    source_details: tuple[SourceDetails, ...]
+    claim_reviews: tuple[ClaimReview, ...]
+    rights_details: tuple[RightsDetails, ...]
+    events: tuple[Event, ...]
+    snapshot_checksum: str
+
+    def __post_init__(self):
+        _instance(self.base, EditorialSnapshot, 'base')
+        _hash(self.snapshot_checksum, 'snapshot_checksum')
+        for name, cls in (('source_details', SourceDetails), ('claim_reviews', ClaimReview),
+                          ('rights_details', RightsDetails), ('events', Event)):
+            values = getattr(self, name)
+            _tuple(values, cls, name)
+            if len(values) > 10_000:
+                _fail(name, 'at most 10000 values')
+            keys = tuple(v.id if name == 'events' else
+                         (v.owner_ref.kind, v.owner_ref.id, v.owner_ref.revision)
+                         for v in values)
+            _unique(keys, name)
+        _unique(tuple(a.id for a in self.base.approvals), 'base.approvals.id')
+        if len(self.base.revisions) > 10_000:
+            _fail('base.revisions', 'at most 10000 revisions')
+        _unique(tuple((v.ref.kind, v.ref.id, v.ref.revision) for v in self.base.revisions), 'base.revisions')
+        for value in self.base.revisions:
+            if not any(value.ref.kind is kind and type(value) is cls for kind, cls in _REVISION_TYPES):
+                _fail('base.revisions', 'must contain concrete payload types, not ref-only headers')
+        ranks = {kind: i for i, (kind, _) in enumerate(_REVISION_TYPES)}
+        order = tuple((ranks[v.ref.kind], v.ref.id, v.ref.revision) for v in self.base.revisions)
+        if order != tuple(sorted(order)):
+            _fail('base.revisions', 'must use contract collection/id/revision order')
+        active_kinds = (ObjectKind.PRODUCTION, ObjectKind.CANDIDATE, ObjectKind.SCRIPT, ObjectKind.SCENE_PLAN)
+        indices = []
+        for value in self.base.active_refs:
+            if value.kind not in active_kinds:
+                _fail('base.active_refs', 'unsupported selection kind')
+            indices.append(active_kinds.index(value.kind))
+        if indices != sorted(set(indices)):
+            _fail('base.active_refs', 'must be unique and in slot order')
+
+    @property
+    def active_selections(self) -> ActiveSelections:
+        selected = {r.kind: r for r in self.base.active_refs}
+        return ActiveSelections(*(selected.get(k) for k in (
+            ObjectKind.PRODUCTION, ObjectKind.CANDIDATE, ObjectKind.SCRIPT, ObjectKind.SCENE_PLAN)))
+
+    @property
+    def rights_reviews(self) -> tuple[RightsReview, ...]:
+        """Distinct typed collection for the future wire mapping, no serialization."""
+        return tuple(r for r in self.base.revisions if r.ref.kind is ObjectKind.RIGHTS_REVIEW)

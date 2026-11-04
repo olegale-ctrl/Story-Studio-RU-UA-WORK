@@ -7,6 +7,8 @@ from .model import (
     RightsReview, RightsStatus, SourceRevision, Violation,
     CandidateRevision, ClaimReview, CriterionRating, GenreProfile,
     RightsDetails, RubricCriterion, SourceDetails,
+    ActiveSelections, AssetRevision, BriefValue, ContractSnapshot, Event,
+    Scene, ScenePlanRevision, ScriptRevision, ScriptSegment,
 )
 
 __all__ = (
@@ -17,4 +19,6 @@ __all__ = (
     'SourceRevision', 'Violation',
     'CandidateRevision', 'ClaimReview', 'CriterionRating', 'GenreProfile',
     'RightsDetails', 'RubricCriterion', 'SourceDetails',
+    'ActiveSelections', 'AssetRevision', 'BriefValue', 'ContractSnapshot', 'Event',
+    'Scene', 'ScenePlanRevision', 'ScriptRevision', 'ScriptSegment',
 )

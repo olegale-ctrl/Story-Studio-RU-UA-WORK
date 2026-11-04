@@ -52,3 +52,44 @@ GenreProfile ref UUID/revision, profile_key и version хранятся отде
 Перед E01.2 остаются: завершить недостающие value types и aggregate/active mapping, обеспечить их локальные инварианты и совместимость с E01.1, затем отдельно согласовать codec. Не начинать parsing/serialization под видом новых value types. Source locator совместно с SourceDetails и subject binding разрешаются позднее; эти constructors не делают lookup.
 
 Откат: revert только коммита E01.1b-1, без удаления production/media пользователя. Main, PR5/PR6, E00 branch, Sprint26/core/scripts/tests baseline, timeline v3, зависимости и CI не менялись. Релиз, merge, storage, workflow и E01.2 не выполнялись. После публикации ветки остановиться для проверки владельца.
+
+## E01.1b-2 — завершение value types (2026-11-04)
+
+Отдельная часть разрешена владельцем после принятия E01.1b-1. База ровно16d96d64bad98f2c87a0fd856d2bdff3a0f46f3e, та же ветка feat/editorial-e01-1b-types; предыдущая запись сохранена как история, её «предлагаемая E01.1b-2» больше не означает отсутствие новых типов.
+
+Добавлены девять public immutable типов: BriefValue, ScriptSegment, ScriptRevision, Scene, ScenePlanRevision, AssetRevision, Event, ActiveSelections, ContractSnapshot. Код добавлен после прежних типов; их конструкторы не изменены. Exports дополнены, старые имена сохранены.
+
+Локальные инварианты: правильные kinds ссылок, обязательные поля и tuple types, bool не integer, положительные/неотрицательные offsets, ограничения1..1000 сегментов/сцен, уникальность IDs, sorted unique union claim_refs внутри script, exact Unicode text без нормализации, непрерывность и порядок диапазонов сцен. Равенство narration slice с referenced script не проверяется до E01.5. Лимит20 сцен остаётся downstream capability, не ограничением editorial plan.
+
+AssetRevision сохраняет supplied SHA-256, relative POSIX path с ограничениями Windows reserved names/characters/length и пару script_ref/text_digest. Файлы не читаются, junction/symlink/существование/реальные hashes не проверяются. Учётный kind=video допустим, Scene.visual_kind только still; это не реализация video renderer. Event хранит данные, не исполняет action.
+
+ContractSnapshot(base,source_details,claim_reviews,rights_details,events,snapshot_checksum) сохраняет исходный EditorialSnapshot. Проверяет типы/tuple, формат checksum, локальную уникальность records, concrete revision payloads и нормативный порядок групп/id/revision. Не пересортировывает данные. active_selections — immutable проекция base.active_refs по четырём nullable slots; неизвестные kinds/duplicates/order rejected. rights_reviews — отдельная typed projection, предназначенная для будущей отдельной JSON-коллекции. Код сериализации отсутствует.
+
+Наличие всех companions/targets, совпадение owner payload/hash, целостность графа и approval authority не объявляются проверенными: это следующий уровень. Даже полный по форме aggregate может содержать unresolved refs. Базовый минимальный EditorialSnapshot по-прежнему допускает прежние конструкторы; усиления относятся только к новому ContractSnapshot.
+
+Q5 сохранён: subject_kind обязателен в RightsDetails, без inference и без global UUID uniqueness. Сравнение RightsDetails.expires_at с RightsReview.reviewed_at явно отложено до связанной проверки; constructor не ищет другой объект и не использует текущее время. Wire codec обязан будет объединять companion metadata без потери subject_kind/expiry. Ни E00, ни E01.1a молча не переписаны.
+
+### Файлы E01.1b-2
+
+1. editorial/model.py — новые types/helpers, без правки старой части.
+2. editorial/__init__.py — дополнительные public exports.
+3. tests/test_editorial_content.py — отдельный тестовый файл для читаемости; старые tests/test_editorial_model.py и test_editorial_types.py не изменены.
+4. docs/tasks/E01_1B_RESULT.md — это дополнение.
+
+### Фактическое тестирование E01.1b-2
+
+Linux, Python3.12.14, существующая .venv, без установок. Команды:
+
+- `.venv/bin/python -m unittest discover -s tests -p test_editorial_content.py -v` — **24 tests, OK**.
+- `.venv/bin/python -m unittest discover -s tests -p test_editorial_model.py -v` — **22 tests, OK**.
+- `.venv/bin/python -m unittest discover -s tests -p test_editorial_types.py -v` — **18 tests, OK**.
+
+Итого **64 tests, OK** (24+22+18). Это число test methods; subTest scenarios не считаются дополнительными самостоятельными tests. Полный suite, Windows, FFmpeg/TTS/render/API не запускались. Старый import-isolation test прошёл повторно.
+
+### Открытые вопросы и границы перед E01.2
+
+Архитектурных изменений сверх принятого Q5 не потребовалось. JSON envelope остаётся отдельными коллекциями E00/E01.1a; общий внутренний tuple не является заменой wire schema. В E01.2 нужно реализовать strict field mapping и обратимый join с companions; вычисление checksum/content_hash/digest не включать. Даты/checked strings старых E01.1 объектов всё ещё могут быть слабее wire contract, поэтому codec обязан диагностировать их явно, без изменения значений.
+
+E01.3 должен проверить exact refs и owner cardinality, материал/права/expiry и hash integrity. E01.5 — полный текст scene↔script и handoff capability. При приёмке не считать constructor ContractSnapshot доказательством этих properties.
+
+E01.2 не начат: parsing/serialization, canonical hashing, graph traversal, save/locks, workflow и медиа отсутствуют. Новый отдельный коммит E01.1b-2 предназначен для review; merge/main/release не выполняются. После результата остановиться для проверки владельца.
