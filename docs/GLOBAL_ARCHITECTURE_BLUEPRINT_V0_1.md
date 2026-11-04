@@ -1,11 +1,15 @@
 # Story Studio RU/UA — Global Architecture Blueprint
-**Version:** 0.1 (design proposal) | **Date:** 2026-11-04
+**Version:** 0.1, editorial design addendum | **Date:** 2026-11-04
 **Status:** DRAFT FOR USER REVIEW — documentation only. Product direction is approved, detailed technical choices are **not yet approved for implementation**.
 **Baseline:** `main` = Sprint 26; docs branch = `docs/codex-handoff-audit-20261104`; CPU Lip Sync PR #5 remains experimental and unmerged.
 
 ## 0. Scope, verified baseline, and non-goals
 
-**Goal:** A Windows-first, local-first, modular production system for finding promising RU/UA stories, verifying claims, creating editorial scripts, producing and assembling video, and learning from authorized post-publication analytics. The user controls approvals, provider selection, rights, spend and publication.
+**Goal:** A Windows-first, local-first, modular **universal multi-genre** production system for finding promising RU/UA stories, verifying factual claims when applicable, creating original editorial scripts, producing and assembling video, and learning from authorized post-publication analytics. The user controls approvals, provider selection, rights, spend and publication.
+
+**User-approved direction (2026-11-04):** one common editorial engine for history, science/technology, education, culture, fiction and other topics, with declarative genre profiles and independent `factual/fictional/hybrid` content modes. Detailed contracts and UX remain design proposals, not implementation authorization.
+
+**Detailed design documents:** [Universal Editorial Pipeline](architecture/EDITORIAL_PIPELINE_V0_1.md), [Editorial Data Contracts](architecture/EDITORIAL_DATA_CONTRACTS_V0_1.md), [Editorial User Workflow](architecture/EDITORIAL_USER_WORKFLOW_V0_1.md).
 
 **Observed in current code (2026-11-04):**
 - `core/project_schema.py`: neutral project/timeline **schema v3**, `Scene`, `Track`, `Subtitle`, `Clip`, `MediaAsset`, `Project`; locales ru/uk.
@@ -189,7 +193,7 @@ Deliver: context map, boundaries, contracts, workflow gates, current-vs-target m
 Deliver: reproducible Sprint 26 smoke tests, documented v3 compatibility, sidecar schema, fixture samples and contract tests. Gate: existing CLI/render regression tests pass; Windows end-to-end acceptance separately verified.
 
 **A2 — Human-guided story-to-script vertical slice.**
-Deliver: manual story intake, SourceReference/EvidenceLedger, original RU/UA scripts, approvals, scene plan mapped to existing still-image renderer. Gate: one complete Ukrainian and one Russian example with explicit sources, review and MP4; no fabricated citations.
+Deliver: manual story intake, SourceReference/EvidenceLedger for factual claims, original RU/UA scripts, approvals, scene plan mapped to existing still-image renderer. Gate: one complete Ukrainian and one Russian factual example with verified source links, plus a distinct fictional/hybrid editorial fixture; all use the same contracts and approval system. MP4/Windows acceptance remains separately testable; no fabricated citations.
 
 **A3 — Media library & provider prototype.**
 Deliver: provenance/rights manifest, local/manual image adapter, simulated quota router, approved real adapter only if rights/API verified. Gate: safe fallback, no secret leakage, no surprise spend, no breaking v3.
@@ -214,7 +218,7 @@ Roadmap stages are logical work packages, **not Sprint numbers or delivery-time 
 |---|---|---|
 | D01: Deployment | Local-first modular monolith, opt-in cloud | Windows usability, privacy, low overhead |
 | D02: Human control | Approve story, script, provider, spend and publication | Editorial integrity, rights, safety |
-| D03: First vertical slice | One RU and one UK factual short video, human-selected story | End-to-end proof without premature scraping |
+| D03: First vertical slice | **Universal multi-genre editorial engine**; cross-genre fixtures (factual RU/UK + fiction/hybrid), then human-approved short videos | User-approved direction; demonstrate reuse rather than history-only logic |
 | D04: Media baseline | Preserve schema v3 and still-image renderer; sidecar metadata | Avoid breaking Sprint 26 |
 | D05: Providers | Verified local/free first; web-manual fallback; paid opt-in | Resilience, cost control, ToS |
 | D06: Source integrity | Every factual claim must have source references or be marked unverified | Traceability |
@@ -223,10 +227,10 @@ Roadmap stages are logical work packages, **not Sprint numbers or delivery-time 
 | D09: First UI | Guided wizard + advanced settings and clear approvals | Ease of use with controllability |
 | D10: Commercial release | Block until rights and dependencies cleared | Current upstream license uncertainty |
 
-### User choices needed next (only three)
-1. **First target content genre:** history/biography, factual explainers, science/technology, or mixed? The system can support all later, but the first fixtures and rubrics need a concrete genre.
-2. **Initial control level:** default human approvals at each editorial gate (recommended), or an optional fully automatic draft run that still stops before paid calls/publication?
-3. **Primary target format:** vertical 9:16 shorts (recommended first) or simultaneous 9:16 + 16:9? This affects scene framing and visual generation costs.
+### Product choice resolved and remaining design defaults
+- **Resolved by user:** universal multi-genre platform, not a history-only product. Implement genre differences through versioned profiles; editorial content mode is separately factual, fictional or hybrid.
+- **Proposed, not yet separately approved:** guided workflow with human approvals at editorial gates; optional automatic drafting later, always stopping before paid calls, provider activation, sensitive uploads and publication.
+- **Proposed, not yet separately approved:** first vertical-video preset 9:16, while the architecture remains format-agnostic and can support 16:9.
 
 ## 11. Risk register and evidence gates
 
@@ -258,6 +262,8 @@ Roadmap stages are logical work packages, **not Sprint numbers or delivery-time 
 - [x] Versioned data contracts and provider integration points proposed.
 - [x] Rights, privacy, cost, provenance, and analytics boundaries proposed.
 - [x] Roadmap and acceptance gates drafted without runtime edits.
-- [ ] User confirms first genre, autonomy mode and target format.
+- [x] User selected a universal multi-genre editorial platform.
+- [x] Editorial pipeline, versioned data sidecar and user workflow drafted as separate documents.
+- [ ] User confirms autonomy defaults and first production format if/when needed.
 - [ ] Cross-check future Codex research findings and amend blueprint with evidence.
 - [ ] User explicitly approves implementation work packages before any runtime changes.
