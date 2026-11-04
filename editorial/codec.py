@@ -2,12 +2,13 @@
 import json
 import re
 from datetime import datetime
+from enum import Enum
 from urllib.parse import urlsplit
 from uuid import UUID
 
 from . import model as m
 
-__all__ = ('decode_snapshot', 'DecodeError')
+__all__ = ('decode_snapshot', 'encode_snapshot', 'DecodeError', 'EncodeError')
 
 MAX_BYTES = 32 * 1024 * 1024
 MAX_DEPTH = 64
@@ -19,8 +20,16 @@ class DecodeError(m.ModelError):
     """Atomic decode failure; violation.field_path is a JSON-style path."""
 
 
+class EncodeError(m.ModelError):
+    """Atomic encode failure; violation.field_path identifies invalid input."""
+
+
 def _error(path, code, message):
     raise DecodeError(m.Violation(code, path, message))
+
+
+def _encode_error(path, code, message):
+    raise EncodeError(m.Violation(code, path, message))
 
 
 def _field(path, name):
@@ -404,3 +413,198 @@ def decode_snapshot(raw: bytes) -> m.ContractSnapshot:
     return _make(m.ContractSnapshot, {'base': base, 'source_details': tuple(companions['sources']),
         'claim_reviews': tuple(companions['claims']), 'rights_details': tuple(companions['rights_reviews']),
         'events': events, 'snapshot_checksum': checksum}, '$')
+
+
+def _enum_value(value):
+    """Preserve weak legacy values so strict decode can reject them with a path."""
+    return value.value if isinstance(value, Enum) else value
+
+
+def _wire_ref(value):
+    return {'kind': _enum_value(value.kind), 'id': value.id, 'revision': value.revision,
+            'content_hash': value.content_hash}
+
+
+def _wire_rubric(value):
+    return {'key': value.key, 'description': value.description, 'rating_min': value.rating_min,
+            'rating_max': value.rating_max, 'weight_percent': value.weight_percent}
+
+
+def _wire_rating(value):
+    return {'criterion_key': value.criterion_key, 'rating': value.rating, 'reason': value.reason}
+
+
+def _wire_brief(value):
+    return {'revision': value.revision, 'audience': value.audience, 'angle': value.angle,
+            'promise': value.promise,
+            'must_include_claim_refs': [_wire_ref(r) for r in value.must_include_claim_refs],
+            'must_avoid': list(value.must_avoid), 'profile_ref': _wire_ref(value.profile_ref)}
+
+
+def _wire_segment(value):
+    return {'id': value.id, 'text': value.text, 'role': value.role,
+            'claim_refs': [_wire_ref(r) for r in value.claim_refs],
+            'visual_notes': value.visual_notes, 'pronunciation_notes': value.pronunciation_notes,
+            'disclosure_marker': value.disclosure_marker}
+
+
+def _wire_scene(value):
+    return {'id': value.id, 'start': value.start, 'end': value.end,
+            'narration_text': value.narration_text, 'visual_kind': value.visual_kind,
+            'visual_brief': value.visual_brief,
+            'asset_ref': None if value.asset_ref is None else _wire_ref(value.asset_ref),
+            'estimate_ms': value.estimate_ms}
+
+
+def _wire_evidence(value):
+    return {'source_ref': _wire_ref(value.source_ref), 'relation': _enum_value(value.relation),
+            'locator': value.locator, 'explanation': value.explanation, 'reviewer': value.reviewer,
+            'reviewed_at': value.reviewed_at}
+
+
+def _wire_revision(value):
+    common = {'ref': _wire_ref(value.ref)}
+    if type(value) is m.ProductionRevision:
+        return common | {'title': value.title, 'profile_ref': _wire_ref(value.profile_ref),
+            'content_mode': _enum_value(value.content_mode),
+            'script_locale': _enum_value(value.script_locale),
+            'narration_locale': _enum_value(value.narration_locale),
+            'subtitle_locale': _enum_value(value.subtitle_locale), 'ui_locale': _enum_value(value.ui_locale),
+            'intended_use': value.intended_use, 'output_preset': value.output_preset,
+            'created_at': value.created_at}
+    if type(value) is m.GenreProfile:
+        return common | {'profile_key': value.profile_key, 'version': value.version,
+            'display_name_ru': value.display_name_ru, 'display_name_uk': value.display_name_uk,
+            'allowed_modes': [_enum_value(v) for v in value.allowed_modes],
+            'narrative_structure': list(value.narrative_structure),
+            'review_policy_version': value.review_policy_version,
+            'rubric': None if value.rubric is None else [_wire_rubric(v) for v in value.rubric]}
+    if type(value) is m.CandidateRevision:
+        return common | {'title': value.title, 'summary': value.summary,
+            'source_refs': [_wire_ref(v) for v in value.source_refs],
+            'discovery_method': value.discovery_method, 'discovery_input': value.discovery_input,
+            'assessment': None if value.assessment is None else [_wire_rating(v) for v in value.assessment],
+            'rationale': value.rationale}
+    if type(value) is m.SourceRevision:
+        return common | {'title': value.title, 'locator': value.locator,
+                         'rights_ref': _wire_ref(value.rights_ref)}
+    if type(value) is m.ClaimRevision:
+        return common | {'statement': value.statement, 'claim_type': _enum_value(value.claim_type),
+            'materiality': value.materiality,
+            'evidence_links': [_wire_evidence(v) for v in value.evidence_links]}
+    if type(value) is m.ScriptRevision:
+        return common | {'production_ref': _wire_ref(value.production_ref),
+            'candidate_ref': _wire_ref(value.candidate_ref), 'brief': _wire_brief(value.brief),
+            'locale': _enum_value(value.locale), 'segments': [_wire_segment(v) for v in value.segments],
+            'claim_refs': [_wire_ref(v) for v in value.claim_refs]}
+    if type(value) is m.ScenePlanRevision:
+        return common | {'script_ref': _wire_ref(value.script_ref),
+                         'scenes': [_wire_scene(v) for v in value.scenes]}
+    if type(value) is m.AssetRevision:
+        return common | {'file_ref': value.file_ref, 'sha256': value.sha256, 'kind': value.kind,
+            'rights_ref': _wire_ref(value.rights_ref), 'scene_id': value.scene_id,
+            'script_ref': None if value.script_ref is None else _wire_ref(value.script_ref),
+            'text_digest': value.text_digest}
+    if type(value) is m.RightsReview:
+        return common | {'subject_id': value.subject_id, 'subject_revision': value.subject_revision,
+            'material_digest': value.material_digest, 'intended_use': value.intended_use,
+            'allowed_actions': list(value.allowed_actions), 'status': _enum_value(value.status),
+            'reviewer': value.reviewer, 'reviewed_at': value.reviewed_at, 'basis': value.basis}
+    _encode_error('$.base.revisions', 'UNSUPPORTED_TYPE', 'Unsupported revision payload type')
+
+
+def _wire_approval(value):
+    return {'id': value.id, 'gate': value.gate, 'object_ref': _wire_ref(value.object_ref),
+            'dependency_digest': value.dependency_digest, 'policy_version': value.policy_version,
+            'actor': value.actor, 'timestamp': value.timestamp, 'decision': _enum_value(value.decision),
+            'reason': value.reason, 'review_declarations': list(value.review_declarations)}
+
+
+def _wire_event(value):
+    return {'id': value.id, 'actor': value.actor, 'at': value.at, 'action': value.action,
+            'refs': [_wire_ref(v) for v in value.refs], 'reason': value.reason,
+            'error_code': value.error_code}
+
+
+def _companions(revisions, values, collection, internal_name):
+    if type(values) is not tuple:
+        _encode_error(f'$.{internal_name}', 'TYPE', 'Companion collection must be an immutable tuple')
+    if len(values) != len(revisions):
+        index = min(len(values), len(revisions))
+        _encode_error(f'$.{collection}[{index}]', 'COMPANION_COUNT',
+                      'Exactly one companion is required for every revision')
+    for i, (revision, companion) in enumerate(zip(revisions, values)):
+        if companion.owner_ref != revision.ref:
+            _encode_error(f'$.{collection}[{i}].ref', 'COMPANION_OWNER',
+                          'Companion owner_ref must exactly match the revision ref in the same position')
+    return values
+
+
+def encode_snapshot(snapshot: m.ContractSnapshot) -> bytes:
+    """Return deterministic normative JSON bytes or raise EncodeError.
+
+    The supplied checksum is retained, never computed or verified. The complete
+    wire value is validated through the strict decoder before bytes are returned.
+    """
+    if type(snapshot) is not m.ContractSnapshot:
+        _encode_error('$', 'TYPE', 'Expected ContractSnapshot')
+    try:
+        revisions = tuple(snapshot.base.revisions)
+        ranks = {kind: rank for rank, (kind, _) in enumerate(m._REVISION_TYPES)}
+        try:
+            order = tuple((ranks[v.ref.kind], v.ref.id, v.ref.revision) for v in revisions)
+        except (AttributeError, KeyError):
+            _encode_error('$.base.revisions', 'UNSUPPORTED_TYPE', 'Revision has no supported typed ref')
+        if order != tuple(sorted(order)) or len(order) != len(set(order)):
+            _encode_error('$.base.revisions', 'REVISION_ORDER',
+                          'Revisions must use contract collection/id/revision order without duplicates')
+        grouped = {kind: tuple(v for v in revisions if v.ref.kind is kind)
+                   for kind, _ in m._REVISION_TYPES}
+        sources = grouped[m.ObjectKind.SOURCE]
+        claims = grouped[m.ObjectKind.CLAIM]
+        rights = grouped[m.ObjectKind.RIGHTS_REVIEW]
+        source_details = _companions(sources, snapshot.source_details, 'sources', 'source_details')
+        claim_reviews = _companions(claims, snapshot.claim_reviews, 'claims', 'claim_reviews')
+        rights_details = _companions(rights, snapshot.rights_details, 'rights_reviews', 'rights_details')
+
+        collections = {name: [_wire_revision(v) for v in grouped[kind]] for name, kind in (
+            ('production_revisions', m.ObjectKind.PRODUCTION), ('profiles', m.ObjectKind.GENRE_PROFILE),
+            ('candidates', m.ObjectKind.CANDIDATE), ('sources', m.ObjectKind.SOURCE),
+            ('claims', m.ObjectKind.CLAIM), ('scripts', m.ObjectKind.SCRIPT),
+            ('scene_plans', m.ObjectKind.SCENE_PLAN), ('assets', m.ObjectKind.ASSET),
+            ('rights_reviews', m.ObjectKind.RIGHTS_REVIEW))}
+        for record, details in zip(collections['sources'], source_details):
+            record.update({'source_type': details.source_type, 'author': details.author,
+                'publisher': details.publisher, 'published_at': details.published_at,
+                'accessed_at': details.accessed_at, 'access_notes': details.access_notes,
+                'reliability_notes': details.reliability_notes, 'material_digest': details.material_digest})
+        for record, review in zip(collections['claims'], claim_reviews):
+            record.update({'review_status': review.review_status, 'qualification': review.qualification,
+                'reviewer': review.reviewer, 'reviewed_at': review.reviewed_at, 'reason': review.reason})
+        for record, details in zip(collections['rights_reviews'], rights_details):
+            record.update({'subject_kind': _enum_value(details.subject_kind),
+                           'expires_at': details.expires_at})
+
+        active = snapshot.active_selections
+        envelope = {'editorial_schema_version': snapshot.base.editorial_schema_version,
+            'production_id': snapshot.base.production_id, 'generation': snapshot.base.generation,
+            **collections, 'approvals': [_wire_approval(v) for v in snapshot.base.approvals],
+            'events': [_wire_event(v) for v in snapshot.events],
+            'active_refs': {name: None if value is None else _wire_ref(value) for name, value in (
+                ('production', active.production), ('candidate', active.candidate),
+                ('script', active.script), ('scene_plan', active.scene_plan))},
+            'snapshot_checksum': snapshot.snapshot_checksum}
+        encoded = json.dumps(envelope, ensure_ascii=False, sort_keys=True, separators=(',', ':'),
+                             allow_nan=False).encode('utf-8')
+    except EncodeError:
+        raise
+    except (AttributeError, TypeError, ValueError, OverflowError) as error:
+        _encode_error('$', 'INTERNAL_SHAPE', f'Unsupported or malformed internal value: {error}')
+    try:
+        restored = decode_snapshot(encoded)
+    except DecodeError as error:
+        violation = error.violation
+        raise EncodeError(m.Violation('INVALID_VALUE', violation.field_path, violation.message)) from None
+    if restored != snapshot:
+        _encode_error('$', 'NON_REVERSIBLE', 'Internal snapshot cannot round-trip without information loss')
+    return encoded
