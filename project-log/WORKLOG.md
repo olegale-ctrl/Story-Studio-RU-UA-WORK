@@ -179,3 +179,13 @@
 - Тесты: **не запускались** для документационных изменений; GitHub link/content review после записи. Реальный Windows end-to-end, TTS платные API, Wav2Lip CPU inference и внешний Jianying export не запускались.
 - GitHub: отдельная ветка `docs/codex-handoff-audit-20261104`; приёмка через PR, без merge в `main`. Не готовить новых ZIP-накладок, пока пользователь не попросит.
 - Следующий шаг: пользователь проверяет документационный PR; после его принятия передать Codex read-only запрос из `docs/CODEX_ONBOARDING.md`. При новых находках обновлять audit с file/line и tests, но не менять runtime без отдельной задачи.
+
+
+## 2026-11-04 — Global Architecture Blueprint v0.1 (documentation-only)
+- Пользователь поручил детальное проектирование глобальной архитектуры Story Studio RU/UA параллельно read-only аудиту Codex; рабочий код не менять.
+- Проверены существующие файлы `core/project_schema.py`, `scripts/first_video.py`, `core/mp4_render.py`, `core/cli.py`, README, master prompt, Codex handoff и архитектурные/лицензионные ограничения.
+- Важный факт: schema v3 допускает `MediaAsset.kind='video'`, но текущий `core/mp4_render.py` принимает в видеодорожке только изображения; смешанный AI-video монтаж потребует отдельной реализации и тестов.
+- Создан `docs/GLOBAL_ARCHITECTURE_BLUEPRINT_V0_1.md`: modular monolith local-first, модули, контракты и versioned sidecar, gates, provenance, интеграция provider discovery, roadmap A0–A7, риски и три пользовательских решения.
+- Статус: **DRAFT**, архитектура не утверждена для реализации; лицензии и коммерческое использование остаются заблокированными до проверки; работа Codex не прерывалась.
+- Тесты не запускались: изменена только документация; Sprint 26 `main`, PR #5 и пользовательская Windows установка не затронуты.
+- Следующий шаг: согласовать жанр первого сквозного сценария, уровень автономности и формат видео; затем обновить blueprint, позднее сверить с результатами Codex.
