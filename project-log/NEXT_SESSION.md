@@ -1,3 +1,15 @@
+# Next session — Codex research documentation (2026-11-04)
+
+Текущая работа — review двух волн исследования, сохранённых в [docs/research/README.md](../docs/research/README.md). Ветка публикации: docs/codex-research-2026-11-04. Это только документация, без нового Sprint, интеграции, merge или release.
+
+Прочитать матрицу, независимое ревью и предлагаемые контракты/дорожную карту. Архитектура PROPOSED, требует отдельного утверждения. Исходные yt-retention/content-thumbnail-package/TARPA остаются неподтверждёнными; альтернативы не являются установлением их тождества.
+
+Рабочая база Sprint 26 не изменена. Предыдущие Linux tests/синтетический рендер — исторические результаты, не новые Windows/Silero/API проверки. Не повторять настройку, полный test suite, загрузки моделей или внешний код без технической необходимости и разрешённого scope.
+
+После review: согласовать источники, права и метрики, затем отдельную реализационную задачу. Ничего из backlog не запускать автоматически.
+
+Ниже сохранены исторические записи; они не заменяют текущую задачу review.
+
 # Next session — Sprint 26 first-video pipeline (2026-11-03)
 
 Windows Sprint 25.1 Silero Ukrainian preview verified by user: Preview ready, WAV 2.2 s, synthesis 11.2 s, RTF 5.17, playback reported working.

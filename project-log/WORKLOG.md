@@ -1,5 +1,16 @@
 # WORKLOG
 
+## 2026-11-04 — Codex: сохранение двух волн исследования, только Markdown
+
+- По прямому запросу пользователя результаты из чата сохранены в восьми отчётах [docs/research](../docs/research/README.md): матрица, upstream audit, метрики/эксперименты, ML/утечки, альтернативы, архитектура/план, независимое ревью и индекс.
+- Исходные C03/C06 остаются UNVERIFIED SOURCE; C11 TARPA — UNVERIFIED RESEARCH REFERENCE. Проверенные альтернативы перечислены отдельно.
+- Архитектура PROPOSED, интеграция и новый Sprint не начаты. Рабочая база e1f4efb0fb5ff290bb198349213c004b4667ef0f сохранена.
+- Состав этой документальной публикации: восемь новых docs/research/*.md и краткие дополнения WORKLOG/NEXT_SESSION/ROADMAP_STATUS/LICENSE_REVIEW_LOG. Старые записи сохранены.
+- Внешний код, модели, paid API и live Analytics не запускались. Полные project tests не повторялись. Точные исторические результаты настройки и границы исследования записаны в README отчётов.
+- Проверки публикации: Markdown-only allowlist, отсутствие изменений runtime/dependencies/CI/gitlinks, diff whitespace, локальные ссылки и закреплённые source citations; итог указан в описании ветки/PR.
+- Разрешена отдельная Git-ветка docs/codex-research-2026-11-04 и PR для review. Merge, release, публикация облачной среды и реализация не разрешены и не выполняются.
+- Следующий шаг: review документов и отдельное утверждение архитектуры; не выполнять предложенный backlog автоматически.
+
 ## 2026-10-30 — Session 1: planning and initial archive inventory
 
 ### Выполнено

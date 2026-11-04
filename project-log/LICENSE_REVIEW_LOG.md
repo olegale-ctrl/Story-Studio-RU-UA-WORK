@@ -1,5 +1,15 @@
 # LICENSE REVIEW LOG
 
+## 2026-11-04 — Codex research: evidence, без новых разрешений на интеграцию
+
+- Сводка версий/прав: [EXTERNAL_TECHNOLOGY_MATRIX.md](../docs/research/EXTERNAL_TECHNOLOGY_MATRIX.md). Статус ADOPT не присвоен ни одному внешнему компоненту.
+- Текущий upstream объявляет CC BY-NC-SA 4.0, но LICENSE сокращён/изменён относительно стандартного текста. Коммерческий перенос покрытых материалов BLOCKED; историческая MIT-запись ниже не является clearance текущего snapshot. Подробности и первоисточники: [UPSTREAM_AUDIT.md](../docs/research/UPSTREAM_AUDIT.md).
+- ViralIQ: all rights reserved для кода, заявленные NC-условия данных/derived artifacts; коммерческий перенос требует разрешения.
+- У YosukM, retention-clipper, C09 и D²Co в проверенных trees не найден LICENSE; публичная доступность не даёт подтверждённого grant. C01/C07 заявляют MIT только в README, полный grant/provenance не подтверждён.
+- MIT/Apache исходников keepwatching, Analytics, packaging helpers, Beyond Views, GrowthBook SDK/stats и других кандидатов не распространяется автоматически на данные, веса, изображения, шрифты, API/output. GrowthBook Enterprise directories имеют отдельные условия.
+- Оригинальные неподтверждённые названия не включены в интеграционные рекомендации. Китайские корпуса/DNA/референсы сохраняют REPLACE/BLOCKED policy.
+- Публикуются только оригинальные Markdown-отчёты с citations; чужие корпуса, данные, веса, медиа и библиотеки в эту ветку не добавляются. Это исследовательская оценка, не юридическое заключение.
+
 | Компонент | Источник | Лицензия | Статус | Основание/следующий шаг |
 |---|---|---|---|---|
 | Корневой код Story Studio | https://github.com/konlu/story-studio | MIT, Copyright (c) 2026 konlu | PRELIMINARY | Сохранить notices, проверить охват и другие лицензии |
