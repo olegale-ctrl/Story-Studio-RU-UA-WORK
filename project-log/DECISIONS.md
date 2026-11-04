@@ -46,3 +46,10 @@ Date: 2026-10-30. Decision: report same-track overlap as warning, attach SHA-256
 - Legal gate: CC BY-NC-SA 4.0 on current upstream; historical MIT copy is not adequate evidence to green-light commercialization.
 - Sprint releases remain incremental ZIPs; each release's exact files are committed to GitHub.
 
+
+
+## ADR-2026-11-04 — Codex onboarding: read-only audit before new development
+Дата: 2026-11-04. Статус: согласовано направление аудита и подготовка документов; реализация новых функций **не санкционирована**.
+Решение: один приватный GitHub-репозиторий, Sprint 26 в `main`, Sprint 25.1 локально как резерв. Новый `AGENTS.md` указывает Codex на короткий handoff и конкретные источники; первый Codex этап перепроверяет претензии к китайскому поиску историй, factual evidence и редакционной драматургии без изменений кода.
+Причины: пользователь считает поиск и сценарную систему наиболее ценными; текущие инструменты локального corpus search не равны автономному интернет-агрегатору, а редакционные hooks не являются доказанным retention predictor.
+Последствия: новые оригинальные RU/UA Discovery, Evidence и Narrative DNA требуют отдельной проектной приёмки; старый lip-sync PR #5 остаётся экспериментальным; никакой новый ZIP или новая рабочая папка на этом шаге не нужны.
