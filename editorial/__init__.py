@@ -5,6 +5,8 @@ from .model import (
     EditorialRevision, EditorialSnapshot, EvidenceLink, EvidenceRelation,
     Locale, ModelError, ObjectKind, ProductionRevision, RevisionRef,
     RightsReview, RightsStatus, SourceRevision, Violation,
+    CandidateRevision, ClaimReview, CriterionRating, GenreProfile,
+    RightsDetails, RubricCriterion, SourceDetails,
 )
 
 __all__ = (
@@ -13,4 +15,6 @@ __all__ = (
     'EvidenceRelation', 'Locale', 'ModelError', 'ObjectKind',
     'ProductionRevision', 'RevisionRef', 'RightsReview', 'RightsStatus',
     'SourceRevision', 'Violation',
+    'CandidateRevision', 'ClaimReview', 'CriterionRating', 'GenreProfile',
+    'RightsDetails', 'RubricCriterion', 'SourceDetails',
 )
