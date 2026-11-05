@@ -1,7 +1,7 @@
 # GitHub repository storage and collaboration policy — Story Studio RU/UA
 
-**Дата принятия:** 2026-11-05  
-**Статус:** обязательная проектная политика для дальнейших заданий Codex, ревизий и ручных изменений.  
+**Дата принятия:** 2026-11-05
+**Статус:** обязательная проектная политика для дальнейших заданий Codex, ревизий и ручных изменений.
 **Репозиторий:** `olegale-ctrl/Story-Studio-RU-UA-WORK` (private).
 
 ## 1. Назначение и границы
@@ -37,10 +37,10 @@ GitHub/Git — система версий **кода, документации,
 | Git LFS | По умолчанию **не включать**. Только после явного решения владельца, проверки текущих лимитов хранилища, трафика, стоимости, доступа и правил удаления. |
 | GitHub Actions artifacts / Releases | Не использовать как постоянное бесплатное хранилище. Учитывать отдельные ограничения, retention и стоимость. |
 
-Источники для периодической сверки:  
-- https://docs.github.com/en/repositories/creating-and-managing-repositories/repository-limits  
-- https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github  
-- https://docs.github.com/en/billing/concepts/product-billing/git-lfs  
+Источники для периодической сверки:
+- https://docs.github.com/en/repositories/creating-and-managing-repositories/repository-limits
+- https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github
+- https://docs.github.com/en/billing/concepts/product-billing/git-lfs
 - https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-storage-and-bandwidth-usage
 
 ## 5. Места хранения больших артефактов
