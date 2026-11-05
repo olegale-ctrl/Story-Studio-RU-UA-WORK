@@ -1,6 +1,6 @@
 # E01.3.9.1 — Atomic Storage, Protected Head Anchor and Transaction Sequence
 
-Статус: **DESIGN PROPOSAL — НЕ УТВЕРЖДЁН**. Дата: 2026-11-05.
+Статус: **DESIGN PROPOSAL — НЕ УТВЕРЖДЁН**. Ревизия: E01.3.9.1a, 2026-11-05.
 
 Этот документ не разрешает реализацию storage, broker, journal, anchor,
 authority evaluation или recovery. Рекомендации D1–D12 в конце требуют отдельного
@@ -9,16 +9,25 @@ authority evaluation или recovery. Рекомендации D1–D12 в ко�
 ## 1. Основание и границы
 
 - Репозиторий: `olegale-ctrl/Story-Studio-RU-UA-WORK`.
-- База: `feat/editorial-e01-3-8-6-schema2-migration`.
-- Точный base SHA: `33b92d5af58426c01baf0cf283ef20b6f89f6bc5`.
-- Ветка предложения: `docs/editorial-e01-3-9-1-atomic-storage-design`.
-- Единственный добавляемый файл: этот документ.
+- База уточнения: `docs/story-intelligence-architecture-decision-2026-11-05`.
+- Точный base SHA: `aeef7435e85538ed2b83c0cb6e6513b999b8c062`.
+- Ветка уточнения: `docs/editorial-e01-3-9-1a-storage-clarifications`.
+- Единственный изменяемый файл: этот документ. Исходное предложение E01.3.9.1
+  сохранено и уточняется на месте; его публикация не означала approval.
 
 Изучены E00/1 из нормативного коммита
 `e520648411b99264688ff66dc61ad0e974201ed3`, утверждённые
 `E01_3_7_3_APPROVED_CONTRACT.md`, `E01_3_8_1_APPROVED_CONTRACT.md`, существующие
 schema-2 models/codec/attestation/integrity/migration, snapshot integrity,
 approval consistency/history. Исполняемый код не создаётся и не меняется.
+
+[Story Intelligence architecture decision от 2026-11-05](../architecture/STORY_INTELLIGENCE_ARCHITECTURE_DECISION_2026-11-05.md)
+учитывается как согласованная **концепция**: Discovery/Evaluation/Creative
+рекомендуют, а Production Brief передаёт версионированное задание через
+редакционные проверки. Они не получают privileged storage endpoint, право
+создавать approvals или обходить blockers через высокий score. Этот документ
+не меняет утверждённые границы и не добавляет Story Intelligence schemas/API.
+Концептуальный decision прямо не утверждает storage D1–D12.
 
 Сохраняются следующие границы:
 
@@ -104,6 +113,43 @@ Same-user directory ACL, hidden attribute, checksum, hash chain без секр�
 DPAPI сами по себе не защищают anchor от приложения, работающего под тем же
 пользователем. Dedicated service — существенное требование рекомендуемого уровня
 защиты, а не косметическая настройка каталога.
+
+Установка/repair/upgrade/uninstall broker и provisioning его identity, binaries,
+ACL и key storage — отдельная операция installer с UAC elevation администратора.
+Она не назначает установившему пользователю gate/recovery permissions по умолчанию:
+владелец явно задаёт principals и policy. Обычный reviewer запускает UI/CLI и
+разрешённые команды без elevation; recovery permission также не равна правам
+локального администратора. Привилегированный maintenance и содержательная
+авторизация recovery — разные проверки.
+
+Upgrade выполняется в maintenance mode после остановки новых запросов и
+проверки state; штатный upgrade допустим только после stable finalization.
+При unresolved pending обычное обновление отклоняется: сначала exact recovery
+совместимым adapter либо явное диагностическое обслуживание без изменения store.
+Несовместимый software/protocol downgrade не получает разрешения писать state.
+Upgrade сохраняет registry, epoch, keys, journal,
+reservations и policy versions. Нельзя «починить установку» удалением protected
+state или пересозданием anchor. Uninstall останавливает writes, но не стирает
+историю/ключи автоматически; их уничтожение требует отдельной явной процедуры
+с предупреждением о потере проверяемости, без обещания последующего trust recovery.
+Сбой запуска, несовместимая protocol version или утрата доступа оставляют
+защищённые операции заблокированными, а не переводят их в unprotected writer.
+
+Без установленного/доступного сервиса обычный пользователь может создавать и
+сохранять **локальные drafts**, редактировать proposals, читать доступные export/
+snapshot copies и запускать pure codec/integrity diagnostics. Это обычные
+пользовательские файлы, не authenticated storage commit и не authoritative
+save зарегистрированной production. Запрещены protected writes, initial trust,
+effective approvals и upgrade draft → trusted head без отдельной процедуры.
+Не нужно устанавливать сервис/получать admin rights только ради таких черновиков.
+
+Diagnostics работают offline, без elevation и без executing imported content.
+Если primary/service-owned данные недоступны по ACL, можно проверить выбранную
+пользовательскую копию; UI сообщает, что active protected state не прочитан.
+Он не повышает права и не ослабляет ACL автоматически. Показываются integrity,
+service/protection availability, head/pending/history uncertainty и конкретные
+коды; keys, full private journal/политики и полномочия другого principal не
+раскрываются. `DIAGNOSTICS_OK` никогда не означает `AUTHORIZED`.
 
 ### 3.2 Конкретное расположение
 
@@ -199,27 +245,43 @@ vectors до реализации. Не менять смысл snapshot_checksu
 | `snapshot_schema_version`, `generation` | Exact snapshot version/generation |
 | `snapshot_checksum` | Уже утверждённый checksum соответствующей schema |
 | `canonical_file_sha256`, `canonical_file_length` | SHA-256 **полных** canonical bytes, включая snapshot_checksum; не заменяет его |
-| `committed_tx_seq` | Последний committed storage snapshot transaction в epoch |
-| `commit_record_index`, `commit_record_mac` | Проверяемая ссылка на journal commit/genesis |
+| `tx_seq` | Sequence данного content head; у finalized head это committed transaction, у pending B — reserved sequence |
 
 Никакой timestamp не входит в ключ упорядочивания. Для registered writes
 canonical file bytes обязательны; portable input сначала строго декодируется,
 проверяется и явно принимается только отдельной процедурой import/genesis.
 
+Чтобы исключить самоссылочное хэширование, различаются **ContentHead** (ровно
+поля таблицы) и **CommittedHead** (ContentHead + `commit_record_index` и
+`commit_record_mac`). PREPARE/INTENT содержат уже известный CommittedHead A и
+новый ContentHead B; у B ещё нет ссылки на собственный будущий COMMIT.
+Payload SNAPSHOT_COMMIT содержит ContentHead B и ссылку на предыдущую chain,
+его MAC вычисляется после сериализации. Только затем anchor связывает B с
+полученной commit reference. Собственный MAC записи не входит в её payload.
+Для GENESIS применяется тот же принцип. Эти типы — storage envelope, не
+изменения snapshot-моделей; термин HeadState далее означает соответствующую
+content/committed форму, а не структуру с циклическими hash references.
+
 ### 4.2 AnchorState
 
-Anchor содержит version, production/machine/epoch, `stable_head`,
+Anchor содержит version, production/machine/epoch, `stable_head` (CommittedHead),
 `reserved_tx_high_watermark`, authenticated journal tail `(index, mac)`,
-`pending` или explicit null, `key_id`, `mac`.
+`pending` или explicit null, authenticated `history_guard` (§9.3), `key_id`, `mac`.
 
 `pending` содержит `tx_seq`, `request_id`, `review_session_id` или null для
-не-review операций, command digest, exact old/new HeadState, prepared-image
+не-review операций, command digest, exact old CommittedHead/new ContentHead, prepared-image
 reference, prepare record reference и phase `PREPARED`/`PUBLISH_INTENT`.
 В stable head нельзя молча подставлять текущий primary при несовпадении.
 
 Один atomically replaced anchor-файл содержит stable и pending одновременно;
 два независимых файла stable/pending не считаются атомарной парой. MAC покрывает
 все поля, кроме собственного `mac`, включая explicit null и journal tail.
+
+Commit reference в stable head и journal tail — **разные указатели**: tail может
+включать PREPARE/ABORT после последнего committed head. Поэтому high watermark
+может быть больше stable head tx_seq; это не основание увеличить generation или
+считать reserved transaction committed. Расхождения проверяются по §6.1,
+а не правилом «самое большое число победило».
 
 ### 4.3 Journal frames и аутентичность
 
@@ -299,9 +361,12 @@ conflict после уже выполненного коммита.
 
 ### 5.2 Три разных момента
 
-1. **Intent barrier**: durable authenticated PUBLISH_INTENT. Операцию уже нельзя
-   отменить или заменить другой: crash recovery может только завершить тот же B
-   либо заблокироваться. Это ещё не snapshot commit point.
+1. **Intent barrier**: полный authenticated PUBLISH_INTENT записан и flush
+   подтверждён; после restart полный valid record также нельзя игнорировать
+   из-за отсутствия прежнего ACK. Операцию уже нельзя отменить или заменить
+   другой: crash recovery может только завершить тот же B либо заблокироваться.
+   Barrier начинается на journal record, а не на следующем anchor replacement.
+   Это ещё не snapshot commit point.
 2. **Snapshot commit point CP**: замена primary `editorial.json` полными bytes B.
    Сохраняется E00. До этого primary A остаётся committed data; после этого B
    committed, даже если клиент не получил ответ.
@@ -309,7 +374,12 @@ conflict после уже выполненного коммита.
    Только после этого можно вернуть successful receipt. Это не переносит CP
    на anchor и не объявляет разные записи одной атомарной операцией.
 
-Состояние между intent и finalization блокирует effective authority. Даже если
+Любой unresolved PREPARE/intent/finalization блокирует новые решения и effective
+authority. Успешный receipt допустим только после W8; ошибка/таймаут после
+потенциального intent/CP возвращает `PENDING_RECOVERY`/`OUTCOME_UNKNOWN`, а не
+окончательное «не committed». Отмена до intent возвращает terminal abort только
+после authenticated ABORT и согласованного anchor/high watermark.
+Даже если
 старый A читабелен, pending нельзя игнорировать и считать A безопасным current
 head для новых решений.
 
@@ -317,21 +387,29 @@ head для новых решений.
 
 | Шаг | Действие под writer lock |
 |---|---|
-| W0 | Проверить предусловия; сохранить frozen canonical command и review context; построить B через pure APIs, generation A+1; validate B и round-trip |
+| W0 | Проверить предусловия; выбрать S=high watermark+1 под lock; сохранить frozen canonical command/review context/IDs и deterministic receipt data; построить B через pure APIs, generation A+1; validate B и round-trip. Reservation становится постоянной при полном valid PREPARE, а не по имени temp |
 | W1 | Сохранить exact A/B в protected content-addressed image archive; temp/write/flush, проверить длину и hash. Создать sibling `.pending/<E>-<S>.tmp` с B на volume primary; flush и reread |
 | W2 | Проверенный A сохранить в backup temp и заменить `editorial.json.bak`; никогда не копировать corrupt primary поверх backup. Append/flush PREPARE с request binding, reserved S, heads и images |
-| W3 | Заменить/flush anchor на stable A + pending PREPARED, high watermark S, journal PREPARE tail; reread/MAC проверить |
-| W4 | Append/flush PUBLISH_INTENT; заменить/flush anchor на pending PUBLISH_INTENT с соответствующим journal tail. До завершения этого шага primary replacement запрещён |
+| W3 | Заменить/flush anchor на stable A + pending PREPARED, high watermark S, journal PREPARE tail; reread/MAC проверить. Anchor никогда не ссылается на ещё не flush-подтверждённый record |
+| W4 | Append/flush PUBLISH_INTENT — intent barrier; затем заменить/flush anchor на pending PUBLISH_INTENT с соответствующим journal tail. Нормальный writer не выполняет W5 до подтверждения обеих операций; valid journal intent при отстающем anchor уже требует forward recovery |
 | W5 — CP | Повторно проверить exact A/native identity и выполнить same-volume replacement sibling temp → primary B; не in-place rewrite |
 | W6 | Открыть primary, проверить exact full hash/length/checksum/integrity B и flush опубликованный file handle. Не откатывать primary к A при ошибке после CP |
-| W7 | Append/flush SNAPSHOT_COMMIT: request receipt, S, heads, newly introduced approval mapping и session consumption; reconcile только тот же transaction |
+| W7 | Append/flush SNAPSHOT_COMMIT: frozen receipt, S, old CommittedHead/new ContentHead, newly introduced approval mapping и session consumption; MAC frame формирует новую commit reference. Reconcile только тот же transaction |
 | W8 | Заменить/flush anchor на stable B, pending null, high watermark ≥S, journal COMMIT tail; reread и проверить primary/journal/anchor вместе |
 | W9 | Освободить lock; вернуть сохранённый receipt. Удаление лишних temp допустимо после finalization, не является условием коммита |
 
-До W4 разрешён детерминированный ABORT: primary не меняется, request/session
-reservations остаются consumed tombstones, journal/anchor high watermark не
-уменьшается. После появления authenticated PUBLISH_INTENT — только forward
-recovery exact B; нельзя трактовать отсутствие ответа как отмену.
+ABORT разрешён только при полностью проверенном journal prefix **без** complete
+PUBLISH_INTENT, без неопределённого tail и при exact primary A. Нужно append/flush
+ABORT, затем заменить/flush anchor с pending null и tail ABORT; reserved S и
+request/session остаются consumed tombstones. На crash в этом переходе replay
+завершает тот же ABORT. После появления complete authenticated PUBLISH_INTENT —
+только forward recovery exact B; нельзя трактовать отсутствие ответа как отмену.
+
+После ошибки write/flush нельзя предполагать, что record отсутствует: результат
+сверяется under lock по строгому parser и §6.1. Если нельзя доказать отсутствие
+intent, запрещено выбирать ABORT ради возвращения к A. Изменение policy после
+accepted intent не превращает replay в новую авторизацию: завершается прежняя
+transaction, а current authority позже проверяется отдельно по действующим правилам.
 
 Запись valid PREPARE может стать видна в journal до обновления anchor. При
 restart проверяется authenticated tail extension старого anchor, включая такой
@@ -368,11 +446,21 @@ exact A при intent — ещё не опубликовано либо поте
 автоматическим доверием произвольному файлу: принимаются только hashes из
 authenticated pending transaction.
 
-Гарантия MVP после будущих испытаний: процессный crash не создаёт логически
-частичный successful commit; unresolved состояние явно блокирует authority.
-Power-loss durability — условная гарантия при соблюдении flush semantics
-OS/накопителем, с отдельной матрицей испытанных конфигураций. Против отката всего
-диска/witness эта схема гарантии не даёт (§10).
+Проверяемые уровни гарантий для будущей реализации:
+
+| Уровень | Допущения | Критерий |
+|---|---|---|
+| Process-crash consistency | Испытанный local NTFS adapter, живые OS/storage, process/service kill | После restart — exact предусмотренный A/B либо явная блокировка, никогда partial successful state; ACK означает один finalized transaction |
+| Power-loss durability | Отдельно испытанные OS/filesystem/controller, реальное соблюдение flush и namespace persistence barriers | На квалифицированной конфигурации после ACK exact B/receipt/order сохраняются. До ACK допустим только state-machine recovery либо block; одной atomic rename недостаточно |
+| Corruption/неизвестная persistence | Не удаётся подтвердить порядок/сохранность proofs | Не обещать durability или автоматическую repair; диагностировать и заблокировать authority по §6/§9 |
+| Full privileged state rollback | Вместе откатаны snapshot, anchor, journal, registry и keys | Локально может быть неотличим от старого легитимного состояния; за пределами гарантий §10 |
+
+Kill tests не подтверждают power-loss durability. До qualification конкретной
+конфигурации нельзя рекламировать её устойчивость к отключению питания или
+выпускать protected writer как проверенный production storage. Ошибки flush
+не игнорируются и не заменяются sleep/retry с новым request. Испытания не дают
+абсолютной гарантии против любого неисправного/лживого контроллера. Никакой
+timestamp/новый UUID не устраняет обнаруженную или неразличимую потерю proofs.
 
 ## 6. State machine и crash matrix
 
@@ -404,14 +492,14 @@ authority. Во всех случаях можно безопасно показ
 | До W0 / CAS failure | Stable A | A committed; B отсутствует | A, если exact anchor match | Не нужно; stable A проверяется | Новый request после корректного CAS; отказ не сохраняет decision |
 | В W1, частичный temp/image | A, unreferenced partial files | Только A committed | A; temp не current | Orphans можно quarantine; не выбирать их как snapshot | Незавершённый, не bound request требует valid live session |
 | После W1/backup, до полного PREPARE | A и valid images B/backup A | A committed; B uncommitted | A | Stable A; наличие image не означает accepted command | Не восстанавливать B по имени temp; новый valid request |
-| Во время append PREPARE, anchor ещё старый | Полный или torn frame | A committed | A; journal только после проверки framing/MAC | Complete valid PREPARE нужно учесть и abort; torn unreferenced tail обрабатывается по §6.1 | IDs complete PREPARE consumed; иначе session после restart invalid |
+| Во время append PREPARE, anchor ещё старый | Полный или torn frame | A committed; судьба нового запроса может быть неопределённой | A только для inspection до проверки tail | Полный valid PREPARE без неопределённого suffix → ABORT; непроверяемый fragment → block по §6.1 | Не переиспользовать неизвестную reservation, не объявлять definitive failure без proof |
 | PREPARE durable, до/в W3 anchor update | PREPARE, A/B images, old/torn/new anchor | A committed; reserved S uncommitted | A labelled pending | Valid tail extension → ABORT до intent; damaged/missing anchor не реконструировать автоматически | Идентичный request получает ABORTED_PRECOMMIT либо pending, не новую decision |
-| W3 complete, до intent | Anchor pending PREPARED | A committed; S reserved | A labelled pending | Durable ABORT и high watermark; до этого authority blocked | Старые request/session не использовать для нового review |
+| W3 complete, до intent | Anchor pending PREPARED, journal целиком проверен без intent/tail uncertainty | A committed; S reserved | A labelled pending | Durable ABORT и high watermark; при fragment возможного intent — block | Старые request/session не использовать для нового review |
 | Полный intent в journal, anchor ещё PREPARED | Authenticated intent, B image | A пока committed; B обязательно завершить | A labelled pending | Нельзя abort: полный intent уже barrier. Довести anchor pending и forward B | Только тот же request/B; не новое generation |
 | W4 complete, до W5 | Intent и pending anchor | A committed; B uncommitted до CP | A labelled pending | Проверить proof/images и выполнить W5–W8 exact B | Safe forward replay; API pending, не окончательный failure |
 | В W5 / native error | Primary может быть A, B либо недоступен | CP зависит от actual namespace publication; не от ответа API | Exact A/B только с pending label | B → finalize; A → forward B; unknown/missing → blocked explicit recovery | Никогда не повторять команду как новое решение |
 | После CP, до W6 flush / после power loss | B либо переупорядоченные persisted artifacts | B логически committed при CP; durability не доказана | B если exact; A не принимать как rollback | Pending intent требует восстановить exact B; неверные доказательства блокируют | Та же транзакция, без второго event/approval/generation |
-| W6 complete, до/во время COMMIT append | Exact B, valid/torn commit tail | B committed; receipt ещё не finalized | B labelled finalization pending | Reconcile один COMMIT, затем anchor; torn tail только по §6.1 | Request pending/committed, не повторная запись |
+| W6 complete, до/во время COMMIT append | Exact B, valid/torn commit tail | B committed; receipt ещё не finalized | B labelled finalization pending | Valid COMMIT → finalize; fragment допускается только как доказанный prefix exact reconstructable COMMIT по §6.1 | Request pending/committed, не повторная запись |
 | COMMIT durable, anchor ещё pending | B и valid COMMIT | B committed | B, но authority blocked до согласованного anchor | Проверить linked chain и finalization exact B | Возобновить W8, вернуть сохранённый receipt |
 | В W8 anchor replacement | B/COMMIT и old/new/torn anchor | B committed | B для inspection | Valid pending → finalize; damaged/missing → ANCHOR_UNAVAILABLE/MISSING, explicit recovery | Не создавать anchor из одного B |
 | После W8, до ACK / потерян ответ | Stable B, COMMIT receipt | B committed | B после полного cross-check | Stable B trusted storage head | Идентичный retry возвращает прежний receipt |
@@ -421,27 +509,64 @@ authority. Во всех случаях можно безопасно показ
 
 ### 6.1 Правила replay
 
-На restart сначала проверяются protection, anchor MAC и chain prefix; затем
-только contiguous authenticated extension с допустимыми state transitions.
-Сегменты не сканируются в поиске «самого нового по имени/времени».
+На restart новые writes и authority закрыты до полного reconciliation. Под тем
+же OS lock проверяются registry/machine/epoch/protection/key, **существующий**
+anchor MAC, полный journal prefix до его tail и commit reference stable head.
+Только затем читается contiguous authenticated extension. Для каждого record
+проверяются index+1, previous MAC, before/after relation, command/IDs, sequence,
+state transition и image hashes. MAC без допустимого transition недостаточен.
+Допускается не более одной нетерминальной snapshot transaction на production.
+Сегменты не выбираются по имени/mtime, frames не пропускаются ради «более нового».
 
-- PREPARE без какого-либо полного authenticated intent → явный ABORT record,
-  consumed IDs, сохранение high watermark, стабильный A после проверки.
-- Любой полный authenticated intent → forward-only B. Даже если primary снова
-  A, нельзя отличить crash до CP от последующей подмены A; оба случая решаются
-  восстановлением **того же B**, а не забыванием операции.
-- Изменённый C, отсутствующий authenticated B image, неверная chain или anchor
-  не дают права перезаписать пользовательские данные. Состояние blocked,
-  артефакты сохраняются для explicit recovery.
-- Torn trailing frame можно удалить только если anchor не ссылается на него,
-  весь подтверждённый prefix валиден, и независимые pending/head proofs
-  однозначно допускают это действие. Полный frame с неверным MAC или missing
-  frame, на который ссылается anchor, — corruption, не benign tail.
-- Replay идемпотентен по epoch/tx_seq/request/heads: повтор не выделяет новый
-  ApprovalRecord UUID, event, session, request или generation.
-- Механическая finalization previously authenticated intent — не first trust
-  establishment. Она не создаёт anchor, если anchor отсутствует/повреждён, и
-  не принимает неизвестный snapshot как head.
+Отставание anchor допустимо **только** когда его exact `(index, mac)` найден
+в проверенной той же chain, а extension логически продолжает известное состояние.
+Replayed COMMITs подтверждают новые heads в record order; A/B ниже относятся к
+точной рассматриваемой транзакции после проверки всего предшествующего prefix.
+Наличие authentic старого anchor не оправдывает старый primary, если verified
+journal уже подтверждает другой stable head. Ниже таблица reconciliation
+артефактов; crash matrix выше показывает, на каких этапах они возникают.
+
+| Проверенное сочетание | Допустимое действие | Когда блокировать |
+|---|---|---|
+| Stable anchor и journal tail согласованы, pending null, primary exact stable head | Открыть stable storage state; authority проверять отдельно | Любое несовпадение current primary, registration/protection или history guard |
+| Anchor отстаёт, complete extension заканчивается PREPARE, intent нигде нет, primary exact A | Записать durable ABORT и обновить существующий anchor; consumed IDs/high watermark сохранить | Непроверенный suffix, partial возможного intent, primary не A или неполные proof/images |
+| Complete ABORT отстающего pending PREPARED | Довести anchor до stable A, tail ABORT; не повторять reservation | ABORT после intent, другой request/seq или primary не A |
+| Complete PREPARE+PUBLISH_INTENT, anchor ещё stable A/PREPARED/INTENT; primary exact A или B | Сверить frozen B image, довести pending anchor, forward exact B либо finalize уже опубликованный B | До W5 anchor intent update должен успешно сохраниться; отсутствие key/image, unknown/missing primary или contradiction означает block |
+| Complete SNAPSHOT_COMMIT после соответствующего intent, anchor отстаёт | При exact B finalization; при exact A только verified pending forward B. Добавленный commit reference связывается с уже вычисленным MAC | COMMIT без valid PREPARE/INTENT, fork, изменённые receipt/records или primary вне A/B |
+| Anchor указывает за конец доступной valid chain либо MAC этого index иной | Никакого усечения anchor или выбора более старой копии | `ANCHOR_MISMATCH` с `JOURNAL_PREFIX_MISMATCH`; read-only + explicit recovery |
+| Missing anchor; invalid/unreadable anchor/key/protection; неверифицируемый journal | Нет автоматического replay/promote, даже если B проходит integrity | `ANCHOR_MISSING` либо `ANCHOR_UNAVAILABLE` с причиной; не создать replacement anchor из найденных файлов |
+| Stable B + primary старый A/backup или произвольный C | Не выполнять normal replay как будто pending существует | `ANCHOR_MISMATCH`; explicit exact-head repair по §9, без переноса authority на A/C |
+
+Полный valid intent, найденный после restart, необратим даже при старом anchor
+и потерянном flush response. Если old primary A после crash допустим по этому
+intent, recovery публикует тот же B; не решает, был ли A restored злоумышленником.
+Receipt и IDs остаются прежними. Если primary missing/partial/unknown, нельзя
+без разрешения перезаписывать данные: explicit recovery сначала сохраняет
+forensic копии и проверяет exact target по существующим proofs.
+
+**Неполные записи:** запрещено общее правило «отрезать всё после последнего
+valid frame». Обычный partial PREPARE/INTENT, unknown header/length, неверный MAC,
+пропуск внутри prefix или ссылка anchor на непроверяемый frame блокируют replay.
+Отсутствие полного intent при таком suffix не доказывает возможность ABORT.
+Не производится silent fallback на backup anchor/journal.
+
+Единственное предлагаемое автоматическое tail-repair исключение: после полностью
+проверенного intent существует ровно один terminal fragment **следующего
+SNAPSHOT_COMMIT**, не referenced active anchor. Его полный exact frame можно
+независимо восстановить из frozen PREPARE/intent/receipt, известных index/previous
+MAC и проверенного B; все доступные fragment bytes обязаны быть буквальным
+prefix этого frame, короче ожидаемой длины. Primary должен быть допустимым A/B;
+сначала довести exact B и проверить его, сохранить raw fragment в quarantine,
+затем дописать/перезаписать только этот suffix под lock, flush, validate entire
+chain и finalize anchor. Нельзя завершать guessed PREPARE/INTENT, исправлять
+полный bad-MAC frame или обрезать referenced bytes. Если хотя бы одно условие
+не доказано, `JOURNAL_TAIL_UNVERIFIABLE` и обязательная блокировка.
+
+Таким образом безопасный automatic recovery имеет узкую область, а не гарантию
+автоматического восстановления после любой corruption. Он идемпотентен по
+epoch/tx_seq/request/heads и не генерирует новые approvals/events/generation.
+Это finalization ранее принятой операции с existing valid anchor, а не trust
+establishment. При отсутствии/повреждении anchor применяется только §9.
 
 ## 7. Latest applicable target и REVOKE barrier
 
@@ -498,6 +623,10 @@ Lookup key: `(production_id, storage_epoch_id, request_id)`; одинаковы�
 Receipt lookup не раскрывает данные неавторизованному principal. Повтор после
 изменения policy может вернуть исторический receipt разрешённому читателю,
 но не создаёт новую decision и не подтверждает её current effective authority.
+Epoch остаётся частью lookup binding, но известные consumed IDs сохраняются
+для production через переходы epoch (§9.3): новая epoch не разрешает исполнить
+старый request второй раз. Imported claims могут запрещать reuse ID, но не
+считаются authenticated receipts существующих локальных операций.
 
 ### 8.2 Полный жизненный цикл
 
@@ -555,7 +684,7 @@ Ledger/tombstones не очищаются по текущему времени �
 | Restore exact current head | Проверить current protected anchor/chain, найти exact image по anchored full hash; явно разрешённый repair восстанавливает те же bytes и sequence | Подбирать backup по mtime/max generation; считать checksum равным proof of current head |
 | Restore более старого backup при живом current lineage | Показать old/current heads; это content proposal на текущем head с новой generation/transaction, сохранением всей decision/revocation history; валидация и свежий review при необходимости | Заменить primary старой generation и «отмотать» anchor/ledger; удалить REVOKE, чтобы оживить APPROVE |
 | Crash с valid pending proof | Механический ABORT до intent или exact forward completion после intent по §6; никаких новых permissions | Автоматически принять unknown primary; восстановить отсутствующий anchor по одному journal/snapshot |
-| Administrative trust recovery при потере trusted store | Сохранить forensic копии; отдельная recovery-authorized процедура показывает неопределённость, backup generations, history и последствия; explicit new epoch, отдельный authenticated recovery record/receipt | Называть прежний order доказанным, стереть revocation barrier, silently make approvals effective |
+| Administrative recovery при потере trusted store | Forensic копии и recovery-authorized диагностика; exact trusted lineage восстанавливается только из проверяемых proofs. При их потере content остаётся draft/quarantined с CONTINUITY_LOST | Approval администратора, новая epoch, новый key или исправленный checksum не снимают потерю истории и не создают effective decisions |
 
 ### 9.1 Genesis и cross-machine proof
 
@@ -585,6 +714,11 @@ ACTIVE registry с отсутствующим anchor — ANCHOR_MISSING, а не
 Повтор initialize request возвращает тот же receipt/epoch, не создаёт новый
 baseline. Fault matrix для этой операции дополнительно проверяет каждый
 registry/anchor transition, включая отсутствие primary и потерянный ACK.
+
+Known production нельзя повторно представить как first-time genesis из-за
+удалённого anchor, reinstall или переименования каталога. Initialize нового
+пустого production и import существующей истории — разные операции; metadata
+source с approvals не получает status «новая история» по клиентскому флагу.
 
 Machine-local HMAC нельзя проверить на другой машине без передачи секрета,
 которую это предложение запрещает. Переносимый bundle поэтому не называется
@@ -617,6 +751,68 @@ Consistent backup bundle создаётся under writer lock из stable head, 
 попадают в обычный export. Защищённый disaster-recovery backup keys/state —
 отдельная административная политика; наличие такой копии не устраняет риск
 полного rollback и не разрешает автоматический restore старой epoch.
+
+### 9.3 Непрерывность истории: обязательный guard для restore/import
+
+Предлагаемый `history_guard` содержит `history_continuity` и проверяемые ссылки
+на известные epoch/head/approval-order barriers. Он входит в authenticated
+anchor envelope и соответствующие GENESIS/COMMIT/recovery journal proofs,
+а не в schema 2. Его before/after values фиксируются в той же frozen transaction
+metadata; anchor меняется по тому же протоколу, не независимой третьей записью.
+Registry может хранить registration/cache, но её флаг не заменяет anchor/chain.
+При отсутствующем/непроверяемом anchor diagnostics **выводит** CONTINUITY_LOST,
+не записывает новый «доверенный» guard вместо утраченного доказательства.
+Состояние определяется proofs, а не пользовательским checkbox:
+
+| Состояние | Значение | Допуск |
+|---|---|---|
+| CONTINUOUS | От пустого локального genesis или отдельно доказанной lineage сохранены все необходимые commit/order/receipt proofs | Только обычная полная authority composition; это не grant само по себе |
+| BASELINE_UNVERIFIED | Принят imported baseline, но pre-genesis происхождение/полнота/порядок не доказаны | Старые approvals всегда unverified/legacy; reconsideration, зависящее от этой истории, blocked |
+| CONTINUITY_LOST | У ранее зарегистрированной production нельзя подтвердить известный head, barriers или непрерывность protected history | Только inspection/draft/forensic recovery; новые effective decisions не допускаются до восстановления proof |
+
+Guard и retained request/decision metadata не сбрасываются при создании новой
+epoch, смене ключа или reinstall. Если сама registry утрачена, это не доказательство
+отсутствия предыдущей регистрации: импорт старых approvals не становится
+CONTINUOUS. Полный привилегированный rollback всей protected state имеет предел
+обнаружения из §10; в поддерживаемых процедурах этот guard обходить запрещено.
+
+Обязательные правила для каждой backup/import/repair операции:
+
+1. **Exact-head repair:** при valid current anchor/proofs восстанавливаются
+   только bytes указанного head. Его checksum, generation, transaction sequence
+   и история не меняются. Historical APPROVE остаётся historical; проверка
+   current permissions/rights/REVOKE выполняется заново отдельным evaluator.
+2. **Старый backup:** это источник content proposal на доказанном current head,
+   а не новая current history. Сохраняются все уже известные ApprovalRecord,
+   отрицательные решения, evidence, order mappings и request/session tombstones.
+   Если их невозможно совместить без потери, операция blocked; нельзя выбрать
+   «более удобный» набор records из backup.
+3. **Нет полного trusted proof:** нельзя удалять missing REVOKE как corrupt,
+   считать surviving APPROVE последним или ставить trust на backup по целому
+   checksum. Потерянная отрицательная запись и её отсутствие с самого начала
+   неразличимы без независимого доказательства. Сохраняется CONTINUITY_LOST;
+   одобрение оператора/new epoch не превращает неизвестность в подтверждённую
+   историю. Без достаточных proofs безопасное восстановление authority в этом
+   контракте недоступно, даже если content удалось прочитать.
+4. **Импорт/transfer:** imported approval IDs не входят как новые approvals в
+   local COMMIT order map; provenance/ordering не достраиваются задним числом.
+   Старый signed/digested APPROVE не становится effective после local genesis.
+   Унаследованный exact key с непроверенной значимой историей нельзя разблокировать
+   переименованием record, сменой epoch/даты или копированием его в новый import.
+5. **Новый review — отдельное решение:** в разрешённом workflow создаётся новая
+   immutable ApprovalRecord/evidence pair с новым request/session и полными
+   current/latest-target проверками. Она не выдаётся за восстановленный старый
+   APPROVE и не обходит history guard. Workflow разрешения pre-genesis ambiguity
+   вне текущего предложения; до отдельного approved контракта dependent key blocked.
+6. **Cross-epoch retries:** известные request/session reservations не становятся
+   свободными в новой epoch. Старый request возвращает historical receipt либо
+   EPOCH_MISMATCH/denied; он не исполняется снова как новая approval.
+   Reserved/aborted/committed IDs сохраняются в соответствующем protected ledger.
+
+Recovery permission позволяет инициировать и протоколировать допустимое
+восстановление, но не отменяет A8/O10 и не предоставляет право стереть REVOKE.
+Administrative acknowledgement не заменяет недостающую chain. Документ не
+обещает невозможную полную реконструкцию истории из одного повреждённого JSON.
 
 ## 10. Threat model и остаточные риски
 
@@ -653,8 +849,8 @@ TPM-backed monotonic storage или offline внешний witness можно п
 | Код | Условие | Поведение |
 |---|---|---|
 | ANCHOR_MISSING | Ожидаемый зарегистрированный anchor отсутствует | Read-only inspection; никакой auto-init |
-| ANCHOR_UNAVAILABLE | Доступ, key, MAC/format/protection или adapter не позволяют проверить anchor | Fail-closed, конкретная nested reason/path |
-| ANCHOR_MISMATCH | Проверенный anchor не соответствует production/epoch/head/journal binding | Fail-closed, показать сравниваемые IDs/hashes без секретов |
+| ANCHOR_UNAVAILABLE | Доступ, key, MAC/format/protection, adapter или неверифицируемый journal не позволяют проверить proof | Fail-closed; PROTECTION_INVALID, JOURNAL_UNVERIFIABLE, JOURNAL_TAIL_UNVERIFIABLE и другие конкретные reason/path |
+| ANCHOR_MISMATCH | Valid anchor противоречит проверенным production/epoch/head/chain данным; в частности его tail отсутствует в полностью прочитанном valid prefix | Fail-closed; SNAPSHOT_HEAD_MISMATCH либо JOURNAL_PREFIX_MISMATCH с сравниваемыми IDs/hashes без секретов |
 | TRANSACTION_PENDING / RECOVERY_REQUIRED | Valid proof, но процесс не достиг stable finalization | Inspection; никакого effective authority; exact recovery по протоколу |
 
 Отдельные codes для `LOCK_BUSY`, `EXPECTED_GENERATION_MISMATCH`,
@@ -779,6 +975,10 @@ Process kill tests не называются power-loss tests. Для durability
 накопителя/контроллера с внезапным питанием; документировать Windows build,
 filesystem, cache/flush configuration и observed guarantees. Отказ/потеря
 доказательств после reboot должен давать blocked diagnostic, а не auto-trust.
+Если на конфигурации, заявленной как power-loss qualified, после ACK теряются
+B или receipt при выполненных допущениях, это **провал durability qualification**,
+даже если fail-closed диагностика сработала. Безопасная блокировка не подменяет
+обещанную сохранность данных.
 
 ### 13.3 Проверка границы угроз
 
@@ -787,6 +987,29 @@ journal при current anchor обнаруживается; удаление anc
 копия на другой ПК не активирует foreign order. Полное восстановление согласованного
 system image показать как **необнаружимый в этой модели остаточный риск**, а не
 провал теста, который скрывается workaround с текущим timestamp.
+
+### 13.4 Обязательные критерии приёмки будущей реализации
+
+Все строки — запланированные gates, **сейчас не выполнены**. Набор должен
+использовать реальные durable artifacts и independent expected states; одного
+mock успешных API returns недостаточно.
+
+| Критерий | Проверяемое условие прохождения |
+|---|---|
+| Crash matrix и replay | Для каждой строки §6 и каждого repeated-recovery interruption получается ровно предписанное stable/pending/blocked состояние; ни одного false success или authority bypass |
+| Commit/idempotency | На один accepted request не более одной новой approval/evidence pair и generation increment; complete COMMIT/receipt ровно один при успешной finalization; retry сохраняет exact IDs/bytes |
+| Prefix reconciliation | Anchor lag допускается только для matching authenticated prefix; ahead/fork/bad MAC/unknown primary всегда дают назначенный diagnostic, не fallback |
+| Tail exception | Exhaustive prefix-length/bit-flip tests восстанавливают только разрешённый deterministic COMMIT fragment; full bad-MAC, partial INTENT и referenced missing bytes никогда не чинятся автоматически |
+| История | Старый APPROVE перед REJECT/REVISE/REVOKE не активируется через backup/import/reinstall/new epoch; unknown omitted negative history оставляет continuity guard blocked; ledger IDs не переиспользуются |
+| Standard-user UX/security | Без admin доступны drafts/безопасная диагностика; protected writes без service запрещены; install/maintenance требуют elevation и не дают default gate grants |
+| Durability qualification | Process-kill и power-loss results раздельны; на заявленном power-loss profile каждый ACK сохраняет exact B/order/receipt в пределах §5.4; нарушения закрывают release gate |
+| Contract compatibility | Existing schema-1/schema-2 golden bytes и pure migration semantics неизменны; нет hidden transaction fields, trust flags или auto-generated legacy evidence |
+
+Результаты должны указывать Windows build, filesystem/controller/cache profile,
+версии adapter/protocol, исходные heads, точку fault, artifact hashes и observed
+diagnostic. Невозможность проверить предпосылку не считается прохождением теста.
+Unqualified или постоянно блокирующаяся реализация не объявляется готовой только
+потому, что fail-closed безопаснее некорректного grant.
 
 ## 14. Предлагаемые этапы после утверждения
 
@@ -807,9 +1030,11 @@ system image показать как **необнаружимый в этой м
 ## 15. Проверка этого документа
 
 Это design-only изменение. Unit/runtime tests не запускались и не заявляются:
-нового исполняемого кода нет. Проверяются единственный добавленный файл,
+нового исполняемого кода нет. Проверяются единственный изменённый файл,
 `git diff --check`, `git diff --cached --check`, опубликованный diff относительно
-точной базы, совпадение local/remote SHA и clean working tree после публикации.
+точной базы уточнения, внутренние ссылки/нумерация, согласованность таблиц W0–W9,
+replay rules/crash matrix и D1–D12, совпадение local/remote SHA и clean working
+tree после публикации. Другие документы/код/тесты не изменяются.
 Коммит и ссылка на этот документ передаются в итоговом сообщении.
 
 ## 16. Справочные platform sources
@@ -838,27 +1063,45 @@ B не рекомендуется без пересмотра E00; C остаё�
 защищает от полного administrator-controlled system rollback только благодаря
 transaction/checksum механизмам.
 
-| ID / вопрос | Рекомендуемый вариант | Последствия альтернативы |
+Каждая строка ниже — самостоятельная формулировка, которую владелец может
+**принять / отклонить / вернуть с указанными условиями**. Для всех D1–D12 текущий
+статус: **ОЖИДАЕТ РЕШЕНИЯ ВЛАДЕЛЬЦА**. Пустой ответ, публикация ревизии или
+согласованная Story Intelligence концепция не означают согласие. При частичном
+согласовании отклонённые зависимости должны быть пересмотрены до реализации.
+
+| ID | Формулировка предлагаемого решения для согласования | Граница/последствие альтернативы |
 |---|---|---|
-| D1: граница защиты и active project location | Выделенный service SID, protected ProgramData managed root, edits через broker; arbitrary drafts отдельно | Same-user writable root/anchor не даёт заявленной защиты; допускается inspection-only режим без effective authority |
-| D2: storage engine | A с E00 primary replacement CP; approve exact protocol перед реализацией | B требует отдельного пересмотра authoritative layout; C сохраняет CP, но добавляет DB lifecycle и cross-file coordination |
-| D3: local journal authenticity | Service-only key, domain-separated HMAC, DPAPI + ACL; без обязательного Ed25519 | ACL-only слабее при copied/tampered artifacts; обязательные asymmetric signatures требуют нового key registry/lifecycle и не устраняют full rollback |
-| D4: recovery после intent | Forward-only exact previously authenticated B; pending блокирует новые операции до finalization | Полностью manual recovery безопасен, но требует оператора после каждого такого crash; abort после intent нарушил бы rollback/idempotency guarantees и не предлагается |
-| D5: imported legacy order gaps | Не создавать historical sequence; fail-closed для зависимого same-key reconsideration до отдельного контракта | Выбор timestamp/array order запрещён O10; сохранение удобства требует отдельно спроектированного legitimate legacy-resolution workflow |
-| D6: перенос на другой ПК | Explicit new machine-bound baseline, foreign history unverified, no MAC-key export | Сохранение verified foreign authority требует separately trusted signed transfer scheme и policy/principal mapping; checksum bundle недостаточен |
-| D7: backup/retention | Retain journal/tombstones и committed images в MVP, quotas и disk-full отказ; compaction позже отдельным форматом | Ограничение диска требует более сложного authenticated checkpoint/index и доказательства, что idempotency/REVOKE не потеряны |
-| D8: durability claim | Испытанная process-crash safety; условная Windows power-loss durability с явной hardware boundary | Абсолютный anti-rollback/power-loss claim без внешнего witness/hardware нельзя принять; обязательный TPM/внешняя опора расширяет MVP |
-| D9: bootstrap permissions | Installer/owner явно назначает initialize/recovery permissions; ни одного default all-gate grant | Без административной установки можно оставить safe draft mode; OS login не становится default authority |
-| D10: v1 transaction schemas | Утвердить отдельно head/anchor/journal/receipt/command schemas и MAC domains до кода | Нельзя скрыто добавить transaction_seq в schema 2 или использовать существующие hashes в новом смысле |
-| D11: время и sessions | Unbound sessions invalid после restart; accepted durable intent завершается exact replay; sequence независимо от часов | Resumable unbound sessions/долговременные expiry потребуют отдельного защищённого session lifecycle, не wall-clock предположения |
-| D12: подтверждение Windows scope | Windows 10/11 + local NTFS + ordinary offline Intel-PC; Linux/macOS отдельные будущие adapters | Расширение на NAS, sync folders, removable media или другие OS требует новой testing/durability матрицы до claims |
+| D1 | Принять выделенный Windows service SID и managed ProgramData root для protected writes; UI/CLI standard-user без elevation, а без service — draft/diagnostics mode по §3.1 | Same-user writable primary/anchor не принимается как эквивалентная защита. Альтернатива — оставить только drafts до отдельно проверенного security adapter |
+| D2 | Принять вариант A и W0–W9 с CP на primary replacement; не считать journal/anchor раздельные записи атомарной группой | C требует пересогласования protected metadata adapter и crash matrix. B как другой authoritative state не входит в текущую редакцию E00 и не принимается молча |
+| D3 | Принять domain-separated HMAC-SHA-256, service-only key, DPAPI + ACL; внутренний MAC не заменяет optional schema-2 signatures | Иной key/protection adapter требует доказательства того же boundary. Ни ACL-only пользовательский каталог, ни обязательная Ed25519 без key lifecycle не считаются готовой заменой |
+| D4 | Разрешить mechanical recovery только по §6.1: verified prefix extension, pre-intent ABORT или exact forward B; tail exception только для reconstructable terminal COMMIT | Можно выбрать manual-only reconciliation с теми же proofs/блокировками ценой доступности. Abort после intent, guessed tail repair и auto-create missing anchor не являются допустимыми опциями |
+| D5 | Принять continuity guard §9.3: imported decisions не получают authority/order; при потере доказательств CONTINUITY_LOST не снимается административным подтверждением или новой epoch | Пока нет approved legacy-resolution contract, зависимый exact key остаётся blocked. Восстановление утраченного trust «по желанию оператора» не предлагается и не совместимо с A8/O10 |
+| D6 | Принять transfer как explicit new machine-bound baseline с foreign history unverified и сохранением известных barriers/consumed IDs; MAC key не экспортировать | Перенос verified foreign authority возможен только после отдельного trusted-transfer/key-registry contract. Старый импорт не считается новым локальным approval |
+| D7 | Принять retention всех journal/receipt/tombstone/order proofs и committed images в MVP; quotas предупреждают/останавливают новые writes, но не удаляют историю | Численные quotas и места backup нужно задать до implementation acceptance. Меньшая retention требует approved authenticated compaction/checkpoint, а не silent eviction |
+| D8 | Принять уровни §5.4 и gates §13.4: process crash и power loss квалифицируются отдельно; full privileged state rollback явно вне baseline защиты | Требование защиты от полного rollback потребует дополнительной внешней/аппаратной опоры и отдельного решения. Не заявлять абсолютную durability на непроверенном hardware |
+| D9 | Принять installer elevation только для service/ACL/key maintenance; initialize/recovery/gate permissions назначаются явно и раздельно, reinstall сохраняет protected state | Если administrative установка недоступна, доступен draft mode; elevation не заменяет permission и не даёт all-gate grants |
+| D10 | Принять отдельный storage-protocol v1 boundary: ContentHead/CommittedHead, anchor, framing, frozen receipts/commands, continuity metadata; closed schemas и golden vectors закрепить до executable кода | Нельзя поместить эти поля в schema 2, ввести self-referential COMMIT hash или изменить смысл существующих digest/codec. Точная v1 wire specification — отдельный контрольный результат S1 |
+| D11 | Принять restart invalidation unbound sessions; reserved IDs не переиспользуются; bound intent replay не создаёт новый review, ordering независимо от часов | Resumable unbound sessions требуют отдельного protected lifecycle. Wall clock не подтверждает transaction order и не освобождает ledger IDs |
+| D12 | Принять первый supported profile Windows 10/11 local NTFS, offline CPU-only Intel-compatible PC; конкретные builds/controller profiles проходят §13 до production claims | NAS/sync folders/removable roots и Linux/macOS не поддерживаются по умолчанию; каждому нужен отдельный adapter/test profile без ложных promises |
 
-Открытые технические acceptance вопросы: конкретные supported Windows builds и
-filesystem/cache configurations; installer/service deployment и privileges;
-native msvcrt lock convention; exact quotas/backup policy; новый approved
-command envelope и policy provisioning; допустимый операторский workflow при
-legacy-order блокировке. Предложенные решения дают основу этапам S1–S8, но не
-считаются согласованными по факту публикации этого документа.
+**Что ещё требует решения владельца:** сами D1–D12; в D4 — mechanical recovery
+в указанной узкой области или manual-only вариант; в D7 — численные quotas,
+место/доступ к backup и готовность принять disk-full write blocking без pruning;
+в D8/D12 — перечень целевых Windows/hardware profiles и принятие явно описанной
+границы полного привилегированного rollback. Рекомендуемый набор — все приведённые
+формулировки с mechanical recovery, без hardware witness в baseline.
 
-После публикации E01.3.9.1 работа останавливается. Storage, anchor, transaction
-journal, recovery и следующие этапы без отдельного утверждения не реализуются.
+Технические proof obligations после архитектурного согласования не считаются
+уже выполненными: точные native lock/replacement conventions, installer privilege
+minimization, closed protocol/command schemas, protection provisioning и полный
+fault-injection/qualification report. Они должны соответствовать согласованным
+решениям; если проверка опровергнет предпосылку, вернуть proposal владельцу,
+не ослаблять инварианты и не расширять threat claims самостоятельно.
+
+Фиксация владельцем решения по каждому ID должна содержать дату, выбранный
+вариант и условия. Утверждение proposal само по себе не является заданием на
+реализацию: последующий этап разрешается отдельной инструкцией. Ни E00, ни
+A1–A14/O1–O10 не предлагаются как отменяемые опции D-таблицы.
+
+После публикации E01.3.9.1a — STOP. Storage, anchor, transaction journal,
+recovery и следующие этапы без отдельного утверждения не реализуются.
