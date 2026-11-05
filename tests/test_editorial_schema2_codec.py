@@ -236,6 +236,58 @@ class VersionedCodecTests(unittest.TestCase):
         self.assertEqual(restored.base_snapshot.events[0].action, 'schema_migrated')
         self.assertEqual(decode_editorial_versioned(encode_editorial_versioned(restored)), restored)
 
+    def test_schema2_mixed_event_types_preserve_actions(self):
+        value = wire2()
+        migrated = copy.deepcopy(value['events'][0])
+        migrated.update(id=eid(31), action='schema_migrated', reason='Schema 1 to 2')
+        value['events'].append(migrated)
+        restored = decode_editorial_versioned(raw(value))
+        self.assertIs(type(restored.base_snapshot.events[0]), m.Event)
+        self.assertIs(type(restored.base_snapshot.events[1]), Schema2Event)
+        self.assertEqual(tuple(event.action for event in restored.base_snapshot.events),
+                         ('revision_added', 'schema_migrated'))
+        encoded = encode_editorial_versioned(restored)
+        self.assertEqual([event['action'] for event in json.loads(encoded)['events']],
+                         ['revision_added', 'schema_migrated'])
+
+    def test_multiple_schema_migrated_events_round_trip_at_codec_level(self):
+        value = wire2()
+        value['events'] = []
+        for number in (41, 42):
+            event = copy.deepcopy(wire()['events'][0])
+            event.update(id=eid(number), action='schema_migrated', reason=f'Migration {number}')
+            value['events'].append(event)
+        restored = decode_editorial_versioned(raw(value))
+        self.assertTrue(all(type(event) is Schema2Event for event in restored.base_snapshot.events))
+        self.assertEqual(decode_editorial_versioned(encode_editorial_versioned(restored)), restored)
+
+    def test_migrated_event_bytes_never_contain_substitute_action(self):
+        value = wire2()
+        value['events'][0]['action'] = 'schema_migrated'
+        encoded = encode_editorial_versioned(decode_editorial_versioned(raw(value)))
+        self.assertIn(b'"action":"schema_migrated"', encoded)
+        self.assertNotIn(b'operation_failed', encoded)
+
+    def test_unknown_schema2_event_action_has_exact_path(self):
+        value = wire2()
+        value['events'][0]['action'] = 'future_action'
+        self.bad(value, '$.events[0].action', 'VALUE')
+
+    def test_malformed_schema_migrated_event_has_exact_path(self):
+        value = wire2()
+        value['events'][0]['action'] = 'schema_migrated'
+        value['events'][0]['refs'] = 'not-an-array'
+        self.bad(value, '$.events[0].refs', 'TYPE')
+
+    def test_two_consecutive_round_trips_are_identical(self):
+        value = wire2([authority_evidence()])
+        value['events'][0]['action'] = 'schema_migrated'
+        first = encode_editorial_versioned(decode_editorial_versioned(raw(value)))
+        second = encode_editorial_versioned(decode_editorial_versioned(first))
+        third = encode_editorial_versioned(decode_editorial_versioned(second))
+        self.assertEqual(first, second)
+        self.assertEqual(second, third)
+
     def test_no_automatic_migration(self):
         result = decode_editorial_versioned(raw(wire()))
         self.assertIs(type(result), m.ContractSnapshot)

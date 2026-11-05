@@ -43,6 +43,19 @@ _SCHEMA1_ROOT_FIELDS = tuple(name for name, _ in c._COLLECTIONS) + (
     'events', 'active_refs', 'snapshot_checksum',
 )
 _SCHEMA2_ROOT_FIELDS = frozenset((*_SCHEMA1_ROOT_FIELDS, 'approval_authority_evidence'))
+_SCHEMA2_EVENT_FIELDS = {
+    'id': c._uuid,
+    'actor': c._text,
+    'at': c._utc,
+    'action': c._choice(
+        'production_created', 'revision_added', 'active_selection_changed',
+        'review_recorded', 'approval_recorded', 'recovery_recorded',
+        'operation_failed', 'schema_migrated',
+    ),
+    'refs': c._array(c._ref()),
+    'reason': c._text,
+    'error_code': c._nullable(c._text),
+}
 
 
 def _parsed_document(raw: bytes):
@@ -92,11 +105,10 @@ def _evidence(value, path):
         c._error(field_path, error.violation.code, error.violation.message)
 
 
-def _schema2_event(event):
-    return Schema2Event(
-        event.id, event.actor, event.at, 'schema_migrated', event.refs,
-        event.reason, event.error_code,
-    )
+def _schema2_event(value, path):
+    fields = c._object(value, _SCHEMA2_EVENT_FIELDS, path)
+    cls = Schema2Event if fields['action'] == 'schema_migrated' else m.Event
+    return c._make(cls, fields, path)
 
 
 def _decode_schema2(data) -> Schema2Snapshot:
@@ -110,30 +122,25 @@ def _decode_schema2(data) -> Schema2Snapshot:
     evidence = c._array(_evidence)(
         data['approval_authority_evidence'], '$.approval_authority_evidence'
     )
+    events = c._array(_schema2_event)(data['events'], '$.events')
+    seen_event_ids = set()
+    for index, event in enumerate(events):
+        if event.id in seen_event_ids:
+            c._error(f'$.events[{index}].id', 'DUPLICATE_VALUE', 'Record id must be unique')
+        seen_event_ids.add(event.id)
 
     schema1_wire = dict(data)
     del schema1_wire['approval_authority_evidence']
     schema1_wire['editorial_schema_version'] = 1
-    migrated_positions = []
-    events = []
-    for index, event in enumerate(schema1_wire['events'] if type(schema1_wire['events']) is list else ()):
-        if type(event) is dict and event.get('action') == 'schema_migrated':
-            event = dict(event)
-            event['action'] = 'operation_failed'
-            migrated_positions.append(index)
-        events.append(event)
-    if type(schema1_wire['events']) is list:
-        schema1_wire['events'] = events
+    # Events have already been parsed against the version-2 vocabulary. The
+    # schema-1 codec validates only the unchanged portion of the flat envelope.
+    schema1_wire['events'] = []
 
     base_bytes = json.dumps(
         schema1_wire, ensure_ascii=False, sort_keys=True, separators=(',', ':'), allow_nan=False,
     ).encode('utf-8')
     base_snapshot = c.decode_snapshot(base_bytes)
-    if migrated_positions:
-        restored_events = list(base_snapshot.events)
-        for index in migrated_positions:
-            restored_events[index] = _schema2_event(restored_events[index])
-        base_snapshot = replace(base_snapshot, events=tuple(restored_events))
+    base_snapshot = replace(base_snapshot, events=events)
     try:
         return Schema2Snapshot(base_snapshot, evidence, editorial_schema_version=2)
     except Schema2ModelError as error:
@@ -168,20 +175,6 @@ def _wire_evidence(value):
     }
 
 
-def _schema1_encodable(snapshot):
-    migrated_positions = []
-    events = []
-    for index, event in enumerate(snapshot.events):
-        if type(event) is Schema2Event and event.action == 'schema_migrated':
-            migrated_positions.append(index)
-            event = m.Event(
-                event.id, event.actor, event.at, 'operation_failed', event.refs,
-                event.reason, event.error_code,
-            )
-        events.append(event)
-    return replace(snapshot, events=tuple(events)), tuple(migrated_positions)
-
-
 def encode_editorial_versioned(snapshot: m.ContractSnapshot | Schema2Snapshot) -> bytes:
     """Encode schema 1 or 2 canonically without changing stored checksums."""
     if type(snapshot) is m.ContractSnapshot:
@@ -189,15 +182,16 @@ def encode_editorial_versioned(snapshot: m.ContractSnapshot | Schema2Snapshot) -
     if type(snapshot) is not Schema2Snapshot:
         c._encode_error('$', 'TYPE', 'Expected ContractSnapshot or Schema2Snapshot')
 
-    base, migrated_positions = _schema1_encodable(snapshot.base_snapshot)
+    # The existing codec serializes the unchanged schema-1 portion. Schema-2
+    # events are mapped below from their real objects and actions.
+    base = replace(snapshot.base_snapshot, events=())
     encoded_base = c.encode_snapshot(base)
     envelope = json.loads(encoded_base.decode('utf-8'))
     envelope['editorial_schema_version'] = 2
     envelope['approval_authority_evidence'] = [
         _wire_evidence(value) for value in snapshot.approval_authority_evidence
     ]
-    for index in migrated_positions:
-        envelope['events'][index]['action'] = 'schema_migrated'
+    envelope['events'] = [c._wire_event(value) for value in snapshot.base_snapshot.events]
     try:
         encoded = json.dumps(
             envelope, ensure_ascii=False, sort_keys=True, separators=(',', ':'), allow_nan=False,
