@@ -20,6 +20,7 @@ __all__ = (
     'HANDOFF_APPROVE_DECLARATION_CODES',
     'NON_APPROVE_DECLARATION_CODES',
     'ApprovalAuthorityEvidence',
+    'Schema2Event',
     'Schema2ModelError',
     'Schema2Snapshot',
     'required_declaration_codes',
@@ -79,6 +80,20 @@ _MAX_EVIDENCE = 10_000
 
 class Schema2ModelError(m.ModelError):
     """Invalid schema-2 model value with a stable code and field path."""
+
+
+@dataclass(frozen=True)
+class Schema2Event(m.Event):
+    """The schema-2-only migration event; legacy actions remain ``m.Event``."""
+
+    def __post_init__(self) -> None:
+        m._id(self.id, 'id')
+        m._contract_text(self.actor, 'actor')
+        m._utc(self.at, 'at')
+        m._choice(self.action, ('schema_migrated',), 'action')
+        m._tuple(self.refs, m.RevisionRef, 'refs')
+        m._contract_text(self.reason, 'reason')
+        m._optional_text(self.error_code, 'error_code')
 
 
 def _fail(path: str, code: str, message: str) -> None:
