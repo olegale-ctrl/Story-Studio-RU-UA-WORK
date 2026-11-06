@@ -25,7 +25,7 @@ Source URLs:
 
 ### `fendouai/free-ai-humanizer` and same-author open source
 
-- Exact `github.com/fendouai/free-ai-humanizer` repository was not found (404 on 2026-11-06). External listings describe `fendouai/free-ai-humanizer` as a Hugging Face Space; its precise source revision and license were **not independently audited**, so do not copy its code or claim its implementation has been verified.
+- **Correct canonical location:** `https://huggingface.co/spaces/fendouai/free-ai-humanizer` (Hugging Face Space, **not** `github.com/fendouai/free-ai-humanizer`). The Hugging Face Spaces catalog lists it as a running *AI Text Humanizer* with cliché-removal rules and protection of code, numbers and quotes (catalog checked 2026-11-06). Direct access to its Space source files and exact revision was unavailable in this review; its implementation and license have **not** been independently audited. Do not copy its code or claim its implementation has been verified.
 - The same author publishes the inspectable GitHub repository `fendouai/humanize-text-skill` (MIT license, checked 2026-11-06), aimed at **Chinese and English**, not RU/UA. Useful architecture: `detect/rewrite/edit`; subtraction (remove AI residue) + addition (target voice); protect factual spans first; separate AI-pattern score, voice drift and fidelity; scene-aware action policy; minimal edit; second-pass residue audit.
 - No claim that a humanizer can prove human authorship, guarantee AI-detector results, or create distinctive writing by vocabulary substitution alone.
 - Do not import its JS runtime into the Windows/CPU-only Python pipeline by default. If copying any MIT code, preserve license/copyright notice and separately review dependencies; prefer independently authored RU/UA rules and tests.
@@ -36,7 +36,7 @@ Source URLs:
 - https://github.com/fendouai/humanize-text-skill/blob/main/references/voice-contract.md
 - https://github.com/fendouai/humanize-text-skill/blob/main/references/quick-checklist.md
 - https://github.com/fendouai/humanize-text-skill/blob/main/LICENSE
-- https://huggingface.co/spaces/fendouai/free-ai-humanizer (listed externally; primary page not verified)
+- https://huggingface.co/spaces/fendouai/free-ai-humanizer (canonical Space URL supplied by owner; catalog listing verified; source code not inspected)
 
 ### Current RU/UA gap
 
