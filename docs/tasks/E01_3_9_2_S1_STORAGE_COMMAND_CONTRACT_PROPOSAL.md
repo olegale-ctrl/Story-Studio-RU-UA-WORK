@@ -1,6 +1,6 @@
 # E01.3.9.2 / S1 — Storage & Command Protocol v1
 
-**Статус: PROPOSAL — НЕ УТВЕРЖДЁН.** Дата: 2026-11-05.
+**Статус: PROPOSAL — НЕ УТВЕРЖДЁН.** Ревизия: E01.3.9.2a/S1a, 2026-11-06.
 Документ определяет предлагаемый wire/state contract, не реализацию и не
 разрешение реализовать S2–S8. D1–D12 уже утверждены; новые schemas, limits,
 golden vectors и параметры этого S1 требуют отдельного решения владельца.
@@ -8,9 +8,9 @@ golden vectors и параметры этого S1 требуют отдельн
 ## 1. Нормативная база и область
 
 - Repository: `olegale-ctrl/Story-Studio-RU-UA-WORK`.
-- Base: `docs/editorial-e01-3-9-1b-approved-storage-architecture`,
-  `0eb694f9a8f1c744799a3ae99c1f38c4707e0379`.
-- Branch: `docs/editorial-e01-3-9-2-s1-storage-command-contract`.
+- Base уточнения: `docs/editorial-e01-3-9-2-s1-storage-command-contract`,
+  `6a53033f65258c121603ccf3b81e00f8c0edf152`.
+- Branch: `docs/editorial-e01-3-9-2a-s1-contract-clarifications`.
 - Приоритет: [E01.3.9.1b](E01_3_9_1B_APPROVED_ARCHITECTURE_DECISION.md),
   E00 из `e520648411b99264688ff66dc61ad0e974201ed3`,
   [A1–A14](E01_3_7_3_APPROVED_CONTRACT.md),
@@ -222,7 +222,7 @@ Request = {
 | INITIALIZE_EMPTY | `{draft_ref:BlobRef}` | Новый managed production; schema 2 generation 1, approvals/evidence пусты; explicit initialize permission |
 | IMPORT_BASELINE | `{source_ref:BlobRef}` | Strict source schema 1/2 integrity; existing records буквальны, guard unverified |
 | TRANSFER_BASELINE | `{source_ref:BlobRef, manifest_ref:BlobRef}` | Explicit destination initialization, foreign claims не становятся verified order |
-| PUBLISH_REVISION | `{proposal_ref:BlobRef, reason:nonempty Text}` | Registered schema 2, existing approvals/evidence неизменны; revisions immutable, append-only; service добавляет revision/selection event |
+| PUBLISH_REVISION | Зарезервированная outer форма `{proposal_ref:BlobRef, reason:nonempty Text}`; содержимое blob **не определено и не поддерживается** | DISABLED в этом S1: OPERATION_NOT_AVAILABLE до admission/dereference; отдельный approved revision-proposal contract обязателен |
 | RECORD_DECISION | `{decision_key:DecisionKey, decision:approve|reject|revise|revoke, reason:nonempty Text, reconsiders_record_id:UUID|null}` | Schema 2, READY session + authority/current/history checks; ровно одна новая approval/evidence pair и approval_recorded event |
 | MIGRATE_SCHEMA | `{}` | Registered verified schema 1; existing pure migration, generation +1 ровно один раз |
 | RESTORE_EXACT_HEAD | `{image_ref:BlobRef, expected_observation:FileObservation}` | Explicit recovery permission, valid existing anchor/chain; target **current** exact head, не старый backup |
@@ -233,6 +233,8 @@ Request = {
 и exact expected_head. Session non-null только RECORD_DECISION. Client не
 передаёт principal/actor/trust flags/assigned approval IDs; unknown fields rejected.
 Operation — ровно семь строк таблицы, Parameters выбирается только этим tag.
+Из них доступны для проектирования admission только шесть: PUBLISH_REVISION
+остается reserved tag с безусловным отказом по §5.3, не поддерживаемой командой.
 Snapshot refs в этих requests указывают на **canonical** bytes. Если исходный
 portable JSON имеет иное whitespace/escaping, read-only preflight может явно
 декодировать/проверить и предложить canonical export с новым full-file digest,
@@ -259,9 +261,12 @@ source_head:CommittedHead|null, source_guard:HistoryGuard|null}`.
 ### 5.2 Frozen command и review snapshot
 
 ```text
+GateDecisionGrant = {
+  gate:SCRIPT|SCENES|HANDOFF, decision:approve|reject|revise|revoke
+}
 Authorization = {
-  policy_ref:PolicyRef, permission:INITIALIZE|RECOVERY|DRAFT_WRITE|REVIEW_DECISION,
-  authenticated_connection_id:UUID
+  policy_ref:PolicyRef, principal_id:Principal, authenticated_connection_id:UUID,
+  command_grants:[CommandGrant], gate_decision_grant:GateDecisionGrant|null
 }
 ReviewSnapshot = {
   session_id:UUID, principal_id:Principal, policy_ref:PolicyRef,
@@ -279,31 +284,114 @@ FrozenCommand = {
 }
 ```
 
-Principal берётся из Windows TokenUser/проверенного local connection, policy —
-из protected provider. Authorization/READY как присланные клиентом JSON не
-принимаются. Grant проверяет service dependency; MAC фиксирует принятый контекст,
-но его формат не реализует authentication. Отсутствие provider → fail closed.
-PolicyRef независим от editorial decision_key.policy_version (A12).
+CommandGrant — закрытый enum PROTECTED_SNAPSHOT_WRITE, INITIALIZE, RECOVERY,
+MIGRATE_SCHEMA, RECORD_DECISION. Command_grants — **ровно минимальный набор**
+из таблицы ниже, без duplicates/добавочных прав, в указанном порядке. Это
+frozen evidence фактического protected policy lookup, не клиентская декларация.
+Общий REVIEW_DECISION и DRAFT_WRITE не являются допустимыми grant tokens.
+
+| Operation | Exact command_grants | Exact gate_decision_grant |
+|---|---|---|
+| INITIALIZE_EMPTY / IMPORT_BASELINE / TRANSFER_BASELINE | `[PROTECTED_SNAPSHOT_WRITE,INITIALIZE]` | null |
+| RESTORE_EXACT_HEAD | `[PROTECTED_SNAPSHOT_WRITE,RECOVERY]` | null |
+| MIGRATE_SCHEMA | `[PROTECTED_SNAPSHOT_WRITE,MIGRATE_SCHEMA]` | null |
+| RECORD_DECISION | `[PROTECTED_SNAPSHOT_WRITE,RECORD_DECISION]` | Non-null; gate и decision буквально равны request.parameters.decision_key.gate / request.parameters.decision |
+| PUBLISH_REVISION | Набор не определён: операция DISABLED независимо от permissions | Authorization для неё нельзя сформировать/принять |
+
+**Protected lookup:** service получает principal из OS-verified TokenUser/local
+connection, не из actor, request, environment или UI. В protected policy catalog
+выбирается current authority policy для production; проверяются ACL/owner,
+поддерживаемые version/schema и exact canonical bytes/hash. PolicyRef фиксирует
+ID/version/SHA-256 этих bytes; их immutable artifact сохраняется в protected
+policy store для проверки принятого контекста. Не читать policy из editable
+snapshot или caller path; editorial policy_version не выбирает authority policy.
+Отсутствующая/нечитаемая/непроверяемая policy/provider/version → POLICY_UNAVAILABLE.
+
+Lookup выполняется по `(production_id, authenticated principal_id, operation)`
+для command grants и по `(principal_id, gate, decision)` для gate grant. Все
+требуемые grants должны быть явно в allow-list. Missing principal/command/gate/
+decision → PERMISSION_DENIED; unknown/malformed policy не трактуется как allow-all.
+Право local draft edit/OS file access **не** даёт PROTECTED_SNAPSHOT_WRITE,
+INITIALIZE, MIGRATE_SCHEMA, RECOVERY или gate decision rights. И наоборот, один
+PROTECTED_SNAPSHOT_WRITE не разрешает произвольный snapshot/неподдерживаемую
+операцию. Local drafts остаются доступными без service; их сохранение не W0–W9.
+
+Для каждого SCRIPT/SCENES/HANDOFF независимо проверяются APPROVE, REJECT, REVISE,
+REVOKE. Никаких неявных all-gates/all-decisions, `APPROVE ⇒ REVOKE`,
+`APPROVE ⇒ REJECT/REVISE` или `SCRIPT ⇒ SCENES/HANDOFF`. В policy с отдельным
+`can_revoke` gate-level разрешением оно должно быть явно установлено; отсутствие
+означает отказ. Наличие can_approve не создаёт can_revoke. GateDecisionGrant
+сериализует только подтверждённую требуемую пару, не расширенный список прав.
+
+Authorization/READY JSON от клиента не принимаются. Service формирует их после
+lookup; Authorization.principal_id равен FrozenCommand.principal_id и principal
+из authenticated connection, PolicyRef совпадает с ReviewSnapshot/policy evidence
+для decision. Command MAC и Plan/frame MAC связывают неизменные policy reference,
+principal, production/request/session, minimal command grants и exact gate/decision.
+Значение MAC само по себе не выполняет authentication или policy lookup.
+
+При новом request policy проверяется на W0 и перед irreversible intent. Provider
+должен сериализовать update policy с recheck+append/flush PUBLISH_INTENT, чтобы
+между grant check и barrier не подменить policy. Изменение frozen PolicyRef или
+потеря grant до intent → отказ/доказанный pre-intent ABORT(REVALIDATION_FAILED),
+без обновления FrozenCommand и без «подбора другой policy». Если стабильность
+protected lookup не обеспечена, новый intent не допускается. После valid intent
+replay завершает прежние exact bytes по frozen authorization proof, а не выдаёт
+новую авторизацию из текущей policy. Утрата/несоответствие frozen proof блокирует
+replay; изменение live policy после intent не оправдывает ABORT или изменение B.
+Historical connection ID остаётся frozen evidence исходного admission: replay
+не требует живого прежнего connection и не заменяет его ID текущим. Доступ к
+receipt lookup проверяется отдельно. Current effective authority и возможность нового request проверяются отдельно;
+прежний receipt/commit не обходит новую policy.
+
+Четыре независимые проверки: authentication устанавливает principal;
+authorization проверяет explicit command/gate grants; editorial approval требует
+также current package, facts/declarations/history/reconsideration; rights/intended-use
+и production readiness проверяются отдельно. Ни одна из них не заменяет остальные.
 
 RECORD_DECISION требует exact session/principal/policy/key/reconsideration
-binding, закрытый **порядок** declaration codes по schema-2 §6.2 и отдельный
-REVOKE permission. Approval actor/timestamp/review declarations и evidence
+binding, exact Authorization grants по таблице и закрытый **порядок** declaration
+codes по schema-2 §6.2. Approval actor/timestamp/review declarations и evidence
 principal/policy/session/request/declarations формирует service из frozen context;
 input score/Creative output не считается review confirmation.
 
 Assigned approval/event IDs non-null только там, где создаются новые records:
-decision — оба; revision/migration — только event; genesis/repair — оба null.
+decision — оба; migration — только event; genesis/repair — оба null.
 Все metadata/IDs/at фиксируются до PREPARE и не пересоздаются при retry/replay.
 MIGRATE_SCHEMA не получает второе generation increment от writer. Если source
 уже schema 2, после existing-request lookup возвращается non-admitted
 ALREADY_MIGRATED observation: нет PREPARE, reservation, receipt или storage write.
 Это не durable transaction receipt и не integrity/authority result.
 
-PUBLISH_REVISION proposal не может менять старые revision payloads, approvals,
-evidence или events. Предложение содержит прежние events; service сам добавляет
-ровно один supported event, выбирает explicit new/active refs и generation A+1.
-Пустая по смыслу операция отклоняется COMMAND_NO_CHANGE до admission. Registered
-schema 1 в v1 доступна для read/migration, не для новых decision writes.
+Registered schema 1 в v1 доступна для read/migration, не для новых decision writes.
+
+### 5.3 PUBLISH_REVISION — недоступна до отдельного контракта
+
+Одного full snapshot BlobRef и общих слов append-only недостаточно: не определены
+closed proposal contents, полный набор разрешённых mutations/active selections,
+точное создание companion/event records и однозначный порядок пересчёта новых
+revision hashes. Этот S1a не изобретает такой business command под видом storage.
+
+Зарезервированный tag не имеет допустимого proposal blob или Authorization.
+Новый PUBLISH_REVISION после bounded structural parsing/authentication и проверки
+существующего request ID отклоняется OPERATION_NOT_AVAILABLE **до** admission, policy grant construction,
+загрузки proposal_ref, выделения IDs/sequence, PREPARE, формирования B и любых
+protected writes. Любые права пользователя, including draft или protected write,
+не включают её. Unknown outer fields всё равно rejected, но корректная outer
+форма не означает поддержку операции. No-op/COMMAND_NO_CHANGE fallback и generic
+«save submitted JSON» endpoint запрещены.
+Если тот же ID уже связан с другим содержимым, сохраняется IDEMPOTENCY_CONFLICT.
+Stored PUBLISH_REVISION не обслуживается как допустимый historical receipt:
+такого admitted operation в этом контракте нет, его records требуют block.
+
+Plan/FrozenCommand/PREPARE/COMMIT с таким operation не является допустимым v1
+transition даже при правильном MAC: block JOURNAL_TRANSITION_INVALID, не
+автопубликация и не ABORT после presumed intent. Предыдущий S1 был proposal,
+не источником разрешённой legacy реализации этой команды. Включение потребует
+отдельного approved closed revision-proposal contract, явной operation/grant
+mapping, deterministic builder rules, vectors и обновлённых acceptance tests.
+Until then prospective implementation must not expose it. Это ограничение
+текущего unapproved S1, а не изменение моделей, E00 или D1–D12.
 
 ## 6. Plan, anchor и receipts
 
@@ -339,6 +427,10 @@ Imported history не записывается как introduced approvals. Bind
 проверяет existing API. Guard_commit обновляет ledger и необходимые barriers,
 сохраняет все прежние roots/entries, не повышает continuity по пользовательскому
 acknowledgement. Exact repair меняет только metadata ledger, не историю decisions.
+Plan.kind PUBLISH здесь допускает только RECORD_DECISION или MIGRATE_SCHEMA,
+а не arbitrary snapshot replacement. GENESIS — только три initialization/import
+operations; REPAIR_EXACT — только RESTORE_EXACT_HEAD. Reserved PUBLISH_REVISION
+нельзя провести как PUBLISH, GENESIS, repair, NO_CHANGE или административный обход.
 
 Для каждого terminal результата ledger_tip обязан указывать на **один новый**
 LedgerBlob с previous_ref=guard_before.ledger_tip и ровно одной entry принятого
@@ -467,7 +559,7 @@ InitializationBody = {
   initialization_version:1, request_id:UUID, request_sha256:Hex,
   production_id:UUID, machine_binding_id:UUID, storage_epoch_id:UUID,
   managed_root_token:UUID, source_ref:BlobRef, principal_id:Principal,
-  actor:nonempty Text, at:UTC, policy_ref:PolicyRef,
+  actor:nonempty Text, at:UTC, policy_ref:PolicyRef, authorization:Authorization,
   guard_before:HistoryGuard, key_id:Label
 }
 InitializationAuthorization = {body:InitializationBody, mac:Hex}
@@ -488,6 +580,11 @@ registry lifecycle/cache не подтверждает authority и не соз�
 Initialization_ref указывает на canonical authorization wrapper; её MAC не
 содержит будущий plan/COMMIT/anchor MAC и потому не образует cycle.
 
+InitializationBody.authorization обязана точно равняться FrozenCommand.authorization;
+principal_id и policy_ref в body равны одноимённым значениям authorization.
+Для genesis grants — ровно [PROTECTED_SNAPSHOT_WRITE, INITIALIZE], gate_decision_grant null.
+Несовпадение — AUTHORIZATION_BINDING_MISMATCH, без bootstrap.
+
 Первые registration/authorization создаются лишь по явному initialize permission,
 не при missing anchor у известной production. Для genesis guard/source hash,
 request, IDs, epoch и policy должны совпадать между authorization, plan и
@@ -502,17 +599,19 @@ first-time bootstrap повторно из-за reinstall/удалённого �
 Под lock допускается одна nonterminal transaction. До admission: authenticate
 connection → проверить доступ principal к request lookup → проверить existing
 request/consumed session across retained epochs → только для нового request
-сверить exact head/CAS и live policy/session/current package. Source strict
+отклонить reserved PUBLISH_REVISION до dereference/admission; для остальных
+сверить exact head/CAS и live policy/session/current package. Historical receipt
+lookup требует разрешённого read access, но не нового write grant и не создаёт полномочий. Source strict
 codec/round-trip и full integrity обязательны. Actual proofs, а не числовое
 совпадение generation, определяют stable head.
 
 | Шаг | Обязательная операция и persistence barrier | Разрешённое состояние |
 |---|---|---|
-| W0 | Validate source/command/current policy/session/history; выделить S/IDs/at, построить exact B и FrozenCommand; проверить output integrity/round-trip и все proposed limits; подготовить plan/guard/receipt blobs | Stable A; source не изменён. S пока не durable reservation |
+| W0 | Validate supported operation и exact command/gate-decision grants (§5.2), source/current policy/session/history; выделить S/IDs/at, построить exact B и FrozenCommand; проверить output integrity/round-trip и все proposed limits; подготовить plan/guard/receipt blobs | Stable A; source не изменён. S пока не durable reservation |
 | W1 | Archive exact A/B/metadata blobs write-new/flush/reread; sibling temp B на volume primary; проверить ACL/path identity, hash/length | Stable A + unreferenced prepared artifacts |
 | W2 | Проверенный A → backup temp/flush/atomic backup replace; append/flush complete PREPARE | S/request/session/assigned IDs reserved при complete authenticated PREPARE, даже если response/anchor update потерян |
 | W3 | Replace/flush anchor: stable A, unchanged guard_before, pending PREPARED, high watermark S, tail PREPARE; reread/MAC | PREPARED; authority/new writes blocked |
-| W4 | Append/flush PUBLISH_INTENT **сначала**; затем replace/flush anchor pending PUBLISH_INTENT, tail INTENT; reread | Полный valid intent — irreversible barrier. Обычный writer не идёт к W5 до обеих подтверждённых записей |
+| W4 | Атомарно с protected policy update boundary повторно проверить frozen PolicyRef и exact grants (§5.2); потеря/смена до intent → proven pre-intent ABORT(REVALIDATION_FAILED), не refreeze. Затем append/flush PUBLISH_INTENT **сначала**; затем replace/flush anchor pending PUBLISH_INTENT, tail INTENT; reread | Полный valid intent — irreversible barrier. Обычный writer не идёт к W5 до обеих подтверждённых записей |
 | W5 — CP | Under native handles/CAS atomically replace primary exact B, не in-place write | Snapshot committed в момент namespace publication B; ещё не ACK |
 | W6 | Reread primary exact B; hash/length/checksum/full integrity; flush published file handle | PUBLISHED / finalization pending |
 | W7 | Append/flush ровно один terminal SNAPSHOT_COMMIT/GENESIS/REPAIR_COMMIT с frozen receipt | Data committed, terminal MAC известен; anchor может отставать |
@@ -685,7 +784,9 @@ contract, authority остаётся blocked. Если target зависит о�
   complete required journal/guard/image proofs и отдельный manifest. Git/Git LFS/
   Releases/Actions artifacts не backup. Raw secret/key export запрещён; disaster
   recovery key policy требует отдельного решения, не подразумевается этим S1.
-- **Old backup restore:** только content proposal на current proven head;
+- **Old backup restore:** допускается только read-only draft/content extraction.
+  Protected content proposal на current proven head потребует отдельного approved
+  revision contract; PUBLISH_REVISION в этом S1 недоступна (§5.3). В любом случае
   ни старый generation, ни удаление поздних approvals/evidence/REVOKE не принимаются.
   Если нельзя сохранить весь known history, операция blocked. Exact-head repair
   — отдельный ограниченный endpoint §8.3, а не rollback к backup.
@@ -730,6 +831,8 @@ editorial checks nested source code остаётся прежним; это tran
 |---|---|
 | TYPE / WIRE_FORMAT / UNKNOWN_FIELD / MISSING_FIELD / VERSION_UNSUPPORTED / LIMIT | Exact offending JSON field/frame header; reject до trust use |
 | AUTHENTICATION_REQUIRED / PERMISSION_DENIED / POLICY_UNAVAILABLE | `$.authorization`; no default grant, no private receipt leakage |
+| OPERATION_NOT_AVAILABLE | `$.operation`; PUBLISH_REVISION reserved/disabled, no proposal lookup, PREPARE, IDs или writes |
+| AUTHORIZATION_BINDING_MISMATCH | `$.authorization` либо точное nested поле frozen/init evidence; principal/policy/grants не связаны с командой; block/reject, не достроить proof |
 | SERVICE_UNAVAILABLE / PROTECTION_INVALID / PROFILE_UNQUALIFIED | `$.storage_profile`; drafts/diagnostics only, не unprotected writer |
 | LOCK_BUSY | `$.lock`; не force unlock по PID/age |
 | EXPECTED_HEAD_MISMATCH / EPOCH_MISMATCH | `$.expected_head` / `$.storage_epoch_id`; no new write; lookup admitted request выполняется раньше |
@@ -745,7 +848,8 @@ editorial checks nested source code остаётся прежним; это tran
 | OUTCOME_UNKNOWN / RECOVERY_REQUIRED / OPTIONAL_CAPABILITY_DISABLED | Нет definitive failure/success без reconciliation; capability OFF по умолчанию |
 
 Фазы проверки: bounded closed parsing → authenticated connection/permission
-context → existing request lookup → valid registered protection/head/history →
+context (authentication отдельно от grants) → existing request lookup → supported operation →
+valid registered protection/head/history → exact command/gate grants →
 CAS/live session/source integrity → B/plan/metadata integrity → W1–W9. Для replay
 используется приоритет §9. Несколько неисправностей диагностируются в этом
 детерминированном порядке, без repair ради прохождения следующего шага.
@@ -765,6 +869,11 @@ CAS/live session/source integrity → B/plan/metadata integrity → W1–W9. Д�
    wall clock для изменения frozen canonical bytes.
 9. Snapshot bytes и A/O/E00 semantics не расширяются storage fields.
 10. Optional partial COMMIT repair отсутствует в baseline переходах.
+11. Каждая новая команда имеет explicit protected-write и operation grant; каждая
+    decision — отдельный grant для exact gate/decision. APPROVE не даёт REVOKE.
+12. Frozen authorization MAC binds principal/connection/policy/scopes; invalid
+    binding никогда не исправляется новым grant во время recovery.
+13. PUBLISH_REVISION не имеет admissible plan/receipt/transition в S1a.
 
 ## 13. Синтетические проверяемые golden vectors
 
@@ -828,8 +937,9 @@ C(Q) length=352; plain SHA256=`1620bcf520a6c44fe250b3178a5cb0877f632410f82a4187c
    principal_id `windows-sid:S-1-5-21-1000-1000-1000-1001`; actor задан JSON
    string `"Тест Ї И\u0306 😀"` (escape **декодируется до C**, combining U+0306
    сохраняется); at `2026-11-05T00:00:00Z`; authorization policy ID выше,
-   version `fixture-v1`, policy_sha256 — 64 нуля, permission INITIALIZE,
-   authenticated_connection_id выше. Assigned approval_id/event_id null;
+   version `fixture-v1`, policy_sha256 — 64 нуля; authorization.principal_id
+   равен F.principal_id, command_grants=[PROTECTED_SNAPSHOT_WRITE, INITIALIZE],
+   gate_decision_grant null, authenticated_connection_id выше. Assigned approval_id/event_id null;
    storage_epoch_id E, expected_result H, review_snapshot null.
 2. ReceiptCore C0: version 1, request R/digest Q, epoch E, operation INITIALIZE_EMPTY,
    tx_seq 0, status INITIALIZED, result_content_head H; approval_ids/event_ids
@@ -839,7 +949,7 @@ C(Q) length=352; plain SHA256=`1620bcf520a6c44fe250b3178a5cb0877f632410f82a4187c
    command_mac MAC(F), key fixture-key, tx_seq 0, outcome INITIALIZED,
    receipt_core_sha256 SHA256(C(C0)). G1=G0, кроме ledger_tip=ref(L0).
 4. InitializationBody I0: version 1, R/digest Q, P/M/E, root token выше,
-   source_ref=ref(S), principal/actor/at/policy те же, guard_before G0,
+   source_ref=ref(S), principal/actor/at/policy те же, authorization=F.authorization, guard_before G0,
    key fixture-key. I={body:I0,mac:initialization MAC(I0)}.
 5. RegistrationBody T0: registration_version/storage_protocol_version 1,
    P/M/E/root token, initialization_ref=ref(I), storage_profile_id fixture-profile,
@@ -870,35 +980,35 @@ POLICY_UNAVAILABLE, несмотря на mathematically matching MACs.
 
 | C(object) | Bytes | Plain SHA-256 |
 |---|---:|---|
-| F | 1511 | `858b4b61ae0edf61802c2c24317579a0a47dbb847ae3325d2f06c5e40f523754` |
+| F | 1629 | `a6746a97b88d1837e97b4dd9a42242405410971aadbafcc291bf0abc9678d2c6` |
 | C0 | 817 | `a677d7c51ecfde869cf2a0cf8711c2be35f98d27d1f364c9717b1a1e0475017e` |
-| L0 | 581 | `48422b24924e9e9629ae01b9050f303b51de27db4ee2ab99181a3629b9cf63d0` |
-| I0 | 963 | `000814348a486f01c28002c3773224299e1d1b3f3aacf930977df6740aecc9bc` |
-| I wrapper | 1045 | `a373ea493da0880d84d9d7f58629d51a2df15a7085ecbb5e169d8863601ccb45` |
-| T0 | 468 | `58a09f754b4274acc379dfe1ff17a5722a6acb4f4bdab24a24a5bbc81dd0327c` |
-| T | 2365 | `de9406eb60ac486d32768e0c1ea2c41b235b6fcf9ea6f9eee27111bb6ef06e53` |
-| J0 payload | 412 | `8e949848c6755ebfc11b6348f2c3582d9e97392b3ef59c02ce0ed1cd3200969e` |
-| J1 payload | 594 | `f0d8ce3fd5219bee5e4a90dddcf77939d5d973d033ceee7c1d7298573240e708` |
-| J2 payload | 1532 | `30808c1c7610fb6a10931f1fb09faf52a5ef7a9f088de5448db36774ef7fbe05` |
-| CH | 614 | `561cebf2c9543a8db5a1410293feace9434ba97536ade5706ded5b4dc96237fb` |
-| A0 body | 836 | `bec91b9eb712ccf93596ec19e0bd3fbfe3c9422d75e12f65c67462a4aba59f54` |
-| A1 body | 1256 | `aae253d0d84a122399f27cce03280605a999f0fbfddcac8424cf813db333f10e` |
-| RC body | 1612 | `011f780751e2c204d6ead0d729ce3598043c6d07be8e6e5f02629353bf4dba1c` |
+| L0 | 581 | `c216ee03e00bf197987469f8c1148841d21e21fe082404533fc463fa7648781a` |
+| I0 | 1373 | `3b80f73d520191a3a8d0fcce3a04655ab8e08c90fe2b2bf045cf9d82ca9a327c` |
+| I wrapper | 1455 | `0ea34d03ade7acc68577a80f9575b6abfcb2023d83a57ac546c47e5ed595cad6` |
+| T0 | 468 | `143ec2963aa12b36c777f246043e7e512dde6d410faaec6809931ce96cbe11f1` |
+| T | 2365 | `827c61894419f8fb1a8f8ac628f797fb0743be651ea4e4ea71d4738cbfc0582a` |
+| J0 payload | 412 | `d21691c38834df252c82b75733566f8903c2a8ff67b04c1b711e07aa3efcf3bf` |
+| J1 payload | 594 | `cdce641252af9dc8d175a06d8515632e83133f6e0700ecbf1d2dca19420d3ecb` |
+| J2 payload | 1532 | `4e495831ac683ed673c1ad444e15d380df04f3f80a5fc8005e377cc31d0297d1` |
+| CH | 614 | `dbd9a7294834d1a1fd6996209717a8f62663fd25b4b11779e33cd50e65d37d05` |
+| A0 body | 836 | `bb768ad978fdc95172617791c7850235c3e06909c66b072a067712fb911a1fe7` |
+| A1 body | 1256 | `4984943c3c76c81580b686edd4ece03d38f7054472ba7aafc2264a6f82062472` |
+| RC body | 1612 | `a0e53e1207b99e33cef88abbd94eab34b49dece1a419160dcc61f30cb7f5e17b` |
 
 | Domain MAC | Expected Hex |
 |---|---|
-| Frozen F | `d39786287caa22382353e91de044f38d4c1858a9fa2a2cb9271971646f054be7` |
-| Initialize I0 | `32489eb0ea65742037d38286438f300ae6906add140f31c73759a91bbfc2c842` |
-| Registration T0 | `1162e78c68e39115bde311a8abcab4f83cfdd148b50f13c8dbc10290e1839102` |
-| Anchor A0 | `1f3e68f951e4f2bd9f1aa4d4f97ecb722acf767656106ae8a2f6fe2b7050f1fd` |
-| Anchor A1 | `d4773fc07e67a9c56371472eccf607b9d93dac50a8957a76a9edad1a69a9daee` |
-| Receipt RC | `5a09a85ca13f7cf48ec293533ab4d946e3080581084488370e6500b5a4dad6fa` |
+| Frozen F | `b60a2346904d2bed9b69280ef808a5ae366f151de93675df0620d2552c175ac2` |
+| Initialize I0 | `7a6e46914a816cf7e29d16c3370d6750cd1c94c4f97c58f3dd23d805f77f4c6b` |
+| Registration T0 | `2bbf41c650a957ada9abdf1cf0671cd5593fdd3d05f5aca7e405b6775a30e888` |
+| Anchor A0 | `2338e85beda320de081478fc6a271c850c8a8dd34653c9bc375c5106b03932f5` |
+| Anchor A1 | `7ade0e3cac5cf9b884bc7eaa73d63cc4fa3c00b313eff991ef0d1a127690cefa` |
+| Receipt RC | `1ee63df031daabfda27c2550b61888081b03309bb6039653471b7603a6e937a0` |
 
 | Frame | Header Hex | Payload bytes | Full frame bytes | Frame MAC |
 |---|---|---:|---:|---|
-| J0 | `53534a310000019c` | 412 | 452 | `d95894530415aa96dcafdd43aa1366e1be576f17ee4b9e76961c564dd8d8fc48` |
-| J1 | `53534a3100000252` | 594 | 634 | `17cb81935040ef4cbcb53fcefafbe7c7c699346336eeb3d1da7be6ce49cacf54` |
-| J2 | `53534a31000005fc` | 1532 | 1572 | `e5d986b231a0531ae17c87ab6ff661c0d968697f41bb578975b765f51f355437` |
+| J0 | `53534a310000019c` | 412 | 452 | `4e8ebffc3ffcb8972b15dbc901d3ca8e4a7806a838bd785780b1f3b867b79a13` |
+| J1 | `53534a3100000252` | 594 | 634 | `def73c97f59e3e2a544f30acacc593dc7ffc2826733465748dbfea69579b25de` |
+| J2 | `53534a31000005fc` | 1532 | 1572 | `a1b89141d2676cdfebaf341dc2a509e7c641ac0165901fcde46111d9b7f3630f` |
 
 ### 13.3 Альтернативный ABORT vector A и отрицательные vectors
 
@@ -913,16 +1023,20 @@ receipt_core:C_abort,result_guard:G_abort}. Ни J1, ни J2 в этой history
 | Object | Bytes | Plain SHA-256 |
 |---|---:|---|
 | C_abort | 391 | `30846a5bbae224f4bd1d319fcebe010b5755d16f17ba2368c1ec3903b94b3327` |
-| L_abort | 587 | `2a97a62074063d4bdca1366ed695517b24a20b5dd37ac243c4c422fbee0c817f` |
-| JA payload | 1260 | `f2182796685367fff6cd19f38870b884129aace04092c2084d1c4063c85e0ce8` |
+| L_abort | 587 | `8c4aeec32367511467e3a17aec76b9d336cedd3f618fde5c0fd99a3626a05c0a` |
+| JA payload | 1260 | `587ec273360978aed78818d4f30868193d3d9fd837afb394985b95ca2f34403d` |
 
 JA header=`53534a31000004ec`, full frame length=1300,
-MAC=`7fc0d52bf635f7217d375218c951783adb4eb3cc976240958522ed2e6d592d49`.
+MAC=`7526b984a77b5bd45ea35eb9548cd923e6d671e139e9c3c7654baa6f85e2f5fa`.
 Ожидаемый результат — INITIALIZATION_ABORTED, generation source не меняется,
 primary не публикуется, request R consumed, same-request retry даёт abort.
 
 | Изменение synthetic input | Обязательный expected outcome |
 |---|---|
+| Valid Request с PUBLISH_REVISION и корректным BlobRef | OPERATION_NOT_AVAILABLE; zero blob dereferences/IDs/sequence/writes |
+| Frozen F: old permission вместо command_grants или extra grant | UNKNOWN_FIELD/MISSING_FIELD либо AUTHORIZATION_BINDING_MISMATCH; даже новый корректный MAC не создаёт grant |
+| InitializationBody.authorization отличается от F.authorization | AUTHORIZATION_BINDING_MISMATCH, no genesis/recovery |
+| RECORD_DECISION gate SCRIPT/decision revoke при policy только SCRIPT approve | PERMISSION_DENIED, no PREPARE; gate grants не наследуются |
 | J0/J1/J2 содержат extra/missing fields или duplicate keys | WIRE_FORMAT/UNKNOWN_FIELD/MISSING_FIELD до trust use; не normalize-and-accept |
 | Header length 412→413 без изменения actual bytes/MAC | Incomplete/bad frame → block, не discard suffix |
 | Любой MAC bit изменён, полный frame | MAC_MISMATCH; optional reconstruction также запрещена |
@@ -993,6 +1107,8 @@ anti-rollback witness protocol; требования самой Windows отде
 | W0–W9 | Kill/fail до/после каждого write/flush/replace/ACK, затем repeated recovery kill; результат только предписанный A/B/pending/block, никаких partial successful receipts |
 | Reconciliation | Anchor lag matching prefix допускается; ahead/fork/invalid MAC/unknown primary blocked; нельзя discard complete authenticated tail |
 | Default D4 | При capability OFF каждый incomplete terminal block; partial PREPARE/INTENT всегда block. Optional tests/owner acceptance — отдельно, не запуск по client flag |
+| Authorization | Все 12 gate×decision: allow exact grant, deny absent principal/gate/decision/provider/policy; APPROVE-only не REVOKE/REJECT/REVISE и не другой gate. Draft edit без protected-write, write без operation grant — deny. Wrong frozen principal/connection/policy/scopes/init binding — reject. Policy change до intent → ABORT, после intent → exact frozen replay без нового grant |
+| Disabled revision | Любой proposal_ref, даже valid blob, → OPERATION_NOT_AVAILABLE без чтения blob/IDs/seq/PREPARE; existing ID conflict раньше; forged authenticated stored revision → JOURNAL_TRANSITION_INVALID; no generic save/repair bypass |
 | Request/session | Lost ACK, conflicting retry, restart, aborted/old epoch reuse, principal mismatch, policy change; один terminal receipt и максимум одна новая decision |
 | Order/REVOKE | All negative decisions/latest target checks, legacy gaps, same-time ambiguity, restored old APPROVE, missing negative history, import/transfer/new epoch — без fabricated order/authority |
 | Genesis/repair | INITIALIZING/INITIALIZATION_ABORTED/ACTIVE transitions, missing anchor не recreated; repair сохраняет original head/gen/seq и не публикует backup как current |
@@ -1027,27 +1143,37 @@ privileged store rollback явно остаётся вне обнаружени�
 
 Сейчас выполняются только документационные проверки и воспроизводимость
 синтетических vectors, не runtime/storage/service implementation tests.
-Один новый документ, no existing-file edits. Проверяются closed field lists,
+В S1a изменяется только этот существующий Markdown; код и другие документы не меняются. Проверяются closed field lists,
 matching recipes/vectors, SHA/MAC cross-check двумя независимыми подходами,
-ссылки, numbering/fences, diff whitespace, размер нового файла и отсутствие
+ссылки, numbering/fences, diff whitespace, размер файла и отсутствие
 реальных секретов/PII/protected artifacts. `.gitignore` проверяется как часть
 policy hygiene, но не изменяется и не заменяет inspection staged file list.
+
+Для S1a пересчитаны 17 canonical objects (включая неизменные контрольные
+C0/C_abort) и 10 domain/frame HMAC: Python json/hashlib/hmac и независимая
+реконструкция графа в Node с sorted-key serialization и OpenSSL SHA-256/HMAC
+дали одинаковые результаты. Новые executable файлы в репозиторий не добавляются.
+Это проверка synthetic vectors, не реализация протокола или Windows qualification.
 
 На решение владельца остаются:
 
 1. **Сам S1 v1 contract:** exact schemas/types, operation set, framing, domains,
    counter/payload bounds, metadata roots, errors и literal vectors. Approval
    D1–D12 не является approval этих деталей.
-2. **Q1:** numeric quota/floor/reserve/warning thresholds, weekly/pre-maintenance
+2. **Authorization/provider:** утвердить предложенные exact scopes/evidence и
+   protected policy lookup/update boundary; schema/deployment policy provider
+   не объявляются реализованными. PUBLISH_REVISION остаётся недоступной до
+   отдельного approved closed proposal/builder contract и согласованных vectors.
+3. **Q1:** numeric quota/floor/reserve/warning thresholds, weekly/pre-maintenance
    backup, independent destination/access и retention 4 validated bundles либо
    указанные владельцем альтернативы. Ни одно число не считается принятым.
-3. **Windows profiles:** выбрать actual builds/UBR/editions/hardware/cache
+4. **Windows profiles:** выбрать actual builds/UBR/editions/hardware/cache
    configurations, including поддерживаемый Windows 10 security maintenance,
    и отдельные process/power-loss qualification evidence requirements.
-4. **Optional terminal reconstruction:** оставить OFF в первой реализации;
+5. **Optional terminal reconstruction:** оставить OFF в первой реализации;
    enabled implementation потребует отдельного approval и exhaustive acceptance.
    Сейчас approval на неё не запрашивается и не подразумевается.
-5. **Legacy-resolution/disaster recovery keys:** не входят в v1. Если proofs
+6. **Legacy-resolution/disaster recovery keys:** не входят в v1. Если proofs
    потеряны, legacy key остаётся blocked; нельзя трактовать этот открытый вопрос
    как разрешённый administrative override/secret export.
 
@@ -1055,4 +1181,4 @@ policy hygiene, но не изменяется и не заменяет inspecti
 создаёт Windows service, filesystem writer/journal/anchor, policy, authority
 evaluator, Story Intelligence module, media/model/key или protected data в Git.
 Коммит/remote SHA и фактические проверки передаются в итоговом ответе.
-После публикации E01.3.9.2/S1 — **STOP**, без PR/merge/release/main changes и без S2.
+После публикации E01.3.9.2a/S1a — **STOP**, без PR/merge/release/main changes и без S2.
