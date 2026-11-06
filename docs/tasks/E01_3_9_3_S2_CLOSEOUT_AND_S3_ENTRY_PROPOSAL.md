@@ -1,7 +1,7 @@
 # E01.3.9.3 — S2 Closeout / S3 Entry Proposal
 
-**Date:** 2026-11-06.  
-**Status:** S2 independently code-reviewed and accepted for *pure in-memory protocol modeling*; S3 is a **proposed design task**, not an approved implementation.  
+**Date:** 2026-11-06.
+**Status:** S2 independently code-reviewed and accepted for *pure in-memory protocol modeling*; S3 is a **proposed design task**, not an approved implementation.
 **Base SHA:** `21b1f06c1560ff65e6dc9c47ac9a972e5a3f2879` (S2.4).
 **No PR/merge/release/main changes.**
 
