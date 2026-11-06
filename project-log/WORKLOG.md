@@ -169,3 +169,11 @@
 - Validation: GitHub Actions CI pending at time of authoring; actual Windows MP4 not tested yet. User validation required before further video quality work.
 - Files: `scripts/first_video.py`, `examples/first_video_plan_ru.json`, `examples/first_video_plan_uk.json`, `tests/test_sprint26.py`, `docs/SPRINT26_FIRST_VIDEO_WINDOWS.md`, four project logs.
 - Next: verify CI; user runs real Silero end-to-end on Windows and checks exported video.
+
+## 2026-11-06 — Story Production / WanGP ideas adoption (docs-only)
+
+- Владелец согласовал архитектурные идеи WanGP для Story Studio RU/UA без переноса кода, весов или обязательной GPU-зависимости.
+- Зафиксированы WP-01–WP-16: storyboard, shots/takes, cast/place/voice, selective rebuild, QA/Deep Review, timeline/versions, Media Flow, preflight, provider registry, queue/recovery, workspaces, Windows Manager, scoped agents, optional WanGPProvider, license gates.
+- Добавлены `docs/architecture/STORY_PRODUCTION_WANGP_ADOPTION_DECISION_2026-11-06.md` и `docs/tasks/STORY_PRODUCTION_WANGP_IMPLEMENTATION_BACKLOG_2026-11-06.md`; Story Intelligence architecture получила ссылку.
+- WanGP source commit `bd1ff5903cbc18b46c3cce3b75bd140870b536a2`, license blob `8e51ce4143ab472e3835ccc5e5f3e71e385f8770` (Community License 2.0). Commercial embedding требует отдельной письменной лицензии.
+- Documentation only; no code/tests/golden/media/secrets changes; no PR/merge/main/release. S3.1, Q1 и S3.2 не утверждены. Runtime tests не запускались.

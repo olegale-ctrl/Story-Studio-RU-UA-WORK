@@ -59,3 +59,9 @@ E01.3.9.1 Atomic Storage остаётся самостоятельным **не�
 ## 8. Дальнейшая работа
 
 Подготовить отдельную спецификацию **Story Intelligence V1**: роли модулей, модель данных, критерии/блокеры, интерфейсы передачи, тестовые примеры, offline-поведение, границы прав и согласований. Только после утверждения спецификации — отдельные задания Codex на реализацию. Не менять `main`, не создавать PR/merge/release без отдельного разрешения владельца.
+
+## 9. Дополнение от 2026-11-06 — производственный контур
+
+Владелец согласовал концептуальное включение полезных идей WanGP: Showrunner/storyboard, shot/take, selective rebuild, Deep Review, Media Flow, preflight, provider registry, очередь, версии, workspaces, Windows rollback, optional API/WanGP и license gates. Полное решение WP-01–WP-16: [STORY_PRODUCTION_WANGP_ADOPTION_DECISION_2026-11-06.md](STORY_PRODUCTION_WANGP_ADOPTION_DECISION_2026-11-06.md). Будущие задания: [STORY_PRODUCTION_WANGP_IMPLEMENTATION_BACKLOG_2026-11-06.md](../tasks/STORY_PRODUCTION_WANGP_IMPLEMENTATION_BACKLOG_2026-11-06.md).
+
+Это позднее дополнение не меняет исторические статусы от 2026-11-05: D1–D12 и S1 были утверждены позднее отдельными решениями, S2.1–S2.4 завершены как pure model, S3.1 остаётся PROPOSAL. Не создаёт новых protected/rights grants и не разрешает реализацию.
