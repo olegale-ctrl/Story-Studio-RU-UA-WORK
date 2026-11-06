@@ -298,10 +298,15 @@ class TransactionModel:
             fail('UNVERIFIED_ORDERING', '$.lineage', 'Multiple local predecessors')
         if local:
             link = local[0]
-            parent = state.parents.get(link['storage_epoch_id'])
+            parent_epoch = link['storage_epoch_id']
+            parent = state.parents.get(parent_epoch)
             if parent is None:
                 fail('BLOB_MISSING', '$.lineage', 'Verified parent container absent')
             prev = self._scan(parent, visited)
+            # _scan binds the authenticated registration, anchor and journal epoch.
+            # The container lookup key selects a proof; it does not establish identity.
+            if prev.registration['storage_epoch_id'] != parent_epoch:
+                fail('EPOCH_MISMATCH', '$.lineage.storage_epoch_id', 'Retained parent epoch does not match authenticated context')
             if prev.pending is not None or any((link['parent_head'] != prev.head, link['parent_guard'] != prev.guard,
                     link['parent_terminal_ref'] != prev.tail, link['machine_binding_id'] != prev.registration['machine_binding_id'],
                     link['production_id'] != reg['production_id'])):

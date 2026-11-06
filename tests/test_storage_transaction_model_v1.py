@@ -971,5 +971,171 @@ class AdmissionRegression(ModelCase):
         self.assertEqual(s.events, [])
 
 
+
+class ParentEpochBinding(ModelCase):
+    def aborted_parent(self, *, epoch=E, lost=False):
+        guard = None
+        if lost:
+            guard = {'guard_version': 1, 'continuity': 'CONTINUITY_LOST', 'baseline_ref': None,
+                     'ledger_tip': None, 'barrier_tip': None, 'lineage_tip': None}
+        transaction = genesis(epoch=epoch, guard=guard)
+        store, model, _ = self.make(transaction)
+        self.crash_at(store, model, transaction, 'W3.anchor.flush')
+        outcome = model.recover()
+        self.assertEqual(outcome.state, 'ABORTED')
+        return store, outcome
+
+    def child_input(self, parent, *, claimed=None, container_key=None, change=None, continuity=None):
+        ab = json.loads(parent.visible.anchor)['body']
+        reg = json.loads(parent.visible.registration)['body']
+        actual_epoch = reg['storage_epoch_id']
+        claimed = actual_epoch if claimed is None else claimed
+        container_key = claimed if container_key is None else container_key
+        epoch = uid(940)
+        image = fixtures()['S'] if ab['stable_head'] is None else json.loads(parent.visible.primary)
+        entry = {'production_id': reg['production_id'], 'machine_binding_id': reg['machine_binding_id'],
+                 'storage_epoch_id': claimed, 'source_snapshot_ref': ref(image), 'parent_head': ab['stable_head'],
+                 'parent_guard': ab['history_guard'], 'parent_terminal_ref': ab['journal_tail'],
+                 'order_status': 'VERIFIED_LOCAL_PARENT'}
+        if change:
+            change(entry)
+        lineage = {'blob_version': 1, 'blob_type': 'LINEAGE_DELTA', 'production_id': reg['production_id'],
+                   'storage_epoch_id': epoch, 'previous_ref': None, 'entries': [entry]}
+        guard = {'guard_version': 1,
+                 'continuity': continuity or ('BASELINE_UNVERIFIED' if ab['stable_head'] else ab['history_guard']['continuity']),
+                 'baseline_ref': None, 'ledger_tip': None, 'barrier_tip': None, 'lineage_tip': ref(lineage)}
+        return genesis(image=image, epoch=epoch, request=uid(941), guard=guard,
+                       operation='IMPORT_BASELINE' if ab['stable_head'] else 'INITIALIZE_EMPTY',
+                       extra={ref(lineage)['sha256']: c(lineage)}, parents={container_key: parent.visible})
+
+    def reject_before_persistence(self, transaction, code):
+        store, model, _ = self.make(transaction)
+        visible, durable, source = copy.deepcopy(store.visible), copy.deepcopy(store.durable), copy.deepcopy(transaction)
+        error = self.error(code, model.execute, transaction)
+        self.assertEqual(store.visible, visible)
+        self.assertEqual(store.durable, durable)
+        self.assertEqual(transaction, source)
+        self.assertEqual(store.events, [])  # Not even W0.freeze; no W1/PREPARE/COMMIT/ACK.
+        self.assertEqual(store.visible.journal, [])
+        self.assertIsNone(store.visible.anchor)
+        self.assertIsNone(store.visible.primary)
+        return error
+
+    def test_exact_epoch_allows_new_initialization_after_abort(self):
+        parent, abort = self.aborted_parent()
+        transaction = self.child_input(parent)
+        store, model, _ = self.make(transaction)
+        out = model.execute(transaction)
+        self.assertEqual(out.state, 'FINALIZED')
+        self.assertEqual(self.anchor(store)['storage_epoch_id'], uid(940))
+        self.assertEqual(self.anchor(store)['reserved_tx_high_watermark'], 0)
+        self.assertEqual(store.visible.primary, c(fixtures()['S']))
+        self.assertEqual(store.visible.parents[E], parent.visible)
+        self.assertEqual(model.execute(genesis()).receipt, abort.receipt)
+        self.assertEqual([json.loads(f[8:-32])['record_type'] for f in store.visible.journal],
+                         ['PREPARE', 'PUBLISH_INTENT', 'GENESIS'])
+
+    def test_alias_epoch_cannot_select_an_authenticated_different_epoch(self):
+        parent, _ = self.aborted_parent()
+        for alias in (uid(920), uid(921)):
+            with self.subTest(alias=alias):
+                error = self.reject_before_persistence(self.child_input(parent, claimed=alias), 'EPOCH_MISMATCH')
+                self.assertEqual(error.path, '$.lineage.storage_epoch_id')
+
+    def test_parent_registration_must_match_lineage_epoch(self):
+        parent, _ = self.aborted_parent(epoch=uid(950))
+        self.assertEqual(json.loads(parent.visible.registration)['body']['storage_epoch_id'], uid(950))
+        self.assertEqual(json.loads(parent.visible.anchor)['body']['storage_epoch_id'], uid(950))
+        self.assertTrue(all(json.loads(f[8:-32])['storage_epoch_id'] == uid(950) for f in parent.visible.journal))
+        self.reject_before_persistence(self.child_input(parent, claimed=E), 'EPOCH_MISMATCH')
+
+    def test_authenticated_parent_anchor_wrong_epoch_still_blocks(self):
+        parent, _ = self.aborted_parent()
+        anchor = json.loads(parent.visible.anchor)
+        anchor['body']['storage_epoch_id'] = uid(951)
+        anchor['mac'] = w.anchor_mac(anchor['body'], KEY)
+        parent.visible.anchor = c(anchor)
+        self.assertEqual(anchor['mac'], w.anchor_mac(anchor['body'], KEY))
+        self.reject_before_persistence(self.child_input(parent), 'ANCHOR_MISMATCH')
+
+    def test_authenticated_parent_journal_wrong_epoch_still_blocks(self):
+        parent, _ = self.aborted_parent()
+        record = json.loads(parent.visible.journal[-1][8:-32])
+        record['storage_epoch_id'] = uid(952)
+        record['payload']['receipt_core']['storage_epoch_id'] = uid(952)
+        parent.visible.journal[-1] = w.encode_journal_frame(record, KEY)
+        self.assertEqual(w.decode_journal_frame(parent.visible.journal[-1], KEY)['storage_epoch_id'], uid(952))
+        anchor = json.loads(parent.visible.anchor)
+        anchor['body']['journal_tail']['record_mac'] = parent.visible.journal[-1][-32:].hex()
+        anchor['mac'] = w.anchor_mac(anchor['body'], KEY)
+        parent.visible.anchor = c(anchor)
+        self.reject_before_persistence(self.child_input(parent), 'JOURNAL_TRANSITION_INVALID')
+
+    def test_container_dictionary_key_is_only_a_selector(self):
+        for misplaced in ('missing_expected_key', 'different_authenticated_container'):
+            with self.subTest(misplaced=misplaced):
+                parent, _ = self.aborted_parent(epoch=E if misplaced == 'missing_expected_key' else uid(953))
+                transaction = self.child_input(parent, claimed=E,
+                        container_key=uid(954) if misplaced == 'missing_expected_key' else E)
+                # Every parent frame and anchor has a valid MAC for its own epoch.
+                anchor = json.loads(parent.visible.anchor)
+                self.assertEqual(anchor['mac'], w.anchor_mac(anchor['body'], KEY))
+                for frame in parent.visible.journal:
+                    w.decode_journal_frame(frame, KEY)
+                self.reject_before_persistence(transaction, 'BLOB_MISSING' if misplaced == 'missing_expected_key' else 'EPOCH_MISMATCH')
+
+    def test_valid_parent_keeps_negative_records_ids_and_verified_order(self):
+        parent, machine, _ = self.ready(populated=True)
+        receipts = {}
+        for number, decision in enumerate(('approve', 'reject', 'revise', 'revoke'), 1):
+            transaction = publication(parent, number=number, operation='RECORD_DECISION', decision=decision)
+            self.authorize(machine, transaction)
+            receipts[uid(number)] = machine.execute(transaction).receipt
+        before = machine.inspect()
+        old_image = parent.visible.primary
+        old_guard = self.anchor(parent)['history_guard']
+        transaction = self.child_input(parent)
+        store, child, _ = self.make(transaction)
+        self.assertEqual(child.execute(transaction).state, 'FINALIZED')
+        after = child.inspect()
+        expected = [(E, n, uid(100 + n), decision) for n, decision in enumerate(('approve', 'reject', 'revise', 'revoke'), 1)]
+        self.assertEqual([(v['epoch'], v['tx_seq'], v['binding']['approval_id'], v['binding']['decision']) for v in after.ordered], expected)
+        self.assertEqual(after.ordered, before.ordered)
+        self.assertEqual(after.ids, before.ids)
+        self.assertEqual(after.sessions, before.sessions)
+        self.assertTrue(before.requests.keys() <= after.requests.keys())
+        for request_id, receipt in receipts.items():
+            self.assertEqual(after.requests[request_id]['receipt'], receipt)
+        self.assertEqual(store.visible.primary, old_image)
+        self.assertEqual(store.visible.parents[E], parent.visible)
+        self.assertEqual(json.loads(store.visible.parents[E].anchor)['body']['history_guard'], old_guard)
+        self.assertIn(old_guard['barrier_tip']['sha256'], store.visible.parents[E].blobs)
+        self.assertEqual([a['decision'] for a in json.loads(store.visible.primary)['approvals']], ['approve', 'reject', 'revise', 'revoke'])
+        self.assertEqual(self.anchor(store)['reserved_tx_high_watermark'], 0)  # Not compared to parent's seq 4.
+        self.assertEqual(after.guard['continuity'], 'BASELINE_UNVERIFIED')
+        self.error('UNVERIFIED_ORDERING', child.latest_verified, transaction_key(after))
+
+    def test_other_parent_boundary_checks_are_not_weakened(self):
+        for field in ('parent_head', 'parent_guard', 'parent_terminal_ref', 'production_id', 'machine_binding_id', 'continuity'):
+            with self.subTest(field=field):
+                parent, _ = self.aborted_parent(lost=field == 'continuity')
+                def change(entry):
+                    if field == 'parent_head':
+                        entry[field] = fixtures()['CH']
+                    elif field == 'parent_guard':
+                        entry[field] = {**entry[field], 'ledger_tip': None}
+                    elif field == 'parent_terminal_ref':
+                        entry[field] = {**entry[field], 'record_mac': '0' * 64}
+                    elif field in ('production_id', 'machine_binding_id'):
+                        entry[field] = uid(955)
+                transaction = self.child_input(parent, change=change,
+                        continuity='CONTINUOUS' if field == 'continuity' else None)
+                self.reject_before_persistence(transaction, 'HISTORY_CONTINUITY_LOST' if field == 'continuity' else 'UNVERIFIED_ORDERING')
+
+
+def transaction_key(replay):
+    return replay.ordered[-1]['binding']['decision_key']
+
+
 if __name__ == '__main__':
     unittest.main()
