@@ -1,9 +1,9 @@
 # Story Studio RU/UA — Natural Narration & Anti-Template Editor (proposal)
 
-**Date:** 2026-11-06  
-**Status:** RESEARCHED DESIGN PROPOSAL — NOT OWNER-APPROVED; NO IMPLEMENTATION AUTHORIZATION.  
-**Branch base:** `d816f1b94a71e04363371d9bc05b06f52a7fc0d6` (S2.3 adversarial verification).  
-**Request:** make RU/UA video scripts sound like a human narrator rather than generic AI prose; review the original Chinese project and selectively adapt ideas from `fendouai/free-ai-humanizer`.  
+**Date:** 2026-11-06
+**Status:** RESEARCHED DESIGN PROPOSAL — NOT OWNER-APPROVED; NO IMPLEMENTATION AUTHORIZATION.
+**Branch base:** `d816f1b94a71e04363371d9bc05b06f52a7fc0d6` (S2.3 adversarial verification).
+**Request:** make RU/UA video scripts sound like a human narrator rather than generic AI prose; review the original Chinese project and selectively adapt ideas from `fendouai/free-ai-humanizer`.
 **Scope:** script drafting and editorial style only; no protected-storage changes.
 
 ## 1. Verified source findings and provenance
@@ -78,7 +78,7 @@ Examples to **flag for review, not blanket-ban**:
 Illustrative **non-factual** style contrast:
 
 - Template: «Сегодня мы погрузимся в удивительную тайну исчезнувших цивилизаций. Эта тема заставляет задуматься о хрупкости всего человечества».
-- More direct: «Почему некоторые города постепенно пустели? Чтобы разобраться, нужно отделить то, что показывают археологические находки, от догадок о причинах».  
+- More direct: «Почему некоторые города постепенно пустели? Чтобы разобраться, нужно отделить то, что показывают археологические находки, от догадок о причинах».
   This is a framing example, **not** a historical claim or approved script hook.
 
 ## 5. Non-negotiable fidelity and rights gates
