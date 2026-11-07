@@ -199,3 +199,92 @@ PUBLISH_REVISION **DISABLED**, partial COMMIT reconstruction **OFF**.
 | `s32a-dispatcher-verified.log` | `06d6d0ded04e4b45654e077dd1549532051b887309bfad8a79f025e707949b70` |
 | `s32a-storage.log` | `139f9ebbdc03022816996386a50d5d070a48bd22b004be74e1cf749dc421d2a0` |
 | `s32a-full-verified.log` | `7b484f5ab61b4e06deb8c78ea5614039746215699c48d9974147f0642ea45ce7` |
+
+## S3.2a-R1 · 2026-11-07
+
+База `c61d82591ec37d1285672f599180aa0c7fa2125c`, HEAD ветки
+`docs/editorial-e01-3-9-4-s3-2a-independent-review`. Ветка исправления
+`fix/editorial-e01-3-9-4-s3-2a-cold-admission-guard`. Итоговый SHA публикуется
+в передаче результата, поскольку запись SHA внутри собственного коммита циклична.
+Результаты выше относятся к первоначальной реализации.
+
+### S32A-R01
+
+На базовом коде четыре новых теста дали 15 отказавших проверок: перехватчик
+`TransactionModel.execute` обнаружил вызов seed до возврата отказа. Входные
+кадры подготовлены отдельным экземпляром dispatcher/Factory. Целевой Factory
+не прогревался построением тестовых кадров.
+
+`Factory.candidate()` теперь строит точный шаблон и входные данные чистым
+вычислением. Для холодного non-genesis запроса ссылка на ожидаемый terminal head
+вычисляется через S1 journal MAC для трёх фиксированных записей synthetic genesis.
+При построении шаблона не создаётся VirtualStore и не выполняются операции S2.
+Dispatcher сравнивает полные канонические байты и проверяет live grants, квоту,
+карантин, pre-admission fault и fixture authority до `Factory.materialize()`.
+При допуске холодного запроса Factory выполняет исходный seed неизменённым S2
+и сверяет реальный head с ожидаемым. Startup seed отделён от клиентского вызова
+и не расходует квоту. Если S2 отклоняет команду до первого события, новое
+хранилище не сохраняется. Lookup и точный replay возвращаются до подготовки кандидата.
+
+Изменённые пути и Git blob SHA исходников:
+
+| Path | Blob SHA |
+|---|---|
+| `editorial/windows_lab/dispatcher.py` | `940614d8e55a5a5c2cdec49a309d58133fe58116` |
+| `editorial/windows_lab/fixtures.py` | `a681603403f0d16c3b68ebe95aac979dbee4fb98` |
+| `tests/test_windows_lab_dispatcher_v1.py` | `108bbe007fe735df8c9f6890121cc879b658b6d7` |
+| `docs/tasks/E01_3_9_4_S3_2A_RESULT.md` | В дереве итогового коммита |
+
+### Проверки R1
+
+Среда: Windows 10 IoT Enterprise LTSC 2021, build 19044, Python 3.12.10 AMD64.
+Исходный checkout восстановлен из дерева точного коммита через GitHub API.
+Проверены 314 blob SHA, Git tree SHA и SHA базового объекта commit.
+Для полного discovery использованы pytest 9.2.0 и реальный FFmpeg 9.0.2 из
+изолированного тестового каталога. Зависимости проекта и CI без изменений.
+
+| Команда или проверка | Результат |
+|---|---|
+| `python -m unittest -v` с четырьмя новыми cold-denial методами на исходном коде | 4 теста, 15 сбоев проверок до исправления, exit 1 |
+| `python -m unittest -v` с пятью новыми методами, W0 rejection, CG matrix, replay/LOOKUP и PREPARE/INTENT pending | 9 OK, 10.830 с, exit 0 |
+| `python -m unittest tests.test_storage_protocol_v1 tests.test_storage_transaction_model_v1 tests.test_storage_recovery_adversarial_v1 -v` | 169 OK, 291.209 с, exit 0. S2.3: 1659 параметризованных сценариев |
+| `python -u -m unittest discover -s tests -v` | 842 выполнено, 841 OK, 1 failure, 0 skipped, 824.871 с, exit 1. Все 34 LAB-теста прошли, включая 32/33 и три byte oracles |
+| `python -m unittest -v tests.test_sprint23_2.Sprint232Tests.test_env_override` на точной базе | Тот же failure, exit 1 |
+| `git diff --check` | Exit 0 |
+
+Отдельный первоначальный LAB-прогон выявил сохранение пустого store при
+W0 rejection. После переноса сохранения к регистрации допуска этот тест
+прошёл в целевом и полном прогонах. Единственный failure финального discovery
+вне LAB: `test_sprint23_2.Sprint232Tests.test_env_override` ожидает POSIX-разделители,
+а Windows возвращает путь с обратными слешами. Ошибка воспроизведена на точной базе.
+
+SHA-256 логов R1 вне Git:
+
+| Log | SHA-256 |
+|---|---|
+| `s3-red.log` | `d83205d40973c2c8b5824ff50e9c3ef258ef952e0f215137b57b70b79bf53890` |
+| `s3-targeted-final.log` | `9d1127862b00d75ee398d5fc60d85208dd61ee358e5ba01598d9584d6d482312` |
+| `s3-storage.log` | `a2566992ebd26bb1215524e6300e9a9bc1f43f28dc12416e3eff726f5344f714` |
+| `s3-discovery-final.log` | `e92a4ba1a73be0a7135d0c44bba74851178aa22dd86649fd15a5eb39390fc76a` |
+
+В тестах холодного отказа перехватчик проверяет отсутствие любых вызовов
+`TransactionModel.execute`, включая временные seed stores. Проверены B,
+cross-policy A, CG_WRITER_ONLY, CG_NONE, отсутствие writer/operation/gate grant,
+семь denial/stall hooks и crash-before-admission, карантин и несовпадение
+reason/session при известном request ID. В проверке квоты после 32 реальных
+RAM admissions временно меняется доверенный gate grant, чтобы новый холодный
+probe дошёл до `LAB_CAPACITY`. Сохранённые replay и LOOKUP возвращают исходные
+байты. Матрица GD дала 12 allow / 132 deny, матрица CG охватила 30 ячеек.
+
+Дополнительное сравнение с базой по SHA-256 охватило 578 холодных EXECUTE
+кадров (17 policies × 2 principals × 17 probes, slot 0) и 20 пар разрешённых
+EXECUTE/RESULT, включая четыре последовательных GD_SCRIPT_REJECT. Обе
+выборки совпали, SHA-256 файла сравнения
+`1d192d12240be5cc0af6c750ec3ed75b88bfd286524bd4b5b8a2874099d8c4bd`.
+
+### Квалификация R1 и STOP
+
+Проверки относятся к `PURE_ONLY`. Windows native LT03–LT06/08/14, OS identity,
+ACL, SCM/pipe и protected writer вне квалификации. S1/S2, D-01 и golden vectors
+в исходном виде. После публикации требуется независимое ревью S32A-R01.
+**STOP.**

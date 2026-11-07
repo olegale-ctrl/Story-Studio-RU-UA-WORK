@@ -307,21 +307,42 @@ def relocate_image(image, production):
     raise ValueError('Synthetic DAG did not stabilize')
 
 
+def seed_head(plan):
+    """Derive the fresh seed's committed head using the S1 journal codec."""
+    head = plan['new_content_head']
+    context = {key: head[key] for key in ('production_id', 'machine_binding_id', 'storage_epoch_id')}
+    plan_ref = ref(plan)
+
+    def record_ref(index, kind, previous, payload):
+        record = {'journal_record_version': 1, **context, 'record_index': index,
+                  'previous_record_mac': previous, 'key_id': plan['key_id'],
+                  'record_type': kind, 'payload': payload}
+        return {'record_index': index, 'record_mac': w.journal_frame_mac(record, KEY)}
+
+    prepare = record_ref(0, 'PREPARE', None, {'plan_ref': plan_ref})
+    intent = record_ref(1, 'PUBLISH_INTENT', prepare['record_mac'],
+                        {'plan_ref': plan_ref, 'prepare_ref': prepare})
+    terminal = record_ref(2, 'GENESIS', intent['record_mac'],
+                           {'plan_ref': plan_ref, 'prepare_ref': prepare, 'intent_ref': intent,
+                            'receipt_core': plan['expected_commit_receipt']})
+    return {'committed_head_version': 1, 'content_head': head, 'commit_ref': terminal}
+
+
 class Builder:
-    def __init__(self, factory, actor, probe, slot):
+    def __init__(self, factory, actor, probe, slot, *, policy=None):
         self.factory, self.actor, self.probe, self.slot = factory, actor, probe, slot
         self.principal = PRINCIPALS[actor]
         self.machine, self.epoch = self.ident('machine'), self.ident('epoch')
-        image_key = actor, probe
-        if image_key not in factory._images:
-            factory._images[image_key] = relocate_image(copy.deepcopy(SEED), self.ident('production'))
-        self.image = copy.deepcopy(factory._images[image_key])
-        policy = factory.policy(actor)
+        if policy is None:
+            policy = factory._case_policy(actor)
         self.policy_ref = {'policy_id':self.ident('policy'), 'policy_version':'lab-v1',
                            'policy_sha256':hashlib.sha256(c(policy)).hexdigest()}
 
     def ident(self, role):
         return self.factory.ident(self.actor, self.probe, self.slot, role)
+
+    def image(self):
+        return relocate_image(copy.deepcopy(SEED), self.ident('production'))
 
     def authorization(self, operation):
         grant = 'INITIALIZE' if operation in ('INITIALIZE_EMPTY','IMPORT_BASELINE','TRANSFER_BASELINE') else 'RECOVERY' if operation == 'RESTORE_EXACT_HEAD' else operation
@@ -335,7 +356,7 @@ class Builder:
         M, PRINCIPAL, POLICY = self.machine, self.principal, self.policy_ref['policy_id']
         epoch = epoch or self.epoch
         request = request or self.ident('request')
-        image = copy.deepcopy(image or self.image)
+        image = self.image() if image is None else image
         image_bytes = c(image)
         guard = copy.deepcopy(guard or {'guard_version': 1, 'continuity': 'CONTINUOUS' if operation == 'INITIALIZE_EMPTY' else 'BASELINE_UNVERIFIED',
                                        'baseline_ref': None, 'ledger_tip': None, 'barrier_tip': None, 'lineage_tip': None})
@@ -381,16 +402,14 @@ class Builder:
         return m.TransactionInput(plan, f, blobs, reg, parents or {})
 
 
-    def publication(self, store, *, number=1, operation='MIGRATE_SCHEMA', decision=None, reconsiders=None, key=None, assigned_number=None):
+    def publication(self, base, guard, high, primary, old_raw, *, number=1, operation='MIGRATE_SCHEMA', decision=None, reconsiders=None, key=None, assigned_number=None):
         PRINCIPAL, POLICY = self.principal, self.policy_ref['policy_id']
         uid = lambda n: self.ident('approval' if n >= 100 and n < 200 else 'event' if n >= 200 and n < 300 else 'session' if n >= 300 else 'request')
         from editorial.schema2_migration import migrate_schema1_to_schema2
         from editorial.versioned_codec import decode_editorial_versioned, encode_editorial_versioned
-        ab = json.loads(store.visible.anchor)['body']; base = ab['stable_head']; guard = ab['history_guard']
-        old_raw = store.visible.blobs[base['content_head']['snapshot_file_sha256']] if operation == 'RESTORE_EXACT_HEAD' else store.visible.primary
         old = json.loads(old_raw); new = copy.deepcopy(old)
         assigned_number = number if assigned_number is None else assigned_number
-        seq = ab['reserved_tx_high_watermark'] + 1 if operation != 'RESTORE_EXACT_HEAD' else None
+        seq = high + 1 if operation != 'RESTORE_EXACT_HEAD' else None
         ids = {'approval_id': uid(100 + assigned_number) if operation == 'RECORD_DECISION' else None,
                'event_id': uid(200 + assigned_number) if operation != 'RESTORE_EXACT_HEAD' else None}
         epoch = base['content_head']['storage_epoch_id']
@@ -401,7 +420,7 @@ class Builder:
         auth['command_grants'] = ['PROTECTED_SNAPSHOT_WRITE', 'RECOVERY' if operation == 'RESTORE_EXACT_HEAD' else operation]
         review = None; bindings = []
         if operation == 'MIGRATE_SCHEMA':
-            migrated = migrate_schema1_to_schema2(decode_editorial_versioned(store.visible.primary), actor=ACTOR, at=AT, event_id=ids['event_id'])
+            migrated = migrate_schema1_to_schema2(decode_editorial_versioned(primary), actor=ACTOR, at=AT, event_id=ids['event_id'])
             new = json.loads(encode_editorial_versioned(migrated.snapshot))
         elif operation == 'RECORD_DECISION':
             from editorial.schema2_model import ApprovalAuthorityEvidence, required_declaration_codes
@@ -432,7 +451,7 @@ class Builder:
                          'approval_record_sha256': w.approval_wire_digest(a), 'evidence_attestation_digest': e['attestation_digest']}]
         elif operation == 'RESTORE_EXACT_HEAD':
             q['parameters'] = {'image_ref': {'sha256': base['content_head']['snapshot_file_sha256'], 'byte_length': base['content_head']['snapshot_file_length']},
-                               'expected_observation': m.observation(store.visible.primary)}
+                               'expected_observation': m.observation(primary)}
         raw = c(new); image_ref = ref(new)
         head = {**base['content_head'], 'editorial_schema_version': new['editorial_schema_version'], 'generation': new['generation'],
                 'snapshot_checksum': new['snapshot_checksum'], 'snapshot_file_sha256': image_ref['sha256'], 'snapshot_file_length': len(raw),
@@ -441,7 +460,7 @@ class Builder:
              'actor': ACTOR, 'at': AT, 'authorization': auth, 'assigned_ids': ids, 'storage_epoch_id': epoch, 'expected_result': head, 'review_snapshot': review}
         blobs = {image_ref['sha256']: raw}
         plan = finish_plan(q, f, head, guard, blobs, kind='REPAIR_EXACT' if operation == 'RESTORE_EXACT_HEAD' else 'PUBLISH',
-                           base=base, observed=m.observation(store.visible.primary), seq=seq, bindings=bindings)
+                           base=base, observed=m.observation(primary), seq=seq, bindings=bindings)
         return m.TransactionInput(plan, f, blobs)
 
 
@@ -453,7 +472,6 @@ class Factory:
         require(policy_case in POLICIES and fault_case in FAULTS)
         self.incarnation, self.policy_case, self.fault_case = incarnation, policy_case, fault_case
         self._stores = {}
-        self._images = {}
 
     def ident(self, actor, probe, slot, role):
         require(actor in PRINCIPALS and probe in PROBES and role in ROLES)
@@ -462,6 +480,10 @@ class Factory:
         return str(uuid5(UUID(self.incarnation), f'S32_FIXTURES_1/{self.policy_case}/{actor}/{probe}/{part}/{role}'))
 
     def policy(self, actor):
+        """Return the live policy used for admission and authority."""
+        return self._case_policy(actor)
+
+    def _case_policy(self, actor):
         require(actor in PRINCIPALS)
         grants, pair = [], None
         if self.policy_case != 'CG_NONE':
@@ -494,45 +516,68 @@ class Factory:
         return None
 
     def candidate(self, actor, probe, slot=0):
-        # UUID validation also closes probe/actor/slot before constructing a seed.
+        """Build exact fixture inputs without allocating or mutating a store."""
         self.ident(actor, probe, slot, 'request')
         builder = Builder(self, actor, probe, slot)
-        key = actor, probe
-        if key not in self._stores:
-            store = m.VirtualStore()
-            if probe not in PROBES[:3]:
-                image = copy.deepcopy(builder.image)
+        seed = None
+        if probe in PROBES[:3]:
+            transaction = builder.genesis(operation=OPS[probe])
+        else:
+            store = self._stores.get((actor, probe))
+            if store is None:
+                image = builder.image()
                 if probe == 'MIGRATE':
                     image.pop('approval_authority_evidence')
                     image['editorial_schema_version'] = 1
                     image = sealed(image)
                 seed = builder.genesis(image=image, request='44444444-4444-4444-8444-444444444444',
                                        operation='IMPORT_BASELINE' if probe == 'MIGRATE' else 'INITIALIZE_EMPTY')
-                engine = m.TransactionModel(store, keys={'fixture-key':KEY}, authority=self.seed_authority(seed))
+                base, guard, high = seed_head(seed.plan), seed.plan['guard_commit'], 0
+                source = seed.blobs[seed.plan['image_ref']['sha256']]
+                primary = b'corrupt synthetic image' if probe == 'RECOVERY' else source
+            else:
+                anchor = json.loads(store.visible.anchor)['body']
+                base, guard, high = anchor['stable_head'], anchor['history_guard'], anchor['reserved_tx_high_watermark']
+                primary = store.visible.primary
+                source = store.visible.blobs[base['content_head']['snapshot_file_sha256']] if probe == 'RECOVERY' else primary
+            if probe in ('MIGRATE', 'RECOVERY'):
+                transaction = builder.publication(base, guard, high, primary, source, operation=OPS[probe])
+            else:
+                from editorial.current_package import compute_current_dependency_digest
+                from editorial.versioned_codec import decode_editorial_versioned
+                _, gate, decision = probe.split('_')
+                image = json.loads(source)
+                target = image['active_refs'][{'SCRIPT':'script','SCENES':'scene_plan','HANDOFF':'production'}[gate]]
+                digest = compute_current_dependency_digest(decode_editorial_versioned(source).base_snapshot, gate, 'fixture-review')
+                dk = {'gate':gate,'policy_version':'fixture-review','object_ref':target,'dependency_digest':digest}
+                transaction = builder.publication(base, guard, high, primary, source,
+                                                  operation='RECORD_DECISION', decision=decision.lower(), key=dk)
+        require(transaction.plan['image_ref']['byte_length'] <= 128 * 1024)
+        require(sum(map(len, transaction.blobs.values())) <= 256 * 1024)
+        return seed, transaction
+
+    def materialize(self, actor, probe, seed, transaction):
+        """Run synthetic startup only for a candidate past pre-admission checks."""
+        key = actor, probe
+        store = self._stores.get(key)
+        retained_bytes = sum(len(raw) for s in self._stores.values() for raw in s.visible.blobs.values())
+        seed_bytes = sum(map(len, seed.blobs.values())) if seed is not None else 0
+        require(retained_bytes + seed_bytes <= 16 * 1024 * 1024)
+        if store is None:
+            store = m.VirtualStore()
+            if seed is not None:
+                engine = m.TransactionModel(store, keys={'fixture-key': KEY}, authority=self.seed_authority(seed))
                 result = engine.execute(seed)
                 require(result.state == 'FINALIZED')
+                actual_head = json.loads(store.visible.anchor)['body']['stable_head']
+                require(actual_head == transaction.command['request']['expected_head'])
                 if probe == 'RECOVERY':
                     store.visible.primary = b'corrupt synthetic image'
                     store.durable.primary = store.visible.primary
-            self._stores[key] = store
-        store = self._stores[key]
-        if probe in PROBES[:3]:
-            transaction = builder.genesis(operation=OPS[probe])
-        elif probe in ('MIGRATE','RECOVERY'):
-            transaction = builder.publication(store, operation=OPS[probe])
-        else:
-            from editorial.current_package import compute_current_dependency_digest
-            from editorial.versioned_codec import decode_editorial_versioned
-            _, gate, decision = probe.split('_')
-            image = json.loads(store.visible.primary)
-            target = image['active_refs'][{'SCRIPT':'script','SCENES':'scene_plan','HANDOFF':'production'}[gate]]
-            digest = compute_current_dependency_digest(decode_editorial_versioned(store.visible.primary).base_snapshot, gate, 'fixture-review')
-            dk = {'gate':gate,'policy_version':'fixture-review','object_ref':target,'dependency_digest':digest}
-            transaction = builder.publication(store, operation='RECORD_DECISION',decision=decision.lower(),key=dk)
-        require(transaction.plan['image_ref']['byte_length'] <= 128 * 1024)
-        require(sum(map(len, transaction.blobs.values())) <= 256 * 1024)
-        require(sum(sum(map(len, s.visible.blobs.values())) for s in self._stores.values()) <= 16 * 1024 * 1024)
-        return store, transaction
+        return store
+
+    def retain(self, actor, probe, store):
+        self._stores[(actor, probe)] = store
 
     @staticmethod
     def seed_authority(transaction):
@@ -551,12 +596,13 @@ class Factory:
         location = self.locate(actor, request['request_id'])
         require(location is not None and self.allowed(actor, location[0]))
         probe, slot = location
-        expected = Builder(self, actor, probe, slot).authorization(request['operation'])
+        live_policy = self.policy(actor)
+        expected = Builder(self, actor, probe, slot, policy=live_policy).authorization(request['operation'])
         require(command['principal_id'] == PRINCIPALS[actor] and c(command['authorization']) == c(expected))
         # Only the independently selected current policy can issue this live assertion.
         return m.FixtureAuthority(PRINCIPALS[actor], frozenset([PRINCIPALS[actor]]),
             frozenset([c(expected)]), CONNECTION,
             frozenset([request['review_session_id']]) if request['review_session_id'] else frozenset(),
             frozenset([(command['request_sha256'],command['expected_result']['snapshot_file_sha256'])]),
-            'INITIALIZE' in self.policy(actor)['actor_a_command_grants'],
+            'INITIALIZE' in live_policy['actor_a_command_grants'],
             production_id=self.ident(actor, probe, slot, 'production'))

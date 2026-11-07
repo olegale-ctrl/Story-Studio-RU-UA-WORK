@@ -96,7 +96,7 @@ class Dispatcher:
         if lookup:
             return self._result(request,'NOT_ADMITTED','LAB_NOT_FOUND')
         probe, slot = location
-        store, transaction = self.factory.candidate(actor, probe, slot)
+        seed, transaction = self.factory.candidate(actor, probe, slot)
         if raw != c(transaction.command['request']):
             return self._result(request,'DENIED','LAB_FIXTURE_NOT_ALLOWED')
         if not self.factory.allowed(actor, probe):
@@ -119,8 +119,9 @@ class Dispatcher:
             self._quarantined = True
             self._dead = True
             raise DeliveryLost('Synthetic crash before admission')
-        engine = model.TransactionModel(store, keys={'fixture-key':KEY},
-                                        authority=self.factory.authority(transaction, actor))
+        authority = self.factory.authority(transaction, actor)
+        store = self.factory.materialize(actor, probe, seed, transaction)
+        engine = model.TransactionModel(store, keys={'fixture-key':KEY}, authority=authority)
         if fault in ('PAUSE_AFTER_RAM_PREPARE','PAUSE_AFTER_RAM_INTENT'):
             store.arm(model.Fault('W3.anchor.flush' if fault.endswith('PREPARE') else 'W4.INTENT.journal.flush','after'))
         self.model_calls += 1
@@ -130,6 +131,7 @@ class Dispatcher:
         except model.SimulatedCrash:
             if fault not in ('PAUSE_AFTER_RAM_PREPARE','PAUSE_AFTER_RAM_INTENT'):
                 self._quarantined = True
+                self.factory.retain(actor, probe, store)
                 raise
             response = self._result(request,'MOCK_PENDING',admission='RAM')
             self._quarantined = True
@@ -158,6 +160,7 @@ class Dispatcher:
                 except (s1.ProtocolError, p.LabError, KeyError):
                     self._quarantined = True
                     response = self._result(request,'MOCK_PENDING','LAB_ENGINE_FAILURE',admission='UNKNOWN')
+        self.factory.retain(actor, probe, store)
         self._entries[request['request_id']] = {'actor':actor,'bytes':raw,'response':response}
         if fault in ('RESPONSE_LOSS','CRASH_AFTER_RAM_FINAL'):
             if fault == 'CRASH_AFTER_RAM_FINAL':

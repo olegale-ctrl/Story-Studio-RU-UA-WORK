@@ -33,6 +33,87 @@ class LabDispatcher(unittest.TestCase):
     def events(self,d):
         return {key:tuple(store.events) for key,store in d.factory._stores.items()}
 
+    def assert_no_model_dispatch(self, d, frame, actor='A'):
+        before = self.events(d)
+        counters = d.admissions, d.model_calls
+        with patch.object(m.TransactionModel, 'execute', autospec=True) as execute:
+            execute.side_effect = AssertionError('S2 execute called before admission')
+            response = d.dispatch(frame, Caller(actor))
+            execute.assert_not_called()
+        self.assertEqual(self.events(d), before)
+        self.assertEqual((d.admissions, d.model_calls), counters)
+        return p.decode_lab(response)
+
+    def test_cold_policy_denials_never_seed(self):
+        probe = 'GD_SCRIPT_APPROVE'
+        for actor, policy in (('B', probe), ('A', 'GD_SCENES_APPROVE'),
+                              ('A', 'CG_WRITER_ONLY'), ('A', 'CG_NONE')):
+            with self.subTest(actor=actor, policy=policy):
+                d = self.make(policy)
+                frame = self.make(policy).execute_frame(actor, probe)
+                self.assertEqual(d.factory._stores, {})
+                result = self.assert_no_model_dispatch(d, frame, actor)
+                self.assertEqual(result['error']['code'], 'LAB_POLICY_DENIED')
+
+    def test_cold_missing_grants_never_seed(self):
+        probe = 'GD_SCRIPT_APPROVE'
+        frame = self.make(probe).execute_frame('A', probe)
+        for missing in ('PROTECTED_SNAPSHOT_WRITE', 'RECORD_DECISION', 'gate'):
+            with self.subTest(missing=missing):
+                d = self.make(probe)
+                policy = d.factory.policy('A')
+                if missing == 'gate':
+                    policy['actor_a_gate_grant'] = None
+                else:
+                    policy['actor_a_command_grants'].remove(missing)
+                with patch.object(d.factory, 'policy', return_value=policy):
+                    result = self.assert_no_model_dispatch(d, frame)
+                self.assertEqual(result['error']['code'], 'LAB_POLICY_DENIED')
+
+    def test_cold_pre_admission_faults_never_seed(self):
+        probe = 'GD_SCRIPT_APPROVE'
+        frame = self.make(probe).execute_frame('A', probe)
+        faults = {'READ_STALL': 'LAB_BUSY', 'DISPATCH_STALL': 'LAB_BUSY',
+                  'PRE_ADMISSION_DENY': 'LAB_POLICY_DENIED',
+                  'IMPERSONATE_FALSE': 'LAB_POLICY_DENIED',
+                  'THREAD_TOKEN_QUERY_FALSE': 'LAB_POLICY_DENIED',
+                  'REVERT_FALSE': 'LAB_POLICY_DENIED',
+                  'RESIDUAL_TOKEN': 'LAB_POLICY_DENIED'}
+        for fault, code in faults.items():
+            with self.subTest(fault=fault):
+                d = self.make(probe, fault)
+                result = self.assert_no_model_dispatch(d, frame)
+                self.assertEqual(result['error']['code'], code)
+        d = self.make(probe, 'CRASH_PRE_ADMISSION')
+        with patch.object(m.TransactionModel, 'execute', autospec=True) as execute:
+            execute.side_effect = AssertionError('S2 execute called before admission')
+            with self.assertRaises(DeliveryLost):
+                d.dispatch(frame, Caller('A'))
+            execute.assert_not_called()
+        self.assertEqual((self.events(d), d.admissions, d.model_calls), ({}, 0, 0))
+
+    def test_cold_byte_mismatch_never_seeds(self):
+        probe = 'GD_SCRIPT_APPROVE'
+        frame = self.make(probe).execute_frame('A', probe)
+        for field in ('reason', 'review_session_id'):
+            with self.subTest(field=field):
+                message = p.decode_lab(frame)
+                if field == 'reason':
+                    message['request']['parameters']['reason'] = 'Changed synthetic reason'
+                else:
+                    message['request'][field] = NEW_INC
+                d = self.make(probe)
+                result = self.assert_no_model_dispatch(d, p.encode_lab(message))
+                self.assertEqual(result['error']['code'], 'LAB_FIXTURE_NOT_ALLOWED')
+
+    def test_quarantined_cold_probe_never_seeds(self):
+        probe = 'GD_SCRIPT_APPROVE'
+        frame = self.make(probe).execute_frame('A', probe)
+        d = self.make(probe)
+        d._quarantined = True
+        result = self.assert_no_model_dispatch(d, frame)
+        self.assertEqual(result['error']['code'], 'LAB_BUSY')
+
     def test_144_gate_cells(self):
         allow=deny=0
         for policy in p.POLICIES[5:]:
@@ -161,6 +242,17 @@ class LabDispatcher(unittest.TestCase):
         self.assertEqual(before,self.events(d))
         self.assertEqual(p.decode_lab(d.dispatch(extra,Caller('A')))['error']['code'],'LAB_CAPACITY')
         self.assertEqual(d.admissions,32);self.assertEqual(d.model_calls,32)
+        # Switch the trusted live gate grant so a different, cold probe reaches quota.
+        cold_probe = 'GD_SCENES_REJECT'
+        helper = self.make('GD_SCRIPT_REJECT')
+        policy = helper.factory.policy('A')
+        policy['actor_a_gate_grant'] = {'gate': 'SCENES', 'decision': 'reject'}
+        with patch.object(helper.factory, 'policy', return_value=policy):
+            cold_frame = helper.execute_frame('A', cold_probe)
+        self.assertNotIn(('A', cold_probe), d.factory._stores)
+        with patch.object(d.factory, 'policy', return_value=policy):
+            result = self.assert_no_model_dispatch(d, cold_frame)
+        self.assertEqual(result['error']['code'], 'LAB_CAPACITY')
         for frame,response in zip(frames,responses):
             self.assertEqual(d.dispatch(frame,Caller('A')),response)
             self.assertEqual(d.dispatch(self.lookup(frame),Caller('A')),response)
