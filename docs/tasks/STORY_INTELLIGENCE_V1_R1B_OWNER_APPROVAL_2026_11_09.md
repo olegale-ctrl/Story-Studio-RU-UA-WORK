@@ -1,8 +1,8 @@
 # Story Intelligence V1 — owner approval of R1b-P01–P05
 
-**Date:** 2026-11-09  
-**Decision status:** **APPROVED — R1b-P01–P05 (contract-only clarification)**  
-**Implementation status:** **SI-E01.2a-RESUME TASK PREPARATION; NOT STARTED**  
+**Date:** 2026-11-09
+**Decision status:** **APPROVED — R1b-P01–P05 (contract-only clarification)**
+**Implementation status:** **SI-E01.2a-RESUME TASK PREPARATION; NOT STARTED**
 **Owner instruction (verbatim):** «Утверждаю R1b-P01–P05 в предложенной редакции. Зафиксируй решение в GitHub и подготовь ограниченное задание Codex на возобновление SI-E01.2a. Без merge/main.»
 
 ## 1. Exact approved clarification
