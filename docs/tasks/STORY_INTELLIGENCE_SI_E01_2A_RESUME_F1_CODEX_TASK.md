@@ -1,8 +1,8 @@
 # CODEX TASK — SI-E01.2a-RESUME-F1: Packet capture consistency regression
 
-**Date:** 2026-11-09  
-**Status:** **READY FOR OWNER HANDOFF — FIX ONLY; NOT STARTED**  
-**Finding:** `docs/tasks/STORY_INTELLIGENCE_SI_E01_2A_RESUME_INDEPENDENT_REVIEW_F1.md` @ `4c975fab264bd002232005915b01b794fbb06788`  
+**Date:** 2026-11-09
+**Status:** **READY FOR OWNER HANDOFF — FIX ONLY; NOT STARTED**
+**Finding:** `docs/tasks/STORY_INTELLIGENCE_SI_E01_2A_RESUME_INDEPENDENT_REVIEW_F1.md` @ `4c975fab264bd002232005915b01b794fbb06788`
 **Owner constraints:** no PR, merge, release, `main`, unrelated changes, or follow-on SI-E01.2b. **STOP after publication.**
 
 ## 1. Exact entrypoint
