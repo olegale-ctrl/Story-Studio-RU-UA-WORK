@@ -1,8 +1,8 @@
 # CODEX TASK — SI-E01.2a-RESUME: strict typed SI/1 records after approved R1b
 
-**Date:** 2026-11-09  
-**Status:** **READY FOR OWNER HANDOFF — BOUNDED IMPLEMENTATION TASK; NOT STARTED**  
-**Owner gate:** R1b-P01–P05 **APPROVED**, per `docs/tasks/STORY_INTELLIGENCE_V1_R1B_OWNER_APPROVAL_2026_11_09.md`, approval commit `418becfa88e4e8f5ba4a293247c293988f7d5742`.  
+**Date:** 2026-11-09
+**Status:** **READY FOR OWNER HANDOFF — BOUNDED IMPLEMENTATION TASK; NOT STARTED**
+**Owner gate:** R1b-P01–P05 **APPROVED**, per `docs/tasks/STORY_INTELLIGENCE_V1_R1B_OWNER_APPROVAL_2026_11_09.md`, approval commit `418becfa88e4e8f5ba4a293247c293988f7d5742`.
 **No PR, merge, release or main changes. STOP after publication.**
 
 ## 1. Entry point — mandatory exact-base check
