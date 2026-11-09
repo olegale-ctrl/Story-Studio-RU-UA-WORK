@@ -398,8 +398,10 @@ def _packet(header, p):
         _fail('REF_HASH_MISMATCH', base + '.review_state_at_capture.context_hash', 'Captured context digest mismatch')
     if review['selection_head_refs'] != p['context_snapshot']['selection_head_refs']:
         _fail('SELECTION_CONFLICT', base + '.review_state_at_capture.selection_head_refs', 'Capture heads differ from context')
-    if review['brief_ref'] is not None and review['brief_ref'] != p['brief_ref']:
+    if review['brief_ref'] != p['brief_ref']:
         _fail('PROVENANCE_MISMATCH', base + '.review_state_at_capture.brief_ref', 'Captured Brief differs')
+    if review['creative_ref'] is None:
+        _fail('PROVENANCE_MISMATCH', base + '.review_state_at_capture.creative_ref', 'Packet capture requires Creative ref')
     capture_refs = [review['evaluation_ref']] + [review[key] for key in ('creative_ref', 'brief_ref') if review[key] is not None] + review['selection_head_refs']
     if any(_ref_key(ref) not in manifest for ref in capture_refs):
         _fail('REF_MISSING', base + '.review_state_at_capture', 'Capture references absent from source manifest')

@@ -444,6 +444,40 @@ class PacketTests(unittest.TestCase):
         self.assertNotEqual(sha(observed),value['payload']['review_state_at_capture']['context_hash'])
         self.assertEqual(first,r.si_record_ref(value));self.assertEqual(before,value)
 
+    def test_F1_capture_brief_is_required(self):
+        value=fixtures()['ReviewPacket']
+        value['payload']['review_state_at_capture']['brief_ref']=None
+        self.reject(value,'PROVENANCE_MISMATCH','$.payload.review_state_at_capture.brief_ref')
+
+    def test_F1_capture_creative_is_required(self):
+        value=fixtures()['ReviewPacket']
+        value['payload']['review_state_at_capture']['creative_ref']=None
+        self.reject(value,'PROVENANCE_MISMATCH','$.payload.review_state_at_capture.creative_ref')
+
+    def test_F1_capture_brief_must_match_exact_packet_brief(self):
+        value=fixtures()['ReviewPacket']
+        value['payload']['review_state_at_capture']['brief_ref']={
+            **ref('ProductionBrief'),'id':'99999999-1111-4111-8111-111111111111'}
+        self.reject(value,'PROVENANCE_MISMATCH','$.payload.review_state_at_capture.brief_ref')
+
+    def test_F1_valid_packet_remains_accepted_unchanged(self):
+        value=fixtures()['ReviewPacket'];before=copy.deepcopy(value)
+        result=r.validate_si_record(value)
+        self.assertEqual(before,result);self.assertEqual(before,value)
+        self.assertIsNot(result,value)
+        self.assertEqual(result['payload']['brief_ref'],
+                         result['payload']['review_state_at_capture']['brief_ref'])
+        self.assertIsNotNone(result['payload']['review_state_at_capture']['creative_ref'])
+
+    def test_F1_general_prebrief_projection_remains_nullable(self):
+        # There is no standalone public projection validator. Exercise the existing
+        # value schema directly to guard against globally tightening _REVIEW.
+        projection=fixtures()['ReviewPacket']['payload']['review_state_at_capture']
+        projection.update(brief_ref=None,creative_ref=None,review_state='AWAITING_CREATIVE')
+        before=copy.deepcopy(projection)
+        r._check(projection,r._REVIEW,'$',{})
+        self.assertEqual(before,projection)
+
     def test_packet_matches_and_tampering(self):
         for change,code in (('missing_grant','PRIVACY_REVIEW_REQUIRED'),('missing_omission','MISSING_FIELD'),
                             ('hash','REF_HASH_MISMATCH'),('false','PRIVACY_REVIEW_REQUIRED')):
