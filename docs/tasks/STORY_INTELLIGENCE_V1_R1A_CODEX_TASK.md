@@ -36,4 +36,4 @@ No new API operation, no new schema2 authority or provider. Keep RU/UK offline C
 
 Run `git diff --check`; verify one-file allowlist, exact base, remote HEAD, clean worktree after publish. Unit tests are not necessary and must not be claimed PASS unless actually executed.
 
-Publish docs-only feature branch and hand off full exact base/commit SHA plus a short decision summary. **STOP** for independent review and explicit owner SI-D01–SI-D10 approval. 
+Publish docs-only feature branch and hand off full exact base/commit SHA plus a short decision summary. **STOP** for independent review and explicit owner SI-D01–SI-D10 approval.
