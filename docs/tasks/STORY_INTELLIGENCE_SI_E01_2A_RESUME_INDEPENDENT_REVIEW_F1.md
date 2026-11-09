@@ -1,9 +1,9 @@
 # SI-E01.2a-RESUME — independent static review and F1 correction gate
 
-**Date:** 2026-11-09  
-**Review status:** **CHANGES_REQUIRED / NOT YET ACCEPTED** (narrow local packet-capture defect)  
-**Reviewed feature commit:** `f19fa33685f05df632222dbcd84abcaca8258547`  
-**Exact base:** `b49230df8740a0917a461d8b4f4d8638ba792675`  
+**Date:** 2026-11-09
+**Review status:** **CHANGES_REQUIRED / NOT YET ACCEPTED** (narrow local packet-capture defect)
+**Reviewed feature commit:** `f19fa33685f05df632222dbcd84abcaca8258547`
+**Exact base:** `b49230df8740a0917a461d8b4f4d8638ba792675`
 **No PR, merge, release or main changes.**
 
 ## 1. Independently verified facts
