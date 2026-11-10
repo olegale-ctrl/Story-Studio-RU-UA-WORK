@@ -205,4 +205,74 @@ class ProvenanceTests(unittest.TestCase):
         self.assertEqual([named['manual']],verify_si_provenance(g.records,[named['manual']]))
 
 
+class RubricRunBindingF1Tests(unittest.TestCase):
+    @staticmethod
+    def graph(mode):
+        g,named=provenance_graph()
+        original_ref=named['evaluation']
+        report=copy.deepcopy(g.refs[key(original_ref)])
+        run=g.refs[key(report['payload']['run_ref'])]
+        rubric_a=run['payload']['rubric_ref']
+        original_manifest=g.closure([original_ref])
+        members={key(ref) for ref in original_manifest}
+        records=[copy.deepcopy(v) for v in g.records if (
+            v['H']['type'],v['H']['id'],v['H']['revision'],digest(v)) in members]
+        report_i=next(i for i,v in enumerate(records) if (
+            v['H']['type'],v['H']['id'],v['H']['revision'])==tuple(original_ref[k] for k in ('type','id','revision')))
+        extra=[]
+        if mode!='matching':
+            rubric_b=copy.deepcopy(g.refs[key(rubric_a)])
+            if mode=='different_record':
+                rubric_b['H']['id']='bbbbbbbb-4444-4444-8444-444444444444'
+            else:
+                revision_run=g.run('REVISION',[rubric_a])
+                records.append(copy.deepcopy(g.refs[key(revision_run)]));extra.append(revision_run)
+                rubric_b['H'].update(revision=2,previous=copy.deepcopy(rubric_a),
+                    input_refs=[copy.deepcopy(rubric_a)],origin={
+                        'mode':'HUMAN_EDIT','run_ref':revision_run,'imported_from':None})
+                rubric_b['payload']['criteria'][0]['description']='Новая редакция описания критерия'
+            h=rubric_b['H']
+            ref_b={'type':h['type'],'id':h['id'],'revision':h['revision'],'sha256':digest(rubric_b)}
+            records.append(rubric_b);extra.append(ref_b)
+            report['payload']['rubric_ref']=ref_b
+        else:ref_b=copy.deepcopy(rubric_a)
+        root={**original_ref,'sha256':digest(report)}
+        records[report_i]=report
+        expected=sorted([ref for ref in original_manifest if key(ref)!=key(original_ref)]+[root]+extra,key=key)
+        return records,root,expected,rubric_a,ref_b,report_i
+
+    def test_F1_matching_exact_report_run_rubric_accepted_detached(self):
+        records,root,expected,a,b,_=self.graph('matching')
+        before=copy.deepcopy((records,root))
+        self.assertEqual(a,b)
+        self.assertEqual(expected,resolve_si_closure(records,[root]))
+        result=verify_si_provenance(records,[root])
+        self.assertEqual(expected,result)
+        result[0]['sha256']='0'*64
+        self.assertEqual(before,(records,root))
+        self.assertEqual(expected,verify_si_provenance(records,[root]))
+
+    def assert_binding_rejected(self,mode):
+        records,root,expected,a,b,report_i=self.graph(mode)
+        before=copy.deepcopy((records,root))
+        self.assertNotEqual(a,b)
+        self.assertEqual(expected,resolve_si_closure(records,[root]))
+        with self.assertRaises(SIValidationError) as caught:
+            verify_si_provenance(records,[root])
+        self.assertEqual('PROVENANCE_MISMATCH',caught.exception.code)
+        self.assertEqual(f'$.records[{report_i}].payload.rubric_ref',caught.exception.path)
+        self.assertEqual(before,(records,root))
+        return a,b
+
+    def test_F1_distinct_real_rubric_rejected_after_resolver_success(self):
+        a,b=self.assert_binding_rejected('different_record')
+        self.assertNotEqual(a['id'],b['id'])
+
+    def test_F1_same_rubric_new_revision_rejected_after_resolver_success(self):
+        a,b=self.assert_binding_rejected('different_revision')
+        self.assertEqual(a['id'],b['id'])
+        self.assertEqual((1,2),(a['revision'],b['revision']))
+        self.assertNotEqual(a['sha256'],b['sha256'])
+
+
 if __name__=='__main__':unittest.main()

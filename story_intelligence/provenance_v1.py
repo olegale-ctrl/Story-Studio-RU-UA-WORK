@@ -67,6 +67,8 @@ def verify_si_provenance(records, roots):
             if expected is None:
                 _fail(path + '.H.origin.run_ref', 'No approved generator for this record mechanism')
             run = generator(origin['run_ref'], expected, path + '.H.origin.run_ref')
+        if h['type'] == 'EvaluationReport' and p['rubric_ref'] != run['payload']['rubric_ref']:
+            _fail(path + '.payload.rubric_ref', 'EvaluationReport Rubric differs from its actual generating Run')
 
         # Exact previous hashes and numbering are already verified by the resolver
         # and accepted header validator. Walk their immutable supplied bytes to
