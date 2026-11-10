@@ -169,6 +169,9 @@ def check_si_currentness(records, root, observed_active_input_refs, observed_sel
                 dependency(child)
 
             producer = h['origin']['run_ref']
+            # F1-D1: actual producer ERefs remain relevant for HUMAN_EDIT too.
+            if producer is not None and lookup(producer)['H']['editorial_refs']:
+                return _result('INVALID', ['REF_MISSING'])
             if kind == 'CreativeAlternative':
                 producer = p['run_ref']  # original C, not actual REVISION metadata
             if producer is None:

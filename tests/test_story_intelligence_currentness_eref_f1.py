@@ -1,13 +1,14 @@
-"""F1 diagnostics on unchanged c90b94a: observed behavior, not owner policy.
+"""F1-D1 regressions: actual producer ERefs versus historical-only audit refs.
 
-T2 is a characterization of the actual implementation, NOT an assertion that
-CURRENT is contractually correct for a current REVISION Run header ERef.
-Only real canonical records/hashes, accepted resolver/provenance; no patches.
+Owner-approved D1-D5 supersede the former T2 behavior characterization. The
+original diagnostic reports and fixtures remain historical evidence. Only real
+canonical records/hashes, accepted resolver/provenance; no patches.
 """
 from copy import deepcopy
 import unittest
 
 from story_intelligence.currentness_v1 import check_si_currentness
+from story_intelligence.model_v1 import SIValidationError
 from story_intelligence.records_v1 import si_record_ref
 from story_intelligence.resolver_v1 import resolve_si_closure
 from story_intelligence.provenance_v1 import verify_si_provenance
@@ -40,22 +41,40 @@ def source_case(location=None):
     return g, s2, [s2], [], {'S1':s1, 'R':r, 'S2':s2}
 
 
-def creative_case(with_eref=True):
+def historical_source_case():
+    g, s2, _, _, named = source_case('run')
+    r3 = g.run('REVISION', [s2])
+    value = deepcopy(g.refs[key(s2)])
+    value['H'].update(revision=3, previous=s2, input_refs=[s2],
+        origin={'mode':'HUMAN_EDIT', 'run_ref':r3, 'imported_from':None})
+    value['payload']['title'] = known('Поточна редакція F1 без ERef')
+    s3 = g.add(value, data_refs(value), keep_identity=True)
+    named.update(R2=named['R'], R=r3, R3=r3, S3=s3)
+    return g, s3, [s3], [], named
+
+
+def creative_case(with_eref=True, location='original'):
     old, names, active = creative_graph('text_only')
     active += [names['Qa']]
+    target = names['C']
+    if location in ('current', 'historical'):
+        creative = names['K3'] if location == 'current' else names['K2']
+        target = old.refs[key(creative)]['H']['origin']['run_ref']
     g, mapping = Graph(), {}
     for original in old.records:
         h = original['H']
         before = {'type':h['type'], 'id':h['id'], 'revision':h['revision'],
                   'sha256':digest(original)}
         value = rewrite(original, mapping)
-        if key(before) == key(names['C']) and with_eref:
+        if key(before) == key(target) and with_eref:
             value['H']['editorial_refs'] = [eref('source')]
         # All downstream exact refs AND frozen snapshots are rebuilt in their
         # original topological order; no mutation of old graph or fake SHA.
         ref = g.add(value, data_refs(value), keep_identity=True)
         mapping[key(before)] = ref
     named = {name:mapping[key(ref)] for name, ref in names.items()}
+    named['R2'] = g.refs[key(named['K2'])]['H']['origin']['run_ref']
+    named['R3'] = g.refs[key(named['K3'])]['H']['origin']['run_ref']
     return g, named['K3'], rewrite(active, mapping), [], named
 
 
@@ -77,10 +96,11 @@ def evidence(case):
         'graph_sha256':digest(g.records),
         'context_sha256':digest({'active_input_refs':active, 'selection_head_refs':heads}),
         'root':root, 'producer':named.get('R', named.get('C')),
+        'actual_producer':g.refs[key(root)]['H']['origin']['run_ref'],
         'actual':actual}
 
 
-class RevisionRunERefF1Diagnostics(unittest.TestCase):
+class RevisionRunERefF1Regressions(unittest.TestCase):
     def test_T1_valid_source_baseline(self):
         case = source_case()
         actual = evidence(case)
@@ -88,7 +108,7 @@ class RevisionRunERefF1Diagnostics(unittest.TestCase):
         self.assertEqual(3, actual['closure_count'])
         self.assertEqual({'currentness':'CURRENT', 'reason_codes':[]}, actual['actual'])
 
-    def test_T2_observe_current_revision_run_header_eref(self):
+    def test_T2_current_revision_run_header_eref_invalid(self):
         case = source_case('run')
         g, root, _, _, n = case
         self.assertEqual([eref('source')], g.refs[key(n['R'])]['H']['editorial_refs'])
@@ -96,8 +116,10 @@ class RevisionRunERefF1Diagnostics(unittest.TestCase):
         self.assertIsNone(g.refs[key(root)]['payload']['editorial_ref'])
         actual = evidence(case)
         baseline = evidence(source_case())
-        # Characterize the asymmetry, without declaring the policy correct.
-        self.assertEqual(baseline['actual'], actual['actual'])
+        self.assertEqual({'currentness':'INVALID', 'reason_codes':['REF_MISSING']}, actual['actual'])
+        self.assertEqual('CURRENT', baseline['actual']['currentness'])
+        # The exact historical T2 bytes remain the independent reproducer.
+        self.assertEqual('87b0f65a5d741ca48b34333f120f41a5b7cbb2c54e2914e954b108528a41f55b', actual['graph_sha256'])
         self.assertNotEqual(baseline['graph_sha256'], actual['graph_sha256'])
         self.assertNotEqual(baseline['producer']['sha256'], actual['producer']['sha256'])
         self.assertNotEqual(baseline['root']['sha256'], actual['root']['sha256'])
@@ -114,16 +136,80 @@ class RevisionRunERefF1Diagnostics(unittest.TestCase):
         self.assertNotEqual(baseline['producer']['sha256'], actual['producer']['sha256'])
         self.assertNotEqual(baseline['root']['sha256'], actual['root']['sha256'])
 
-    def test_T5_behavior_comparison_is_not_contract_adjudication(self):
+    def test_T5_owner_approved_current_producer_boundary_consistent(self):
         no_eref = evidence(source_case())['actual']
         revision = evidence(source_case('run'))['actual']
         direct = evidence(source_case('source'))['actual']
         creative = evidence(creative_case())['actual']
-        self.assertEqual(no_eref, revision)
-        self.assertEqual(direct, creative)
-        self.assertNotEqual(revision, direct)
-        # Contract interpretation is documented in RESULT/GAPS, not manufactured
-        # as a successful runtime proof by changing checker or accepted contracts.
+        self.assertEqual({'currentness':'CURRENT', 'reason_codes':[]}, no_eref)
+        for result in (revision, direct, creative):
+            self.assertEqual({'currentness':'INVALID', 'reason_codes':['REF_MISSING']}, result)
+
+    def test_T6_current_creative_revision_run_eref_invalid(self):
+        case = creative_case(location='current')
+        g, root, _, _, n = case
+        self.assertEqual([], g.refs[key(n['C'])]['H']['editorial_refs'])
+        self.assertEqual([], g.refs[key(root)]['H']['editorial_refs'])
+        self.assertEqual([eref('source')], g.refs[key(n['R3'])]['H']['editorial_refs'])
+        actual = evidence(case)
+        self.assertEqual(n['R3'], actual['actual_producer'])
+        self.assertNotEqual(n['C'], actual['actual_producer'])
+        self.assertEqual({'currentness':'INVALID', 'reason_codes':['REF_MISSING']}, actual['actual'])
+
+    def test_T7_ordinary_historical_run_only_eref_current(self):
+        case = historical_source_case()
+        g, root, active, _, n = case
+        self.assertEqual([eref('source')], g.refs[key(n['R2'])]['H']['editorial_refs'])
+        self.assertEqual([], g.refs[key(n['R3'])]['H']['editorial_refs'])
+        self.assertNotIn(n['S2'], active)
+        self.assertNotIn(n['R2'], active)
+        actual = evidence(case)
+        self.assertEqual(5, actual['closure_count'])
+        self.assertEqual({'currentness':'CURRENT', 'reason_codes':[]}, actual['actual'])
+
+    def test_T8_creative_historical_run_only_eref_current(self):
+        case = creative_case(location='historical')
+        g, root, active, _, n = case
+        self.assertEqual([eref('source')], g.refs[key(n['R2'])]['H']['editorial_refs'])
+        self.assertEqual([], g.refs[key(n['R3'])]['H']['editorial_refs'])
+        self.assertEqual([], g.refs[key(n['C'])]['H']['editorial_refs'])
+        self.assertNotIn(n['K2'], active)
+        self.assertNotIn(n['R2'], active)
+        self.assertEqual({'currentness':'CURRENT', 'reason_codes':[]}, evidence(case)['actual'])
+
+    def test_T9_history_integrity_still_fails_closed(self):
+        for factory in (historical_source_case, lambda:creative_case(location='historical')):
+            for corruption in ('missing_run', 'corrupt_run', 'previous', 'snapshot'):
+                with self.subTest(factory=factory.__name__, corruption=corruption):
+                    g, root, active, heads, n = factory()
+                    if corruption == 'missing_run':
+                        g.records.remove(g.refs[key(n['R2'])])
+                    elif corruption == 'corrupt_run':
+                        g.refs[key(n['R2'])]['payload']['caveats'].append('Tampered historical bytes')
+                    elif corruption == 'previous':
+                        g.refs[key(root)]['H']['previous']['sha256'] = '0' * 64
+                    else:
+                        g.refs[key(n['R3'])]['payload']['input_snapshot'][0]['sha256'] = '0' * 64
+                    code = 'REF_MISSING' if corruption == 'missing_run' else 'REF_HASH_MISMATCH'
+                    for validator in (resolve_si_closure, verify_si_provenance):
+                        with self.assertRaises(SIValidationError) as caught:
+                            validator(g.records, [root] + active + heads)
+                        self.assertEqual(code, caught.exception.code)
+                    before = deepcopy((g.records, root, active, heads))
+                    self.assertEqual({'currentness':'INVALID', 'reason_codes':[code]},
+                        check_si_currentness(g.records, root, active, heads))
+                    self.assertEqual(before, (g.records, root, active, heads))
+
+    def test_T10_current_dependency_actual_producer_eref_invalid(self):
+        # The guard applies to semantic dependencies too, not just queried root.
+        g, source, _, _, _ = source_case('run')
+        claim = g.add(fixtures()['ClaimItem'])
+        value = fixtures()['EvidenceItem']
+        value['payload'].update(claim_ref=claim, source_ref=source)
+        value['H']['input_refs'] = [claim, source]
+        root = g.add(value, data_refs(value))
+        case = (g, root, [claim, source], [], {})
+        self.assertEqual({'currentness':'INVALID', 'reason_codes':['REF_MISSING']}, evidence(case)['actual'])
 
 
 if __name__ == '__main__':
