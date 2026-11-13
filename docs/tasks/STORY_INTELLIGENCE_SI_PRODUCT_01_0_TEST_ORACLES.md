@@ -1,10 +1,13 @@
 # SI-PRODUCT-01.0 — Independent projection test oracles
 
-Дата: 2026-11-13. **PROPOSAL / NOT APPROVED / DOCS ONLY.**
+Дата: 2026-11-13. **APPROVED TEST REQUIREMENTS / DOCS ONLY / PROJECTION TESTS NOT RUN.**
+Approval: [OWNER_APPROVAL](STORY_INTELLIGENCE_SI_PRODUCT_01_0_OWNER_APPROVAL_2026_11_13.md), включая обязательное условие PD-05.
 Projection implementation и executable projection tests отсутствуют. Таблицы ниже —
-requirements/ожидаемые результаты, не PASS. Existing evaluator preflight запускался
+approved requirements/ожидаемые результаты, не PASS. Обязательно будущее исполняемое
+покрытие всех 30 families в RU/UK, блокирующих случаев и существенных findings.
+Existing evaluator tests не доказывают работоспособность ещё не реализованной Projection. Existing evaluator preflight запускался
 отдельно; его фактический результат указан в [RESULT](STORY_INTELLIGENCE_SI_PRODUCT_01_0_RESULT.md).
-Authority proposed strings/shape: [CONTRACT](STORY_INTELLIGENCE_SI_PRODUCT_01_0_CONTRACT_PROPOSAL.md).
+Authority approved strings/shape: [CONTRACT](STORY_INTELLIGENCE_SI_PRODUCT_01_0_CONTRACT_PROPOSAL.md).
 
 ## 1. Independent witness construction
 
@@ -23,7 +26,7 @@ four-condition graph. K: B с `require(); establish()` до `arguments()`, genui
 manifests, ratings/bindings; helper `revise`/`arguments` делает это на искусственных
 данных. Currentness не freshness/truth. Не перетаскивать старый положительный finding.
 
-Сравнивать целые proposed Card values, порядок списков и точные Unicode strings,
+Сравнивать целые approved Card values, порядок списков и точные Unicode strings,
 не только наличие ключевого слова. No UI screenshot test вместо semantic assertions. Optional API defaults сохраняются:
 отсутствующий required_current_premise означает None и не мешает admission genuine
 NEEDS_INPUT result; отсутствующий ui_locale означает None, не guessed display_locale.
@@ -58,7 +61,7 @@ Contract §8 задаёт base/score/reasons/gaps/actions/L1..L6; short selector
 | P15 | K01..K06 × `.blocking`/`.resolution_basis_refs`; all severity values | Six localized category templates, never classification by EVIDENCE_NEEDED alone. No risk disappears on high score, MITIGATED prose, or category MARKET/PRODUCTION |
 | P16 | Visual V01 + generic LEGAL K02, approved C14 | Exactly both blocked explanations plus RC02. RU order: K02 then V01 then RC02; UK same diagnostic order, not alphabetical order |
 | P17 | Approved C44: K02+V01 and source2 insufficient review | All three explanations/actions; source2 Source alias assigned by first diagnostic appearance. Rights cannot be hidden by lower-class evidence text |
-| P18 | Q01..Q04 and F01..F05 individually | Every row has exactly one proposed translation and action, matching expected private subject/slot. Knowledge/motivation/capability requirements apply only to bounded EVALUATE, not early Discovery |
+| P18 | Q01..Q04 and F01..F05 individually | Every row has exactly one approved translation and action, matching expected private subject/slot. Knowledge/motivation/capability requirements apply only to bounded EVALUATE, not early Discovery |
 | P19 | Multiple UNKNOWN-confidence criteria without sufficient findings | One F02 line per criterion, private slots 1..9 и literal criterion labels from approved key order, despite same path/ref; never collapse by EVIDENCE_NEEDED or by translated string |
 | P20 | Three portfolio entries DISTINCT/DUPLICATE/UNRESOLVED; then DISTINCT/DISTINCT/missing | Two pair lines in first case, one missing-pair line in second; same candidate ref in two entries still separate pair slots; private portfolio titles/locators never copied |
 | P21 | T25 exact four conditions | Four explanations, four gaps, four actions, in K01→RC02→F01→F05 order. Primary BLOCKED unchanged, aggregate UNKNOWN, private codes exactly DUPLICATE_REVIEW_NEEDED/EVIDENCE_NEEDED. Three EVIDENCE_NEEDED diagnostics do not become one |
@@ -128,7 +131,7 @@ ratings 4353e9fecd711ba3391f79fa37149d31f558218be487150c1fa4dc331cf0e87d
 ```
 
 Topic heading существует только в этом документе; V1 Card не извлекает/не отображает
-StoryIdea.title. Ниже — **ожидаемая proposed Card**, не результат implemented renderer.
+StoryIdea.title. Ниже — **ожидаемая approved Card**, не результат implemented renderer.
 В reasons base line и score precede diagnostic lines. В gaps копируются ровно четыре
 diagnostic строки из reasons; это отображение четырёх условий, не четыре новых факта.
 
@@ -219,4 +222,4 @@ Projection не создаёт исторические объяснения п�
 полные literal W01 RU/UK comparisons, input/result nonmutation и all blocker retention.
 До её отдельного authorization executable renderer/golden output bytes не создаются.
 Markdown example не выдаётся за runtime rendering или scientific review completion.
-**STOP: только proposed test requirements; реализация и публикация не разрешены.**
+**STOP: только approved test requirements; реализация и публикация не разрешены.**

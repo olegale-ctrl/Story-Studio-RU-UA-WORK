@@ -1,103 +1,114 @@
-# SI-PRODUCT-01.0 — Result
+# SI-PRODUCT-01.0 — Owner Approval Recording Result
 
 Дата: 2026-11-13 (Europe/Kyiv).
-**STATUS: READY_FOR_OWNER_REVIEW. CONTRACT PROPOSAL / NOT APPROVED / DOCS ONLY.**
-Это готовность документации к рассмотрению, не owner approval, implementation или
-independent acceptance evaluator/projection.
+**FINAL STATUS: READY_FOR_OWNER_REVIEW — RECORDING COMPLETED.**
+**ARCHITECTURE / PD-01–PD-08: APPROVED. DOCS ONLY. IMPLEMENTATION NOT AUTHORIZED.**
 
-## 1. Exact preflight and local branch
+## 1. Source, foundation and recording ancestry
 
 Repository: `olegale-ctrl/Story-Studio-RU-UA-WORK`.
-Source: `feat/story-intelligence-si-e02-2-1-implement-pure-evaluate`.
-Exact base / parent единственного нового documentation commit:
+Reference branch: `docs/story-intelligence-si-product-01-0-projection-contract`.
+Exact reference/source and immediate parent of the new recording commit:
+`5e0ddf45aacb2412dd15b9a4923acb40c6a6c7bd`.
+Evaluator foundation/base, also exact parent of that reference commit:
 `35451f6441bd5428e132ae65f2080209b51fe009`.
-Target: `docs/story-intelligence-si-product-01-0-projection-contract`.
+Recording branch: `docs/story-intelligence-si-product-01-0-owner-approval`.
 
-Старая заблокированная ветка указывала ровно на отвергнутый
-`e1f4efb0fb5ff290bb198349213c004b4667ef0f`: worktree clean, commits/diff поверх
-старой базы отсутствовали. Ничего для preservation не обнаружено. По явной resume
-authorization target пересоздан от нового exact base. Windows acceptance branch,
-main и старая BLOCKED_BASE ветка как implementation base не использовались.
+Preflight подтвердил reference commit, все четыре source blob identities, clean
+worktree/unmerged absence и ancestry reference→foundation. Новая recording ветка
+от reference сохраняет четыре утверждённых документа и их историю. Main/Windows
+acceptance/archive-only branch не использованы как источник. Full recording SHA,
+parent и ZIP сообщаются после local commit; собственный SHA не встраивается в него.
 
-Проверены actual evaluator, оба evaluator test modules/fixture support, approved
-EVAL-P01–P04, RC-P01–P06, Q1–Q3 owner decision и readiness/final T25. Source/runtime
-сверка описана в [CONTRACT](STORY_INTELLIGENCE_SI_PRODUCT_01_0_CONTRACT_PROPOSAL.md).
-`rg` по docs/source/tests и поиск log/branch names в доступных local refs не нашли
-существующего approved/implemented SI-PRODUCT-01. Найдены только future requirement
-references в RC/classifier/readiness. Это проверка доступной Git history, не заявление
-о неизвестных remote-only/unfetched документах. Fetch/push/network publication не нужны.
+## 2. Owner approval and mandatory conditions
 
-## 2. Four-file A-only result
+Нормативная запись: [OWNER_APPROVAL_2026_11_13](STORY_INTELLIGENCE_SI_PRODUCT_01_0_OWNER_APPROVAL_2026_11_13.md).
+Основание — explicit owner task в текущей сессии; не самостоятельное утверждение Codex.
+Владелец утвердил четыре source documents как архитектурную основу и recommended
+choices всех PD-01–PD-08. В reference commit остаются исторические proposal revisions;
+текущие статусы актуализированы без изменения содержательной семантики.
 
-| New file | Content |
+**PD-01:** safe evaluator re-verification остаётся обязательной в V1. Будущая
+реализация должна измерить performance вне pure logic; нельзя ослаблять безопасность
+или проверяемость ради оптимизации. **Любое изменение verification mechanism требует
+отдельного контракта и owner approval.** Trusted-handoff alternative не выбрана.
+
+**PD-05:** нужны реальные executable projection tests всех **30 families**, RU/UK,
+blocking cases и сохранения существенных findings. Existing evaluator tests не
+доказывают работоспособность несуществующей Projection. В этом recording этапе
+исполняемые tests не создавались, не менялись и не запускались.
+
+## 3. Exact documentary change set
+
+| File | Change |
 | --- | --- |
-| [CONTRACT_PROPOSAL](STORY_INTELLIGENCE_SI_PRODUCT_01_0_CONTRACT_PROPOSAL.md) | Actual API/results/status inventory, proposed admission/Card, 30 OK condition families plus validation/stale explanations, literal RU/UK text, private aliases/score/limitations |
-| [TEST_ORACLES](STORY_INTELLIGENCE_SI_PRODUCT_01_0_TEST_ORACLES.md) | P01–P42 proposed scenarios with family expansions, exact synthetic W01 and full human-reviewable RU/UK example |
-| [OWNER_DECISIONS](STORY_INTELLIGENCE_SI_PRODUCT_01_0_OWNER_DECISIONS.md) | PD-01–PD-08 recommendations, alternatives/consequences/acceptance; each explicitly PROPOSAL / NOT APPROVED |
-| [RESULT](STORY_INTELLIGENCE_SI_PRODUCT_01_0_RESULT.md) | This evidence/report |
+| [CONTRACT_PROPOSAL](STORY_INTELLIGENCE_SI_PRODUCT_01_0_CONTRACT_PROPOSAL.md) | APPROVED architectural status/link; mandatory conditions PD-01/PD-05; no change to card/schema/catalog/literal RU/UK semantics |
+| [TEST_ORACLES](STORY_INTELLIGENCE_SI_PRODUCT_01_0_TEST_ORACLES.md) | APPROVED TEST REQUIREMENTS, not runtime PASS; explicit executable all-family/RU/UK requirement; original P01–P42/W01 retained |
+| [OWNER_DECISIONS](STORY_INTELLIGENCE_SI_PRODUCT_01_0_OWNER_DECISIONS.md) | All eight rows APPROVED; recommended variants selected; mandatory conditions and unselected alternatives scoped |
+| [RESULT](STORY_INTELLIGENCE_SI_PRODUCT_01_0_RESULT.md) | Current approval-recording report; historical evaluator evidence distinguished from current checks |
+| [OWNER_APPROVAL_2026_11_13](STORY_INTELLIGENCE_SI_PRODUCT_01_0_OWNER_APPROVAL_2026_11_13.md) | New owner decision with exact source commit/blobs, approved scope, PD-01/PD-05 conditions, immutable boundaries and STOP |
+| [IMPLEMENTATION_TASK_DRAFT](STORY_INTELLIGENCE_SI_PRODUCT_01_1_IMPLEMENTATION_TASK_DRAFT.md) | New future task draft; not execution authorization; owner must pin exact future base/scope/publication policy |
+| [WORKLOG](../../project-log/WORKLOG.md) | Append-only recording entry under MASTER_PROMPT.md session/worklog rules; no unrelated log/roadmap/license rewriting |
 
-Diff: **4 новых файла, +767 строк, 0 удалений**. Все пути под `docs/tasks/STORY_INTELLIGENCE_SI_PRODUCT_01_0_*.md` строго соответствуют
-четырём разрешённым именам. Existing files не изменяются. Проекция не реализована.
-Full commit SHA после commit указывается в handoff; собственный SHA не встраивается
-в содержимое этого же commit. Проверяемый parent задан выше. Commit остаётся local.
+Scope: six task Markdown files and one project-log Markdown. No code, tests, SI/1
+schemas, existing approved EVAL/RC/Q/editorial/storage decisions, configuration or
+dependencies changed. No implementation. Other planning/license files did not require
+substantive changes for this narrowly scoped owner-recording task.
 
-## 3. Contract consistency findings
+## 4. Historical evidence is not new Projection acceptance
 
-- Actual evaluator status set — OK/STALE/INVALID. Пять decisions — nested eligibility
-  only when OK, не дополнительные statuses. Rejected не содержит accepted score/ratings.
-- OK code list nested в eligibility, Rejected code list top-level. Class не field
-  результата; EVIDENCE_NEEDED включает blocking Risk, input и research conditions.
-  Следовательно code-only translation недостаточна. Catalog matching использует exact
-  invocation/typed subject/path/fixed emitter, но raw diagnostic Text не отображает.
-- Runtime result — pure dict, не SI EvaluationReport/RunRecord/Request. Positive
-  justifications, authenticated reviewer, rights grant, actual assets/capability и
-  input-bound signature в нём отсутствуют. Они не выдумываются новой projection.
-- Scoped absence of gaps допустимо объяснить, но не назвать scientific truth,
-  audience demand, global novelty, licence clearance или production/publication permission.
-- Actual generic Risk и separate Visual/claim blockers сохраняются. T25/C14/C44
-  expectations не переписываются. При INVALID/STALE не восстанавливается старая eligibility.
-- Future human actions/checklists/Brief остаются вне runtime input contract; P03
-  reuse existing ProductionBrief не превращается здесь в генерацию его содержимого.
-- No material projection-blocking inconsistency обнаружена выполненной проверкой
-  source/result shape, approval scope и existing evaluator regression suite. Это не
-  исчерпывающий security audit, независимая приёмка evaluator или формальная верификация.
+Original proposal preflight at reference commit actually ran 78 evaluator tests
+(48.486 s, exit 0), sampled all five OK eligibility values and STALE/INVALID,
+and built the genuine synthetic 17-record W01 graph. These facts remain historical
+evaluator/fixture evidence; not rerun or claimed as new results here.
 
-## 4. Actually executed verification
+Actual runtime boundaries remain: status OK/STALE/INVALID; five nested eligibility
+values only for OK; no accepted eligibility/score on Rejected; condition class is not
+an output field; EVIDENCE_NEEDED spans blocking/input/research conditions. No positive
+scientific/rights/production evidence fields are invented. Approved templates only
+explain declared evaluation data, not external truth/authority/complete world registry.
 
-Python project `.venv` (3.12.14), Linux CPU-only. Никаких новых dependencies.
+P01–P42 and W01 RU/UK are now approved future acceptance requirements. Executable
+Projection and Projection tests **NOT IMPLEMENTED / NOT RUN**. Performance measurement
+**NOT RUN** here. Full unittest/compileall not needed or claimed for this docs-only
+recording. No tests altered to make approval appear executable.
 
-| Check / command | Actual result |
+## 5. Recording verification
+
+| Check | Result |
 | --- | --- |
-| Exact base/local HEAD, clean/unmerged check, empty prior blocked branch inspection | PASS before branch recreation |
-| `.venv/bin/python -m unittest discover -s tests -p 'test_story_intelligence_evaluate*.py' -v` | 78 tests, 48.486 s, OK, process exit 0 |
-| Inline calls to existing evaluate_si using genuine existing Fixture graphs | Seven cases: five OK eligibility values, STALE, INVALID; actual result key locations confirmed; exit 0 |
-| Inline W01 fixture construction using existing revise/arguments + evaluator | 17 genuine records, exact four expected diagnostic paths/messages, BLOCKED + UNKNOWN score, expected code union; exit 0 |
-| Markdown links/fences/tables and coverage; W01 literal consistency | PASS: 22 relative links, 10 fence lines, 15 tables, 30 OK families, P01–P42, PD-01–PD-08; RU/UK W01 matches catalog, actions and all six limitations; exit 0 |
-| `git diff --check` and `git diff --cached --check` | PASS, exit 0 before commit |
-| Exact four-file A-only list; existing files/main unchanged; parent/clean final check | Four allowed new Markdown only; exact parent/clean final evidence in commit handoff. Cached origin/main unchanged, local main absent |
+| Exact reference→foundation and four frozen source blobs | PASS preflight |
+| PD-01–PD-08 each APPROVED in OWNER_DECISIONS and OWNER_APPROVAL | PASS, eight approved rows in each record |
+| PD-01 safety/verification/performance/separate-contract condition and PD-05 executable 30-family/RU/UK/material-findings requirement | Explicit in approval, register, contract/oracles and future task |
+| No conflicting current approval/proposal status; future task separately NOT AUTHORIZED | PASS; historical source status explicitly superseded only in approved scope |
+| Original contract tables/code blocks and W01 literal output preservation | PASS, exact comparisons with reference commit |
+| Relative Markdown links, fences/tables, family/oracle coverage | PASS: 38 relative links, 12 fence lines, 17 tables, 30 families, P01–P42; doc checker exit 0 |
+| Exact seven-file documentary set, worklog append-only, no code/tests/protected changes | PASS; only six task Markdown and project-log/WORKLOG.md |
+| `git diff --check` / staged / committed diff checks | PASS, exit 0; final committed check repeated before ZIP handoff |
+| Exact commit parent, clean worktree after commit | Final handoff evidence |
 
-W01 independent input hashes и authored future RU/UK outputs — в TEST_ORACLES.
-Renderer и executable projection tests **NOT IMPLEMENTED / NOT RUN**. P01–P42 и
-двуязычные Card examples — proposed expected results, не runtime PASS. Полный
-unittest discovery в этом docs-only этапе не запускался; прежний implementation
-report full-suite count не представлен как новый результат. Реально проверен только
-существующий targeted evaluator suite и указанные read-only synthetic diagnostics.
+## 6. Next task and local review ZIP
 
-## 5. Decisions still requiring owner approval
+[IMPLEMENTATION_TASK_DRAFT](STORY_INTELLIGENCE_SI_PRODUCT_01_1_IMPLEMENTATION_TASK_DRAFT.md)
+includes pure implementation scope, real evaluator recheck, executable 30×2 family/
+locale matrix plus variants/P01–P42, literal W01, performance measurement plan,
+actual tests/counts/exit codes and independent acceptance. Future exact base remains
+**TO_BE_PINNED_BY_OWNER**. The draft is **NOT AUTHORIZED FOR EXECUTION**; no code files
+or executable tests from that proposed scope have been created.
 
-Все PD-01–PD-08 **PROPOSAL / NOT APPROVED**: invocation association/recomputation,
-private Card/admission, explicit RU/UK dictionary policy, exact score display,
-closed diagnostic catalog, full ordered preservation, generic privacy labels и six
-fixed limitations. Usability trade-off generic aliases и verification performance
-явно оставлены для review; display grants/public sharing/persistence не утверждаются.
-Existing approved evaluation policy не пересматривается ради этих choices.
+Review ZIP contains all seven changed Markdown documents, including this RESULT,
+owner approval, future task draft and WORKLOG. It is built from the committed blobs
+outside the repository; archive CRC and exact committed bytes are verified. Archive
+is not committed, pushed, attached to a GitHub release or otherwise published.
 
-No code, tests, SI/1 schemas, weights/scoring/currentness/provenance, existing docs,
-approved contracts или protected storage изменены. No LLM/provider/network integration,
-UI, persistence, discovery/research, creative/asset/Brief generation либо production.
+## 7. Immutable limits and STOP
+
+RU/UK, CPU-only, licensing boundaries retained. No new source findings, hooks, assets,
+reviewer authority, scientific certainty, rights clearance or production permission.
 EVAL-P05 OPEN; PUBLISH_REVISION DISABLED; partial COMMIT reconstruction OFF;
-Windows S3.2b BLOCKED_HOST_NOT_PROVIDED.
+Windows S3.2b BLOCKED_HOST_NOT_PROVIDED. Main unchanged.
 
-**No push, PR, merge, tag, release or external artifact publication.** Новый commit
-остаётся в Codex workspace для independent review. Main не изменён.
-**STOP FOR INDEPENDENT REVIEW.** Реализация и публикация требуют отдельного явного approval.
+**No push, PR, merge, tag, release or external publication in this recording task.**
+Earlier publication of the old archive was separately authorized and does not cover
+this new recording/ZIP. All new artifacts remain local pending review/authorization.
+**STOP. Do not implement Projection without a separate owner task.**

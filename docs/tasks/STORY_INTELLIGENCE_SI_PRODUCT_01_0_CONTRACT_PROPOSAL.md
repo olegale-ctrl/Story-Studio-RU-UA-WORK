@@ -1,7 +1,9 @@
 # SI-PRODUCT-01.0 — Editorial Decision Projection V1
 
-Дата: 2026-11-13 (Europe/Kyiv). **CONTRACT PROPOSAL / NOT APPROVED / DOCS ONLY.**
-Каждое новое правило ниже — предложение для owner review, не изменение evaluator.
+Дата: 2026-11-13 (Europe/Kyiv). **APPROVED ARCHITECTURAL CONTRACT / DOCS ONLY / IMPLEMENTATION NOT AUTHORIZED.**
+Правила ниже утверждены владельцем: [OWNER_APPROVAL](STORY_INTELLIGENCE_SI_PRODUCT_01_0_OWNER_APPROVAL_2026_11_13.md).
+Обязательные условия PD-01/PD-05 действуют; evaluator не изменяется.
+Историческая proposal revision: `5e0ddf45aacb2412dd15b9a4923acb40c6a6c7bd`.
 Exact runtime base: `35451f6441bd5428e132ae65f2080209b51fe009`.
 
 ## 1. Authority, sources and scope
@@ -25,7 +27,7 @@ Original SI/1, R1/R1a/R1b, G01/G02/F1-D1 и editorial/storage contracts сохр
 ProductionBrief не означает, что EVALUATE output уже содержит Brief. Его здесь нет.
 Рекомендации не выполняют операции, не создают approvals/Selection и не меняют priority.
 Тестовые требования: [TEST_ORACLES](STORY_INTELLIGENCE_SI_PRODUCT_01_0_TEST_ORACLES.md).
-Все новые choices: [OWNER_DECISIONS](STORY_INTELLIGENCE_SI_PRODUCT_01_0_OWNER_DECISIONS.md).
+Approved presentation decisions: [OWNER_DECISIONS](STORY_INTELLIGENCE_SI_PRODUCT_01_0_OWNER_DECISIONS.md).
 
 ## 2. Observed runtime, not a historical response schema
 
@@ -80,7 +82,7 @@ UNAVAILABLE_OFFLINE, HANDOFF_ADAPTER_UNAVAILABLE, REQUEST_CONFLICT,
 REDACTED_CONTEXT_INCOMPLETE или RECORD_UNAVAILABLE поддержанными OK conditions
 этого evaluator. Они не получают guessed product mappings.
 
-## 3. Proposed admission and result association — PD-01
+## 3. Approved admission and result association — PD-01
 
 Локальный conceptual interface: exact `evaluation_inputs`, exact `evaluation_result`,
 explicit `display_locale` (ru/uk). Это описание private function boundary, не новый
@@ -92,15 +94,18 @@ existing API default None. Другие пропуски/extra arguments не п
 применение существующих defaults, не coercion/исправление данных. None premise
 остаётся valid evaluator input с возможным NEEDS_INPUT, не missing projection result.
 
-Рекомендуется проверять связь повторным вызовом **того же pinned pure evaluate_si**
+PD-01 требует проверять связь повторным вызовом **того же pinned pure evaluate_si**
 с точно теми же inputs и byte-for-byte по existing canonical JSON сравнивать output
 с supplied result. Это только admission verification: не новая оценочная политика,
 не alternative scoring, не исправление inputs и не принятие другого результата.
 Mismatch, исключение, недостающий input, unsupported shape/extra field/version →
-UNAVAILABLE; не подменять результат на recomputed value. Допустимая будущая оптимизация
-trusted same-invocation handoff требует отдельного owner choice; не считать произвольный
+UNAVAILABLE; не подменять результат на recomputed value. Альтернатива trusted same-invocation handoff в V1 не выбрана; любое изменение
+verification требует отдельного контракта и owner approval. Не считать произвольный
 dict «принятым» по его status. Ни hash, ни повтор вычисления не доказывает real authority.
-Cost такого bounded read-only verification пока не performance-qualified.
+Cost такого bounded read-only verification пока не performance-qualified. При будущем
+implementation acceptance обязательны измерения производительности вне pure function;
+нельзя ослаблять безопасность или проверяемость ради ускорения. Это обязательное
+условие PD-01, а не разрешение менять mechanism verification.
 
 На OK проверить exact result shape, locale/currentness, nine detached ratings,
 Known aggregate, valid enum, code union, unique ordered diagnostics и полное покрытие
@@ -112,7 +117,7 @@ Known aggregate, valid enum, code union, unique ordered diagnostics и полн�
 Отсутствующий result не превращать в evaluator INVALID; это UNAVAILABLE presentation.
 Исключение evaluator не переводить в придуманный reason code/достоверное решение.
 
-## 4. Proposed private card shape and language — PD-02/03
+## 4. Approved private card shape and language — PD-02/03
 
 ```text
 Card = {projection_version:"editorial-decision-projection/1",
@@ -122,7 +127,7 @@ Card = {projection_version:"editorial-decision-projection/1",
                   limitations:List<Text>}}
 ```
 
-Эти local presentation labels/version — **PROPOSAL**, не SI/1 enums/error codes.
+Эти local presentation labels/version — **APPROVED в presentation scope**, не SI/1 enums/error codes.
 Редактору показываются пять sections; технические keys/version/availability не текст UI.
 Поле topic/title отсутствует: title/raw_input не экспортируется автоматически.
 DISPLAYABLE означает только возможность показать объяснение, включая INVALID/STALE.
@@ -149,7 +154,7 @@ AdmissionFailure={availability:"UNAVAILABLE"}, без sections/locale. Это ad
 исходные inputs не изменяются. Нет LLM/внешнего переводчика/Unicode normalization.
 Output values — fixed Unicode strings плюс decimal ordinals/известные numeric values;
 для текстового представления LF, UTF-8 без BOM, без locale-dependent number grouping.
-Это не новый canonical hash/storage format. Все strings ниже буквальные proposed oracles.
+Это не новый canonical hash/storage format. Все strings ниже буквальные approved test requirements, не executed results.
 
 ## 5. Decision summaries and score — PD-04
 
@@ -198,7 +203,7 @@ C=ClaimCheck, E=EvidenceItem, V=VisualRequirement, K=Risk. These are typed roles
 Code E=EVIDENCE_NEEDED в таблице; CC=CENTRAL_CLAIM_UNSUPPORTED; DR=DUPLICATE_REVIEW_NEEDED;
 RB=RIGHTS_BLOCKED. B/I/R/D — existing condition classes BLOCKED/NEEDS_INPUT/
 NEEDS_RESEARCH/REVIEW_DUPLICATE, не новые output enums. Fixed message authority —
-RC D01–D09, Q tables, runtime `_scoring_findings`; новые локализованные тексты ниже — proposal.
+RC D01–D09, Q tables, runtime `_scoring_findings`; локализованные тексты ниже утверждены владельцем.
 
 | ID; selector (code/path/subject); class | RU explanation | UK explanation | Action |
 | --- | --- | --- | --- |
@@ -355,7 +360,7 @@ source locator. Санитизация regex не заменяет запрет 
 Alias не удостоверяет достоверность источника. Количество строк/типов раскрывает
 ограниченную структуру private оценки: V1 не обещает anonymity/public-safe export.
 Human-friendly source titles, grants, public sharing и secure persistence — отдельные
-контракты, не автоматически разрешены этим proposal или наличием Card.
+контракты, не автоматически разрешены этим approval или наличием Card.
 
 ## 9. Fixed limitations and outstanding human decisions — PD-08
 
@@ -386,9 +391,12 @@ justifications/authority fields. Это поддерживаемые representat
 позволяют локализовать существующие условия, не выводя class из code alone.
 Результат этого этапа не утверждает универсальную корректность evaluator и не является
 его independent acceptance. Material projection-blocking inconsistency не обнаружена
-в выполненной source/runtime проверке. Все новые presentation decisions ещё NOT APPROVED.
+в выполненной исторической source/runtime проверке. Presentation decisions PD-01–PD-08
+теперь APPROVED, с условиями OWNER_APPROVAL. Для PD-05 обязательны будущие executable
+tests всех 30 families, blocking/material findings и RU/UK. Existing evaluator tests
+не являются доказательством работоспособности ещё не реализованной Projection.
 
 EVAL-P05 OPEN; PUBLISH_REVISION DISABLED; partial COMMIT reconstruction OFF;
-Windows S3.2b BLOCKED_HOST_NOT_PROVIDED. Никаких code/schema/test/contract changes,
+Windows S3.2b BLOCKED_HOST_NOT_PROVIDED. Никаких code/schema/test changes или изменений ранее утверждённых EVAL/RC/Q/storage contracts,
 external publication, implementation, UI, persistence, service, provider или network
-integration. **STOP FOR INDEPENDENT REVIEW; требуется явное owner approval.**
+integration. **STOP. Архитектура утверждена; реализация и публикация требуют отдельного явного разрешения.**

@@ -169,3 +169,31 @@
 - Validation: GitHub Actions CI pending at time of authoring; actual Windows MP4 not tested yet. User validation required before further video quality work.
 - Files: `scripts/first_video.py`, `examples/first_video_plan_ru.json`, `examples/first_video_plan_uk.json`, `tests/test_sprint26.py`, `docs/SPRINT26_FIRST_VIDEO_WINDOWS.md`, four project logs.
 - Next: verify CI; user runs real Silero end-to-end on Windows and checks exported video.
+
+## 2026-11-13 — SI-PRODUCT-01.0 owner approval recording (DOCS ONLY)
+
+- Explicit owner decision recorded: architecture/four reference documents and all
+  PD-01–PD-08 APPROVED. Reference `5e0ddf45aacb2412dd15b9a4923acb40c6a6c7bd`,
+  evaluator foundation `35451f6441bd5428e132ae65f2080209b51fe009`.
+- Mandatory PD-01: retain safe evaluator re-verification, measure performance at
+  future implementation acceptance; any verification change requires a separate
+  contract and owner approval, with no weakened security/verifiability.
+- Mandatory PD-05: executable tests for all 30 condition families, RU/UK and material
+  blocking findings. Existing evaluator tests are not Projection execution evidence.
+- Documentary files: `docs/tasks/STORY_INTELLIGENCE_SI_PRODUCT_01_0_CONTRACT_PROPOSAL.md`,
+  `docs/tasks/STORY_INTELLIGENCE_SI_PRODUCT_01_0_TEST_ORACLES.md`,
+  `docs/tasks/STORY_INTELLIGENCE_SI_PRODUCT_01_0_OWNER_DECISIONS.md`,
+  `docs/tasks/STORY_INTELLIGENCE_SI_PRODUCT_01_0_RESULT.md`, new
+  `docs/tasks/STORY_INTELLIGENCE_SI_PRODUCT_01_0_OWNER_APPROVAL_2026_11_13.md`, new
+  `docs/tasks/STORY_INTELLIGENCE_SI_PRODUCT_01_1_IMPLEMENTATION_TASK_DRAFT.md`, and this log.
+- No code/tests/SI/1/protected storage or previously approved evaluation policy
+  changed. Unit/Projection/performance tests NOT RUN in this docs-only recording;
+  document identity/status/links/literal-preservation and Git diff checks only.
+  Current recording results and local commit identity are in RESULT/final handoff.
+- No dependencies/media/models/third-party corpora or new licence clearances. RU/UK,
+  CPU-only and existing licensing gates retained. PUBLISH_REVISION DISABLED,
+  partial COMMIT reconstruction OFF, Windows S3.2b BLOCKED_HOST_NOT_PROVIDED.
+- Recording branch: `docs/story-intelligence-si-product-01-0-owner-approval`.
+  No push/PR/merge/tag/release; changed-documents ZIP stays local for review.
+- Next: independent review of the owner recording; then a separate explicit owner
+  implementation task with exact base/scope. Draft is NOT AUTHORIZED FOR EXECUTION.
