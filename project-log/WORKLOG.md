@@ -197,3 +197,31 @@
   No push/PR/merge/tag/release; changed-documents ZIP stays local for review.
 - Next: independent review of the owner recording; then a separate explicit owner
   implementation task with exact base/scope. Draft is NOT AUTHORIZED FOR EXECUTION.
+
+## 2026-11-13 — SI-PRODUCT-01.1 pure Editorial Decision Projection V1
+
+- Separate explicit owner implementation authorization granted; exact base
+  `f56f4ea2a7c7584a6b8b8c236d0b4a54e946485d`, feature
+  `feat/story-intelligence-si-product-01-1-projection-v1`. All PD-01–PD-08 retained.
+- Added `story_intelligence/decision_projection_v1.py`: pure private RU/UK Card,
+  mandatory real evaluator re-verification and exact canonical equality, closed
+  30-family matching, safe aliases/text, five sections/six limitations, no mutation.
+- Added `tests/test_story_intelligence_decision_projection_v1.py` and
+  `tests/test_story_intelligence_decision_projection_oracles_v1.py`: executable
+  30×2 matrix plus variants, P01–P42, full literal W01 RU/UK and real failure cases.
+  All successful projection cases execute real evaluator; no mocked success path.
+- Added `docs/tasks/STORY_INTELLIGENCE_SI_PRODUCT_01_1_IMPLEMENT_RESULT.md` with exact
+  test commands/counts/exit codes, coverage matrix, performance measurements and
+  limitations. Historical evaluator counts are not substituted for Projection tests.
+- Actual final runs: Projection 73, evaluator 78, SI 295, full unittest 1137;
+  all failures/errors/skips=0 and process exit 0. Compileall/diff checks exit 0.
+  PD-01 performance: B/T25/W01/MULTI, one warm-up and three measured repeats each;
+  real evaluator verification retained, actual min/median/max/raw samples in RESULT.
+  Local commit identity/ZIP in final handoff. This entry is
+  append-only. No existing tests/evaluator/SI/1/contracts/config/dependencies changed.
+- No third-party media/models/corpora/keys added; no licence or authority clearance.
+  RU/UK, CPU-only, existing licensing requirements and protected boundaries retained.
+  PUBLISH_REVISION DISABLED; partial COMMIT reconstruction OFF;
+  Windows S3.2b BLOCKED_HOST_NOT_PROVIDED; EVAL-P05 OPEN.
+- Local commit/changed-file ZIP only, no push/PR/merge/tag/release. Next gate:
+  independent owner acceptance. Do not start the next stage without that decision.
