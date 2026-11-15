@@ -169,3 +169,8 @@
 - Validation: GitHub Actions CI pending at time of authoring; actual Windows MP4 not tested yet. User validation required before further video quality work.
 - Files: `scripts/first_video.py`, `examples/first_video_plan_ru.json`, `examples/first_video_plan_uk.json`, `tests/test_sprint26.py`, `docs/SPRINT26_FIRST_VIDEO_WINDOWS.md`, four project logs.
 - Next: verify CI; user runs real Silero end-to-end on Windows and checks exported video.
+
+## 2026-11-15 — SI-PRODUCT-02.0
+
+- Зарегистрировано утверждённое решение владельца и последовательность SI-PRODUCT-02.1 → 02.2 → 02.3.
+- TTS-EVAL-01a отложен до появления проверенных весов. Приёмка Projection V1 ведётся отдельно.

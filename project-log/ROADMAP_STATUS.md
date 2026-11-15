@@ -60,3 +60,13 @@ Sprint 11: Windows user confirmed Sprint10 playback; local FFmpeg auto-detection
 - Includes RU and UK sample scene plans and CLI options for local pictures or existing WAVs.
 - **Gate pending:** CI checks and actual Windows end-to-end MP4 playback; scene-level timing only.
 - Next after Windows confirmation: improve storyboard/images and narration synchronization using legally cleared ideas and adapters from original upstream.
+
+## SI-PRODUCT-02 — приоритет продуктовой интеграции
+
+См. [решение владельца](../docs/tasks/SI_PRODUCT_02_OWNER_DECISION.md).
+
+1. **SI-PRODUCT-02.1 — Repository & CI Alignment.** Минимальные обновления README, ROADMAP, CI и `.gitattributes`, максимум пять рабочих дней.
+2. **SI-PRODUCT-02.2 — End-to-End RU/UK Integration.** Одна воспроизводимая команда от `topic.json` до карточки, производственного плана и двух MP4. Успешный прогон подтверждает интеграцию конвейера. Достоверность исследования темы проверяется отдельно.
+3. **SI-PRODUCT-02.3 — Topic Research & Scoring.** Проверяемые источники, оценки, критическая проверка, эталонный набор и человеческое решение.
+
+TTS-EVAL-01 отложен и не задерживает SI-PRODUCT-02. Windows protected storage и CPU lip-sync вне текущего приоритета.
