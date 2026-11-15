@@ -225,3 +225,8 @@
   Windows S3.2b BLOCKED_HOST_NOT_PROVIDED; EVAL-P05 OPEN.
 - Local commit/changed-file ZIP only, no push/PR/merge/tag/release. Next gate:
   independent owner acceptance. Do not start the next stage without that decision.
+
+## 2026-11-15 — SI-PRODUCT-02.0 and 02.1
+
+- Carried the owner decision from `42ce93f34c0507bc61078d5a78f61c2f9d64866e` onto the accepted Projection V1 baseline `da1d3dd2ad6a55943e88503f5231f4c34a1e4e5f`. See Linux CI run 43735785327 for 01.1c.
+- Updated developer documentation, scoped ignore and shell line endings, and the existing Ubuntu CI matrix. Added the 02.2 integration map. TTS evaluation remains deferred.

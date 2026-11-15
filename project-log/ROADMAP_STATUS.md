@@ -60,3 +60,19 @@ Sprint 11: Windows user confirmed Sprint10 playback; local FFmpeg auto-detection
 - Includes RU and UK sample scene plans and CLI options for local pictures or existing WAVs.
 - **Gate pending:** CI checks and actual Windows end-to-end MP4 playback; scene-level timing only.
 - Next after Windows confirmation: improve storyboard/images and narration synchronization using legally cleared ideas and adapters from original upstream.
+
+## SI-PRODUCT-02 — приоритет продуктовой интеграции
+
+См. [решение владельца](../docs/tasks/SI_PRODUCT_02_OWNER_DECISION.md).
+
+1. **SI-PRODUCT-02.1 — Repository & CI Alignment.** Минимальные обновления README, ROADMAP, CI и `.gitattributes`, максимум пять рабочих дней.
+2. **SI-PRODUCT-02.2 — End-to-End RU/UK Integration.** Одна воспроизводимая команда от `topic.json` до карточки, производственного плана и двух MP4. Успешный прогон подтверждает интеграцию конвейера. Достоверность исследования темы проверяется отдельно.
+3. **SI-PRODUCT-02.3 — Topic Research & Scoring.** Проверяемые источники, оценки, критическая проверка, эталонный набор и человеческое решение.
+
+TTS-EVAL-01 отложен и не задерживает SI-PRODUCT-02. Windows protected storage и CPU lip-sync вне текущего приоритета.
+
+### База интеграции и приёмка
+
+- Projection V1 принят на `da1d3dd2ad6a55943e88503f5231f4c34a1e4e5f`. [Linux CI](https://github.com/olegale-ctrl/Story-Studio-RU-UA-WORK/actions/runs/43735785327)
+- Эта ветка построена от принятой реализации. Решение владельца перенесено из `42ce93f34c0507bc61078d5a78f61c2f9d64866e` с сохранением истории WORKLOG. Общая база исходных веток — `e1f4efb0fb5ff290bb198349213c004b4667ef0f`.
+- 02.1 готовит инфраструктуру. Для 02.2 использовать [карту интеграции](../docs/tasks/SI_PRODUCT_02_2_INTEGRATION_MAP.md). Отдельный [issue #7](https://github.com/olegale-ctrl/Story-Studio-RU-UA-WORK/issues/7) отслеживает Windows-переносимость Silero-теста.
