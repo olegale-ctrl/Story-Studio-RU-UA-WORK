@@ -37,6 +37,21 @@ jobs:
           ffmpeg -version
           ffprobe -version
           python -m pytest --version
+      - name: Render the registered D1 fixture
+        if: matrix.python-version == '3.13'
+        run: python scripts/topic_to_video.py examples/topic_d1_synthetic.json --output-dir output-d1
+      - name: Save synthetic D1 evidence
+        if: matrix.python-version == '3.13'
+        uses: actions/upload-artifact@v6
+        with:
+          name: si-product-02-2-1-d1-evidence
+          path: |
+            output-d1/*.json
+            output-d1/ru/project.json
+            output-d1/uk/project.json
+            output-d1/ru/first-video.mp4
+            output-d1/uk/first-video.mp4
+          if-no-files-found: error
       - name: Run stdlib Python tests
         run: python -m unittest discover -s tests -v
       - name: Run full pytest suite
