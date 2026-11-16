@@ -1,6 +1,7 @@
 """Conservative FFmpeg MP4 renderer: sequential still images + optional audio + SRT.
 
-Supports static images and Ken Burns smooth camera motion (zoom, pan, cut-punch).
+Supports static images, Ken Burns smooth camera motion (zoom, pan, cut-punch),
+background music (BGM) with audio ducking, and modern subtitle styling.
 """
 from __future__ import annotations
 from pathlib import Path
@@ -10,7 +11,7 @@ import tempfile
 import subprocess
 from .project_schema import Project
 from .media_paths import validate_media_path
-from .subtitles import export_srt
+from .subtitles import export_srt, get_subtitle_style
 from .motion import resolve_shot_motion, camera_at
 
 
@@ -96,6 +97,9 @@ def render_mp4(
     height: int | None = None,
     export_srt_files: bool | None = None,
     motion: bool = False,
+    bgm_path: str | Path | None = None,
+    bgm_volume: float = 0.25,
+    ducking: bool = True,
 ) -> dict:
     project.validate()
     root = Path(media_root).resolve(strict=True)
@@ -155,6 +159,12 @@ def render_mp4(
     sources = [source(media[c.media_id].path) for c in video]
     audio_paths = [source(media[c.media_id].path) for c in audio]
 
+    bgm_file = None
+    if bgm_path is not None:
+        bgm_file = Path(bgm_path).resolve(strict=True)
+        if not bgm_file.is_file():
+            raise FileNotFoundError(f"BGM audio file not found: {bgm_file}")
+
     tempdir = None
     if motion or burn_subtitles:
         tempdir = tempfile.TemporaryDirectory(prefix='story-studio-render-')
@@ -182,19 +192,51 @@ def render_mp4(
     for path in audio_paths:
         command += ['-i', str(path)]
 
+    if bgm_file is not None:
+        command += ['-i', str(bgm_file)]
+
+    has_audio_stream = bool(audio) or (bgm_file is not None)
+    dur_s = cursor / 1000.0
+
     if audio:
-        # Trim each source, align to the timeline, then mix at unity gain.
         for i, clip in enumerate(audio):
             filters += (f';[{len(video)+i}:a:0]atrim=start={clip.source_in_ms/1000:.3f}:'
                         f'duration={clip.duration_ms/1000:.3f},asetpts=PTS-STARTPTS,'
                         f'aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo,'
                         f'adelay={clip.start_ms}:all=1[a{i}]')
-        filters += ';' + ''.join(f'[a{i}]' for i in range(len(audio))) + (
-            f'amix=inputs={len(audio)}:duration=longest:normalize=0,atrim=duration={cursor/1000:.3f}[aout]'
-            if len(audio)>1 else 'anull[aout]')
+        if len(audio) > 1:
+            filters += ';' + ''.join(f'[a{i}]' for i in range(len(audio))) + (
+                f'amix=inputs={len(audio)}:duration=longest:normalize=0,atrim=duration={dur_s:.3f}[voice_mix]'
+            )
+        else:
+            filters += ';[a0]anull[voice_mix]'
+
+    if bgm_file is not None:
+        bgm_idx = len(video) + len(audio)
+        fade_out_st = max(0.0, dur_s - 1.5)
+        fade_out_dur = min(1.5, dur_s)
+        fade_in_dur = min(1.0, dur_s)
+        filters += (
+            f';[{bgm_idx}:a:0]aloop=loop=-1:size=2e+09,atrim=0:{dur_s:.3f},'
+            f'asetpts=PTS-STARTPTS,aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo,'
+            f'afade=t=in:st=0:d={fade_in_dur:.3f},afade=t=out:st={fade_out_st:.3f}:d={fade_out_dur:.3f},'
+            f'volume={bgm_volume:.3f}[bgm_raw]'
+        )
+        if audio and ducking:
+            filters += (
+                ';[voice_mix]asplit=2[voice_play][voice_sc]'
+                ';[bgm_raw][voice_sc]sidechaincompress=threshold=0.08:ratio=4:attack=150:release=350[bgm_ducked]'
+                ';[voice_play][bgm_ducked]amix=inputs=2:duration=longest:normalize=0[aout]'
+            )
+        elif audio:
+            filters += ';[voice_mix][bgm_raw]amix=inputs=2:duration=longest:normalize=0[aout]'
+        else:
+            filters += ';[bgm_raw]anull[aout]'
+    elif audio:
+        filters += ';[voice_mix]anull[aout]'
 
     command += ['-filter_complex', filters, '-map', '[vout]']
-    if audio:
+    if has_audio_stream:
         command += ['-map', '[aout]', '-c:a', 'aac', '-b:a', '128k']
     else:
         command += ['-an']
@@ -205,8 +247,7 @@ def render_mp4(
         srt = Path(tempdir.name) / 'captions.srt'
         track = next(t for t in project.tracks if t.kind == 'subtitle')
         srt.write_text(export_srt(project, track_id=track.id), encoding='utf-8')
-        style = ('FontName=Arial,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,'
-                 'BorderStyle=1,Outline=1,Shadow=0,Alignment=2,MarginV=35')
+        style = get_subtitle_style(width, height)
         command[command.index('-filter_complex') + 1] = filters + ';[vout]subtitles=captions.srt:force_style=\'' + style + '\'[vburn]'
         command[command.index('-map') + 1] = '[vburn]'
 
@@ -240,4 +281,6 @@ def render_mp4(
         'width': width,
         'height': height,
         'motion': motion,
+        'bgm': str(bgm_file) if bgm_file else None,
+        'ducking': ducking if bgm_file else False,
     }

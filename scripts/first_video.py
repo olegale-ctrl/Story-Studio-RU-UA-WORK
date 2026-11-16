@@ -1,8 +1,10 @@
-"""Sprint 26: make a real RU/UA narrated MP4 from a scene plan and local audio.
+"""Sprint 26/28: make a real RU/UA narrated MP4 from a scene plan and local audio.
 
-No remote API calls. Existing WAV files or an explicitly trusted local Silero
-model are supported. Uses the existing v3 timeline and FFmpeg renderer.
-Supports smooth Ken Burns motion and horizontal (16:9) or vertical (9:16) rendering.
+Supports:
+- Local Silero TTS or pre-recorded WAVs
+- Smooth Ken Burns motion and horizontal (16:9) or vertical (9:16) rendering
+- Dynamic word/phrase subtitle chunking with syllable-proportional timing
+- Background music (BGM) with automatic audio ducking
 """
 from __future__ import annotations
 
@@ -19,6 +21,7 @@ if str(ROOT) not in sys.path:
 
 from core.project_schema import Project
 from core.mp4_render import render_mp4
+from core.subtitles import chunk_scene_subtitles
 
 FRAME_MS = 40  # 25 fps
 
@@ -74,7 +77,11 @@ def build(plan_path: Path, output_dir: Path, *, audio_dir: Path | None = None,
           images_dir: Path | None = None, silero_model: Path | None = None,
           voice: str | None = None, render: bool = True,
           width: int = 1280, height: int = 720,
-          motion: bool = False) -> tuple[Path, Path | None]:
+          motion: bool = False,
+          bgm_path: Path | None = None,
+          bgm_volume: float = 0.22,
+          ducking: bool = True,
+          sub_chunk_words: int = 3) -> tuple[Path, Path | None]:
     plan = read_plan(plan_path)
     locale = plan["locale"]
     if silero_model is not None and not voice:
@@ -85,6 +92,8 @@ def build(plan_path: Path, output_dir: Path, *, audio_dir: Path | None = None,
         raise FileNotFoundError("Audio directory missing: " + str(audio_dir))
     if images_dir is not None and not images_dir.is_dir():
         raise FileNotFoundError("Images directory missing: " + str(images_dir))
+    if bgm_path is not None and not Path(bgm_path).is_file():
+        raise FileNotFoundError("BGM file missing: " + str(bgm_path))
 
     # Validate user-provided images before writing anything.
     images = []
@@ -102,7 +111,7 @@ def build(plan_path: Path, output_dir: Path, *, audio_dir: Path | None = None,
     output_dir.mkdir(parents=True)
     media_dir = output_dir / "media"
     media_dir.mkdir()
-    project = dict(title=plan.get("title") or "Story Studio RU/UA — first video",
+    project = dict(title=plan.get("title") or "Story Studio RU/UA — video",
                    content_locale=locale, scenes=[], fps=25, width=width, height=height,
                    schema_version=3, tracks=[
                        dict(id="v", kind="video", label="Images"),
@@ -135,9 +144,19 @@ def build(plan_path: Path, output_dir: Path, *, audio_dir: Path | None = None,
                  start_ms=cursor, duration_ms=scene_ms, source_in_ms=0),
             dict(id=f"c{index}", track_id="a", media_id=f"a{index}",
                  start_ms=cursor, duration_ms=audio_ms, source_in_ms=0)])
-        project["subtitles"].append(
-            dict(id=f"s{index}", track_id="s", start_ms=cursor,
-                 duration_ms=audio_ms, text=scene["text"], locale=locale))
+
+        # Dynamic rhythmic subtitles (or single block if sub_chunk_words <= 0)
+        if sub_chunk_words > 0:
+            chunks = chunk_scene_subtitles(scene["text"], cursor, audio_ms, max_words=sub_chunk_words)
+        else:
+            chunks = [{'text': scene['text'], 'start_ms': cursor, 'duration_ms': audio_ms}]
+
+        for sub_idx, ch in enumerate(chunks, 1):
+            project["subtitles"].append(
+                dict(id=f"s{index}_{sub_idx}", track_id="s",
+                     start_ms=ch["start_ms"], duration_ms=ch["duration_ms"],
+                     text=ch["text"], locale=locale))
+
         cursor += scene_ms
 
     validated = Project.from_dict(project)
@@ -147,7 +166,8 @@ def build(plan_path: Path, output_dir: Path, *, audio_dir: Path | None = None,
     if render:
         video = output_dir / "first-video.mp4"
         result = render_mp4(validated, media_dir, video, burn_subtitles=True,
-                            width=width, height=height, crf=22, motion=motion)
+                            width=width, height=height, crf=22, motion=motion,
+                            bgm_path=bgm_path, bgm_volume=bgm_volume, ducking=ducking)
         print("RENDER:", json.dumps(result, ensure_ascii=False))
     print("PROJECT:", project_file)
     if video:
@@ -169,6 +189,10 @@ def main(argv=None) -> int:
     p.add_argument("--vertical", action="store_true", help="Render vertical video 9:16 (720x1280) for Shorts/Reels/TikTok")
     p.add_argument("--width", type=int, default=None)
     p.add_argument("--height", type=int, default=None)
+    p.add_argument("--bgm", type=Path, default=None, help="Background music audio file (mp3, wav, ogg)")
+    p.add_argument("--bgm-volume", type=float, default=0.22, help="Background music base volume factor (0.0 to 1.0, default 0.22)")
+    p.add_argument("--no-ducking", action="store_true", help="Disable automatic audio ducking under speech")
+    p.add_argument("--sub-words", type=int, default=3, help="Max words per dynamic subtitle chunk (0 to disable chunking)")
     args = p.parse_args(argv)
 
     # Resolution defaults based on orientation
@@ -183,7 +207,9 @@ def main(argv=None) -> int:
         build(args.plan, args.output_dir, audio_dir=args.audio_dir,
               images_dir=args.images_dir, silero_model=args.silero_model,
               voice=args.voice, render=not args.no_render,
-              width=width, height=height, motion=args.motion)
+              width=width, height=height, motion=args.motion,
+              bgm_path=args.bgm, bgm_volume=args.bgm_volume,
+              ducking=not args.no_ducking, sub_chunk_words=args.sub_words)
     except (ValueError, OSError, RuntimeError) as exc:
         print("ERROR:", exc, file=sys.stderr)
         return 2
