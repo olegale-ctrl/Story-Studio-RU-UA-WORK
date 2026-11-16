@@ -7,11 +7,13 @@ From a single topic sentence to a fully produced narrated video:
 4. Adds background music (BGM) with automatic sidechain audio ducking.
 5. Applies smooth Ken Burns camera motion.
 6. Encodes horizontal (16:9) or vertical (9:16) MP4 video via FFmpeg.
+7. Optional NLE timeline exports for free editors: DaVinci Resolve (FCPXML), CapCut Desktop, and EDL.
 """
 from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import sys
 from pathlib import Path
 
@@ -44,8 +46,12 @@ def run_story_to_video(
     llm_api_key: str | None = None,
     width: int | None = None,
     height: int | None = None,
+    export_fcpxml_flag: bool = False,
+    export_capcut_flag: bool = False,
+    export_edl_flag: bool = False,
+    export_nle: bool = False,
 ) -> tuple[Path, Path | None]:
-    """Execute the end-to-end topic-to-video workflow."""
+    """Execute the end-to-end topic-to-video workflow with optional NLE exports."""
     if output_dir.exists():
         raise FileExistsError(f"Output directory already exists: {output_dir}")
 
@@ -102,7 +108,26 @@ def run_story_to_video(
         bgm_volume=bgm_volume,
         ducking=ducking,
         sub_chunk_words=sub_words,
+        export_fcpxml_flag=export_fcpxml_flag,
+        export_capcut_flag=export_capcut_flag,
+        export_edl_flag=export_edl_flag,
+        export_nle=export_nle,
     )
+
+    # Move NLE project files to output root for easy opening
+    if (render_dir / "project.fcpxml").is_file():
+        (render_dir / "project.fcpxml").rename(output_dir / "project.fcpxml")
+        print(f"[NLE] DaVinci Resolve / Kdenlive project: {output_dir / 'project.fcpxml'}")
+
+    if (render_dir / "capcut_draft").is_dir():
+        if (output_dir / "capcut_draft").exists():
+            shutil.rmtree(output_dir / "capcut_draft")
+        (render_dir / "capcut_draft").rename(output_dir / "capcut_draft")
+        print(f"[NLE] CapCut Desktop Draft: {output_dir / 'capcut_draft'}")
+
+    if (render_dir / "project.edl").is_file():
+        (render_dir / "project.edl").rename(output_dir / "project.edl")
+        print(f"[NLE] CMX 3600 EDL: {output_dir / 'project.edl'}")
 
     # Move final video to root of output_dir for clean access
     final_video = None
@@ -140,6 +165,12 @@ def main(argv=None) -> int:
     p.add_argument("--no-ducking", action="store_true", help="Disable automatic audio ducking")
     p.add_argument("--sub-words", type=int, default=3, help="Max words per subtitle chunk")
 
+    # NLE Exchange exports
+    p.add_argument("--export-nle", action="store_true", help="Export timeline for DaVinci Resolve (FCPXML), CapCut Desktop, and EDL")
+    p.add_argument("--export-fcpxml", action="store_true", help="Export FCPXML for DaVinci Resolve (Free) and Kdenlive")
+    p.add_argument("--export-capcut", action="store_true", help="Export CapCut Desktop draft folder (draft_content.json)")
+    p.add_argument("--export-edl", action="store_true", help="Export CMX 3600 EDL")
+
     # Optional LLM endpoint
     p.add_argument("--llm-url", type=str, default=None, help="OpenAI-compatible LLM endpoint (e.g. http://localhost:11434/v1/chat/completions)")
     p.add_argument("--llm-model", type=str, default="llama3", help="LLM model name")
@@ -168,6 +199,10 @@ def main(argv=None) -> int:
             llm_api_key=args.llm_key,
             width=args.width,
             height=args.height,
+            export_fcpxml_flag=args.export_fcpxml,
+            export_capcut_flag=args.export_capcut,
+            export_edl_flag=args.export_edl,
+            export_nle=args.export_nle,
         )
     except (ValueError, OSError, RuntimeError) as exc:
         print("ERROR:", exc, file=sys.stderr)

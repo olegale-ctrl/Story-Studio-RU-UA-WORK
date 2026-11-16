@@ -1,10 +1,11 @@
-"""Sprint 26/28: make a real RU/UA narrated MP4 from a scene plan and local audio.
+"""Sprint 26/28/30: make a real RU/UA narrated MP4 from a scene plan and local audio.
 
 Supports:
 - Local Silero TTS or pre-recorded WAVs
 - Smooth Ken Burns motion and horizontal (16:9) or vertical (9:16) rendering
 - Dynamic word/phrase subtitle chunking with syllable-proportional timing
 - Background music (BGM) with automatic audio ducking
+- Export to free video editors (NLE): CapCut Desktop, DaVinci Resolve (FCPXML), and EDL
 """
 from __future__ import annotations
 
@@ -22,6 +23,7 @@ if str(ROOT) not in sys.path:
 from core.project_schema import Project
 from core.mp4_render import render_mp4
 from core.subtitles import chunk_scene_subtitles
+from core.nle_export import export_fcpxml, export_capcut_draft, export_edl
 
 FRAME_MS = 40  # 25 fps
 
@@ -81,7 +83,11 @@ def build(plan_path: Path, output_dir: Path, *, audio_dir: Path | None = None,
           bgm_path: Path | None = None,
           bgm_volume: float = 0.22,
           ducking: bool = True,
-          sub_chunk_words: int = 3) -> tuple[Path, Path | None]:
+          sub_chunk_words: int = 3,
+          export_fcpxml_flag: bool = False,
+          export_capcut_flag: bool = False,
+          export_edl_flag: bool = False,
+          export_nle: bool = False) -> tuple[Path, Path | None]:
     plan = read_plan(plan_path)
     locale = plan["locale"]
     if silero_model is not None and not voice:
@@ -162,6 +168,23 @@ def build(plan_path: Path, output_dir: Path, *, audio_dir: Path | None = None,
     validated = Project.from_dict(project)
     project_file = output_dir / "project.json"
     project_file.write_text(validated.to_json() + "\n", encoding="utf-8")
+
+    # NLE project exports (DaVinci Resolve / Kdenlive / CapCut)
+    if export_nle or export_fcpxml_flag:
+        fcpxml_path = output_dir / "project.fcpxml"
+        export_fcpxml(validated, media_dir, fcpxml_path, bgm_path=bgm_path, bgm_volume=bgm_volume)
+        print("NLE EXPORT FCPXML:", fcpxml_path)
+
+    if export_nle or export_capcut_flag:
+        capcut_dir = output_dir / "capcut_draft"
+        export_capcut_draft(validated, media_dir, capcut_dir, bgm_path=bgm_path, bgm_volume=bgm_volume)
+        print("NLE EXPORT CAPCUT:", capcut_dir)
+
+    if export_nle or export_edl_flag:
+        edl_path = output_dir / "project.edl"
+        export_edl(validated, media_dir, edl_path)
+        print("NLE EXPORT EDL:", edl_path)
+
     video = None
     if render:
         video = output_dir / "first-video.mp4"
@@ -193,6 +216,13 @@ def main(argv=None) -> int:
     p.add_argument("--bgm-volume", type=float, default=0.22, help="Background music base volume factor (0.0 to 1.0, default 0.22)")
     p.add_argument("--no-ducking", action="store_true", help="Disable automatic audio ducking under speech")
     p.add_argument("--sub-words", type=int, default=3, help="Max words per dynamic subtitle chunk (0 to disable chunking)")
+
+    # NLE Exchange exports
+    p.add_argument("--export-nle", action="store_true", help="Export timeline for DaVinci Resolve (FCPXML), CapCut Desktop, and EDL")
+    p.add_argument("--export-fcpxml", action="store_true", help="Export FCPXML for DaVinci Resolve (Free) and Kdenlive")
+    p.add_argument("--export-capcut", action="store_true", help="Export CapCut Desktop draft folder (draft_content.json)")
+    p.add_argument("--export-edl", action="store_true", help="Export CMX 3600 EDL")
+
     args = p.parse_args(argv)
 
     # Resolution defaults based on orientation
@@ -209,7 +239,11 @@ def main(argv=None) -> int:
               voice=args.voice, render=not args.no_render,
               width=width, height=height, motion=args.motion,
               bgm_path=args.bgm, bgm_volume=args.bgm_volume,
-              ducking=not args.no_ducking, sub_chunk_words=args.sub_words)
+              ducking=not args.no_ducking, sub_chunk_words=args.sub_words,
+              export_fcpxml_flag=args.export_fcpxml,
+              export_capcut_flag=args.export_capcut,
+              export_edl_flag=args.export_edl,
+              export_nle=args.export_nle)
     except (ValueError, OSError, RuntimeError) as exc:
         print("ERROR:", exc, file=sys.stderr)
         return 2
