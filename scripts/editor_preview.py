@@ -152,7 +152,12 @@ def preview(data):
                 state = result["status"]
                 if state not in ("OK", "INVALID", "STALE"):
                     raise ValueError("EVALUATION_FAILED")
-                files["evaluation.json"] = result
+                # SI diagnostic paths can contain keys supplied by the editor.
+                # Only the in-memory result is passed to Projection for verification.
+                files["evaluation.json"] = {
+                    **result,
+                    "diagnostics": [{"code": item["code"]} for item in result["diagnostics"]],
+                }
                 status["evaluation"] = dict(state=state, file="evaluation.json")
                 if state == "OK":
                     status["evaluation"]["eligibility"] = result["eligibility"]["state"]

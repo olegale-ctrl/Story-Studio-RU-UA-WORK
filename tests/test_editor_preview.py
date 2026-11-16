@@ -93,15 +93,30 @@ class EditorPreview(unittest.TestCase):
         self.assertFalse(any(n.startswith('private-card') for n in files))
         self.assertIn('EVALUATION_INVALID', [d['code'] for d in status['diagnostics']])
 
+    def test_invalid_diagnostics_do_not_export_editor_paths(self):
+        data = full()
+        private_path = '/PRIVATE_SENTINEL/source.txt'
+        data['evaluation_inputs']['records'][0]['payload'][private_path] = 'private fragment'
+        actual = cli.evaluate_si(**data['evaluation_inputs'])
+        self.assertIn(private_path, actual['diagnostics'][0]['field_path'])
+        status, files = self.render(data)
+        self.assertEqual(status['evaluation']['state'], 'INVALID')
+        self.assertEqual(files['evaluation.json']['diagnostics'], [{'code': 'UNKNOWN_FIELD'}])
+        self.assertNotIn(private_path, json.dumps([status, files]))
+        self.assertNotIn('private fragment', json.dumps([status, files]))
+
     def test_real_stale_card_retains_stale_semantics(self):
         data = full(); data['evaluation_inputs'] = stale_args()
         status, files = self.render(data)
         self.assertEqual(status['evaluation']['state'], 'STALE')
         self.assertEqual(files['evaluation.json']['status'], 'STALE')
         self.assertIsNone(files['evaluation.json']['eligibility'])
+        actual = cli.evaluate_si(**data['evaluation_inputs'])
+        self.assertEqual(files['evaluation.json']['diagnostics'],
+                         [{'code': item['code']} for item in actual['diagnostics']])
         for locale in cli.LOCALES:
             card = files[f'private-card-{locale}.json']
-            self.assertEqual(card, cli.project_evaluation(data['evaluation_inputs'], files['evaluation.json'], locale))
+            self.assertEqual(card, cli.project_evaluation(data['evaluation_inputs'], actual, locale))
         self.assertIn('EVALUATION_STALE', [d['code'] for d in status['diagnostics']])
 
     def test_projection_unavailable_never_fabricated(self):

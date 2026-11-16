@@ -83,7 +83,8 @@ for relevance by the editor; this adapter does not invent a semantic alignment.
 2. **Actual SI evaluation**: NOT_RUN, FAILED, or the actual OK/INVALID/STALE result.
    Missing metadata can coexist with a real evaluation if the separate SI invocation
    is complete. Missing ratings/findings never invoke evaluator or Projection.
-   `evaluation.json` contains only the actual evaluator return value, unchanged.
+   `evaluation.json` contains the actual evaluator result. Each diagnostic is
+   exported by its code alone. Projection receives the original result in memory.
    Real INVALID/STALE include `eligibility: null` and `aggregate_tenths: null`;
    neither is converted into a rejection score or accepted eligibility.
    INVALID retains its evaluation file and safe corrective diagnostic, but creates
@@ -98,8 +99,9 @@ for relevance by the editor; this adapter does not invent a semantic alignment.
 Diagnostic vocabulary is closed in the adapter's TEXT catalog. Diagnostics contain
 only fixed code/section/locales, material index and controlled RU/UK explanations
 and actions, not user identifiers, raw paths, material descriptions or private
-exception messages. The raw evaluation file and authored draft/plan files are
-private exports, not sanitized public documents. No diagnostics/text are routed
+exception messages. The evaluation export and authored draft/plan files remain
+private. Only the diagnostic codes are exported from the evaluator's diagnostics,
+since SI paths can contain editor-supplied keys. No diagnostics/text are routed
 into Projection as fabricated findings.
 
 ## Plans, rights and binding
@@ -157,7 +159,7 @@ Actual CLI smoke outputs are provided in the external evidence ZIP:
 
 ## Verification
 
-Final actual execution on Linux (full commands/streams/exit metadata in the evidence ZIP):
+Execution on Linux before the diagnostic export correction (full commands/streams/exit metadata in the original evidence ZIP):
 
 | Python | Check | Count | Failures/errors/skips | Exit | Wall seconds |
 |---|---|---:|---|---:|---:|
