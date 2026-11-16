@@ -13,7 +13,7 @@ class Sprint232Tests(unittest.TestCase):
     def test_env_override(self):
         with patch.dict(os.environ, {'STORY_SILERO_MODEL': '/custom/v5_cis_base_nostress.pt'}):
             cmd = silero_preview_command(Path('python'), 'ru', 'ru_dmitriy', 'Тест', trusted=True)
-        self.assertIn('/custom/v5_cis_base_nostress.pt', cmd)
+        self.assertIn(os.path.normpath('/custom/v5_cis_base_nostress.pt'), cmd)
     def test_untrusted_blocked(self):
         with self.assertRaises(ValueError):
             silero_preview_command(Path('python'), 'uk', 'ukr_igor', 'Тест', trusted=False)

@@ -1,6 +1,6 @@
 """Conservative FFmpeg MP4 renderer: sequential still images + optional audio + SRT.
 
-Experimental: no native editor export or AI generation.
+Supports static images and Ken Burns smooth camera motion (zoom, pan, cut-punch).
 """
 from __future__ import annotations
 from pathlib import Path
@@ -11,6 +11,7 @@ import subprocess
 from .project_schema import Project
 from .media_paths import validate_media_path
 from .subtitles import export_srt
+from .motion import resolve_shot_motion, camera_at
 
 
 def find_ffmpeg() -> str:
@@ -24,7 +25,78 @@ def find_ffmpeg() -> str:
     return found
 
 
-def render_mp4(project: Project, media_root: str | Path, output: str | Path, *, ffmpeg: str | None = None, burn_subtitles: bool = False, crf: int = 23, width: int | None = None, height: int | None = None, export_srt_files: bool | None = None) -> dict:
+def render_motion_clip(
+    image_path: Path,
+    dest_path: Path,
+    width: int,
+    height: int,
+    fps: int,
+    frames: int,
+    shot: dict,
+    ffmpeg: str,
+    crf: int = 22,
+) -> None:
+    """Render a single image shot with smooth Ken Burns motion into an MP4 clip."""
+    try:
+        from PIL import Image
+    except ImportError as exc:
+        raise ValueError('Rendering with motion requires pillow: pip install pillow') from exc
+
+    im = Image.open(image_path).convert('RGB')
+    duration_s = frames / fps
+
+    cmd = [
+        ffmpeg, '-hide_banner', '-loglevel', 'error', '-y',
+        '-f', 'rawvideo', '-pixel_format', 'rgb24',
+        '-video_size', f'{width}x{height}',
+        '-framerate', str(fps),
+        '-i', 'pipe:0',
+        '-an',
+        '-c:v', 'libx264', '-preset', 'veryfast', '-crf', str(crf),
+        '-pix_fmt', 'yuv420p', '-vf', 'setsar=1',
+        '-movflags', '+faststart',
+        str(dest_path),
+    ]
+
+    proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+    try:
+        for k in range(frames):
+            t_rel = (k / max(1, frames - 1)) * duration_s
+            z, px, py = camera_at(shot, t_rel, duration_s)
+            scale = min(im.width / width, im.height / height) / z
+            x = (im.width - width * scale) * px
+            y = (im.height - height * scale) * py
+            frame_img = im.transform(
+                (width, height),
+                Image.Transform.AFFINE,
+                (scale, 0, x, 0, scale, y),
+                Image.Resampling.BILINEAR,
+            )
+            proc.stdin.write(frame_img.tobytes())
+        proc.stdin.close()
+        stderr = proc.stderr.read().decode('utf-8', errors='replace')
+        proc.stderr.close()
+        if proc.wait() != 0:
+            raise RuntimeError(f'FFmpeg motion clip failed: {stderr}')
+    except BaseException:
+        proc.kill()
+        proc.wait()
+        raise
+
+
+def render_mp4(
+    project: Project,
+    media_root: str | Path,
+    output: str | Path,
+    *,
+    ffmpeg: str | None = None,
+    burn_subtitles: bool = False,
+    crf: int = 23,
+    width: int | None = None,
+    height: int | None = None,
+    export_srt_files: bool | None = None,
+    motion: bool = False,
+) -> dict:
     project.validate()
     root = Path(media_root).resolve(strict=True)
     if not root.is_dir():
@@ -82,13 +154,34 @@ def render_mp4(project: Project, media_root: str | Path, output: str | Path, *, 
 
     sources = [source(media[c.media_id].path) for c in video]
     audio_paths = [source(media[c.media_id].path) for c in audio]
+
+    tempdir = None
+    if motion or burn_subtitles:
+        tempdir = tempfile.TemporaryDirectory(prefix='story-studio-render-')
+
     command = [ffmpeg, '-hide_banner', '-loglevel', 'error', '-nostdin', '-n']
-    for clip, path in zip(video, sources):
-        command += ['-loop', '1', '-framerate', str(project.fps), '-t', f'{clip.duration_ms / 1000:.3f}', '-i', str(path)]
+
+    if motion:
+        motion_clips = []
+        for i, (clip, path) in enumerate(zip(video, sources)):
+            frames = int(round(clip.duration_ms * project.fps / 1000))
+            shot = {'id': clip.id, 'duration_s': clip.duration_ms / 1000}
+            resolve_shot_motion(shot, index=i, total_shots=len(video), preset_mode=True)
+            clip_dest = Path(tempdir.name) / f'motion_v{i}.mp4'
+            render_motion_clip(path, clip_dest, width, height, project.fps, frames, shot, ffmpeg, crf)
+            motion_clips.append(clip_dest)
+            command += ['-i', str(clip_dest)]
+        filters = ''.join(f'[{i}:v]setsar=1,format=yuv420p[v{i}];' for i in range(len(video)))
+        filters += ''.join(f'[v{i}]' for i in range(len(video))) + f'concat=n={len(video)}:v=1:a=0[vout]'
+    else:
+        for clip, path in zip(video, sources):
+            command += ['-loop', '1', '-framerate', str(project.fps), '-t', f'{clip.duration_ms / 1000:.3f}', '-i', str(path)]
+        filters = ''.join(f'[{i}:v]scale={width}:{height}:force_original_aspect_ratio=decrease,pad={width}:{height}:(ow-iw)/2:(oh-ih)/2,setsar=1,format=yuv420p[v{i}];' for i in range(len(video)))
+        filters += ''.join(f'[v{i}]' for i in range(len(video))) + f'concat=n={len(video)}:v=1:a=0[vout]'
+
     for path in audio_paths:
         command += ['-i', str(path)]
-    filters = ''.join(f'[{i}:v]scale={width}:{height}:force_original_aspect_ratio=decrease,pad={width}:{height}:(ow-iw)/2:(oh-ih)/2,setsar=1,format=yuv420p[v{i}];' for i in range(len(video)))
-    filters += ''.join(f'[v{i}]' for i in range(len(video))) + f'concat=n={len(video)}:v=1:a=0[vout]'
+
     if audio:
         # Trim each source, align to the timeline, then mix at unity gain.
         for i, clip in enumerate(audio):
@@ -99,27 +192,24 @@ def render_mp4(project: Project, media_root: str | Path, output: str | Path, *, 
         filters += ';' + ''.join(f'[a{i}]' for i in range(len(audio))) + (
             f'amix=inputs={len(audio)}:duration=longest:normalize=0,atrim=duration={cursor/1000:.3f}[aout]'
             if len(audio)>1 else 'anull[aout]')
+
     command += ['-filter_complex', filters, '-map', '[vout]']
     if audio:
         command += ['-map', '[aout]', '-c:a', 'aac', '-b:a', '128k']
     else:
         command += ['-an']
-    # Burn-in uses a temporary UTF-8 SRT and the FFmpeg subtitles filter.
-    # Filter arguments are intentionally built from a fixed temporary basename,
-    # not from arbitrary user-provided paths (Windows drive letters are special).
-    tempdir = None
+
     if burn_subtitles:
         if len([t for t in project.tracks if t.kind == 'subtitle']) != 1:
             raise ValueError('burn-in requires exactly one subtitle track')
-        tempdir = tempfile.TemporaryDirectory(prefix='story-studio-sub-')
         srt = Path(tempdir.name) / 'captions.srt'
         track = next(t for t in project.tracks if t.kind == 'subtitle')
         srt.write_text(export_srt(project, track_id=track.id), encoding='utf-8')
-        # Execute FFmpeg in tempdir, making the filter path platform-independent.
         style = ('FontName=Arial,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,'
                  'BorderStyle=1,Outline=1,Shadow=0,Alignment=2,MarginV=35')
-        command[command.index('-filter_complex') + 1] = filters + ';[vout]subtitles=captions.srt:force_style='' + style + ''[vburn]'
+        command[command.index('-filter_complex') + 1] = filters + ';[vout]subtitles=captions.srt:force_style=\'' + style + '\'[vburn]'
         command[command.index('-map') + 1] = '[vburn]'
+
     command += ['-c:v', 'libx264', '-crf', str(crf), '-pix_fmt', 'yuv420p', '-r', str(project.fps), '-movflags', '+faststart', '-t', f'{cursor/1000:.3f}', str(output)]
     subtitle_tracks = [t for t in project.tracks if t.kind == 'subtitle']
     subtitle_targets = ([output.with_name(f'{output.stem}.sub{i:02}.srt') for i in range(1, len(subtitle_tracks)+1)] if export_srt_files else [])
@@ -134,8 +224,20 @@ def render_mp4(project: Project, media_root: str | Path, output: str | Path, *, 
     finally:
         if tempdir:
             tempdir.cleanup()
+
     srt_paths = []
     for path, track in zip(subtitle_targets, subtitle_tracks):
         path.write_text(export_srt(project, track_id=track.id), encoding='utf-8-sig')
         srt_paths.append(str(path))
-    return {'video': str(output), 'subtitles': srt_paths, 'duration_ms': cursor, 'clips': len(video), 'burned_subtitles': burn_subtitles, 'crf': crf, 'width': width, 'height': height}
+
+    return {
+        'video': str(output),
+        'subtitles': srt_paths,
+        'duration_ms': cursor,
+        'clips': len(video),
+        'burned_subtitles': burn_subtitles,
+        'crf': crf,
+        'width': width,
+        'height': height,
+        'motion': motion,
+    }

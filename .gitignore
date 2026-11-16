@@ -50,6 +50,8 @@ examples/**/media/
 *.ppm
 
 # Archived installers and temporary outputs
+output/
+.pytest_temp/
 *.zip
 *.7z
 *.rar

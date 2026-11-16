@@ -2,6 +2,7 @@
 
 No remote API calls. Existing WAV files or an explicitly trusted local Silero
 model are supported. Uses the existing v3 timeline and FFmpeg renderer.
+Supports smooth Ken Burns motion and horizontal (16:9) or vertical (9:16) rendering.
 """
 from __future__ import annotations
 
@@ -72,11 +73,8 @@ def safe_image(source_dir: Path, filename: str) -> Path:
 def build(plan_path: Path, output_dir: Path, *, audio_dir: Path | None = None,
           images_dir: Path | None = None, silero_model: Path | None = None,
           voice: str | None = None, render: bool = True,
-          width: int = 1280, height: int = 720) -> tuple[Path, Path | None]:
-    if (audio_dir is None) == (silero_model is None):
-        raise ValueError("Choose exactly one: --audio-dir OR --silero-model")
-    if width % 2 or height % 2 or not 2 <= width <= 8192 or not 2 <= height <= 8192:
-        raise ValueError("Width and height must be even, between 2 and 8192")
+          width: int = 1280, height: int = 720,
+          motion: bool = False) -> tuple[Path, Path | None]:
     plan = read_plan(plan_path)
     locale = plan["locale"]
     if silero_model is not None and not voice:
@@ -128,7 +126,7 @@ def build(plan_path: Path, output_dir: Path, *, audio_dir: Path | None = None,
         if image_source:
             shutil.copyfile(image_source, image_target)
         else:
-            make_background(image_target, index - 1)
+            make_background(image_target, index - 1, width=width, height=height)
         project["media"].extend([
             dict(id=f"i{index}", kind="image", path=image_name),
             dict(id=f"a{index}", kind="audio", path=wav.name)])
@@ -149,7 +147,7 @@ def build(plan_path: Path, output_dir: Path, *, audio_dir: Path | None = None,
     if render:
         video = output_dir / "first-video.mp4"
         result = render_mp4(validated, media_dir, video, burn_subtitles=True,
-                            width=width, height=height, crf=22)
+                            width=width, height=height, crf=22, motion=motion)
         print("RENDER:", json.dumps(result, ensure_ascii=False))
     print("PROJECT:", project_file)
     if video:
@@ -167,14 +165,25 @@ def main(argv=None) -> int:
     p.add_argument("--voice", help="Silero speaker, e.g. ukr_igor")
     p.add_argument("--images-dir", type=Path)
     p.add_argument("--no-render", action="store_true")
-    p.add_argument("--width", type=int, default=1280)
-    p.add_argument("--height", type=int, default=720)
+    p.add_argument("--motion", action="store_true", help="Enable smooth Ken Burns camera motion")
+    p.add_argument("--vertical", action="store_true", help="Render vertical video 9:16 (720x1280) for Shorts/Reels/TikTok")
+    p.add_argument("--width", type=int, default=None)
+    p.add_argument("--height", type=int, default=None)
     args = p.parse_args(argv)
+
+    # Resolution defaults based on orientation
+    if args.vertical:
+        width = args.width if args.width is not None else 720
+        height = args.height if args.height is not None else 1280
+    else:
+        width = args.width if args.width is not None else 1280
+        height = args.height if args.height is not None else 720
+
     try:
         build(args.plan, args.output_dir, audio_dir=args.audio_dir,
               images_dir=args.images_dir, silero_model=args.silero_model,
               voice=args.voice, render=not args.no_render,
-              width=args.width, height=args.height)
+              width=width, height=height, motion=args.motion)
     except (ValueError, OSError, RuntimeError) as exc:
         print("ERROR:", exc, file=sys.stderr)
         return 2
