@@ -6,6 +6,7 @@ import json
 import os
 from pathlib import Path
 import sys
+import stat
 from tempfile import TemporaryDirectory
 
 if __package__ in (None, ""):
@@ -274,10 +275,62 @@ def write_json(path, value):
         stream.write(data)
 
 
+def _output_path(output, *, create_parents=False):
+    """Check each component before looking up its children."""
+    output = output.absolute()
+    if ".." in output.parts or output == output.parent:
+        raise ValueError("OUTPUT_PATH_UNSAFE")
+    if os.name == "nt":
+        import ctypes
+        from ctypes import wintypes
+
+        if (len(output.drive) != 2 or output.drive[1] != ":" or
+                not output.drive[0].isascii() or not output.drive[0].isalpha() or
+                any(":" in part or part.endswith((" ", ".")) or Path(part).is_reserved()
+                    for part in output.parts[1:])):
+            raise ValueError("OUTPUT_PATH_UNSAFE")
+        attributes = ctypes.WinDLL("kernel32", use_last_error=True).GetFileAttributesW
+        attributes.argtypes = (wintypes.LPCWSTR,)
+        attributes.restype = wintypes.DWORD
+
+    for component in (*reversed(output.parents), output):
+        if os.name == "nt":
+            # Windows lstat may follow reparse points other than name surrogates.
+            flags = attributes(str(component))
+            if flags == 0xFFFFFFFF:
+                error = ctypes.get_last_error()
+                if error not in (2, 3):
+                    raise ctypes.WinError(error)
+                flags = None
+            if flags is not None and flags & stat.FILE_ATTRIBUTE_REPARSE_POINT:
+                raise ValueError("OUTPUT_PATH_UNSAFE")
+            exists = flags is not None
+            directory = exists and bool(flags & stat.FILE_ATTRIBUTE_DIRECTORY)
+        else:
+            try:
+                mode = component.lstat().st_mode
+            except FileNotFoundError:
+                mode = None
+            exists = mode is not None
+            directory = exists and stat.S_ISDIR(mode)
+
+        if component == output:
+            if exists:
+                raise FileExistsError("OUTPUT_EXISTS")
+        elif exists:
+            if not directory:
+                raise ValueError("OUTPUT_PATH_UNSAFE")
+        elif create_parents:
+            # An intervening creator must cause failure, including a junction.
+            component.mkdir()
+        else:
+            break
+    return output
+
+
 def run(source, output):
     """Write a fresh private preview directory; never reuse earlier artifacts."""
-    if output.exists() or output.is_symlink():
-        raise FileExistsError("OUTPUT_EXISTS")
+    output = _output_path(output)
     raw = None
     invalid_json = False
     try:
@@ -299,10 +352,11 @@ def run(source, output):
             message=dict(ru=a, uk=b), next_action=dict(ru=c, uk=d))]
     if raw is not None and len(raw) <= 2_000_000:
         status["source_sha256"] = sha256(raw).hexdigest()
-    output = output.absolute()
-    output.parent.mkdir(parents=True, exist_ok=True)
+    _output_path(output, create_parents=True)
+    _output_path(output)
     with TemporaryDirectory(prefix=".editor-preview-", dir=output.parent) as temp:
         stage = Path(temp) / "preview"
+        _output_path(stage)
         stage.mkdir(mode=0o700)
         for filename, value in files.items():
             path = stage / filename
@@ -310,8 +364,7 @@ def run(source, output):
             if filename.startswith("plan-"):
                 read_plan(path)
         write_json(stage / "preview-status.json", status)
-        if output.exists() or output.is_symlink():
-            raise FileExistsError("OUTPUT_EXISTS")
+        _output_path(output)
         stage.rename(output)
     return status
 

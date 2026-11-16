@@ -3,7 +3,9 @@ from contextlib import ExitStack, redirect_stdout, redirect_stderr
 from copy import deepcopy
 from io import StringIO
 import json
+import os
 from pathlib import Path
+import subprocess
 from tempfile import TemporaryDirectory
 import unittest
 from unittest.mock import patch
@@ -191,7 +193,7 @@ class EditorPreview(unittest.TestCase):
 
     def test_write_read_plan_private_files_and_no_reuse(self):
         with TemporaryDirectory() as tmp:
-            root = Path(tmp); source = root / 'input.json'; source.write_text(json.dumps(full(), ensure_ascii=False), encoding='utf-8')
+            root = Path(tmp).resolve(); source = root / 'input.json'; source.write_text(json.dumps(full(), ensure_ascii=False), encoding='utf-8')
             out = root / 'preview'; status = cli.run(source, out)
             self.assertEqual(status, json.loads((out / 'preview-status.json').read_text(encoding='utf-8')))
             for locale in cli.LOCALES:
@@ -209,7 +211,7 @@ class EditorPreview(unittest.TestCase):
         cases = [b'{"schema_version":1,"schema_version":2}', b'\xff', b'{"x":NaN}', b'{"x":1.2}',
                  b'{"x":"\\ud800"}', b'[' * 70 + b'0' + b']' * 70, b' ' * 2_000_001]
         with TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            root = Path(tmp).resolve()
             for i, raw in enumerate(cases):
                 with self.subTest(i=i):
                     source = root / 'input'; source.write_bytes(raw); out = root / str(i)
@@ -229,7 +231,7 @@ class EditorPreview(unittest.TestCase):
             self.assertNotIn('/PRIVATE', json.dumps(status))
             self.assertNotIn('evaluation.json', files)
         with TemporaryDirectory() as tmp:
-            root = Path(tmp); source = root / 'input'; source.write_text(json.dumps(full()), encoding='utf-8')
+            root = Path(tmp).resolve(); source = root / 'input'; source.write_text(json.dumps(full()), encoding='utf-8')
             with patch.object(cli, 'read_plan', side_effect=ValueError('PRIVATE')):
                 with self.assertRaises(ValueError): cli.run(source, root / 'out')
             self.assertFalse((root / 'out').exists())
@@ -237,12 +239,90 @@ class EditorPreview(unittest.TestCase):
 
     def test_cli_no_paths_or_source_fragments_in_console(self):
         with TemporaryDirectory() as tmp:
-            root = Path(tmp); output = StringIO(); errors = StringIO()
+            root = Path(tmp).resolve(); output = StringIO(); errors = StringIO()
             with redirect_stdout(output), redirect_stderr(errors):
                 result = cli.main([str(root / 'PRIVATE_MISSING'), '--output-dir', str(root / 'out')])
             self.assertEqual(result, 2)
             self.assertEqual(errors.getvalue(), 'EDITOR_PREVIEW_IO_FAILED\n')
             self.assertNotIn('PRIVATE', output.getvalue() + errors.getvalue())
+
+
+class PreviewOutputPaths(unittest.TestCase):
+    def setUp(self):
+        tmp = TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.root = Path(tmp.name).resolve()
+        self.source = ROOT / 'examples/editor_input_incomplete.json'
+
+    def assert_refuses_redirect(self, link, target):
+        for suffix in (Path('.'), Path('preview'), Path('missing/deeper/preview')):
+            with self.subTest(suffix=suffix):
+                stdout, stderr = StringIO(), StringIO()
+                with redirect_stdout(stdout), redirect_stderr(stderr):
+                    rc = cli.main([str(self.source), '--output-dir', str(link / suffix)])
+                self.assertEqual(rc, 2)
+                self.assertEqual(stdout.getvalue(), '')
+                self.assertEqual(stderr.getvalue(), 'EDITOR_PREVIEW_IO_FAILED\n')
+                self.assertEqual(list(target.iterdir()), [])
+
+    def test_native_directory_symlink(self):
+        target = self.root / 'target'
+        target.mkdir()
+        link = self.root / 'link'
+        try:
+            link.symlink_to(target, target_is_directory=True)
+        except OSError as exc:
+            if os.name == 'nt' and exc.winerror == 1314:
+                self.skipTest('Windows directory symlink privilege unavailable')
+            raise
+        self.assert_refuses_redirect(link, target)
+
+    @unittest.skipUnless(os.name == 'nt', 'Windows junction requires NTFS')
+    def test_native_directory_junction(self):
+        target = self.root / 'target'
+        target.mkdir()
+        link = self.root / 'junction'
+        self.make_junction(link, target)
+        self.assert_refuses_redirect(link, target)
+
+    def make_junction(self, link, target):
+        result = subprocess.run(
+            ['cmd.exe', '/d', '/c', 'mklink', '/J', str(link), str(target)],
+            capture_output=True, check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_new_nested_relative_output(self):
+        previous = Path.cwd()
+        os.chdir(self.root)
+        try:
+            output = Path('missing/deeper/preview')
+            status = cli.run(ROOT / 'examples/editor_input_example.json', output)
+            self.assertEqual(status['production_readiness']['state'], 'NOT_ASSESSED')
+            self.assertEqual({p.name for p in output.iterdir()}, {
+                'preview-status.json', 'evaluation.json', 'private-card-ru.json',
+                'private-card-uk.json', 'plan-ru.json', 'plan-uk.json',
+            })
+        finally:
+            os.chdir(previous)
+
+    def test_redirect_appearing_during_preview(self):
+        target = self.root / 'target'
+        target.mkdir()
+        link = self.root / 'parent'
+        original = cli.preview
+
+        def introduce_link(data):
+            if os.name == 'nt':
+                self.make_junction(link, target)
+            else:
+                link.symlink_to(target, target_is_directory=True)
+            return original(data)
+
+        with patch.object(cli, 'preview', side_effect=introduce_link):
+            with self.assertRaisesRegex(ValueError, 'OUTPUT_PATH_UNSAFE'):
+                cli.run(self.source, link / 'preview')
+        self.assertEqual(list(target.iterdir()), [])
 
 
 if __name__ == '__main__':

@@ -247,3 +247,15 @@
   and the external evidence logs. Local compatibility matrix; remote CI NOT_RUN.
 - Local commit and review archive only. No push/PR/merge/tag/release/main changes.
   STOP for independent review; SI-PRODUCT-02.3 not started.
+
+## 2026-11-16 — SI-PRODUCT-02.2.2a Windows export containment
+
+- Rejected Windows reparse points throughout the Preview output path and added
+  native junction and directory symlink regressions.
+- Replayed V07 on the exact base and fix. Exit changed from 0 to 2, and the
+  junction target went from two generated files to zero.
+- Windows Preview + D1 passed. The full suites reproduced the existing Silero
+  path test failure. Results and race limits are in
+  `docs/tasks/SI_PRODUCT_02_2_2A_V07_FIX_RESULT.md`.
+- READY_FOR_INDEPENDENT_REVIEW. The implementation uses path checks and relies
+  on a user-controlled directory chain.
