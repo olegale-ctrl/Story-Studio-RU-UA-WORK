@@ -230,3 +230,20 @@
 
 - Carried the owner decision from `42ce93f34c0507bc61078d5a78f61c2f9d64866e` onto the accepted Projection V1 baseline `da1d3dd2ad6a55943e88503f5231f4c34a1e4e5f`. See Linux CI run 43735785327 for 01.1c.
 - Updated developer documentation, scoped ignore and shell line endings, and the existing Ubuntu CI matrix. Added the 02.2 integration map. TTS evaluation remains deferred.
+
+
+## 2026-11-16 — SI-PRODUCT-02.2.2 Editor Preview
+
+- Exact base `6ecc263ff4eefd5d6c419c36f8ad215540a1e6a4`; feature
+  `feat/si-product-02-2-2-editor-preview`. Added a local PREVIEW_ONLY editor JSON
+  adapter, real evaluator/Projection cards, independent exact RU/UK draft plans,
+  safe bilingual diagnostics and NOT_ASSESSED production state with no permissions.
+- Added two explicit synthetic/incomplete input examples and 16 new tests.
+  No fabricated SI inputs, translations, production project, render/TTS/network
+  calls or D1 permit use in the new adapter. Existing evaluator/Projection/SI/1,
+  Storage, A14, D1 and media code remain unchanged.
+- Actual Python 3.10.22 / 3.13.5 full unittest and pytest, new+D1 target tests,
+  syntax and diff results are recorded in `docs/tasks/SI_PRODUCT_02_2_2_RESULT.md`
+  and the external evidence logs. Local compatibility matrix; remote CI NOT_RUN.
+- Local commit and review archive only. No push/PR/merge/tag/release/main changes.
+  STOP for independent review; SI-PRODUCT-02.3 not started.
