@@ -3,6 +3,7 @@ import argparse
 from datetime import datetime, timezone
 from hashlib import sha256
 import json
+from math import ceil
 import os
 from pathlib import Path
 import re
@@ -16,6 +17,10 @@ from experimental_mvp.captions import CueError, calculated, render_srt, validate
 VOICES = {"ru": "ru-RU-SvetlanaNeural", "uk": "uk-UA-PolinaNeural"}
 ROOT = Path(os.environ.get("STORY_MVP_HOME") or (Path(os.environ.get("LOCALAPPDATA", str(Path.home()))) / "StoryStudioMVP")).resolve()
 DEMOS = Path(__file__).with_name("demos")
+IMAGE_TYPES = {".png", ".jpg", ".jpeg", ".webp", ".bmp"}
+AUDIO_TYPES = {".wav", ".mp3"}
+VISUAL_MODES = {"photo", "camera", "video"}
+CAMERA_PRESETS = {"push_in", "pull_out", "pan"}
 
 
 def synthesize(*args, **kwargs):
@@ -283,26 +288,68 @@ def render_preview(project, index, workspace, audio):
     return folder / "preview.mp4", approximate
 
 
+def visual_input(scene):
+    mode = scene.get("visual_mode", "photo")
+    if mode not in VISUAL_MODES:
+        raise ValueError("Выберите фото, движение камеры или видео MP4.")
+    if mode == "video":
+        return "video", scene.get("video"), {".mp4"}
+    if mode == "camera" and scene.get("camera_preset", "push_in") not in CAMERA_PRESETS:
+        raise ValueError("Выберите наезд, отъезд или панораму.")
+    return "image", scene.get("image"), IMAGE_TYPES
+
+
 def render_scene(scene, index, length, folder, log, ffmpeg):
+    try:
+        return render_visual(scene, index, length, folder, log, ffmpeg)
+    except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:
+        raise ValueError(
+            f"Сцена {index}: не удалось подготовить видеоряд. Замените файл или выберите фото. {exc}"
+        ) from exc
+
+
+def render_visual(scene, index, length, folder, log, ffmpeg):
     colors = ["0x17365a", "0x275148", "0x603d44", "0x39466b"]
-    image = scene.get("image")
-    if image:
-        source = Path(image).expanduser().resolve(strict=True)
-        if source.suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp", ".bmp"}:
-            raise ValueError("Используйте PNG, JPEG, WebP или BMP.")
+    mode = scene.get("visual_mode", "photo")
+    field, value, allowed = visual_input(scene)
+    if mode != "photo" and not value:
+        raise ValueError("Укажите MP4." if field == "video" else "Укажите изображение.")
+    if value:
+        source = Path(value).expanduser().resolve(strict=True)
+        if source.suffix.lower() not in allowed:
+            raise ValueError(f"Неподдерживаемый формат: {source.suffix}")
+    scale = "scale=1920:1080:force_original_aspect_ratio=decrease:force_divisible_by=2"
+    pad = "pad=1920:1080:(ow-iw)/2:(oh-ih)/2"
+    fit = f"{scale}:reset_sar=1,{pad}"
+    if mode == "video":
+        args = ["-i", str(source)]
+        filters = (f"{fit},setpts=PTS-STARTPTS,tpad=stop_mode=clone:stop_duration={length},"
+                   "fps=30,format=yuv420p")
+    elif mode == "camera":
+        frames = ceil(length * 30)
+        progress = f"on/{max(1, frames - 1)}"
+        zoom, x = {
+            "push_in": (f"1+0.16*{progress}", "iw/2-iw/zoom/2"),
+            "pull_out": (f"1.16-0.16*{progress}", "iw/2-iw/zoom/2"),
+            "pan": ("1.16", f"(iw-iw/zoom)*{progress}"),
+        }[scene.get("camera_preset", "push_in")]
+        args = ["-i", str(source)]
+        filters = (f"{fit},scale=3840:2160,zoompan=z='{zoom}':x='{x}':y='ih/2-ih/zoom/2':"
+                   f"d={frames}:s=1920x1080:fps=30,setsar=1,format=yuv420p")
+    elif value:
         local = folder / f"image{index:03}{source.suffix.lower()}"
         shutil.copyfile(source, local)
-        image_args = ["-loop", "1", "-framerate", "30", "-i", local.name]
+        args = ["-loop", "1", "-framerate", "30", "-i", local.name]
     else:
         color = colors[(index - 1) % len(colors)]
-        image_args = ["-f", "lavfi", "-i", f"color=c={color}:s=1920x1080:r=30"]
-    fade = min(0.22, length / 3)
-    filters = ("scale=1920:1080:force_original_aspect_ratio=decrease:"
-               "force_divisible_by=2,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,"
-               f"setsar=1,format=yuv420p,fade=t=in:d={fade},"
-               f"fade=t=out:st={length-fade}:d={fade}")
+        args = ["-f", "lavfi", "-i", f"color=c={color}:s=1920x1080:r=30"]
+    if mode == "photo":
+        fade = min(0.22, length / 3)
+        filters = (f"{scale},{pad},setsar=1,format=yuv420p,fade=t=in:d={fade},"
+                   f"fade=t=out:st={length-fade}:d={fade}")
     clip = f"scene{index:03}.mp4"
-    command([ffmpeg, "-nostdin", "-v", "error", *image_args, "-an", "-vf", filters,
+    command([ffmpeg, "-nostdin", "-v", "error", "-xerror", "-abort_on", "empty_output", *args,
+             "-map", "0:v:0", "-an", "-vf", filters,
              "-t", str(length), "-c:v", "libx264", "-preset", "ultrafast",
              "-threads", "4", clip], folder, log)
     return clip
@@ -316,21 +363,22 @@ def check_project(project, workspace):
         return [(None, "scenes", "Добавьте хотя бы одну сцену.", False)]
     ffmpeg, ffprobe = executable("ffmpeg"), executable("ffprobe")
 
-    def inspect(value, field, scene_id):
+    def inspect(value, field, scene_id, allowed=AUDIO_TYPES):
         try:
             path = Path(value).expanduser().resolve(strict=True)
-            audio = field != "image"
-            allowed = {".wav", ".mp3"} if audio else {".png", ".jpg", ".jpeg", ".webp", ".bmp"}
+            audio = field not in {"image", "video"}
             if not path.is_file() or path.suffix.lower() not in allowed:
                 raise ValueError("Неподдерживаемый файл.")
             length = duration(path, ffprobe) if audio else None
             limit = ["-t", "1"] if audio else ["-frames:v", "1"]
-            subprocess.run([ffmpeg, "-nostdin", "-v", "error", "-xerror", "-i", str(path),
+            subprocess.run([ffmpeg, "-nostdin", "-v", "error", "-xerror", "-abort_on", "empty_output",
+                            "-i", str(path),
                             "-map", "0:a:0" if audio else "0:v:0", *limit, "-f", "null", "-"],
                            capture_output=True, check=True, timeout=25)
             return length
         except (ValueError, OSError, KeyError, subprocess.SubprocessError) as exc:
-            issues.append((scene_id, field, f"Файл отсутствует или не читается: {value} ({exc})", False))
+            remedy = " Замените файл или выберите фото." if field in {"image", "video"} else ""
+            issues.append((scene_id, field, f"Файл отсутствует или не читается: {value} ({exc}).{remedy}", False))
             return None
 
     whole = project.get("audio")
@@ -347,8 +395,15 @@ def check_project(project, workspace):
         key = scene["id"]
         if not scene["text"].strip():
             issues.append((key, "text", "Пустой текст сцены.", False))
-        if scene.get("image"):
-            inspect(scene["image"], "image", key)
+        try:
+            field, value, allowed = visual_input(scene)
+        except ValueError as exc:
+            issues.append((key, "visual_mode", str(exc), False))
+        else:
+            if value:
+                inspect(value, field, key, allowed)
+            elif scene.get("visual_mode", "photo") != "photo":
+                issues.append((key, field, "Укажите файл или выберите режим «Фото».", False))
         if whole:
             length = spans[index - 1][1] - spans[index - 1][0] if spans else None
         elif scene.get("audio"):
@@ -380,7 +435,8 @@ def preview_signature(project):
     selection = {k: project.get(k) for k in ("locale", "voice", "audio", "scenes", "captions_by_scene")}
     sources = [project.get("audio")]
     for scene in project["scenes"]:
-        sources.extend((scene.get("image"), None if project.get("audio") else scene.get("audio")))
+        visual = scene.get("video" if scene.get("visual_mode") == "video" else "image")
+        sources.extend((visual, None if project.get("audio") else scene.get("audio")))
     stamps = []
     for value in filter(None, sources):
         try:

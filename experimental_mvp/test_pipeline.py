@@ -1,4 +1,5 @@
 import tempfile
+import json
 import unittest
 from pathlib import Path
 import shutil
@@ -8,12 +9,80 @@ from unittest.mock import patch
 import wave
 
 from experimental_mvp.pipeline import (DEMOS, BuildStopped, brief, build, check_project,
-                                       executable, export_history, intervals, load,
-                                       preview_signature, save, subtitles)
+                                       audio_key, executable, export_history, intervals, load,
+                                       preview_signature, render_scene, save, subtitles)
 from experimental_mvp.captions import CueError, render_srt
 
 
 class PipelineTests(unittest.TestCase):
+    def test_legacy_project_defaults_to_photo_and_keeps_scene_identity(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            path = root / "legacy.json"
+            path.write_text('{"locale":"ru","scenes":[{"text":"Legacy"}]}', encoding="utf-8")
+            project = load(path)
+            scene = project["scenes"][0]
+            self.assertNotIn("visual_mode", scene)
+            with patch("experimental_mvp.pipeline.command") as run:
+                render_scene(scene, 1, 1, root, root / "log", "ffmpeg")
+            self.assertIn("color=c=0x17365a:s=1920x1080:r=30", run.call_args.args[0])
+            cache = audio_key(project, scene, root)
+            old_preview = preview_signature(project)
+            scene.update(visual_mode="camera", camera_preset="pan")
+            save(path, project)
+            reopened = load(path)
+            self.assertEqual(reopened["scenes"][0], scene)
+            self.assertEqual(audio_key(reopened, reopened["scenes"][0], root), cache)
+            self.assertNotEqual(preview_signature(reopened), old_preview)
+
+    def test_video_drops_audio_and_holds_last_frame_or_trims(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            ffmpeg, ffprobe = executable("ffmpeg"), executable("ffprobe")
+            source = root / "клип.mp4"
+            subprocess.run([ffmpeg, "-v", "error", "-f", "lavfi", "-i", "testsrc2=s=320x240:r=20",
+                            "-f", "lavfi", "-i", "sine=frequency=900", "-t", "0.4", "-c:v", "libx264",
+                            "-c:a", "aac", str(source)], check=True, timeout=30)
+            scene = {"visual_mode": "video", "video": str(source), "image": "unused.png"}
+            for index, seconds in enumerate((1, 0.2), 1):
+                with self.subTest(seconds=seconds):
+                    clip = render_scene(scene, index, seconds, root, root / "log", ffmpeg)
+                    probe = subprocess.check_output([ffprobe, "-v", "error", "-show_streams",
+                                                     "-of", "json", str(root / clip)], timeout=30)
+                    [video] = json.loads(probe)["streams"]
+                    self.assertEqual((video["codec_type"], video["width"], video["height"],
+                                      video["pix_fmt"], video["r_frame_rate"]),
+                                     ("video", 1920, 1080, "yuv420p", "30/1"))
+                    self.assertAlmostEqual(float(video["duration"]), seconds, places=3)
+                    if seconds == 1:
+                        raw = subprocess.check_output(
+                            [ffmpeg, "-v", "error", "-i", str(root / clip), "-vf", "scale=96:54",
+                             "-pix_fmt", "gray", "-f", "rawvideo", "-"], timeout=30)
+                        size = 96 * 54
+                        frames = [raw[i:i + size] for i in range(0, len(raw), size)]
+                        self.assertEqual(len(frames), 30)
+                        reference = frames[-1]
+                        for frame in frames[-12:]:
+                            # Lossy H.264 may reconstruct identical source frames slightly differently.
+                            self.assertLess(sum(abs(a - b) for a, b in zip(frame, reference)) / size, 0.5)
+                        self.assertGreater(sum(abs(a - b) for a, b in zip(frames[0], reference)) / size, 1)
+
+    def test_missing_and_corrupt_video_identify_scene_for_repair(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            source = root / "broken.mp4"
+            project = {"locale": "ru", "scenes": [
+                {"text": "Сцена", "visual_mode": "video", "video": str(source)}]}
+            save(root / "project.json", project)
+            for exists in (False, True):
+                if exists:
+                    source.write_bytes(b"broken")
+                issues = check_project(project, root)
+                field, message = [(field, msg) for _, field, msg, pending in issues if not pending][0]
+                self.assertEqual(field, "video")
+                self.assertIn("выберите фото", message)
+                self.assertEqual(issues[0][0], project["scenes"][0]["id"])
+
     def test_offline_cli_starts_without_edge_adapter(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

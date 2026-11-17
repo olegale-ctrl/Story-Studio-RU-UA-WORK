@@ -38,6 +38,13 @@ def launch():
     selected = None
     scene_audio_path = tk.StringVar()
     scene_voice = tk.StringVar()
+    visual_labels = {"photo": "Фото", "camera": "Движение камеры", "video": "Локальный MP4"}
+    camera_labels = {"push_in": "Наезд", "pull_out": "Отъезд", "pan": "Панорама"}
+    visual_keys = {label: key for key, label in visual_labels.items()}
+    camera_keys = {label: key for key, label in camera_labels.items()}
+    visual_mode = tk.StringVar()
+    camera_preset = tk.StringVar()
+    scene_video_path = tk.StringVar()
     scene_fields = {}
     buttons = []
 
@@ -109,6 +116,9 @@ def launch():
                 scene[key] = widget.get("1.0", "end-1c").strip()
             scene["audio"] = scene_audio_path.get().strip()
             scene["voice"] = scene_voice.get()
+            scene["visual_mode"] = visual_keys[visual_mode.get()]
+            scene["camera_preset"] = camera_keys[camera_preset.get()]
+            scene["video"] = scene_video_path.get().strip()
 
     def show_scene(scene):
         nonlocal selected
@@ -118,6 +128,10 @@ def launch():
             widget.insert("1.0", scene.get(key, "") if scene else "")
         scene_audio_path.set(scene.get("audio", "") if scene else "")
         scene_voice.set(scene.get("voice", "") if scene else "")
+        data = scene or {}
+        visual_mode.set(visual_labels.get(data.get("visual_mode"), visual_labels["photo"]))
+        camera_preset.set(camera_labels.get(data.get("camera_preset"), camera_labels["push_in"]))
+        scene_video_path.set(data.get("video", ""))
 
     def refresh(keep=None):
         tree.delete(*tree.get_children())
@@ -226,6 +240,14 @@ def launch():
             widget.delete("1.0", "end")
             widget.insert("1.0", name)
             approved.set(False)
+
+    def video():
+        if current() is not None:
+            name = filedialog.askopenfilename(filetypes=[("Видео MP4", "*.mp4")])
+            if name:
+                scene_video_path.set(name)
+                visual_mode.set(visual_labels["video"])
+                approved.set(False)
 
     def selected_audio():
         if current() is None:
@@ -391,6 +413,11 @@ def launch():
                 notebook.select(scenes_tab)
             if field == "image":
                 image()
+            elif field == "video":
+                video()
+                visual_mode_box.focus_set()
+            elif field == "visual_mode":
+                visual_mode_box.focus_set()
             elif field == "scene_audio":
                 choose(scene_audio_path, [("Аудио", "*.mp3 *.wav")])
             elif field == "audio":
@@ -591,6 +618,17 @@ def launch():
             button(row, "Выбрать", image)
     row = ttk.Frame(scenes_tab)
     row.pack(fill="x", pady=4)
+    ttk.Label(row, text="Видеоряд", width=24).pack(side="left")
+    visual_mode_box = ttk.Combobox(row, textvariable=visual_mode, values=tuple(visual_keys),
+                                   state="readonly", width=18)
+    visual_mode_box.pack(side="left")
+    preset_box = ttk.Combobox(row, textvariable=camera_preset, values=tuple(camera_keys),
+                              state="readonly", width=12)
+    preset_box.pack(side="left", padx=5)
+    ttk.Entry(row, textvariable=scene_video_path).pack(side="left", expand=True, fill="x")
+    button(row, "Выбрать MP4", video)
+    row = ttk.Frame(scenes_tab)
+    row.pack(fill="x", pady=4)
     ttk.Label(row, text="Аудиофайл сцены", width=24).pack(side="left")
     ttk.Entry(row, textvariable=scene_audio_path).pack(side="left", fill="x", expand=True)
     button(row, "MP3/WAV", lambda: choose(scene_audio_path, [("Аудио", "*.mp3 *.wav")]))
@@ -628,6 +666,10 @@ def launch():
                                (current() or {}).get("audio", "") else None)
     scene_voice.trace_add("write", lambda *_: approved.set(False) if scene_voice.get() !=
                           (current() or {}).get("voice", "") else None)
+    for box in (visual_mode_box, preset_box):
+        box.bind("<<ComboboxSelected>>", lambda _: approved.set(False))
+    scene_video_path.trace_add("write", lambda *_: approved.set(False) if scene_video_path.get() !=
+                               (current() or {}).get("video", "") else None)
     root.protocol("WM_DELETE_WINDOW", close)
     root.after(100, poll)
     root.after(500, update_preview_status)
