@@ -38,7 +38,16 @@ K-V001, K-V002, K-V003, K-V004, K-V005, K-V006, K-V007, K-V008, K-V009, K-V010, 
 
 | Decision | Question | Prerequisites | Status |
 |---|---|---|---|
-System.String[]
+| K-D01 | Comparison domain | none | PROPOSED — NOT APPROVED |
+| K-D02 | Decoding and BOM | K-D01 | PROPOSED — NOT APPROVED |
+| K-D03 | Normalization and case | K-D01 | PROPOSED — NOT APPROVED |
+| K-D04 | Admissibility | K-D02, K-D03 | PROPOSED — NOT APPROVED |
+| K-D05 | Profile principle | K-D01 | PROPOSED — NOT APPROVED |
+| K-D06 | Request association | none | PROPOSED — NOT APPROVED |
+| K-D07 | Occurrence association | K-D06 | PROPOSED — NOT APPROVED |
+| K-D08 | Family and role isolation | K-D07 | PROPOSED — NOT APPROVED |
+| K-D09 | Authority and currentness | K-D06 | PROPOSED — NOT APPROVED |
+| K-D10 | Missing or ambiguous context | K-D07, K-D08, K-D09 | PROPOSED — NOT APPROVED |
 
 The listed topological order is acyclic.
 
@@ -46,17 +55,61 @@ The listed topological order is acyclic.
 
 | Decision | Prerequisites |
 |---|---|
-System.Object[]
+| H-D01 | none |
+| H-D02 | H-D01 |
+| H-D03 | H-D02 |
+| H-D04 | H-D02 |
+| H-D05 | H-D02 |
+| H-D06 | H-D02 |
+| H-D07 | H-D03, H-D04, H-D06 |
+| H-D08 | H-D03, H-D04, H-D05, H-D06 |
+| H-D09 | H-D06, H-D07 |
+| H-D10 | H-D02 |
+| I-Q01 | none |
+| I-Q02 | I-Q01 |
+| I-Q03 | I-Q02 |
+| I-Q04 | I-Q01 |
+| I-Q05 | I-Q01 |
+| I-Q06 | I-Q01, I-Q02 |
+| I-Q07 | I-Q05, I-Q06 |
+| I-Q08 | I-Q05, I-Q06 |
+| I-Q09 | I-Q06 |
+| I-Q10 | I-Q02, I-Q04, I-Q06 |
 
 ## Unchanged register
 
 | OP | Status |
 |---|---|
-System.Object[]
+| OP-07 | OPEN — NOT APPROVED |
+| OP-08 | OPEN — NOT APPROVED |
+| OP-09 | OPEN — NOT APPROVED |
+| OP-10 | OPEN — NOT APPROVED |
+| OP-11 | OPEN — NOT APPROVED |
+| OP-12 | OPEN — NOT APPROVED |
+| OP-13 | OPEN — NOT APPROVED |
+| OP-14 | OPEN — NOT APPROVED |
+| OP-15 | OPEN — NOT APPROVED |
+| OP-16 | OPEN — NOT APPROVED |
+| OP-17 | OPEN — NOT APPROVED |
+| OP-18 | OPEN — NOT APPROVED |
+| OP-19 | OPEN — NOT APPROVED |
+| OP-20 | OPEN — NOT APPROVED |
+| OP-21 | OPEN — NOT APPROVED |
+| OP-22 | OPEN — NOT APPROVED |
+| OP-23 | OPEN — NOT APPROVED |
+| OP-24 | OPEN — NOT APPROVED |
+| OP-25 | OPEN — NOT APPROVED |
+| OP-28 | OPEN — NOT APPROVED |
 
 | CM | Status |
 |---|---|
-System.Object[]
+| CM-006 | PARTIAL |
+| CM-022 | PARTIAL |
+| CM-070 | PARTIAL |
+| CM-071 | PARTIAL |
+| CM-072 | PARTIAL |
+| CM-073 | PARTIAL |
+| CM-095 | PARTIAL |
 
 ## Source blob registry
 
@@ -134,5 +187,21 @@ Every source row is pinned at the exact K base above.
 All K-V cases, executable conformance, cryptography, runtime, provider/OS qualification, replay, TOCTOU, resource, admission, migration and production tests are NOT_RUN. Equality domain, representation, admissibility, exact association, authority, currentness and missing-context handling remain open.
 
 RECOMMENDATION — NOT APPROVED. After independent review, answer K-D01 separately from K-D06. Defer a concrete domain pending paired representation evidence. Consider a documentary study of supplied request association.
+
+## G3.2.0k-FIX-1 Root Cause and Impact Assessment
+
+| Field | Assessment |
+|---|---|
+| Observed defect | Line 41 rendered `System.String[]`. Lines 49, 55 and 59 rendered `System.Object[]`, each as a standalone line where table rows belonged. |
+| Reproduction | The recorded PowerShell command put the K rows, inherited graph rows and filtered OP/CM rows into a comma-built outer array, then joined the outer array with newlines. With synthetic string and object arrays the same construction reproduced both exact type names. Concatenating line collections before joining emitted individual rows. |
+| Root cause | GENERATION_DEFECT. The comma-built array preserved those four row collections as nested elements. The final shallow join stringified each nested collection. The source registry was appended as individual rows through array concatenation and did not share this defect. No transformation of the underlying member values was required to reproduce it. |
+| Source-data integrity | Verified. Ten K decisions and their statuses recover from the committed K dossier. Both ten-node inherited graphs match the original H and I dossiers, with I's external H-D01/A prerequisite note preserved in its original source. The pinned J packet supplies 20 OPEN OP and seven PARTIAL CM in their original order. The complete source registry matches Git object identities and order. |
+| Contract impact | None proven. Four rendered tables were unavailable for review. No source contradiction, changed approval, prerequisite or normative conclusion was found. |
+| Validation gap | VALIDATION_GAP. The original checks examined source headings, decision counts, graph inputs and Git metadata. They did not parse the emitted packet or compare its table rows with source. The handoff counts and graph results described those inputs and did not establish that the packet rendered them. |
+| Useful findings | USEFUL_IMPROVEMENT. Compare parsed output with source rows as well as checking graph and Git integrity. A shared generator or validator would require separate owner authorization. |
+| Recurrence risk | A repository-wide search for the two exact literals in Markdown at the original published tip found only these four locations. That targeted check does not establish general historical table correctness. Any generator that joins nested values could repeat the failure. |
+| Corrective action | Restored ten K-D, twenty H-D/I-Q, twenty OP and seven CM rows, including original ordering and explicit status where applicable. Kept the complete source registry and six sibling blob pins. |
+| Preventive recommendation | For a separately approved future workflow, emit one row per string and validate the rendered packet's table structure, exact row counts, source correspondence and graph references before publication. |
+
 
 **STOP. Await independent audit and separate owner approval. No merge, G3.2.1 or production permissions.**
