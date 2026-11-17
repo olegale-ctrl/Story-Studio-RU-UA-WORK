@@ -1,7 +1,8 @@
 """Sprint 26: make a real RU/UA narrated MP4 from a scene plan and local audio.
 
 No remote API calls. Existing WAV files or an explicitly trusted local Silero
-model are supported. Uses the existing v3 timeline and FFmpeg renderer.
+model are supported; both routes go through the typed VoiceProvider contract
+(core.providers, ADR-0009). Uses the existing v3 timeline and FFmpeg renderer.
 """
 from __future__ import annotations
 
@@ -17,6 +18,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from core.project_schema import Project
+from core.providers import PreRecordedAudioProvider, ensure_voice_provider
 from core.mp4_render import render_mp4
 
 FRAME_MS = 40  # 25 fps
@@ -40,10 +42,16 @@ def read_plan(path: Path) -> dict:
 
 
 def wav_ms(path: Path) -> int:
-    with wave.open(str(path), "rb") as f:
-        if f.getnframes() == 0 or f.getframerate() <= 0:
-            raise ValueError("Empty WAV: " + str(path))
-        return (f.getnframes() * 1000 + f.getframerate() - 1) // f.getframerate()
+    try:
+        with wave.open(str(path), "rb") as f:
+            if f.getnframes() == 0 or f.getframerate() <= 0:
+                raise ValueError("Empty WAV: " + str(path))
+            return (f.getnframes() * 1000 + f.getframerate() - 1) // f.getframerate()
+    except (wave.Error, EOFError) as exc:
+        # wave.Error/EOFError are neither ValueError nor OSError, so they would
+        # escape the CLI error handler and show a raw traceback (exit code 1
+        # instead of the clean "ERROR:" message with exit code 2).
+        raise ValueError("Invalid WAV: " + str(path)) from exc
 
 
 def make_background(path: Path, index: int, width: int = 640, height: int = 360) -> None:
@@ -96,12 +104,26 @@ def build(plan_path: Path, output_dir: Path, *, audio_dir: Path | None = None,
             raise ValueError("--images-dir required when scene specifies image")
         images.append(safe_image(images_dir, filename) if filename else None)
 
-    provider = None
     if silero_model is not None:
         from integrations.silero_local import SileroLocalProvider
         provider = SileroLocalProvider(silero_model, trusted=True)
+    else:
+        provider = PreRecordedAudioProvider(audio_dir)
+    ensure_voice_provider(provider)
 
     output_dir.mkdir(parents=True)
+    try:
+        return _build_into(plan, output_dir, locale, images, audio_dir, provider,
+                           voice, render, width, height)
+    except BaseException:
+        # Do not leave a half-written output tree behind: a retry with the same
+        # --output-dir would otherwise fail with "Output directory already exists".
+        shutil.rmtree(output_dir, ignore_errors=True)
+        raise
+
+
+def _build_into(plan, output_dir, locale, images, audio_dir, provider, voice,
+                render, width, height):
     media_dir = output_dir / "media"
     media_dir.mkdir()
     project = dict(title=plan.get("title") or "Story Studio RU/UA — first video",
@@ -114,13 +136,11 @@ def build(plan_path: Path, output_dir: Path, *, audio_dir: Path | None = None,
     cursor = 0
     for index, (scene, image_source) in enumerate(zip(plan["scenes"], images), 1):
         wav = media_dir / f"voice{index}.wav"
-        if audio_dir is not None:
-            source = audio_dir / f"voice{index}.wav"
-            if not source.is_file():
-                raise FileNotFoundError("Missing audio: " + str(source))
-            shutil.copyfile(source, wav)
-        else:
-            provider.synthesize(text=scene["text"], locale=locale, voice=voice, output=wav)
+        # One narration route for both sources: the prerecorded provider copies
+        # the user's WAV, the Silero provider synthesizes. Missing files fail
+        # loudly either way (ADR-0009: no silent voice substitution).
+        speaker = f"voice{index}.wav" if audio_dir is not None else voice
+        provider.synthesize(text=scene["text"], locale=locale, voice=speaker, output=wav)
         audio_ms = wav_ms(wav)
         scene_ms = ((audio_ms + 400 + FRAME_MS - 1) // FRAME_MS) * FRAME_MS
         image_name = f"frame{index}" + (image_source.suffix.lower() if image_source else ".ppm")
@@ -128,7 +148,12 @@ def build(plan_path: Path, output_dir: Path, *, audio_dir: Path | None = None,
         if image_source:
             shutil.copyfile(image_source, image_target)
         else:
-            make_background(image_target, index - 1)
+            # Half the target size: the gradient fills the frame aspect (a
+            # vertical 1080x1920 run gets 540x960, not a pillarboxed 16:9
+            # 640x360) while keeping the uncompressed PPM small. FFmpeg scales
+            # it up to the exact output size during rendering.
+            make_background(image_target, index - 1,
+                            width=max(2, width // 2), height=max(2, height // 2))
         project["media"].extend([
             dict(id=f"i{index}", kind="image", path=image_name),
             dict(id=f"a{index}", kind="audio", path=wav.name)])

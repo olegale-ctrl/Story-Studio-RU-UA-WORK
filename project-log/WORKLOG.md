@@ -169,3 +169,90 @@
 - Validation: GitHub Actions CI pending at time of authoring; actual Windows MP4 not tested yet. User validation required before further video quality work.
 - Files: `scripts/first_video.py`, `examples/first_video_plan_ru.json`, `examples/first_video_plan_uk.json`, `tests/test_sprint26.py`, `docs/SPRINT26_FIRST_VIDEO_WINDOWS.md`, four project logs.
 - Next: verify CI; user runs real Silero end-to-end on Windows and checks exported video.
+
+
+## 2026-11-16 — Sprint 26 Windows validation (PASSED) + two test fixes
+- Ran the Sprint 26 first-video pipeline end to end on the user Windows machine:
+  Python 3.10.11 in `.venv` (torch 2.14.1+cpu), FFmpeg in `tools/ffmpeg/bin`.
+- Ukrainian `ukr_igor`: 14.52 s MP4, h264 1280x720 @25 fps + AAC 48 kHz stereo,
+  speech confirmed by `volumedetect` (mean -27.5 dB, max -8.5 dB).
+  Russian `ru_igor`: 13.28 s MP4, same profile.
+  `--audio-dir` + `--images-dir` with user WAVs and JPGs: valid MP4, 4:3 sources
+  pillarboxed correctly into the 16:9 frame.
+- Subtitle timing verified by FFmpeg frame sampling and bright-pixel counting in
+  the bottom band: three distinct captions, each constant inside its planned
+  window (0-4725, 5160-10198, 10600-14088 ms) and 0 pixels after 14088 ms.
+  Visual check: white text, thin outline, `Shadow=0`, no shadow, no filename overlay.
+- `python -m core.cli check` on both generated `project.json`: OK, schema v3.
+- **Defect fixed:** `scripts/first_video.py` left a half-written output tree
+  behind when the run failed at runtime (e.g. unsupported voice), so a retry with
+  the same `--output-dir` failed with "Output directory already exists".
+  The build now runs inside `try/except BaseException` and removes the output
+  tree with `shutil.rmtree(..., ignore_errors=True)` before re-raising.
+  Regression test `test_failed_run_leaves_no_output_directory` added.
+- **Test fixes:** `tests/test_sprint20.py` rewritten from pytest to plain
+  `unittest.TestCase` (pytest still collects it) so the whole suite runs under
+  `python -m unittest discover -s tests -v` without pytest installed;
+  `tests/test_sprint23_2.py::test_env_override` was platform-dependent and used
+  `assertIn` on a list (element equality, not substring) — now compares the
+  `--model-path` argument with normalised separators.
+- Tests: **116 OK** in `.venv` (Python 3.10.11) and in system Python 3.15.0b1.
+  `pytest -q` was not run locally (pytest absent from the venv); CI installs it.
+- Files changed: `scripts/first_video.py`, `tests/test_sprint26.py`,
+  `tests/test_sprint20.py`, `tests/test_sprint23_2.py`,
+  `SPRINT26_WINDOWS_VALIDATION_REPORT.md`, `WINDOWS_VALIDATION.md`,
+  `PLAN.md`, `IMPLEMENTATION_PLAN.md`, `project-log/NEXT_SESSION.md`,
+  `project-log/WORKLOG.md`, `project-log/ROADMAP_STATUS.md`.
+- Licensing unchanged: no Chinese corpora, no upstream code, no FFmpeg binary
+  and no model weights were added or redistributed. Upstream CC BY-NC-SA rights
+  remain unresolved for commercial use.
+- Not covered: audible intelligibility/pronunciation (needs a human ear),
+  vertical 1080x1920 output, word-level subtitle alignment.
+- Next: user listens to `output/first-video-uk/first-video.mp4` in VLC; then
+  start the licensing audit (roadmap stage 1).
+
+
+## 2026-11-16 — Test suite expansion: 116 → 346 tests
+- Extended the automated suite from **116 to 346 tests** (349 under pytest, plus
+  19 subtests). All pass on Windows in `.venv` (Python 3.10.11) and with pytest.
+- Measured coverage with `coverage` (dev-only, installed into `.venv`, not tracked).
+  `core/` is now at 91–100 % per module.
+
+| Module | Before | After |
+|---|---|---|
+| `scripts/first_video.py` | 69 % | **96 %** |
+| `scripts/voice_settings.py` | 0 % | **97 %** |
+| `core/hardware_profile.py` | 54 % | **98 %** |
+| `scripts/studio_runtime.py` | 0 % | **87 %** |
+| `core/project_schema.py` | 92 % | **96 %** |
+| `scripts/silero_studio_preview.py` | 0 % | **96 %** |
+| `scripts/inspect_voice_demo.py` | 63 % | **77 %** |
+| `scripts/edge_voice_demo.py` | 46 % | **59 %** |
+
+- New test files: `tests/test_studio_runtime.py` (29), `tests/test_voice_settings.py` (32),
+  `tests/test_first_video_pipeline.py` (28), `tests/test_voice_studio_helpers.py` (18),
+  `tests/test_hardware_and_silero.py` (27), `tests/test_core_validation.py` (44),
+  `tests/test_silero_studio_preview.py` (6), `tests/test_edge_voice_demo.py` (26),
+  `tests/test_narrated_demo_pipeline.py` (20).
+- **Code fix:** `Project.to_dict()` returned tuples (raw `asdict` output) while
+  `Project.from_dict()` requires JSON arrays, so `from_dict(to_dict())` raised
+  `ValueError: scenes must be a list`. `to_dict()` now converts the five
+  collection fields to lists, making the public serialisation API symmetric and
+  matching the on-disk format. `to_json()`/`from_json()` were never affected.
+  Regression test `test_to_dict_roundtrip_is_lossless` added.
+- **CI extended:** `.github/workflows/tests.yml` gained a `windows-2022` job that
+  runs the same suite on Windows 11 across Python 3.10 and 3.13, because the
+  Linux job cannot see Windows path, encoding and subprocess differences.
+- **Windows pytest caveat documented** in `pytest.ini`: pytest derives its
+  temporary directory from `%TEMP%`, which contains the profile name. With a
+  non-ASCII profile name the `tmp_path` fixture fails with `PermissionError`.
+  The CI job passes `--basetemp` with an ASCII path; the stdlib runner is
+  unaffected.
+- Licensing unchanged: no Chinese corpora, no upstream code, no FFmpeg binary
+  and no model weights were added or redistributed.
+- Remaining uncovered code is either the Tkinter GUI in `scripts/voice_studio.py`
+  (30 %, not headless-testable), the real-model path of
+  `integrations/silero_local.py` (56 %), or the isolated upstream Chinese
+  modules in `scripts/` (0 %, deliberately not covered until the licensing
+  audit of stage 1 decides their fate).
+- Next: the licensing audit (roadmap stage 1) remains the open blocker.

@@ -1,6 +1,8 @@
 """Sprint 26 pipeline tests: stdlib, no Silero model or network required."""
 import json
+import sys
 import tempfile
+import types
 import unittest
 import wave
 from pathlib import Path
@@ -68,3 +70,49 @@ class Sprint26Tests(unittest.TestCase):
             plan.write_text('{"locale":"ru","scenes":[{"text":"Тест"}]}', encoding="utf-8")
             with self.assertRaises(FileNotFoundError):
                 build(plan, root / "out", audio_dir=audio, render=False)
+
+    def test_failed_run_leaves_no_output_directory(self):
+        """A runtime failure must not leave a half-written output tree behind.
+
+        Otherwise a retry with the same --output-dir fails with
+        "Output directory already exists" and the user has to clean up manually.
+        """
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            audio = root / "audio"
+            audio.mkdir()
+            tone(audio / "voice1.wav")
+            plan = root / "plan.json"
+            plan.write_text(json.dumps({"locale": "uk", "scenes": [{"text": "Привіт"}]}),
+                            encoding="utf-8")
+            out = root / "out"
+
+            class FailingProvider:
+                # Must satisfy the ADR-0009 VoiceProvider contract now that
+                # first_video validates every adapter before use.
+                provider_id = "silero_local"
+
+                def voices(self, locale):
+                    return ()
+
+                def synthesize(self, **kwargs):
+                    raise RuntimeError("synthesis failed")
+
+            original = sys.modules.get("integrations.silero_local")
+            module = types.ModuleType("integrations.silero_local")
+
+            def factory(model_path, *, trusted=False):
+                return FailingProvider()
+
+            module.SileroLocalProvider = factory
+            sys.modules["integrations.silero_local"] = module
+            try:
+                with self.assertRaises(RuntimeError):
+                    build(plan, out, silero_model=Path("fake.pt"), voice="ukr_igor",
+                          render=False)
+            finally:
+                if original is not None:
+                    sys.modules["integrations.silero_local"] = original
+                else:
+                    sys.modules.pop("integrations.silero_local", None)
+            self.assertFalse(out.exists(), "failed run must not leave an output directory")

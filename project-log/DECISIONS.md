@@ -1,5 +1,11 @@
 # DECISIONS
 
+## ADR-0009 — License and Compliance as part of the architecture
+Дата: 2026-11-17
+Статус: реализовано (Sprint 28)
+Решение: контракт `VoiceProvider` в `core/providers.py` с лицензионными метаданными в реестре `SPECS`; коммерческое использование гейтится в коде (`require_commercial_use`, ни один голосовой провайдер не APPROVED); SBOM генерируется из проверенных CSV-реестров (`scripts/generate_sbom.py` → `LICENSES/SBOM.cdx.json`) и проверяется побайтно. Полный текст: `docs/ADR-0009-LICENSE-AND-COMPLIANCE.md`.
+Последствия: новый провайдер = адаптер + запись в SPECS + строка реестра + тесты; ручная правка SBOM — дефект.
+
 ## ADR-0001 — Windows-first, RU/UA, Community + Professional
 Дата: 2026-10-30
 Статус: принято пользователем

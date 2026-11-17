@@ -194,7 +194,12 @@ class Project:
 
     def to_dict(self) -> dict:
         self.validate()
-        return asdict(self)
+        payload = asdict(self)
+        # asdict keeps tuples, but the on-disk format uses JSON arrays.
+        # Returning lists keeps to_dict()/from_dict() symmetric.
+        for field in ('scenes', 'tracks', 'subtitles', 'media', 'clips'):
+            payload[field] = list(payload[field])
+        return payload
 
     def to_json(self) -> str:
         return json.dumps(self.to_dict(), ensure_ascii=False, indent=2)

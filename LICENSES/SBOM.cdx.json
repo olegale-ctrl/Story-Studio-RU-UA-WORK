@@ -1,0 +1,955 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:fccafb80-cd76-59a5-99d8-e11cd903d027",
+  "version": 1,
+  "metadata": {
+    "component": {
+      "type": "application",
+      "name": "Story-Studio-RU-UA",
+      "description": "Windows-first RU/UA video story studio",
+      "properties": [
+        {
+          "name": "storystudio:registers",
+          "value": "DEPENDENCY_LICENSES, AI_MODELS_AND_SERVICES, ASSET_REGISTER"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "type": "file",
+      "bom-ref": "storystudio:asset/assets/sponsor/alipay.png",
+      "name": "assets/sponsor/alipay.png",
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "ASSET_REGISTER"
+        },
+        {
+          "name": "storystudio:type",
+          "value": "media"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "user-provided"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "USER CLEARANCE REQUIRED"
+        },
+        {
+          "name": "storystudio:redistribution",
+          "value": "USER CLEARANCE REQUIRED"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "REVIEW REQUIRED"
+        },
+        {
+          "name": "storystudio:notes",
+          "value": "User donation QR code; not for project redistribution"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "bom-ref": "storystudio:asset/assets/sponsor/wechat-pay.png",
+      "name": "assets/sponsor/wechat-pay.png",
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "ASSET_REGISTER"
+        },
+        {
+          "name": "storystudio:type",
+          "value": "media"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "user-provided"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "USER CLEARANCE REQUIRED"
+        },
+        {
+          "name": "storystudio:redistribution",
+          "value": "USER CLEARANCE REQUIRED"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "REVIEW REQUIRED"
+        },
+        {
+          "name": "storystudio:notes",
+          "value": "User donation QR code; not for project redistribution"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/aiohappyeyeballs@2.7.1",
+      "name": "aiohappyeyeballs",
+      "version": "2.7.1",
+      "purl": "pkg:pypi/aiohappyeyeballs@2.7.1",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/aiohttp@3.14.5",
+      "name": "aiohttp",
+      "version": "3.14.5",
+      "purl": "pkg:pypi/aiohttp@3.14.5",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/aiosignal@1.4.0",
+      "name": "aiosignal",
+      "version": "1.4.0",
+      "purl": "pkg:pypi/aiosignal@1.4.0",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/async-timeout@5.0.1",
+      "name": "async-timeout",
+      "version": "5.0.1",
+      "purl": "pkg:pypi/async-timeout@5.0.1",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/attrs@26.1.0",
+      "name": "attrs",
+      "version": "26.1.0",
+      "purl": "pkg:pypi/attrs@26.1.0",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/certifi@2026.10.23",
+      "name": "certifi",
+      "version": "2026.10.23",
+      "purl": "pkg:pypi/certifi@2026.10.23",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/edge-tts@7.3.1",
+      "name": "edge-tts",
+      "version": "7.3.1",
+      "purl": "pkg:pypi/edge-tts@7.3.1",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/filelock@4.1.0",
+      "name": "filelock",
+      "version": "4.1.0",
+      "purl": "pkg:pypi/filelock@4.1.0",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/frozenlist@1.8.0",
+      "name": "frozenlist",
+      "version": "1.8.0",
+      "purl": "pkg:pypi/frozenlist@1.8.0",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/fsspec@2026.9.0",
+      "name": "fsspec",
+      "version": "2026.9.0",
+      "purl": "pkg:pypi/fsspec@2026.9.0",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/idna@3.20",
+      "name": "idna",
+      "version": "3.20",
+      "purl": "pkg:pypi/idna@3.20",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/multidict@7.1.0",
+      "name": "multidict",
+      "version": "7.1.0",
+      "purl": "pkg:pypi/multidict@7.1.0",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/networkx@3.4.2",
+      "name": "networkx",
+      "version": "3.4.2",
+      "purl": "pkg:pypi/networkx@3.4.2",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/numpy@2.2.6",
+      "name": "numpy",
+      "version": "2.2.6",
+      "purl": "pkg:pypi/numpy@2.2.6",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/omegaconf@2.4.0",
+      "name": "omegaconf",
+      "version": "2.4.0",
+      "purl": "pkg:pypi/omegaconf@2.4.0",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/packaging@26.3",
+      "name": "packaging",
+      "version": "26.3",
+      "purl": "pkg:pypi/packaging@26.3",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/pillow@12.3.0",
+      "name": "pillow",
+      "version": "12.3.0",
+      "purl": "pkg:pypi/pillow@12.3.0",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/pyyaml@6.0.3",
+      "name": "PyYAML",
+      "version": "6.0.3",
+      "purl": "pkg:pypi/pyyaml@6.0.3",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/sympy@1.14.0",
+      "name": "sympy",
+      "version": "1.14.0",
+      "purl": "pkg:pypi/sympy@1.14.0",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/tabulate@0.10.0",
+      "name": "tabulate",
+      "version": "0.10.0",
+      "purl": "pkg:pypi/tabulate@0.10.0",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/tomli@2.5.0",
+      "name": "tomli",
+      "version": "2.5.0",
+      "purl": "pkg:pypi/tomli@2.5.0",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/torch@2.14.1%2Bcpu",
+      "name": "torch",
+      "version": "2.14.1+cpu",
+      "purl": "pkg:pypi/torch@2.14.1%2Bcpu",
+      "licenses": [
+        {
+          "license": {
+            "name": "BSD-3-Clause"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/typing_extensions@4.16.0",
+      "name": "typing_extensions",
+      "version": "4.16.0",
+      "purl": "pkg:pypi/typing_extensions@4.16.0",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/yarl@1.25.1",
+      "name": "yarl",
+      "version": "1.25.1",
+      "purl": "pkg:pypi/yarl@1.25.1",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT"
+          }
+        }
+      ],
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "DEPENDENCY_LICENSES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pip"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "OK"
+        }
+      ]
+    },
+    {
+      "type": "machine-learning-model",
+      "bom-ref": "storystudio:model/microsoft-edge-tts-(edge-tts)",
+      "name": "Microsoft Edge TTS (edge-tts)",
+      "version": "7.3.1",
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "AI_MODELS_AND_SERVICES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "microsoft"
+        },
+        {
+          "name": "storystudio:terms-url",
+          "value": "https://learn.microsoft.com/en-us/answers/questions/6007729/commercial-use-of-microsoft-edge-text-to-speech-vi"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "COMMERCIAL BLOCKED (no public commercial grant)"
+        },
+        {
+          "name": "storystudio:data-handling",
+          "value": "Cloud API; text sent to Microsoft endpoint"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "COMMERCIAL BLOCKED - experimental personal prototype only"
+        }
+      ]
+    },
+    {
+      "type": "machine-learning-model",
+      "bom-ref": "storystudio:model/pytorch",
+      "name": "PyTorch",
+      "version": "2.14.1+cpu",
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "AI_MODELS_AND_SERVICES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "pytorch"
+        },
+        {
+          "name": "storystudio:terms-url",
+          "value": "https://pytorch.org/get-started/locally/"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "Yes (BSD-3)"
+        },
+        {
+          "name": "storystudio:data-handling",
+          "value": "Local inference"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "APPROVED - runtime dependency"
+        }
+      ]
+    },
+    {
+      "type": "machine-learning-model",
+      "bom-ref": "storystudio:model/silero-v5_cis_base_nostress",
+      "name": "Silero v5_cis_base_nostress",
+      "version": "0.5",
+      "properties": [
+        {
+          "name": "storystudio:register",
+          "value": "AI_MODELS_AND_SERVICES"
+        },
+        {
+          "name": "storystudio:source",
+          "value": "silero-models"
+        },
+        {
+          "name": "storystudio:terms-url",
+          "value": "https://github.com/snakers4/silero-models"
+        },
+        {
+          "name": "storystudio:commercial-use",
+          "value": "CC BY-NC-SA 4.0 (noncommercial)"
+        },
+        {
+          "name": "storystudio:data-handling",
+          "value": "Local inference only; no data leaves machine"
+        },
+        {
+          "name": "storystudio:status",
+          "value": "REVIEW REQUIRED - user must load model weights separately with trusted=True"
+        }
+      ]
+    }
+  ]
+}

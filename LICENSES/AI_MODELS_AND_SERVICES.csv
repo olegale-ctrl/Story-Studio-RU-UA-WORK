@@ -1,1 +1,4 @@
 provider_or_model,version,source,terms_url,commercial_use,data_handling,status
+Silero v5_cis_base_nostress,0.5,silero-models,https://github.com/snakers4/silero-models,CC BY-NC-SA 4.0 (noncommercial),Local inference only; no data leaves machine,REVIEW REQUIRED - user must load model weights separately with trusted=True
+Microsoft Edge TTS (edge-tts),7.3.1,microsoft,https://learn.microsoft.com/en-us/answers/questions/6007729/commercial-use-of-microsoft-edge-text-to-speech-vi,COMMERCIAL BLOCKED (no public commercial grant),Cloud API; text sent to Microsoft endpoint,COMMERCIAL BLOCKED - experimental personal prototype only
+PyTorch,2.14.1+cpu,pytorch,https://pytorch.org/get-started/locally/,Yes (BSD-3),Local inference,APPROVED - runtime dependency

@@ -1,3 +1,51 @@
+# Next session — after Sprint 28 Stage 2 Architecture (2026-11-17)
+
+**Stage 2 (Архитектура) COMPLETED.** Typed `VoiceProvider` contract + license
+registry + commercial gate in `core/providers.py` (ADR-0009); `first_video.py`
+routes both narration sources through the contract; deterministic CycloneDX
+SBOM generated from the Stage 1 registers with a `--check` drift gate
+(`python scripts/generate_sbom.py --check` must stay green). Tests: 374 pytest
++ 19 subtests OK, unittest 368 OK (`.venv`, Windows).
+
+**Next exact step: begin Stage 3 — RU/UA сценарии (этап 3).** Complete:
+- [ ] Define the example-library format for scene plans (original RU/UA texts only)
+- [ ] Add 3–5 verified original scene plans with legal images (own/CC0) per locale
+- [ ] Wire examples through the first-video pipeline; document each example's provenance in ASSET_REGISTER.csv
+- [ ] Keep provider adapters aligned with ADR-0009 (adapter + SPECS row + register row + tests)
+- [ ] Update ROADMAP_STATUS.md to mark Stage 3 progress
+
+**Open items carried over:**
+- Git repo status on the user machine (Stage 0 blocker) — confirm the local clone/remote sync
+- Clean Win10/11 install validation (Stage 7), GUI not covered by CI
+- Image-provider contract deferred until Stage 5 (Визуальная система)
+- No voice provider is APPROVED for commercial use — commercial gate stays closed
+
+---
+
+# Next session — after Sprint 26 Windows validation (2026-11-16)
+
+**Windows validation gate PASSED.** The Sprint 26 first-video pipeline was run end to end on Windows with local Silero for both locales, plus user-media (`--audio-dir` + `--images-dir`) runs. Full MP4s verified with `ffprobe` and `volumedetect`, test suite 116/116 OK in `.venv` (Python 3.10.11) and system Python 3.15. Two pre-existing test defects fixed.
+
+**Next exact step:** begin **Stage 1 — License Audit** (этап 1). Complete:
+- [ ] Populate DEPENDENCY_LICENSES.csv with all runtime Python packages (25 items verified)
+- [ ] Complete ASSET_REGISTER.csv with all media assets (local QR codes reviewed, upstream media BLOCKED/REPLACE)
+- [ ] Generate THIRD_PARTY_NOTICES.md with formal copyright notices per component
+- [ ] Document all licensing decisions in LICENSE_REVIEW_LOG.md
+- [ ] Verify Silero model SHA256 matches known good copy (already in code)
+- [ ] Confirm edge-tts COMMERCIAL BLOCKED status documented
+- [ ] Update ROADMAP_STATUS.md to mark Stage 1 (Лицензии) as COMPLETED
+- [ ] Prepare for Stage 2 (Архитектура) — typed provider interfaces, ADR-0009 (License and Compliance)
+
+**Still pending from Sprint 26:**
+- Audible intelligibility check by user (not part of MVP)
+- Word-level subtitle alignment (not in MVP scope)
+- Vertical 1080x1920 validated (already done: 1080×1920 render produced and OK)
+- `pytest -q` local run verification (already passed in CI with ASCII basetemp)
+
+**Next session:** Continue license audit documentation, then move to architecture contracts and ADR-0009.
+
+---
+
 # Next session — Sprint 26 first-video pipeline (2026-11-03)
 
 Windows Sprint 25.1 Silero Ukrainian preview verified by user: Preview ready, WAV 2.2 s, synthesis 11.2 s, RTF 5.17, playback reported working.
@@ -18,33 +66,6 @@ Repository: https://github.com/olegale-ctrl/Story-Studio-RU-UA-WORK
 - Do not upload, distribute, or commercialize Chinese corpora/media and current upstream CC BY-NC-SA 4.0 source without legal review. Historical local MIT license provenance differs from current upstream license.
 - Tests run on Linux Python 3.13: 106 passed, 0 failed. Windows GUI + actual Silero model were NOT tested in the CI/container environment. Save Windows test outcome in next worklog entry.
 
-
-# Next session — after Sprint 12
-1. Windows: unpack Sprint12.zip into project root with replacement; keep FFmpeg user-managed.
-2. Render demo with `--burn-subtitles --crf 22` to a NEW output name; verify thin outline and no shadow.
-3. Run `python -m unittest discover -s tests -v`; report actual result.
-4. Test real two-clip audio timeline and then move toward meaningful voiced demo.
-5. License gate: GPL-enabled Gyan FFmpeg build is not to be redistributed inside project ZIP; Chinese corpora/assets remain blocked.
-
-## Sprint 14 next actions
-1. Install Sprint14 overlay and check Windows SAPI voices (uk/ru).
-2. Generate local narrated demo and run render command from docs/SPRINT14_WINDOWS.md.
-3. Confirm speech is intelligible, subtitles synchronized, and final video plays.
-4. If language voice unavailable, investigate local TTS alternatives with model/license review before integrating.
-
-## Sprint 15 next actions
-1. Unpack Sprint15.zip after Sprint14. Run `scripts/run_narrated_demo.ps1 -ListVoices` and report voice names/languages.
-2. If uk/ru voice exists, run `-Locale uk` or `-Locale ru` and confirm speech, subtitle sync and MP4 playback.
-3. If none exists, compare license-cleared offline TTS engines before integrating any external models.
-
-## Sprint 16 next
-- User installs Sprint16.zip and runs `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_edge_demo.ps1 -Locale uk -Gender female`.
-- Confirm MP4 speech, captions and synchronization. Then test RU male and UK male.
-- Review provider terms; Edge TTS is an experimental consumer endpoint, not approved for commercial distribution.
-- Next sprint: provider abstraction, caching, voice previews, GUI and local TTS options.
-
-
-Sprint 16 hotfix: test ru female and ru male; failures should now give clean message and no empty cached MP3. Confirm full render on Windows.
 
 ## Sprint 17 follow-up
 Проверить мужской ru-RU-DmitryNeural после установки патча. Далее: каталог голосов, preview, надёжная синхронизация.
