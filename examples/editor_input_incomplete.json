@@ -1,0 +1,31 @@
+{
+  "schema_version": "EditorPreviewInputV1",
+  "purpose": "PREVIEW_ONLY",
+  "topic": {
+    "id": "editor-draft",
+    "text": "Почему исчезли древние цивилизации?",
+    "source_locale": "ru"
+  },
+  "audience": null,
+  "evaluation_inputs": null,
+  "scene_drafts": {
+    "ru": {
+      "scenes": [
+        {
+          "text": "Вопрос редактора, требующий исследования. Не подтверждённый исторический вывод."
+        },
+        {
+          "text": null
+        }
+      ]
+    }
+  },
+  "materials": [
+    {
+      "id": "unreviewed-material",
+      "description": "Материал ещё не предоставлен для проверки.",
+      "kind": "image",
+      "rights_status": "UNKNOWN"
+    }
+  ]
+}
