@@ -2,7 +2,8 @@
 
 | Компонент | Источник | Лицензия | Статус | Основание/следующий шаг |
 |---|---|---|---|---|
-| Корневой код Story Studio | https://github.com/konlu/story-studio | MIT, Copyright (c) 2026 konlu | PRELIMINARY | Сохранить notices, проверить охват и другие лицензии |
+| Историческая локальная копия Story Studio (точный состав требует аудита) | https://github.com/konlu/story-studio | MIT, Copyright (c) 2026 konlu (архивная редакция) | HISTORICAL / NOT RELEASE-CLEARED | Не переносить оценку архивной лицензии на pinned 2026-11-03 версию или чужие данные |
+| Pinned original Story Studio `87c2bbf...` от 2026-11-03 | https://github.com/konlu/story-studio/commit/87c2bbf7093d7817d28a0f2b32cf21bb857b7cc1 | CC BY-NC-SA 4.0 | NONCOMMERCIAL REFERENCE / COMMERCIAL BLOCKED | Нужна независимая проверка происхождения каждой части и прав на изменения, корпус и компоненты |
 | Китайские корпуса сценариев | Внутри исходного ZIP | Не подтверждена для каждого текста | BLOCKED — LICENSE REVIEW | Установить первоисточники и разрешения |
 | Изображения и референсы | Внутри исходного ZIP | Не подтверждена для каждого файла | BLOCKED — LICENSE REVIEW | Реестр и проверка происхождения |
 | Python/бинарные зависимости | Скрипты проекта | Не проверены | REVIEW REQUIRED | Извлечь manifests и версии |
@@ -38,3 +39,9 @@
 - Generated gradient PPM frames and RU/UA sample texts are new project material; user-provided local images remain user's responsibility to clear for distribution.
 - Local Silero weights and trusted PyTorch model execution remain subject to model provenance/terms; no model weights bundled. FFmpeg remains user-provided, not redistributed.
 - No new third-party Python runtime dependency in the scene/timeline/MP4 glue code.
+
+
+## 2026-11-04 — Codex review handoff (documentation only)
+- Изучены зафиксированные исходники, локальный `history_tool.py`, метаданные 57 исторических сюжетов, файлы Writing-DNA, видеомодуля и тесты. См. `docs/UPSTREAM_DEEP_AUDIT_2026-11-04.md`.
+- Chinese corpora и Writing-DNA: **REPLACE / BLOCKED** для RU/UA runtime и коммерческого релиза. Отчёт не переносит исходный контент и не меняет чьи-либо права.
+- Не выполнены внешние проверки ToS новых сервисов, лицензий весов и всех зависимостей. **Никаких APPROVED** на основании аудита не выдаётся.

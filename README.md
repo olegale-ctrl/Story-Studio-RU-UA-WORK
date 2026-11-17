@@ -64,3 +64,7 @@ The code and voice models have separate licenses. FFmpeg binaries, Silero weight
 ## Development approach
 
 GitHub stores the source of truth and each tested change; compact Sprint ZIPs update the Windows working installation. See `MASTER_PROMPT.md` and `project-log/NEXT_SESSION.md` for project goals and current state.
+
+## Codex onboarding / исходный аудит (2026-11-04)
+
+Подготовка к Codex — **только документация**, не новый Sprint и не изменение среды Windows. Читать: [`AGENTS.md`](AGENTS.md), [`project-log/CODEX_HANDOFF.md`](project-log/CODEX_HANDOFF.md), [`docs/CODEX_ONBOARDING.md`](docs/CODEX_ONBOARDING.md), [`docs/UPSTREAM_DEEP_AUDIT_2026-11-04.md`](docs/UPSTREAM_DEEP_AUDIT_2026-11-04.md) и [`MASTER_PROMPT.md`](MASTER_PROMPT.md). На первом этапе Codex только перепроверяет выводы и планирует модернизацию поиска историй, без изменения рабочего кода.

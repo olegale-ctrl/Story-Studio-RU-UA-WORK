@@ -1,3 +1,19 @@
+# Текущая передача контекста — подготовка Codex (2026-11-04)
+
+**Статус:** разработка Story Studio RU/UA по просьбе пользователя на паузе. Подготовлены документы для передачи исследования и будущей разработки Codex. Это **не Sprint 27 и не разрешение на изменение кода**.
+
+**Сначала читать:** `AGENTS.md` → `project-log/CODEX_HANDOFF.md` → `docs/UPSTREAM_DEEP_AUDIT_2026-11-04.md` → `docs/CODEX_ONBOARDING.md`; `MASTER_PROMPT.md` v1.2 — расширенная продуктовая политика.
+
+**Main:** Sprint 26, `scripts/first_video.py`; Windows Silero preview Sprint 25.1 подтверждён, полный Windows end-to-end Sprint 26 проверять по необходимости. **PR #5** содержит только экспериментальный CPU Lip Sync, не слит и не подтверждён. **Не создавай новый Sprint ZIP** для документационной подготовки.
+
+**Первое задание Codex:** read-only перепроверка китайского оригинала, приоритет — story discovery, оценка, Writing-DNA и фактическая точность, с конкретными `file:line` и опровержением слабых гипотез. Отдельно проверять потенциальные баги видео/субтитров тест-планами. Никаких installs, внешних платных запросов, слияния и изменений runtime до отдельного разрешения.
+
+**Лицензии:** pinned original `87c2bbf...` — CC BY-NC-SA 4.0, исторический MIT не покрывает автоматически текущую версию и чужой корпус.
+
+---
+
+## Исторические handoff-записи (ниже не являются текущими задачами)
+
 # Next session — Sprint 26 first-video pipeline (2026-11-03)
 
 Windows Sprint 25.1 Silero Ukrainian preview verified by user: Preview ready, WAV 2.2 s, synthesis 11.2 s, RTF 5.17, playback reported working.

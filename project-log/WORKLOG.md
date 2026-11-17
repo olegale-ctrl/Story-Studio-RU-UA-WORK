@@ -169,3 +169,33 @@
 - Validation: GitHub Actions CI pending at time of authoring; actual Windows MP4 not tested yet. User validation required before further video quality work.
 - Files: `scripts/first_video.py`, `examples/first_video_plan_ru.json`, `examples/first_video_plan_uk.json`, `tests/test_sprint26.py`, `docs/SPRINT26_FIRST_VIDEO_WINDOWS.md`, four project logs.
 - Next: verify CI; user runs real Silero end-to-end on Windows and checks exported video.
+
+
+## 2026-11-04 — Codex onboarding and Chinese upstream audit handoff (documentation only)
+- Пользователь согласовал переход подготовки документации к Codex и приоритет глубокого исследования Discovery / Editorial Ranking / Narrative DNA. **Код и локальные установленные версии на паузе**; это не Sprint 27.
+- Подготовлены `AGENTS.md`, `project-log/CODEX_HANDOFF.md`, `docs/CODEX_ONBOARDING.md`, `docs/UPSTREAM_DEEP_AUDIT_2026-11-04.md`; обновлён `MASTER_PROMPT.md` до v1.2 и ссылки/статусы в журналах.
+- Исходные данные аудита: pinned китайский commit `87c2bbf...`; локальный поиск в `history_tool.py`, 57 исторических записей, 296 новых биографических файлов, описательные Writing-DNA/hook rules; отдельно перечислены инженерные сильные стороны и не воспроизведённые риски. Источники и оговорки включены в отчёт.
+- Лицензия: оригинал pinned CC BY-NC-SA 4.0; старый MIT-архив исторический, права на внешние корпуса и лицензии моделей/зависимостей не закрыты. Никаких APPROVED выдано.
+- Тесты: **не запускались** для документационных изменений; GitHub link/content review после записи. Реальный Windows end-to-end, TTS платные API, Wav2Lip CPU inference и внешний Jianying export не запускались.
+- GitHub: отдельная ветка `docs/codex-handoff-audit-20261104`; приёмка через PR, без merge в `main`. Не готовить новых ZIP-накладок, пока пользователь не попросит.
+- Следующий шаг: пользователь проверяет документационный PR; после его принятия передать Codex read-only запрос из `docs/CODEX_ONBOARDING.md`. При новых находках обновлять audit с file/line и tests, но не менять runtime без отдельной задачи.
+
+
+## 2026-11-04 — Global Architecture Blueprint v0.1 (documentation-only)
+- Пользователь поручил детальное проектирование глобальной архитектуры Story Studio RU/UA параллельно read-only аудиту Codex; рабочий код не менять.
+- Проверены существующие файлы `core/project_schema.py`, `scripts/first_video.py`, `core/mp4_render.py`, `core/cli.py`, README, master prompt, Codex handoff и архитектурные/лицензионные ограничения.
+- Важный факт: schema v3 допускает `MediaAsset.kind='video'`, но текущий `core/mp4_render.py` принимает в видеодорожке только изображения; смешанный AI-video монтаж потребует отдельной реализации и тестов.
+- Создан `docs/GLOBAL_ARCHITECTURE_BLUEPRINT_V0_1.md`: modular monolith local-first, модули, контракты и versioned sidecar, gates, provenance, интеграция provider discovery, roadmap A0–A7, риски и три пользовательских решения.
+- Статус: **DRAFT**, архитектура не утверждена для реализации; лицензии и коммерческое использование остаются заблокированными до проверки; работа Codex не прерывалась.
+- Тесты не запускались: изменена только документация; Sprint 26 `main`, PR #5 и пользовательская Windows установка не затронуты.
+- Следующий шаг: согласовать жанр первого сквозного сценария, уровень автономности и формат видео; затем обновить blueprint, позднее сверить с результатами Codex.
+
+
+## 2026-11-04 — Universal editorial design (multi-genre) — docs only
+- Пользователь выбрал **универсальную систему для разных тематик**, поручил спроектировать редакционный конвейер, модель данных и пользовательский процесс; менять рабочий код не разрешал.
+- Повторно сверены `core/project_schema.py` v3, `scripts/first_video.py`, `examples/first_video_plan_uk.json`, предыдущий глобальный blueprint и проектные решения. Контракты ограничены существующим still-image/WAV Sprint 26: 1–20 сцен, ru/uk, простые имена PNG/JPG/PPM, длительность определяется WAV, рендерер не поддерживает произвольные AI MP4 клипы.
+- Добавлены проектные документы: `docs/architecture/EDITORIAL_PIPELINE_V0_1.md` (жанровые профили, этапы E0–E9, evidence/approval gates, explainable scoring), `EDITORIAL_DATA_CONTRACTS_V0_1.md` (sidecar-модель, связи, версии, пример, mapping v3), `EDITORIAL_USER_WORKFLOW_V0_1.md` (экраны, UX-сценарии, ошибки, права/затраты, приёмка).
+- `docs/GLOBAL_ARCHITECTURE_BLUEPRINT_V0_1.md` согласован с универсальным решением, ссылки на подробные документы; `project-log/DECISIONS.md` дополнен ADR.
+- Всё имеет статус **DRAFT / documentation only**, кроме согласованного продуктового выбора универсальной тематики. Никаких новых внешних провайдеров, зависимостей, API, скриптов, ZIP, платных запросов, публикаций или PR merge. `main` Sprint 26 и PR #5 не менялись.
+- Тесты не запускались: исходники не менялись. Ссылки и содержимое документов проверить чтением GitHub после записи.
+- Следующий шаг: согласовать правила автономности/первого видеоформата, разработать редакционный эталон с разными жанрами без фиктивных источников; после отчёта Codex сверить discovery/evidence/analytics контракты.
