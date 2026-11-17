@@ -35,6 +35,7 @@ models/
 *.gguf
 
 # Generated voice/video files and test media
+/output/
 examples/voice_previews/
 examples/demo_media/
 examples/**/media/

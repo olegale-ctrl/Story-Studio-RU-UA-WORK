@@ -1,0 +1,2 @@
+# Preserve shell shebangs in Windows checkouts.
+*.sh text eol=lf
