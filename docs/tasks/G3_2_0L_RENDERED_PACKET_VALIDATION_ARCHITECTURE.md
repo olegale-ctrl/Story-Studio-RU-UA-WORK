@@ -1,0 +1,17 @@
+# Rendered packet validation architecture
+
+A successful check of the input data cannot substitute for checking the final published artifact. The following stages are proposals. Each keeps expected observations, actual observations and a decision disposition separately. Failure blocks a completion claim at the affected boundary.
+
+| Stage | Inputs and outputs | Trust boundary and failure classification | Required evidence and access | Passing scope |
+|---|---|---|---|---|
+| V0 Scope and pinning | Owner scope, base, allowlist and source manifest produce review inputs | Mutable names and untrusted claims cross into a pinned review scope. IDENTITY_MISMATCH or UNAUTHORIZED_SCOPE_CHANGE | Owner record, exact refs and source IDs. Git and remote read where applicable | Pins review inputs only |
+| V1 Source extraction | Pinned documents yield keyed rows, statuses and edges with provenance | Source interpretation requires applicable authority. SOURCE_DATA_DEFECT or CONTRACT_AMBIGUITY | Exact complete source bytes and provenance per record. Offline after fetch | Establishes expected data, not emitted rows |
+| V2 Generation boundary | Expected records and assembly produce final Markdown bytes | Serialization can drop or stringify records. GENERATION_DEFECT | Emitted bytes and assembly trace. Offline | Emission is not validation |
+| V3 Structure | Parse emitted bytes into headings, tables, cells and row IDs | Markdown syntax and completeness. INCOMPLETE_RENDERING | Unique required headings/IDs, recognized separators, cell/row counts, placeholder checks outside quoted diagnostics. Offline | Syntax can pass with wrong content |
+| V4 Correspondence | Parsed rows compared with authoritative expected rows | Bind row and cell meaning to provenance. SOURCE_DATA_DEFECT or IDENTITY_MISMATCH where established | Missing/extra and per-cell comparison with ordering rules. Offline | Agreement is limited to selected sources |
+| V5 Semantics | Rendered and expected decisions, edges and approval boundaries yield consistency results | Graph and approval interpretation. CONTRACT_AMBIGUITY or UNAUTHORIZED_SCOPE_CHANGE | Explicit statuses, closed dependency references, cycle evidence, preserved edges. Offline | Documentary graph evidence only |
+| V6 Git integrity | Base and candidate Git objects yield exact path/mode/blob and parent/tree comparison | Working-tree bytes differ from committed bytes unless verified. IDENTITY_MISMATCH | Recursive tree comparison, commit metadata, verified blob bytes. Local Git | Committed identity only |
+| V7 Published artifact | Fetched exact remote candidate and final blob yield renewed V3–V6 evidence | Remote branch is mutable. STALE_ARTIFACT, EVIDENCE_GAP or IDENTITY_MISMATCH | Fetch trace, observed head and committed packet identity. Remote read plus offline review | Observed ref at verification time only |
+| V8 Handoff | Recorded observations yield a reviewer handoff and STOP | Self-reported versus independently observed results. EVIDENCE_GAP or FALSE_POSITIVE_CHECK | Command, input identity, actual result or NOT_RUN, external self-hash and limitations. Offline assembly | No runtime or production qualification |
+
+A failed or indeterminate stage retains its trace. A later stage cannot cure an earlier missing predicate. V7 repeats the substantive checks on the exact fetched blob or establishes byte identity with the independently checked blob and binds that identity to the fetched tree.
