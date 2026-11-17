@@ -5,7 +5,17 @@ Base `a28277b4cb68a3db5da52edc598c37ce66314604`, tree `920713b992046dff1f8fc68e4
 Pinned discovery `9551e490dbda11e372b11e758a2a0aafdb740ce1`, tree `dee2c06cc2274a26bb0dc8d3082fc31e16b81b3c`.
 Только docs/offline vectors. Направление OD-PG-01–12 принято владельцем, но численные значения, роли, trust policies и operational protocols не утверждены. Нет validators/providers, permissions или qualification.
 
-## Степень freeze
+## G3.2.0b effective precedence / historical scope
+
+X01–X04 choices OWNER_APPROVED. [Owner decisions](G3_2_0B_OWNER_DECISIONS_X01_X04.md) и [resolution evidence](G3_2_0B_RESOLUTION_AND_VECTOR_EVIDENCE.md) задают действующие уточнения. Сохранённые формулировки G3.2.0a ниже, помеченные historical, отражают prior blocked analysis, а не конфликтующую текущую норму. Исходный pinned reference никогда не изменяется. Ни один новый status marker проверки не является machine PG verdict или permission.
+
+## Effective X01–X04 resolutions
+
+X01 empty required Text → PG_FORMAT before product predicates; nonempty insufficient content → PG_PRODUCT_GAP after previous stages. X02 uses exactly the seven-stage order in canonicalization spec; known mode lexical recognition is separate from contract-mode pair semantics. X03 abstract graph and real content-addressed closure are distinct; V043 remains historical blocked end-to-end, new graph fixtures make no crypto-validity claim. X04 mandatory immutable toolchain/executor bindings below remove the claimed-but-absent field gap; type/schema/profile/migration details remain PROPOSAL.
+
+The source Record inventory below is **historical proposal-1**, not automatic acceptance under the new RenderPlanV2 profile. Old conflict descriptions are retained for provenance and superseded by these explicit owner-approved choices only. Other OP remain open, and final PG freeze remains blocked.
+
+## Степень freeze (historical A)
 
 Точные schema IDs сохраняются `pg-01/proposal-1`…`pg-05/proposal-1`, не объявляются approved/v1. Все Record fields обязательны; T|null — mandatory explicit nullable field, отсутствие не null. Unknown keys запрещены. Ниже **полнопольная инвентаризация именно pinned discovery**, а не новая реализация/молчаливое исправление. Нерешённые X01–X04 блокируют окончательный freeze.
 
@@ -288,7 +298,7 @@ SubjectKey exact tuple: (PG01 contract/id/revision/binding, plan SHA256, asset m
 
 Graph registry resolution proposal: index exact(contract,id,revision), reject conflicting bodies, verify local digests once, walk declared typed edges с colors/visited и resource bound. Полный closure/hash-first порядок и допустимые historical links должны быть выбраны owner (OP-08/09); это описание алгоритмических требований, **не validator implementation**. Genuine digest-bound cycles нельзя тестировать forged hashes как будто они valid; V043 отмечен BLOCKED.
 
-## Обнаруженные противоречия и compatibility
+## Historical A contradictions and compatibility (owner-approved resolutions above and below)
 
 - **X01:** nonempty Text → schema PG_FORMAT, но P01-07 на пустой why_film обещает PG_PRODUCT_GAP. Нужна owner resolution, исходный oracle сохраняется verbatim.
 - **X02:** mode subset может быть schema condition (PG_FORMAT/PG_MODE before digest) либо semantic after digest (PG_DIGEST first for altered mode). Exact precedence не следует однозначно из discovery; V039 BLOCKED.
@@ -296,3 +306,38 @@ Graph registry resolution proposal: index exact(contract,id,revision), reject co
 - **X04:** discovery утверждает, что Toolchain/executor_profile входят SubjectKey через plan/constraints, но RenderPlan не имеет обязательных toolchain/executor_profile fields, а PG04 содержит их отдельно. Новый PG04 digest меняется, но PG02 SubjectKey может остаться прежним. Нужно explicit binding placement или узко описанная reapproval policy, без молчаливого добавления полей.
 
 G1/SI/G2/D1 interfaces/hash algorithms не меняются. G2 redacted evaluation export не full result; Snapshot требует recomputation exact pinned inputs, без угадывания. A14 HANDOFF editorial-only; synthetic permit не PG04; existing first_video не guarded endpoint. Реальные roles, valid license evidence, latest trusted head, clock, immutable resolver/ledger и native execution не подтверждаются offline schemas. Полный contract freeze **BLOCKED_CONTRACT**, все новые field/edge/limit решения NOT APPROVED.
+
+## X04 schema delta — new RenderPlan version PROPOSAL
+
+Owner approved the mandatory binding direction, not final type/protocol details. Proposed ID `render-plan/proposal-2`; legacy proposal-1 lacks schema_id/toolchain_ref/executor_profile_ref. This is a new closed record version, not optional added fields accepted by old validators. New PG04 consumer profile/contract `pg-04/proposal-2` is a **proposal**, not an addition to current accepted enum/wire. Exact cross-PG version/migration policy OP remains OPEN; do not auto-upgrade old snapshots/approvals/envelopes.
+
+```text
+RenderPlanV2 = Record{schema_id:"render-plan/proposal-2",locales:List<Text>,scene_plans:List<LocaleArtifact>,scene_bindings:List<SceneBinding>,asset_manifest:ByteRef,usage:UseScope,width:Int,height:Int,fps_numerator:Int,fps_denominator:Int,output_profile:PolicyRef,attribution_plan:ByteRef,toolchain_ref:ImmutableBindingRef,executor_profile_ref:ImmutableBindingRef}
+ImmutableBindingRef = Record{schema_id:Text,object_id:Id,revision:Int,sha256:Hash,byte_length:Int}
+BoundToolchain = Record{schema_id:"toolchain-binding/proposal-1",object_id:Id,revision:Int,payload:Toolchain}
+BoundExecutorProfile = Record{schema_id:"executor-profile-binding/proposal-1",object_id:Id,revision:Int,policy:PolicyRef,content:ByteRef}
+```
+
+All fields mandatory, no overrides/extra keys. `toolchain_ref.schema_id` must be toolchain-binding/proposal-1 and resolve exact BoundToolchain. `executor_profile_ref.schema_id` must be executor-profile-binding/proposal-1 and resolve exact BoundExecutorProfile. ID/revision/schema match actual target header, SHA256/length refer to **exact target raw JSON bytes**, not PG envelope DOMAIN digest. For canonical fixture targets raw bytes happen to be canonical JSON; resolver cannot silently reserialize arbitrary bytes for equality. Unknown schema/version, missing/stale ref or conflicting bytes under same identity deny; no latest lookup or network recovery.
+
+Toolchain payload uses exact source/tool/binary/config/environment ByteRefs. Executor target binds policy ID/version/hash plus exact immutable profile-content bytes. Raw content hashes do not establish OS qualification or trusted identity. Caller paths/PATH/env cannot replace these objects. PG04 proposed consumer compares actual full Toolchain payload to resolved BoundToolchain.payload and executor policy/content/execution profile to resolved BoundExecutorProfile, not only a version label. Disagreement → appropriate PG_TOOLCHAIN/PG_REFERENCE by isolated cause; override key → PG_FORMAT at schema stage.
+
+Binding path: SubjectKey.plan_sha256 → **exact RenderPlanV2 raw bytes** → both ImmutableBindingRefs → exact target bytes/versions/config. Toolchain/config/profile change must produce a new target revision/hash, new plan bytes/hash and new SubjectKey. Old SubjectKey is never equivalent to new. Keeping a PG04 toolchain field outside the plan is no longer claimed sufficient.
+
+| Change | Required follow-up | What is forbidden |
+|---|---|---|
+| Content-affecting text/language/scene/visual meaning/tool behavior | New human approval for new exact subject; new authorization candidate | Reusing old exact SubjectKey as equal |
+| Rights-affecting material/license/usage/territory/commercial/attribution | New rights review and any affected human review; new authorization candidate | License grant inferred from tool/profile hash |
+| Purely technical binding/config/profile change | New plan/SubjectKey and authorization candidate, **separate explicitly approved reapproval policy** | Automatic grant or automatic old-PG02 reuse; policy is OPEN |
+
+Technical classification must itself be justified by policy; unknown/content-impact-uncertain change cannot silently be deemed technical. Pending reapproval/migration policy, no operational admission. Owner decision does not choose whether a later policy requires new PG02 or separately evidenced continuity review for purely technical changes; no new approval carrier silently introduced here.
+
+Before/after exact bytes are V079 (legacy) and V080 (proposed new plan). V074/V075 change one immutable binding under old subject, V076 stale raw plan hash, V077 PG04 actual toolchain mismatch, V078 unknown caller override. Their byte hashes are verified; semantic PG expectations not executed, all operational results NOT_QUALIFIED.
+
+## X03 graph fixture semantics
+
+Abstract fixtures nodes have fixture_id/revision, edges from/to/kind/target_revision, root and optional fixture max_nodes. Kind DEPENDENCY/PREDECESSOR is typed fixture metadata, **not** PG wire extension. Directed cycle checks compare DFS and Kahn. V043-S5 uses target_revision1 while actual target revision2: exact lookup mismatch, not an invented requirement that cross-event PG02 revisions must decrease. V043-S6 max_nodes2 is conditional OP-08 test parameter, not approval of numeric closure limits. Real PG ObjectRef must still satisfy exact contract/id/revision/digest first; fake/stale digests do not prove isolated cycle rejection.
+
+## Version and compatibility disposition
+
+G1/G2/G3.1 implementations and their hashes unchanged. Historical proposal-1 is read for diagnostics/provenance only under its own rules, never silently valid under V2. New schema/profile adoption requires explicit version policy, new byte identities and reviews as applicable. Full schemas/OP-01–28/trust/host/provider/evidence contracts remain NOT APPROVED/NOT_QUALIFIED. These remaining gates do not reopen X01–X04 architectural choices.

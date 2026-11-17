@@ -5,6 +5,21 @@ Base `a28277b4cb68a3db5da52edc598c37ce66314604`, tree `920713b992046dff1f8fc68e4
 Pinned discovery `9551e490dbda11e372b11e758a2a0aafdb740ce1`, tree `dee2c06cc2274a26bb0dc8d3082fc31e16b81b3c`.
 Только docs/offline vectors. Направление OD-PG-01–12 принято владельцем, но численные значения, роли, trust policies и operational protocols не утверждены. Нет validators/providers, permissions или qualification.
 
+## G3.2.0b effective precedence / historical scope
+
+X01–X04 choices OWNER_APPROVED. [Owner decisions](G3_2_0B_OWNER_DECISIONS_X01_X04.md) и [resolution evidence](G3_2_0B_RESOLUTION_AND_VECTOR_EVIDENCE.md) задают действующие уточнения. Сохранённые формулировки G3.2.0a ниже, помеченные historical, отражают prior blocked analysis, а не конфликтующую текущую норму. Исходный pinned reference никогда не изменяется. Ни один новый status marker проверки не является machine PG verdict или permission.
+
+## Effective owner-approved overrides and traceability
+
+| Source oracle / vector | Previous (historical) | Effective owner-approved clarification | Dependency / verification |
+|---|---|---|---|
+| P01-07 / V051 | source discovery says PG_PRODUCT_GAP for metadata/missing why_film; A notes PG_FORMAT conflict | Empty required why_film → PG_FORMAT(stage2). Nonempty insufficient dossier → PG_PRODUCT_GAP(stage6) after successful prior stages | X01 OWNER_APPROVED; V072 proposed substantive example, human/product policy OPEN. PG_SEMANTIC_NOT_RUN |
+| COMMON-05 / P04-01 / V039 | A left mode/schema/hash primary error blocked | Unknown enum PG_FORMAT(stage2); known+bad binding PG_DIGEST(stage3); known+correct binding+forbidden pair PG_MODE(stage5) after refs | X02 OWNER_APPROVED; V071 paired correct binding, V073 unknown enum. BYTES/HASH verified, semantic NOT_RUN |
+| P02-04 / V043 | A isolated content-addressed cycle fixture blocked | Preserve historical V043 block. Abstract V043-S…S6 are separate structural oracles, no crypto proof | X03 OWNER_APPROVED; seven STRUCTURAL_ORACLE_VERIFIED annotations, end-to-end closure unproven |
+| P01-05 / P04-02/08 | Source claimed tools/profiles bound via plan though fields absent | New versioned plan proposal mandates both immutable binding refs; new SubjectKey on any binding change | X04 OWNER_APPROVED direction; V074…080 bytes/hashes verified, reapproval/migration policy OPEN |
+
+All58 original source premise/expectation strings remain verbatim below. Their `Exact isolated-cause codes / result` lines are **A historical analysis**, superseded only for named branches by this explicit table; no deletion of historical expected error. Other branches and all HUMAN/PROVIDER/NATIVE limitations retained. New verification labels describe evidence work, not new PG result/error enums.
+
 ## Ошибки и результаты: без расширения namespace
 
 Machine results pure discovery: CONSISTENT_NO_AUTHORITY либо DENY. STRUCTURALLY_VALID — explanatory stage annotation, **не** новый enum/status. CANONICAL_BYTES_VERIFIED в описании vector check — факт offline арифметики, не возвращаемое PG API значение. SUCCEEDED/FAILED/CANCELLED/INDETERMINATE — Body05.outcome, не admission verdict. BLOCKED_CONTRACT — статус задания/неопределённого expectation, не новый Error.code.
@@ -147,6 +162,8 @@ Proposed Error = contract,stage,code,subject_id|null,retry,outcome=DENY (все 
 
 ### P01-07
 
+**OWNER_APPROVED EFFECTIVE ADDENDUM:** Empty Text branch effective PG_FORMAT(stage2), nonempty insufficient branch PG_PRODUCT_GAP(stage6), X01 owner-approved; old source expectation preserved.
+
 - Source premise: Metadata topic/audience не соответствует SI claim/evidence; why_film пуст/досье формально заполнено без central evidence
 - Source oracle (unchanged): PG_PRODUCT_GAP при проверяемом missing/mismatch; substantive suitability требует PRODUCT human tests, не invented semantic judgment
 - Type: PURE.
@@ -201,6 +218,8 @@ Proposed Error = contract,stage,code,subject_id|null,retry,outcome=DENY (все 
 - Implementation readiness: BLOCKED_CONTRACT / PROVIDER_POLICY_OPEN; no implementation authorized.
 
 ### P02-04
+
+**OWNER_APPROVED EFFECTIVE ADDENDUM:** Cycle test model now X03 separated; revision mismatch does not establish crypto-valid cycle coverage.
 
 - Source premise: Неполный predecessor graph, cross-key/self/dangling ref, одинаковые timestamps, conflicting heads
 - Source oracle (unchanged): PG_HISTORY; timestamp/UUID/array order не выбирают latest
@@ -345,6 +364,8 @@ Proposed Error = contract,stage,code,subject_id|null,retry,outcome=DENY (все 
 
 ### P04-01
 
+**OWNER_APPROVED EFFECTIVE ADDENDUM:** Mode error precedence now X02 seven stages; use V039/V071/V073 for isolated early/mode causes. No production effects.
+
 - Source premise: SyntheticRenderPermitV1/D1 manifest под видом PG grant; PREVIEW_ONLY или PRODUCTION_CANDIDATE flags сами по себе
 - Source oracle (unchanged): PG_MODE/PG_SCOPE, ноль production renders. Даже valid PG request даёт pure consistency only
 - Type: PURE.
@@ -355,6 +376,8 @@ Proposed Error = contract,stage,code,subject_id|null,retry,outcome=DENY (все 
 - Implementation readiness: CONDITIONAL SPEC READY; params/X issues remain NOT APPROVED; no implementation authorized.
 
 ### P04-02
+
+**OWNER_APPROVED EFFECTIVE ADDENDUM:** X04 explicit plan refs mandatory in proposed new version; old SubjectKey differs when either changes; purely technical reapproval remains OPEN.
 
 - Source premise: Смена locale/scene/text/assets/audio/tools/config/profile/output set/operation после approval
 - Source oracle (unchanged): PG_REFERENCE/PG_SCOPE/PG_TOOLCHAIN; новое bound request/review, no implicit widening/delegation
@@ -421,6 +444,8 @@ Proposed Error = contract,stage,code,subject_id|null,retry,outcome=DENY (все 
 - Implementation readiness: BLOCKED_CONTRACT / OPERATIONAL_PROTOCOL_OPEN; no implementation authorized.
 
 ### P04-08
+
+**OWNER_APPROVED EFFECTIVE ADDENDUM:** Actual binary/config/toolchain must equal exact plan-bound target; X04 no caller override. Operational NOT_QUALIFIED.
 
 - Source premise: Другой binary с тем же version string, PATH/cwd tool swap, font/libass/config substitution
 - Source oracle (unchanged): PG_TOOLCHAIN, no spawn; actual binary+configuration bytes должны совпасть profile
@@ -656,3 +681,7 @@ Proposed Error = contract,stage,code,subject_id|null,retry,outcome=DENY (все 
 Ровно58 unique IDs: COMMON6, P01=8, P02=8, P03=8, P04=10, P05=8, PRODUCT7, NATIVE3. Тексты premise/expectation сверены с source по ID, не перефразированы как будто approved resolution. Vector70 покрывают byte-level fixtures/negative probes и proposed limits; это **не**70 выполненных PG tests и не executable coverage всех58. HUMAN/provider/native coverage остаётся requirements-only; нет фиктивного offline PASS.
 
 Связи: COMMON01–05 ↔ V001–040,V044–070; reference registry ↔ V022,V041,V042; unresolved cycle ↔ V043; P01-07 ambiguity ↔ V051; P04 mode precedence ↔ V039. P02/03/04 operational/P05/HUMAN/NATIVE требуют будущих independently designed real evidence/context fixtures после owner решения. Их отсутствие явно BLOCKED_CONTRACT, не заменяется arithmetic vectors.
+
+## Evidence and implementation boundary
+
+No PG semantic validator/provider run: expected error descriptions alone are not verified semantic results. BYTES_VERIFIED/HASH_VERIFIED come from full byte/canonical/hash controls. STRUCTURAL_ORACLE_VERIFIED only applies to seven abstract graph fixtures checked by actual independent DFS/Kahn and revision controls. PG_SEMANTIC_NOT_RUN, NATIVE_NOT_RUN, OPERATIONAL_NOT_QUALIFIED remain explicit. Original70 vector IDs and58 oracle IDs retained; OP document unchanged byte-for-byte. No new PG Error.code, result namespace, actual grant or final freeze.
