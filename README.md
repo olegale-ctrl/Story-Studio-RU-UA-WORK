@@ -2,7 +2,7 @@
 
 A Windows-first Russian/Ukrainian adaptation and substantial rework of [konlu/story-studio](https://github.com/konlu/story-studio). This is **not just a translation**: the goal is a reusable, local-first video-production pipeline with original RU/UA prompts, speech, subtitles, media assembly and verified export paths.
 
-## Current status — Sprint 26 (2026-11-03)
+## Current status — SI-PRODUCT-02.1 integration branch
 
 - RU/UA project code, CLI, neutral timeline, FFmpeg rendering and Windows scripts are tracked in this repository.
 - Edge TTS (online, experimental) and local Silero (explicitly trusted external model) can be selected through the Voice Studio desktop UI.
@@ -11,7 +11,20 @@ A Windows-first Russian/Ukrainian adaptation and substantial rework of [konlu/st
 - **Sprint 26:** `scripts/first_video.py` assembles a RU/UA narrated video from a scene plan, trusted local Silero or existing WAV files, optional local images, scene-level subtitles and the existing FFmpeg renderer. Real end-to-end Windows MP4 playback still requires user verification.
 - Windows 10/11 is the primary target; portable architecture for macOS/Linux is planned.
 
-## Sprint 26: first video on Windows
+- **SI-PRODUCT-01 accepted:** the pure evaluator and private Projection V1 passed Linux CI on the [accepted source revision](https://github.com/olegale-ctrl/Story-Studio-RU-UA-WORK/commit/da1d3dd2ad6a55943e88503f5231f4c34a1e4e5f). Topic-to-video integration is planned for SI-PRODUCT-02.2.
+- **SI-PRODUCT-02:** [owner decision](docs/tasks/SI_PRODUCT_02_OWNER_DECISION.md), [roadmap](project-log/ROADMAP_STATUS.md), and [integration map](docs/tasks/SI_PRODUCT_02_2_INTEGRATION_MAP.md). The first integration will connect one selected topic to a private editorial card, approved scene plans and two local MP4s.
+
+## First video from local WAV
+
+From the repository root, provide one WAV per scene (`voice1.wav` through `voice3.wav` for the sample plans) in an audio directory. Install FFmpeg and ffprobe on PATH. Use a fresh output directory for every run.
+
+```text
+python scripts/first_video.py --plan examples/first_video_plan_uk.json --audio-dir output/synthetic-wav --output-dir output/first-video-uk
+```
+
+The [integration map](docs/tasks/SI_PRODUCT_02_2_INTEGRATION_MAP.md) shows how to generate synthetic WAVs and render both locales offline. The output is `project.json` and `first-video.mp4` in the chosen directory. This path uses scene-level subtitles.
+
+## Experimental local Silero on Windows
 
 See [`docs/SPRINT26_FIRST_VIDEO_WINDOWS.md`](docs/SPRINT26_FIRST_VIDEO_WINDOWS.md) for the full procedure. Example, from the project root (replace the model path with your actual local model path):
 
@@ -25,14 +38,19 @@ python .\scripts\first_video.py `
 
 The output is `output/first-video-uk/first-video.mp4`. Use a new output directory for each run. This is an MVP with scene-level timing, not word-level alignment.
 
-## Quick checks (existing Windows working folder)
+## Tests
 
-```powershell
+Use Python 3.10 or 3.13, FFmpeg and ffprobe. Install pytest in a project virtual environment. Run from the repository root.
+
+```text
+python -m pip install 'pytest>=8,<10'
+ffmpeg -version
+ffprobe -version
 python -m unittest discover -s tests -v
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\run_voice_studio.ps1
+python -m pytest -q tests
 ```
 
-The Sprint 25.1 incremental ZIP remains the previous Voice Studio update, **not** the Sprint 26 package. For Sprint 26, download the current `main` source or update a Git checkout; do not overwrite local `.venv`, FFmpeg, model weights, cached media or personal settings.
+CI runs both suites on Ubuntu. The Windows path assertion tracked in [issue #7](https://github.com/olegale-ctrl/Story-Studio-RU-UA-WORK/issues/7) can fail in the full local Windows suite. Tests use synthetic media and do not need TTS weights or API credentials.
 
 ## Preserving the original video-creation technology
 

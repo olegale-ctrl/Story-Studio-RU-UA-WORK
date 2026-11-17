@@ -169,3 +169,93 @@
 - Validation: GitHub Actions CI pending at time of authoring; actual Windows MP4 not tested yet. User validation required before further video quality work.
 - Files: `scripts/first_video.py`, `examples/first_video_plan_ru.json`, `examples/first_video_plan_uk.json`, `tests/test_sprint26.py`, `docs/SPRINT26_FIRST_VIDEO_WINDOWS.md`, four project logs.
 - Next: verify CI; user runs real Silero end-to-end on Windows and checks exported video.
+
+## 2026-11-13 — SI-PRODUCT-01.0 owner approval recording (DOCS ONLY)
+
+- Explicit owner decision recorded: architecture/four reference documents and all
+  PD-01–PD-08 APPROVED. Reference `5e0ddf45aacb2412dd15b9a4923acb40c6a6c7bd`,
+  evaluator foundation `35451f6441bd5428e132ae65f2080209b51fe009`.
+- Mandatory PD-01: retain safe evaluator re-verification, measure performance at
+  future implementation acceptance; any verification change requires a separate
+  contract and owner approval, with no weakened security/verifiability.
+- Mandatory PD-05: executable tests for all 30 condition families, RU/UK and material
+  blocking findings. Existing evaluator tests are not Projection execution evidence.
+- Documentary files: `docs/tasks/STORY_INTELLIGENCE_SI_PRODUCT_01_0_CONTRACT_PROPOSAL.md`,
+  `docs/tasks/STORY_INTELLIGENCE_SI_PRODUCT_01_0_TEST_ORACLES.md`,
+  `docs/tasks/STORY_INTELLIGENCE_SI_PRODUCT_01_0_OWNER_DECISIONS.md`,
+  `docs/tasks/STORY_INTELLIGENCE_SI_PRODUCT_01_0_RESULT.md`, new
+  `docs/tasks/STORY_INTELLIGENCE_SI_PRODUCT_01_0_OWNER_APPROVAL_2026_11_13.md`, new
+  `docs/tasks/STORY_INTELLIGENCE_SI_PRODUCT_01_1_IMPLEMENTATION_TASK_DRAFT.md`, and this log.
+- No code/tests/SI/1/protected storage or previously approved evaluation policy
+  changed. Unit/Projection/performance tests NOT RUN in this docs-only recording;
+  document identity/status/links/literal-preservation and Git diff checks only.
+  Current recording results and local commit identity are in RESULT/final handoff.
+- No dependencies/media/models/third-party corpora or new licence clearances. RU/UK,
+  CPU-only and existing licensing gates retained. PUBLISH_REVISION DISABLED,
+  partial COMMIT reconstruction OFF, Windows S3.2b BLOCKED_HOST_NOT_PROVIDED.
+- Recording branch: `docs/story-intelligence-si-product-01-0-owner-approval`.
+  No push/PR/merge/tag/release; changed-documents ZIP stays local for review.
+- Next: independent review of the owner recording; then a separate explicit owner
+  implementation task with exact base/scope. Draft is NOT AUTHORIZED FOR EXECUTION.
+
+## 2026-11-13 — SI-PRODUCT-01.1 pure Editorial Decision Projection V1
+
+- Separate explicit owner implementation authorization granted; exact base
+  `f56f4ea2a7c7584a6b8b8c236d0b4a54e946485d`, feature
+  `feat/story-intelligence-si-product-01-1-projection-v1`. All PD-01–PD-08 retained.
+- Added `story_intelligence/decision_projection_v1.py`: pure private RU/UK Card,
+  mandatory real evaluator re-verification and exact canonical equality, closed
+  30-family matching, safe aliases/text, five sections/six limitations, no mutation.
+- Added `tests/test_story_intelligence_decision_projection_v1.py` and
+  `tests/test_story_intelligence_decision_projection_oracles_v1.py`: executable
+  30×2 matrix plus variants, P01–P42, full literal W01 RU/UK and real failure cases.
+  All successful projection cases execute real evaluator; no mocked success path.
+- Added `docs/tasks/STORY_INTELLIGENCE_SI_PRODUCT_01_1_IMPLEMENT_RESULT.md` with exact
+  test commands/counts/exit codes, coverage matrix, performance measurements and
+  limitations. Historical evaluator counts are not substituted for Projection tests.
+- Actual final runs: Projection 73, evaluator 78, SI 295, full unittest 1137;
+  all failures/errors/skips=0 and process exit 0. Compileall/diff checks exit 0.
+  PD-01 performance: B/T25/W01/MULTI, one warm-up and three measured repeats each;
+  real evaluator verification retained, actual min/median/max/raw samples in RESULT.
+  Local commit identity/ZIP in final handoff. This entry is
+  append-only. No existing tests/evaluator/SI/1/contracts/config/dependencies changed.
+- No third-party media/models/corpora/keys added; no licence or authority clearance.
+  RU/UK, CPU-only, existing licensing requirements and protected boundaries retained.
+  PUBLISH_REVISION DISABLED; partial COMMIT reconstruction OFF;
+  Windows S3.2b BLOCKED_HOST_NOT_PROVIDED; EVAL-P05 OPEN.
+- Local commit/changed-file ZIP only, no push/PR/merge/tag/release. Next gate:
+  independent owner acceptance. Do not start the next stage without that decision.
+
+## 2026-11-15 — SI-PRODUCT-02.0 and 02.1
+
+- Carried the owner decision from `42ce93f34c0507bc61078d5a78f61c2f9d64866e` onto the accepted Projection V1 baseline `da1d3dd2ad6a55943e88503f5231f4c34a1e4e5f`. See Linux CI run 43735785327 for 01.1c.
+- Updated developer documentation, scoped ignore and shell line endings, and the existing Ubuntu CI matrix. Added the 02.2 integration map. TTS evaluation remains deferred.
+
+
+## 2026-11-16 — SI-PRODUCT-02.2.2 Editor Preview
+
+- Exact base `6ecc263ff4eefd5d6c419c36f8ad215540a1e6a4`; feature
+  `feat/si-product-02-2-2-editor-preview`. Added a local PREVIEW_ONLY editor JSON
+  adapter, real evaluator/Projection cards, independent exact RU/UK draft plans,
+  safe bilingual diagnostics and NOT_ASSESSED production state with no permissions.
+- Added two explicit synthetic/incomplete input examples and 16 new tests.
+  No fabricated SI inputs, translations, production project, render/TTS/network
+  calls or D1 permit use in the new adapter. Existing evaluator/Projection/SI/1,
+  Storage, A14, D1 and media code remain unchanged.
+- Actual Python 3.10.22 / 3.13.5 full unittest and pytest, new+D1 target tests,
+  syntax and diff results are recorded in `docs/tasks/SI_PRODUCT_02_2_2_RESULT.md`
+  and the external evidence logs. Local compatibility matrix; remote CI NOT_RUN.
+- Local commit and review archive only. No push/PR/merge/tag/release/main changes.
+  STOP for independent review; SI-PRODUCT-02.3 not started.
+
+## 2026-11-16 — SI-PRODUCT-02.2.2a Windows export containment
+
+- Rejected Windows reparse points throughout the Preview output path and added
+  native junction and directory symlink regressions.
+- Replayed V07 on the exact base and fix. Exit changed from 0 to 2, and the
+  junction target went from two generated files to zero.
+- Windows Preview + D1 passed. The full suites reproduced the existing Silero
+  path test failure. Results and race limits are in
+  `docs/tasks/SI_PRODUCT_02_2_2A_V07_FIX_RESULT.md`.
+- READY_FOR_INDEPENDENT_REVIEW. The implementation uses path checks and relies
+  on a user-controlled directory chain.
