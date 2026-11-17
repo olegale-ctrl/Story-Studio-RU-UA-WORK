@@ -11,12 +11,25 @@ import subprocess
 import tempfile
 import uuid
 
-from scripts.edge_voice_demo import synthesize
 from experimental_mvp.captions import CueError, calculated, render_srt, validate
 
 VOICES = {"ru": "ru-RU-SvetlanaNeural", "uk": "uk-UA-PolinaNeural"}
 ROOT = Path(os.environ.get("STORY_MVP_HOME") or (Path(os.environ.get("LOCALAPPDATA", str(Path.home()))) / "StoryStudioMVP")).resolve()
 DEMOS = Path(__file__).with_name("demos")
+
+
+def synthesize(*args, **kwargs):
+    try:
+        from scripts.edge_voice_demo import synthesize as online_synthesis
+    except ModuleNotFoundError as exc:
+        if exc.name not in {"scripts", "scripts.edge_voice_demo"}:
+            raise
+        raise RuntimeError(
+            "Адаптер Edge отсутствует. Для онлайн-озвучки откройте полный checkout "
+            "и установите requirements-edge-win-amd64.txt. Для локальной сборки "
+            "импортируйте MP3/WAV сцены или общую дорожку проекта."
+        ) from exc
+    return online_synthesis(*args, **kwargs)
 
 
 def save(path, project):

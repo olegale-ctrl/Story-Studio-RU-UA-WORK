@@ -193,7 +193,19 @@ def launch():
         write("brief", brief(topic.get(), locale.get()))
         if baseline.get():
             # The established preview uses its own existing, explicit input schema.
-            from scripts.editor_preview import preview
+            try:
+                from scripts.editor_preview import preview
+            except ModuleNotFoundError as exc:
+                if exc.name not in {"scripts", "scripts.editor_preview"}:
+                    raise
+                notebook.select(0)
+                messagebox.showinfo(
+                    "Editorial Preview",
+                    "Анализ внешнего JSON доступен в полном checkout Story Studio. "
+                    "Запустите редактор из его корня и выберите JSON снова. "
+                    "Локальный шаблон темы уже показан.",
+                )
+                return
             snapshot = preview(load(Path(baseline.get())))
             from pprint import pformat
             write("brief", read("brief") + "\n\nStory Intelligence · Existing input\n"

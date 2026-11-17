@@ -2,6 +2,8 @@ import tempfile
 import unittest
 from pathlib import Path
 import shutil
+import subprocess
+import sys
 from unittest.mock import patch
 import wave
 
@@ -12,6 +14,26 @@ from experimental_mvp.captions import CueError, render_srt
 
 
 class PipelineTests(unittest.TestCase):
+    def test_offline_cli_starts_without_edge_adapter(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            package = root / "experimental_mvp"
+            package.mkdir()
+            for name in ("pipeline.py", "captions.py", "diagnostics.py", "ui.py"):
+                shutil.copyfile(Path(__file__).with_name(name), package / name)
+            result = subprocess.run(
+                [sys.executable, "-E", "-s", "-m", "experimental_mvp.pipeline", "--help"],
+                cwd=root, capture_output=True, timeout=20,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn(b"--check-edge", result.stdout)
+            result = subprocess.run(
+                [sys.executable, "-E", "-s", "-c",
+                 "from experimental_mvp.pipeline import synthesize; synthesize()"],
+                cwd=root, capture_output=True, timeout=20,
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn(b"MP3/WAV", result.stderr)
     def test_missing_media_repair_preserves_scene_identity_and_captions(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
