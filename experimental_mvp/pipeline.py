@@ -13,6 +13,7 @@ import tempfile
 import uuid
 
 from scripts.edge_voice_demo import synthesize
+from experimental_mvp.captions import render_srt
 
 VOICES = {"ru": "ru-RU-SvetlanaNeural", "uk": "uk-UA-PolinaNeural"}
 ROOT = Path(os.environ.get("STORY_MVP_HOME") or (Path(os.environ.get("LOCALAPPDATA", str(Path.home()))) / "StoryStudioMVP")).resolve()
@@ -209,13 +210,6 @@ def duration(path, ffprobe):
     return round(float(data["format"]["duration"]) * 1000)
 
 
-def timestamp(ms):
-    hours, ms = divmod(ms, 3600000)
-    minutes, ms = divmod(ms, 60000)
-    seconds, ms = divmod(ms, 1000)
-    return f"{hours:02}:{minutes:02}:{seconds:02},{ms:03}"
-
-
 def intervals(texts, total):
     weights = [max(1, len(text.split())) for text in texts]
     if total < 250 * len(weights):
@@ -231,25 +225,76 @@ def intervals(texts, total):
 
 
 def subtitles(texts, spans):
-    cues = []
-    for text, (start, end) in zip(texts, spans):
-        words = text.split()
-        chunks, line = [], []
-        for word in words:
-            if line and len(" ".join(line + [word])) > 64:
-                chunks.append(" ".join(line))
-                line = []
-            line.append(word)
-        if line:
-            chunks.append(" ".join(line))
-        for i, chunk in enumerate(chunks):
-            a = start + (end - start) * i // len(chunks)
-            b = start + (end - start) * (i + 1) // len(chunks)
-            if b > a:
-                # Prevent user-entered markup from becoming subtitle formatting.
-                plain = chunk.replace("<", "‹").replace(">", "›").replace("{", "｛").replace("}", "｝")
-                cues.append(f"{len(cues)+1}\n{timestamp(a)} --> {timestamp(b)}\n{plain}\n")
-    return "\n".join(cues)
+    return render_srt([{"text": text} for text in texts], spans, {})
+
+
+def preview_audio(project, index, workspace):
+    """Resolve the scene audio without invoking synthesis."""
+    scene = project["scenes"][index]
+    ffprobe = executable("ffprobe")
+    if project.get("audio"):
+        source = Path(project["audio"]).expanduser().resolve(strict=True)
+        if source.suffix.lower() not in {".mp3", ".wav"}:
+            raise ValueError("Импорт озвучки поддерживает MP3 и WAV.")
+        texts = [item["text"].strip() for item in project["scenes"]]
+        start, end = list(intervals(texts, duration(source, ffprobe)))[index]
+        return source, start, end - start, True
+    source, entry = audio_key(project, scene, workspace / "scene-audio")
+    ready = entry / "audio.wav"
+    if ready.is_file():
+        try:
+            return ready, 0, duration(ready, ffprobe), False
+        except (ValueError, OSError, subprocess.SubprocessError, KeyError):
+            pass
+    if isinstance(source, Path):
+        return source, 0, duration(source, ffprobe), False
+    raise ValueError(f"Сцена {index + 1}: подготовьте озвучку кнопкой «Подготовить / повторить сцену».")
+
+
+def render_preview(project, index, workspace, audio):
+    source, start, length, approximate = audio
+    scene = project["scenes"][index]
+    from experimental_mvp.captions import calculated, validate
+    overrides = project.get("captions_by_scene", {})
+    validate(overrides.get(scene["id"], calculated(scene["text"], length)), length, index + 1)
+    captions = render_srt([scene], [(0, length)], overrides)
+    folder = workspace.resolve() / ("preview-" + uuid.uuid4().hex[:12])
+    folder.mkdir(parents=True)
+    log = folder / "preview.log"
+    (folder / "captions.srt").write_text(captions, encoding="utf-8")
+    ffmpeg = executable("ffmpeg")
+    clip = render_scene(scene, index + 1, length / 1000, folder, log, ffmpeg)
+    command([ffmpeg, "-nostdin", "-v", "error", "-i", clip, "-ss", str(start / 1000),
+             "-i", str(source), "-map", "0:v:0", "-map", "1:a:0",
+             "-vf", "subtitles=captions.srt", "-t", str(length / 1000),
+             "-c:v", "libx264", "-preset", "ultrafast", "-threads", "4",
+             "-c:a", "aac", "-movflags", "+faststart", "preview.mp4"], folder, log)
+    return folder / "preview.mp4", approximate
+
+
+def render_scene(scene, index, length, folder, log, ffmpeg):
+    colors = ["0x17365a", "0x275148", "0x603d44", "0x39466b"]
+    image = scene.get("image")
+    if image:
+        source = Path(image).expanduser().resolve(strict=True)
+        if source.suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp", ".bmp"}:
+            raise ValueError("Используйте PNG, JPEG, WebP или BMP.")
+        local = folder / f"image{index:03}{source.suffix.lower()}"
+        shutil.copyfile(source, local)
+        image_args = ["-loop", "1", "-framerate", "30", "-i", local.name]
+    else:
+        color = colors[(index - 1) % len(colors)]
+        image_args = ["-f", "lavfi", "-i", f"color=c={color}:s=1920x1080:r=30"]
+    fade = min(0.22, length / 3)
+    filters = ("scale=1920:1080:force_original_aspect_ratio=decrease:"
+               "force_divisible_by=2,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,"
+               f"setsar=1,format=yuv420p,fade=t=in:d={fade},"
+               f"fade=t=out:st={length-fade}:d={fade}")
+    clip = f"scene{index:03}.mp4"
+    command([ffmpeg, "-nostdin", "-v", "error", *image_args, "-an", "-vf", filters,
+             "-t", str(length), "-c:v", "libx264", "-preset", "ultrafast",
+             "-threads", "4", clip], folder, log)
+    return clip
 
 
 def build(project, workspace, notify=print):
@@ -304,34 +349,13 @@ def build(project, workspace, notify=print):
                                                encoding="ascii")
             audio_args = ["-f", "concat", "-safe", "1", "-i", "speech.txt"]
             timing = "measured_scene_boundaries_estimated_cue_boundaries"
-        (folder / "captions.srt").write_text(subtitles(texts, spans), encoding="utf-8")
+        (folder / "captions.srt").write_text(render_srt(scenes, spans, project.get("captions_by_scene", {})),
+                                             encoding="utf-8")
         save(folder / "timing.json", {"method": timing, "scenes_ms": spans})
         clips = []
-        colors = ["0x17365a", "0x275148", "0x603d44", "0x39466b"]
         for index, (scene, (start, end)) in enumerate(zip(scenes, spans), 1):
             notify(f"Видео: сцена {index}/{len(scenes)}")
-            length = (end - start) / 1000
-            image = scene.get("image")
-            if image:
-                source = Path(image).expanduser().resolve(strict=True)
-                if source.suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp", ".bmp"}:
-                    raise ValueError("Используйте PNG, JPEG, WebP или BMP.")
-                local = folder / f"image{index:03}{source.suffix.lower()}"
-                shutil.copyfile(source, local)
-                image_args = ["-loop", "1", "-framerate", "30", "-i", local.name]
-            else:
-                color = colors[(index - 1) % len(colors)]
-                image_args = ["-f", "lavfi", "-i", f"color=c={color}:s=1920x1080:r=30"]
-            fade = min(0.22, length / 3)
-            filters = ("scale=1920:1080:force_original_aspect_ratio=decrease:"
-                       "force_divisible_by=2,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,"
-                       f"setsar=1,format=yuv420p,fade=t=in:d={fade},"
-                       f"fade=t=out:st={length-fade}:d={fade}")
-            clip = f"scene{index:03}.mp4"
-            command([ffmpeg, "-nostdin", "-v", "error", *image_args, "-an", "-vf", filters,
-                     "-t", str(length), "-c:v", "libx264", "-preset", "ultrafast",
-                     "-threads", "4", clip], folder, log)
-            clips.append(clip)
+            clips.append(render_scene(scene, index, (end - start) / 1000, folder, log, ffmpeg))
         (folder / "scenes.txt").write_text("".join(f"file '{name}'\n" for name in clips),
                                           encoding="ascii")
         notify("Сборка MP4")

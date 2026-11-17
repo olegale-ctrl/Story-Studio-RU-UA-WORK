@@ -7,9 +7,34 @@ import wave
 
 from experimental_mvp.pipeline import (DEMOS, brief, build, executable, intervals,
                                        load, save, subtitles)
+from experimental_mvp.captions import CueError, render_srt
 
 
 class PipelineTests(unittest.TestCase):
+    def test_manual_cues_round_trip_and_follow_scene_after_reorder(self):
+        with tempfile.TemporaryDirectory() as temp:
+            file = Path(temp) / "project.json"
+            project = {"scenes": [{"text": "Первый"}, {"text": "Другий"}]}
+            save(file, project)
+            scene = project["scenes"][0]
+            overrides = {scene["id"]: [{"start_ms": 125, "end_ms": 826, "text": "Правка"}]}
+            project["captions_by_scene"] = overrides
+            save(file, project)
+            reopened = load(file)
+            self.assertEqual(reopened["captions_by_scene"], overrides)
+            reopened["scenes"].reverse()
+            srt = render_srt(reopened["scenes"], [(0, 1500), (1500, 2500)], overrides)
+            self.assertIn("00:00:01,625 --> 00:00:02,326\nПравка", srt)
+            self.assertLess(srt.index("Другий"), srt.index("Правка"))
+
+    def test_shortened_audio_rejects_manual_interval_and_reset_recovers(self):
+        scenes = [{"id": "one", "text": "Первый"}, {"id": "two", "text": "Другий"}]
+        overrides = {"two": [{"start_ms": 150, "end_ms": 900, "text": "Правка"}]}
+        with self.assertRaisesRegex(CueError, "Сцена 2, реплика 1.*500 мс"):
+            render_srt(scenes, [(0, 1200), (1200, 1700)], overrides)
+        overrides.clear()
+        self.assertIn("00:00:01,200 --> 00:00:01,700\nДругий",
+                      render_srt(scenes, [(0, 1200), (1200, 1700)], overrides))
     def test_projects_round_trip_and_default_to_unapproved(self):
         for locale in ("ru", "uk"):
             with self.subTest(locale=locale), tempfile.TemporaryDirectory() as temp:

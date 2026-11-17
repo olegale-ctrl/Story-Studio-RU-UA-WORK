@@ -7,8 +7,10 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 import uuid
 
+from experimental_mvp.captions import CueError, calculated, validate
+
 from experimental_mvp.pipeline import (DEMOS, ROOT, audio_status, brief, build, executable,
-                                       identify, load, save, scene_audio)
+                                       identify, load, preview_audio, render_preview, save, scene_audio)
 
 
 def launch():
@@ -154,6 +156,7 @@ def launch():
         if scene and messagebox.askyesno("Удалить сцену", "Удалить выбранную сцену?"):
             index = scenes.index(scene)
             scenes.remove(scene)
+            state["project"].get("captions_by_scene", {}).pop(scene["id"], None)
             approved.set(False)
             refresh(scenes[min(index, len(scenes)-1)]["id"] if scenes else None)
 
@@ -203,6 +206,115 @@ def launch():
             widget.delete("1.0", "end")
             widget.insert("1.0", name)
             approved.set(False)
+
+    def selected_audio():
+        if current() is None:
+            raise ValueError("Выберите сцену.")
+        path, project = save_project()
+        index = next(i for i, scene in enumerate(project["scenes"]) if scene["id"] == selected)
+        workspace = path.parent / "runs"
+        return project, index, workspace, preview_audio(project, index, workspace)
+
+    def edit_captions():
+        project, index, _, (_, _, length, approximate) = selected_audio()
+        scene = project["scenes"][index]
+        key = scene["id"]
+        automatic = calculated(scene["text"], length)
+        overrides = state["project"].setdefault("captions_by_scene", {})
+        dialog = tk.Toplevel(root)
+        dialog.title(f"Субтитры сцены {index + 1}")
+        dialog.transient(root)
+        dialog.grab_set()
+        box = ttk.Frame(dialog, padding=12)
+        box.pack(fill="both", expand=True)
+        wording = "Приблизительный отрезок общей дорожки" if approximate else "Длительность озвучки"
+        ttk.Label(box, text=f"{wording}: {length} мс. Начало и конец относительно сцены.").pack(anchor="w")
+        caption_tree = ttk.Treeview(box, columns=("start", "end", "text"), show="headings",
+                                   height=7, selectmode="browse")
+        for name, label, width in (("start", "Начало, мс", 90), ("end", "Конец, мс", 90),
+                                   ("text", "Реплика", 540)):
+            caption_tree.heading(name, text=label)
+            caption_tree.column(name, width=width, stretch=name == "text")
+        caption_tree.tag_configure("invalid", background="#ffd8d8", foreground="#761a1a")
+        caption_tree.pack(fill="both", expand=True, pady=5)
+        start_var, end_var, text_var, error = (tk.StringVar(master=dialog) for _ in range(4))
+        entries = ttk.Frame(box)
+        entries.pack(fill="x", pady=5)
+        for var, width in ((start_var, 9), (end_var, 9), (text_var, 55)):
+            ttk.Entry(entries, textvariable=var, width=width).pack(side="left", padx=2)
+        ttk.Label(box, textvariable=error, foreground="#9f1b1b").pack(anchor="w")
+
+        def select_row(_event=None):
+            picked = caption_tree.selection()
+            if picked:
+                for var, value in zip((start_var, end_var, text_var),
+                                      caption_tree.item(picked[0], "values")):
+                    var.set(value)
+
+        def verify_rows():
+            for item in caption_tree.get_children():
+                caption_tree.item(item, tags=())
+            rows = []
+            try:
+                for i, item in enumerate(caption_tree.get_children()):
+                    a, b, text = caption_tree.item(item, "values")
+                    try:
+                        rows.append({"start_ms": int(a), "end_ms": int(b), "text": text})
+                    except ValueError:
+                        raise CueError(index + 1, i, "таймкод должен быть целым числом мс.") from None
+                validate(rows, length, index + 1)
+            except CueError as exc:
+                items = caption_tree.get_children()
+                if exc.index < len(items):
+                    item = items[exc.index]
+                    caption_tree.item(item, tags=("invalid",))
+                    caption_tree.selection_set(item)
+                    caption_tree.see(item)
+                    select_row()
+                error.set(str(exc))
+                return None
+            error.set("")
+            return rows
+
+        def populate(rows):
+            caption_tree.delete(*caption_tree.get_children())
+            for row in rows:
+                caption_tree.insert("", "end", values=(row["start_ms"], row["end_ms"], row["text"]))
+            items = caption_tree.get_children()
+            if items:
+                caption_tree.selection_set(items[0])
+                select_row()
+
+        def apply_row():
+            items = caption_tree.selection()
+            if items:
+                caption_tree.item(items[0], values=(start_var.get(), end_var.get(), text_var.get()))
+            return verify_rows()
+
+        def store_captions():
+            rows = apply_row()
+            if rows is None:
+                return
+            if rows == automatic:
+                overrides.pop(key, None)
+            else:
+                overrides[key] = rows
+            save_project()
+            dialog.destroy()
+
+        caption_tree.bind("<<TreeviewSelect>>", select_row)
+        populate(overrides.get(key, automatic))
+        verify_rows()
+        actions = ttk.Frame(box)
+        actions.pack(fill="x", pady=5)
+        for label, action in (("Применить к реплике", apply_row),
+                              ("Рассчитать заново", lambda: (populate(automatic), verify_rows())),
+                              ("Сохранить субтитры", reported(store_captions))):
+            ttk.Button(actions, text=label, command=action).pack(side="left", padx=3)
+
+    def preview_scene():
+        project, index, workspace, audio_data = selected_audio()
+        perform(lambda: render_preview(project, index, workspace, audio_data), "preview")
 
     def retry():
         if current() is None:
@@ -263,7 +375,15 @@ def launch():
                 widget.state(["!disabled"])
             commit_scene()
             refresh(selected)
-            if kind == "audio":
+            if kind == "preview":
+                path, approximate = value
+                suffix = " (приблизительные границы общей дорожки)" if approximate else ""
+                status.set(f"Предпросмотр сцены{suffix}: {path}")
+                try:
+                    os.startfile(path)
+                except OSError as exc:
+                    messagebox.showerror("Предпросмотр сцены", str(exc))
+            elif kind == "audio":
                 status.set(value)
             elif kind == "done":
                 state["video"] = value
@@ -373,6 +493,8 @@ def launch():
     controls.pack(fill="x")
     ttk.Checkbutton(controls, text="Подтверждаю производство этой версии",
                     variable=approved).pack(side="left", padx=6)
+    button(controls, "Субтитры сцены", reported(edit_captions))
+    button(controls, "Предпросмотр сцены", reported(preview_scene))
     button(controls, "Собрать MP4", run)
     button(controls, "Просмотр MP4", reported(play))
     progress = ttk.Progressbar(shell, mode="indeterminate")
