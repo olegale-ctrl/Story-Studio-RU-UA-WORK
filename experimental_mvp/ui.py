@@ -7,7 +7,8 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 import uuid
 
-from experimental_mvp.pipeline import DEMOS, ROOT, brief, build, load, save
+from experimental_mvp.pipeline import (DEMOS, ROOT, audio_status, brief, build, executable,
+                                       identify, load, save, scene_audio)
 
 
 def launch():
@@ -17,7 +18,7 @@ def launch():
     root.minsize(760, 650)
     shell = ttk.Frame(root, padding=16)
     shell.pack(fill="both", expand=True)
-    state = {"path": None, "video": None, "busy": False}
+    state = {"path": None, "video": None, "busy": False, "project": {}}
     updates = queue.Queue()
     topic = tk.StringVar()
     locale = tk.StringVar(value="ru")
@@ -28,6 +29,11 @@ def launch():
     approved = tk.BooleanVar()
     status = tk.StringVar(value="Создайте или откройте проект.")
     editor = {}
+    scenes = []
+    selected = None
+    scene_audio_path = tk.StringVar()
+    scene_voice = tk.StringVar()
+    scene_fields = {}
     buttons = []
 
     def button(parent, label, action):
@@ -62,24 +68,94 @@ def launch():
         baseline.set(value.get("story_input", ""))
         approved.set(False)
         write("brief", value.get("brief", ""))
-        write("script", "\n\n".join(s["text"] for s in value.get("scenes", [])))
-        write("scenes", "\n---\n".join(
-            "\n".join((s.get("visual", ""), s.get("prompt", ""), s.get("image", "")))
-            for s in value.get("scenes", [])))
-        state.update(path=path, video=None)
+        scenes[:] = value.get("scenes", [])
+        identify({"scenes": scenes})
+        state.update(path=path, video=None, project=value)
+        show_scene(None)
+        refresh(scenes[0]["id"] if scenes else None)
+        notebook.select(scenes_tab)
         status.set(str(path) if path else "Новый проект")
 
     def collect():
-        paragraphs = [s.strip() for s in read("script").split("\n\n") if s.strip()]
-        visuals = read("scenes").split("\n---\n")
-        scenes = []
-        for i, text in enumerate(paragraphs):
-            fields = (visuals[i].split("\n", 2) if i < len(visuals) else []) + [""] * 3
-            scenes.append({"text": text, "visual": fields[0].strip(),
-                           "prompt": fields[1].strip(), "image": fields[2].strip()})
-        return {"topic": topic.get().strip(), "locale": locale.get(),
+        commit_scene()
+        return {**state["project"], "topic": topic.get().strip(), "locale": locale.get(),
                 "audio": audio.get().strip(), "voice": voice.get(), "story_input": baseline.get().strip(),
-                "brief": read("brief"), "scenes": scenes, "approved": approved.get()}
+                "brief": read("brief"), "scenes": [dict(scene) for scene in scenes],
+                "approved": approved.get()}
+
+    def cache_path():
+        path = state["path"]
+        if path and path.resolve().is_relative_to(ROOT / "projects"):
+            return path.parent / "runs" / "scene-audio"
+        return None
+
+    def current():
+        return next((scene for scene in scenes if scene["id"] == selected), None)
+
+    def commit_scene():
+        scene = current()
+        if scene is not None:
+            for key, widget in scene_fields.items():
+                scene[key] = widget.get("1.0", "end-1c").strip()
+            scene["audio"] = scene_audio_path.get().strip()
+            scene["voice"] = scene_voice.get()
+
+    def show_scene(scene):
+        nonlocal selected
+        selected = scene["id"] if scene else None
+        for key, widget in scene_fields.items():
+            widget.delete("1.0", "end")
+            widget.insert("1.0", scene.get(key, "") if scene else "")
+        scene_audio_path.set(scene.get("audio", "") if scene else "")
+        scene_voice.set(scene.get("voice", "") if scene else "")
+
+    def refresh(keep=None):
+        tree.delete(*tree.get_children())
+        project = {"locale": locale.get(), "voice": voice.get(), "audio": audio.get()}
+        cache = cache_path()
+        for index, scene in enumerate(scenes, 1):
+            label = audio_status(project, scene, cache) if cache else (
+                "Общая дорожка" if audio.get() else "Ожидает сборки")
+            tree.insert("", "end", iid=scene["id"],
+                        values=(index, scene.get("text", "")[:65], label))
+        if keep and tree.exists(keep):
+            tree.selection_set(keep)
+            tree.see(keep)
+        show_scene(next((scene for scene in scenes if scene["id"] == keep), None))
+
+    def change_selection(_event=None):
+        selection = tree.selection()
+        key = selection[0] if selection else None
+        if key != selected:
+            commit_scene()
+            show_scene(next((scene for scene in scenes if scene["id"] == key), None))
+
+    def change_order(offset):
+        commit_scene()
+        scene = current()
+        if scene is None:
+            return
+        index = scenes.index(scene)
+        target = index + offset
+        if 0 <= target < len(scenes):
+            scenes[index], scenes[target] = scenes[target], scenes[index]
+            approved.set(False)
+            refresh(scene["id"])
+
+    def add_scene():
+        commit_scene()
+        scene = {"id": uuid.uuid4().hex, "text": ""}
+        scenes.append(scene)
+        approved.set(False)
+        refresh(scene["id"])
+
+    def remove_scene():
+        scene = current()
+        if scene and messagebox.askyesno("Удалить сцену", "Удалить выбранную сцену?"):
+            index = scenes.index(scene)
+            scenes.remove(scene)
+            approved.set(False)
+            refresh(scenes[min(index, len(scenes)-1)]["id"] if scenes else None)
 
     def new():
         fill({"locale": locale.get()})
@@ -119,12 +195,48 @@ def launch():
             variable.set(name)
 
     def image():
+        if current() is None:
+            return
         name = filedialog.askopenfilename(filetypes=[("Изображения", "*.png *.jpg *.jpeg *.webp *.bmp")])
         if name:
-            widget = editor["scenes"]
-            current = widget.index("insert linestart")
-            widget.delete(current, current + " lineend")
-            widget.insert(current, name)
+            widget = scene_fields["image"]
+            widget.delete("1.0", "end")
+            widget.insert("1.0", name)
+            approved.set(False)
+
+    def retry():
+        if current() is None:
+            return
+        if audio.get().strip():
+            messagebox.showinfo("Озвучка", "Очистите общую дорожку, чтобы использовать озвучку сцен.")
+            return
+        if not approved.get():
+            messagebox.showinfo("Редакционное решение", "Подтвердите производство этой версии.")
+            return
+        path, project = save_project()
+        scene = next(scene for scene in project["scenes"] if scene["id"] == selected)
+        cache = path.parent / "runs" / "scene-audio"
+
+        def work():
+            scene_audio(project, scene, cache, executable("ffmpeg"), executable("ffprobe"),
+                        lambda s: updates.put(("progress", s)))
+            return "Озвучка сцены готова"
+
+        perform(work, "audio")
+
+    def perform(work, done):
+        state["busy"] = True
+        for widget in buttons:
+            widget.state(["disabled"])
+        progress.start(15)
+
+        def worker():
+            try:
+                updates.put((done, work()))
+            except Exception as exc:
+                updates.put(("error", str(exc)))
+
+        threading.Thread(target=worker, daemon=True).start()
 
     def run():
         if not approved.get():
@@ -135,20 +247,9 @@ def launch():
         except OSError as exc:
             messagebox.showerror("Сохранение проекта", str(exc))
             return
-        state["busy"] = True
         state["video"] = None
-        for widget in buttons:
-            widget.state(["disabled"])
-        progress.start(15)
-
-        def work():
-            try:
-                video = build(project, path.parent / "runs", lambda s: updates.put(("progress", s)))
-                updates.put(("done", video))
-            except Exception as exc:
-                updates.put(("error", str(exc)))
-
-        threading.Thread(target=work, daemon=True).start()
+        perform(lambda: build(project, path.parent / "runs",
+                              lambda s: updates.put(("progress", s))), "done")
 
     def poll():
         while not updates.empty():
@@ -160,14 +261,18 @@ def launch():
             progress.stop()
             for widget in buttons:
                 widget.state(["!disabled"])
-            if kind == "done":
+            commit_scene()
+            refresh(selected)
+            if kind == "audio":
+                status.set(value)
+            elif kind == "done":
                 state["video"] = value
                 status.set(f"Готово: {value}")
                 timing = load(value.parent / "timing.json")
                 write("timing", "\n".join(
                     f"{i}. {(end-start)/1000:.2f} с"
                     for i, (start, end) in enumerate(timing["scenes_ms"], 1))
-                    + "\n\n" + timing["method"])
+                    + "\n\nТаймкоды реплик оценочные. " + timing["method"])
             else:
                 status.set("Ошибка сборки")
                 messagebox.showerror("Ошибка сборки", value)
@@ -226,14 +331,46 @@ def launch():
         button(row, "Выбрать", lambda v=variable, t=types: choose(v, t))
     notebook = ttk.Notebook(shell)
     notebook.pack(fill="both", expand=True)
-    for key, label in (("brief", "Редакторский анализ"), ("script", "Сценарий"),
-                       ("scenes", "Раскадровка"), ("timing", "Длительности и тайминг")):
+    for key, label in (("brief", "Редакторский анализ"), ("timing", "Длительности и тайминг")):
         editor[key] = text_tab(notebook, label)
-    ttk.Label(shell, text="Сценарий: один абзац на сцену. Раскадровка: описание, промпт, путь к изображению. Между сценами — строка --- .",
-              wraplength=900).pack(anchor="w", pady=6)
+    scenes_tab = ttk.Frame(notebook, padding=8)
+    notebook.insert(1, scenes_tab, text="Сцены")
+    tree = ttk.Treeview(scenes_tab, columns=("order", "text", "audio"), show="headings",
+                        height=5, selectmode="browse")
+    for column, heading, width in (("order", "№", 44), ("text", "Сцена", 470),
+                                   ("audio", "Озвучка", 160)):
+        tree.heading(column, text=heading)
+        tree.column(column, width=width, stretch=column == "text")
+    tree.pack(fill="x")
+    tree.bind("<<TreeviewSelect>>", change_selection)
+    actions = ttk.Frame(scenes_tab)
+    actions.pack(fill="x", pady=5)
+    for label, action in (("Добавить сцену", add_scene), ("Удалить", remove_scene),
+                          ("Выше", lambda: change_order(-1)), ("Ниже", lambda: change_order(1))):
+        button(actions, label, action)
+    for key, label, height in (("text", "Текст диктора", 3), ("visual", "Описание", 1),
+                               ("prompt", "Промпт", 1), ("image", "Путь к изображению", 1)):
+        row = ttk.Frame(scenes_tab)
+        row.pack(fill="x")
+        ttk.Label(row, text=label, width=24).pack(side="left")
+        widget = tk.Text(row, height=height, wrap="word", font=("Segoe UI", 10), undo=True)
+        widget.pack(side="left", fill="x", expand=True)
+        scene_fields[key] = widget
+        if key == "image":
+            button(row, "Выбрать", image)
+    row = ttk.Frame(scenes_tab)
+    row.pack(fill="x", pady=4)
+    ttk.Label(row, text="Аудиофайл сцены", width=24).pack(side="left")
+    ttk.Entry(row, textvariable=scene_audio_path).pack(side="left", fill="x", expand=True)
+    button(row, "MP3/WAV", lambda: choose(scene_audio_path, [("Аудио", "*.mp3 *.wav")]))
+    button(row, "Подготовить / повторить сцену", reported(retry))
+    ttk.Label(row, text="Голос сцены").pack(side="left", padx=(8, 3))
+    ttk.Combobox(row, textvariable=scene_voice, values=voice_options, state="readonly",
+                 width=20).pack(side="left")
+    ttk.Label(shell, text="Общая дорожка имеет приоритет. Без неё используется файл сцены или Edge TTS. "
+                          "Таймкоды реплик оценочные.", wraplength=920).pack(anchor="w", pady=6)
     controls = ttk.Frame(shell)
     controls.pack(fill="x")
-    button(controls, "Изображение в текущую строку", image)
     ttk.Checkbutton(controls, text="Подтверждаю производство этой версии",
                     variable=approved).pack(side="left", padx=6)
     button(controls, "Собрать MP4", run)
@@ -243,8 +380,12 @@ def launch():
     ttk.Label(shell, textvariable=status, wraplength=950).pack(anchor="w")
     for variable in (topic, locale, audio, baseline, voice):
         variable.trace_add("write", lambda *_: approved.set(False))
-    for key in ("script", "scenes", "brief"):
-        editor[key].bind("<KeyPress>", lambda _: approved.set(False), add="+")
+    for widget in [editor["brief"], *scene_fields.values()]:
+        widget.bind("<KeyPress>", lambda _: approved.set(False), add="+")
+    scene_audio_path.trace_add("write", lambda *_: approved.set(False) if scene_audio_path.get() !=
+                               (current() or {}).get("audio", "") else None)
+    scene_voice.trace_add("write", lambda *_: approved.set(False) if scene_voice.get() !=
+                          (current() or {}).get("voice", "") else None)
     root.protocol("WM_DELETE_WINDOW", close)
     root.after(100, poll)
     root.mainloop()

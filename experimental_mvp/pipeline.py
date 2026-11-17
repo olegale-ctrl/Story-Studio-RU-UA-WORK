@@ -1,6 +1,7 @@
 """Local experimental production, separate from Story Studio release storage."""
 import argparse
 from datetime import datetime, timezone
+from hashlib import sha256
 import importlib.util
 import json
 import os
@@ -19,6 +20,8 @@ DEMOS = Path(__file__).with_name("demos")
 
 
 def save(path, project):
+    if "scenes" in project:
+        identify(project)
     path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent,
                                      delete=False) as stream:
@@ -37,7 +40,118 @@ def save(path, project):
 
 
 def load(path):
-    return json.loads(path.read_text(encoding="utf-8-sig"))
+    project = json.loads(path.read_text(encoding="utf-8-sig"))
+    if "scenes" in project:
+        identify(project, seed=str(path.resolve()))
+    return project
+
+
+def identify(project, seed=None):
+    used = set()
+    for index, scene in enumerate(project["scenes"]):
+        key = scene.get("id")
+        if not isinstance(key, str) or not re.fullmatch(r"[0-9a-f]{32}", key) or key in used:
+            key = uuid.uuid5(uuid.NAMESPACE_URL, f"{seed}#{index}").hex if seed else uuid.uuid4().hex
+            if key in used:
+                key = uuid.uuid4().hex
+            scene["id"] = key
+        used.add(key)
+
+
+def file_digest(path):
+    with path.open("rb") as stream:
+        digest = sha256()
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(block)
+        return digest.hexdigest()
+
+
+def audio_source(project, scene):
+    if scene.get("audio"):
+        path = Path(scene["audio"]).expanduser().resolve(strict=True)
+        if path.suffix.lower() not in {".mp3", ".wav"}:
+            raise ValueError("Импорт сцены поддерживает MP3 и WAV.")
+        return path, ["import", file_digest(path)]
+    locale = project["locale"]
+    voice = scene.get("voice") or project.get("voice") or VOICES[locale]
+    allowed = {VOICES[locale]}
+    if locale == "ru":
+        allowed.add("ru-RU-DmitryNeural")
+    if voice not in allowed:
+        raise ValueError("Голос не подходит языку проекта.")
+    return voice, ["edge", voice, scene["text"].strip()]
+
+
+def audio_key(project, scene, cache):
+    source, signature = audio_source(project, scene)
+    fingerprint = sha256(json.dumps(signature, ensure_ascii=False).encode()).hexdigest()
+    return source, cache / scene["id"] / fingerprint
+
+
+def scene_audio(project, scene, cache, ffmpeg, ffprobe, announce=print):
+    folder = cache / scene["id"]
+    folder.mkdir(parents=True, exist_ok=True)
+    log = folder / "audio.log"
+    def record(message):
+        with log.open("a", encoding="utf-8") as stream:
+            stream.write(f"{datetime.now(timezone.utc).isoformat()} {message}\n")
+
+    entry = None
+    try:
+        source, entry = audio_key(project, scene, cache)
+        entry.mkdir(parents=True, exist_ok=True)
+        ready = entry / "audio.wav"
+        if ready.exists():
+            try:
+                ms = duration(ready, ffprobe)
+            except (ValueError, OSError, subprocess.SubprocessError, KeyError):
+                pass
+            else:
+                record(f"reuse {entry.name} {ms} ms")
+                announce(f"{scene['id']}: повторное использование")
+                return ready, ms
+        with tempfile.TemporaryDirectory(dir=entry) as staging:
+            temp = Path(staging)
+            if isinstance(source, Path):
+                record(f"import {entry.name} {source.suffix.lower()}")
+                incoming = temp / ("input" + source.suffix.lower())
+                shutil.copyfile(source, incoming)
+                if audio_key(project, scene, cache)[1] != entry or file_digest(incoming) != file_digest(source):
+                    raise ValueError("Исходное аудио изменилось при копировании.")
+            else:
+                if not scene["text"].strip():
+                    raise ValueError("Добавьте текст сцены.")
+                announce(f"{scene['id']}: синтез {source}")
+                record(f"edge {entry.name} {source}")
+                incoming = temp / "speech.mp3"
+                synthesize(source, scene["text"].strip(), incoming, ffprobe=ffprobe,
+                           attempts=3, allow_fallback=False)
+            command([ffmpeg, "-nostdin", "-v", "error", "-i", incoming.name,
+                     "-map", "0:a:0", "-ac", "1", "-ar", "24000", "audio.wav"], temp, log)
+            ms = duration(temp / "audio.wav", ffprobe)
+            (temp / "audio.wav").replace(ready)
+        (entry / "error.json").unlink(missing_ok=True)
+        record(f"ready {entry.name} {ms} ms")
+        return ready, ms
+    except Exception as exc:
+        if entry is not None and entry.is_dir():
+            save(entry / "error.json", {"message": str(exc)})
+        record(f"{type(exc).__name__}: {exc}")
+        raise RuntimeError(f"Сцена {scene['id']}: {exc}\nЖурнал: {log}") from exc
+
+
+def audio_status(project, scene, cache):
+    if project.get("audio"):
+        return "Общая дорожка"
+    try:
+        _, entry = audio_key(project, scene, cache)
+        if (entry / "audio.wav").is_file():
+            return "Готово"
+        if (entry / "error.json").is_file():
+            return "Сбой"
+    except (OSError, ValueError, KeyError):
+        return "Ошибка источника"
+    return "Ожидает сборки"
 
 
 def brief(topic, locale):
@@ -141,6 +255,7 @@ def subtitles(texts, spans):
 def build(project, workspace, notify=print):
     if project.get("approved") is not True:
         raise ValueError("Сначала подтвердите переход к производству.")
+    identify(project)
     scenes = project["scenes"]
     texts = [scene["text"].strip() for scene in scenes]
     if not texts or any(not text for text in texts):
@@ -166,34 +281,29 @@ def build(project, workspace, notify=print):
             audio_args = ["-i", imported.name]
             timing = "estimated_word_weighted_from_imported_audio"
         else:
-            if importlib.util.find_spec("edge_tts") is None:
-                raise RuntimeError("Нет edge-tts. Установите в локальное окружение или импортируйте MP3/WAV.")
-            voice = project.get("voice") or VOICES[project["locale"]]
-            allowed = {VOICES[project["locale"]]}
-            if project["locale"] == "ru":
-                allowed.add("ru-RU-DmitryNeural")
-            if voice not in allowed:
-                raise ValueError("Выбранный голос не подходит языку проекта.")
+            spans = []
             segments = []
-            for index, text in enumerate(texts, 1):
-                notify(f"Edge TTS: {index}/{len(texts)}")
-                mp3 = folder / f"speech{index:03}.mp3"
-                synthesize(voice, text, mp3, ffprobe=ffprobe,
-                           attempts=3, allow_fallback=False)
-                wav = mp3.with_suffix(".wav")
-                command([ffmpeg, "-nostdin", "-v", "error", "-i", mp3.name,
-                         "-ac", "1", "-ar", "24000", wav.name], folder, log)
-                segments.append(wav.name)
+            start = 0
+            cache = workspace / "scene-audio"
+            failures = []
+            for index, scene in enumerate(scenes, 1):
+                notify(f"Озвучка: сцена {index}/{len(scenes)}")
+                try:
+                    ready, ms = scene_audio(project, scene, cache, ffmpeg, ffprobe, notify)
+                except RuntimeError as exc:
+                    failures.append(f"#{index}: {exc}")
+                    continue
+                name = f"speech{index:03}.wav"
+                shutil.copyfile(ready, folder / name)
+                segments.append(name)
+                spans.append((start, start + ms))
+                start += ms
+            if failures:
+                raise RuntimeError("\n".join(failures))
             (folder / "speech.txt").write_text("".join(f"file '{name}'\n" for name in segments),
                                                encoding="ascii")
-            start = 0
-            spans = []
-            for name in segments:
-                end = start + duration(folder / name, ffprobe)
-                spans.append((start, end))
-                start = end
             audio_args = ["-f", "concat", "-safe", "1", "-i", "speech.txt"]
-            timing = "measured_edge_scene_boundaries_estimated_cue_boundaries"
+            timing = "measured_scene_boundaries_estimated_cue_boundaries"
         (folder / "captions.srt").write_text(subtitles(texts, spans), encoding="utf-8")
         save(folder / "timing.json", {"method": timing, "scenes_ms": spans})
         clips = []
