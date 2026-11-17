@@ -9,7 +9,8 @@ import uuid
 
 from experimental_mvp.captions import CueError, calculated, validate
 
-from experimental_mvp.pipeline import (DEMOS, ROOT, audio_status, brief, build, executable,
+from experimental_mvp.pipeline import (DEMOS, ROOT, BuildStopped, audio_status, brief, build,
+                                       check_project, executable, export_history, preview_signature,
                                        identify, load, preview_audio, render_preview, save, scene_audio)
 
 
@@ -22,6 +23,8 @@ def launch():
     shell.pack(fill="both", expand=True)
     state = {"path": None, "video": None, "busy": False, "project": {}}
     updates = queue.Queue()
+    stop_requested = threading.Event()
+    preview_label = tk.StringVar(value="Предпросмотр ролика не создан")
     topic = tk.StringVar()
     locale = tk.StringVar(value="ru")
     audio = tk.StringVar()
@@ -72,11 +75,16 @@ def launch():
         write("brief", value.get("brief", ""))
         scenes[:] = value.get("scenes", [])
         identify({"scenes": scenes})
-        state.update(path=path, video=None, project=value)
+        state.update(path=path, video=None, project=value, movie=None)
+        preview_label.set("Предпросмотр ролика не создан")
         show_scene(None)
         refresh(scenes[0]["id"] if scenes else None)
         notebook.select(scenes_tab)
-        status.set(str(path) if path else "Новый проект")
+        history = export_history(path.parent / "runs") if path else []
+        if history and history[0][1] != "complete":
+            status.set(f"Последний экспорт не завершён: {history[0][0].name}")
+        else:
+            status.set(str(path) if path else "Новый проект")
 
     def collect():
         commit_scene()
@@ -336,7 +344,80 @@ def launch():
 
         perform(work, "audio")
 
-    def perform(work, done):
+    def check():
+        project = collect()
+        workspace = cache_path()
+        runs = workspace.parent if workspace else ROOT / "runs"
+        perform(lambda: check_project(project, runs), "checked")
+
+    def show_issues(issues):
+        if not issues:
+            messagebox.showinfo("Проверка проекта", "Локальные проверки пройдены.")
+            return
+        dialog = tk.Toplevel(root)
+        dialog.title("Проверка проекта")
+        dialog.transient(root)
+        box = ttk.Frame(dialog, padding=12)
+        box.pack(fill="both", expand=True)
+        listing = tk.Listbox(box, width=103, height=min(14, len(issues)), exportselection=False)
+        listing.pack(fill="both", expand=True)
+        for key, field, message, pending in issues:
+            index = next((i for i, scene in enumerate(scenes, 1) if scene["id"] == key), None)
+            location = f"Сцена {index} / {field}" if index else field
+            listing.insert("end", f"{'Ожидание' if pending else 'Ошибка'} · {location} · {message}")
+        listing.selection_set(0)
+
+        def fix():
+            picked = listing.curselection()
+            if not picked:
+                return
+            key, field, _, _ = issues[picked[0]]
+            dialog.destroy()
+            if key and tree.exists(key):
+                commit_scene()
+                refresh(key)
+                notebook.select(scenes_tab)
+            if field == "image":
+                image()
+            elif field == "scene_audio":
+                choose(scene_audio_path, [("Аудио", "*.mp3 *.wav")])
+            elif field == "audio":
+                choose(audio, [("Аудио", "*.mp3 *.wav")])
+            elif field == "captions":
+                reported(edit_captions)()
+            elif field == "scenes":
+                add_scene()
+                notebook.select(scenes_tab)
+            elif field == "voice":
+                scene_voice_box.focus_set()
+            elif field in scene_fields:
+                scene_fields[field].focus_set()
+
+        ttk.Button(box, text="Перейти к исправлению", command=fix).pack(anchor="w", pady=5)
+        listing.bind("<Double-Button-1>", lambda _: fix())
+
+    def movie_preview():
+        path, project = save_project()
+        # Local preview uses the same production confirmation and effective data as export.
+        signature = preview_signature(project)
+        perform(lambda: (build(project, path.parent / "runs", progress_event,
+                               preview=True, cancelled=stop_requested.is_set), signature),
+                "movie", stoppable=True)
+
+    def update_preview_status():
+        movie = state.get("movie")
+        if movie:
+            stale = movie[1] != preview_signature(collect())
+            preview_label.set("Предпросмотр устарел" if stale else "Предпросмотр актуален")
+        root.after(500, update_preview_status)
+
+    def progress_event(message):
+        updates.put(("progress", message))
+
+    def perform(work, done, stoppable=False):
+        stop_requested.clear()
+        if stoppable:
+            stop_button.state(["!disabled"])
         state["busy"] = True
         for widget in buttons:
             widget.state(["disabled"])
@@ -345,6 +426,8 @@ def launch():
         def worker():
             try:
                 updates.put((done, work()))
+            except BuildStopped as exc:
+                updates.put(("stopped", str(exc)))
             except Exception as exc:
                 updates.put(("error", str(exc)))
 
@@ -360,8 +443,8 @@ def launch():
             messagebox.showerror("Сохранение проекта", str(exc))
             return
         state["video"] = None
-        perform(lambda: build(project, path.parent / "runs",
-                              lambda s: updates.put(("progress", s))), "done")
+        perform(lambda: build(project, path.parent / "runs", progress_event,
+                              cancelled=stop_requested.is_set), "done", stoppable=True)
 
     def poll():
         while not updates.empty():
@@ -371,11 +454,24 @@ def launch():
                 continue
             state["busy"] = False
             progress.stop()
+            stop_button.state(["disabled"])
             for widget in buttons:
                 widget.state(["!disabled"])
             commit_scene()
             refresh(selected)
-            if kind == "preview":
+            if kind == "checked":
+                status.set("Проверка проекта завершена")
+                show_issues(value)
+            elif kind == "movie":
+                state["movie"] = value
+                status.set("Предпросмотр ролика готов. В проигрывателе доступна дорожка субтитров.")
+                try:
+                    os.startfile(value[0])
+                except OSError as exc:
+                    messagebox.showerror("Предпросмотр ролика", str(exc))
+            elif kind == "stopped":
+                status.set(value + " Экспорт не завершён.")
+            elif kind == "preview":
                 path, approximate = value
                 suffix = " (приблизительные границы общей дорожки)" if approximate else ""
                 status.set(f"Предпросмотр сцены{suffix}: {path}")
@@ -401,9 +497,12 @@ def launch():
     def play():
         video = state["video"]
         if not video and state["path"]:
-            runs = list((state["path"].parent / "runs").glob("run-*/final.mp4"))
-            if runs:
-                video = max(runs, key=lambda p: p.stat().st_mtime)
+            history = export_history(state["path"].parent / "runs")
+            if history and history[0][1] != "complete":
+                messagebox.showinfo("Видео", "Последний экспорт не завершён. Запустите сборку снова.")
+                return
+            if history:
+                video = history[0][0] / "final.mp4"
         if video:
             os.startfile(video)
         else:
@@ -485,8 +584,9 @@ def launch():
     button(row, "MP3/WAV", lambda: choose(scene_audio_path, [("Аудио", "*.mp3 *.wav")]))
     button(row, "Подготовить / повторить сцену", reported(retry))
     ttk.Label(row, text="Голос сцены").pack(side="left", padx=(8, 3))
-    ttk.Combobox(row, textvariable=scene_voice, values=voice_options, state="readonly",
-                 width=20).pack(side="left")
+    scene_voice_box = ttk.Combobox(row, textvariable=scene_voice, values=voice_options,
+                                   state="readonly", width=20)
+    scene_voice_box.pack(side="left")
     ttk.Label(shell, text="Общая дорожка имеет приоритет. Без неё используется файл сцены или Edge TTS. "
                           "Таймкоды реплик оценочные.", wraplength=920).pack(anchor="w", pady=6)
     controls = ttk.Frame(shell)
@@ -495,7 +595,15 @@ def launch():
                     variable=approved).pack(side="left", padx=6)
     button(controls, "Субтитры сцены", reported(edit_captions))
     button(controls, "Предпросмотр сцены", reported(preview_scene))
-    button(controls, "Собрать MP4", run)
+    build_controls = ttk.Frame(shell)
+    build_controls.pack(fill="x", pady=(4, 0))
+    button(build_controls, "Проверить проект", reported(check))
+    button(build_controls, "Предпросмотр ролика", reported(movie_preview))
+    button(build_controls, "Собрать MP4", run)
+    stop_button = ttk.Button(build_controls, text="Остановить сборку", command=stop_requested.set)
+    stop_button.state(["disabled"])
+    stop_button.pack(side="left", padx=4)
+    ttk.Label(build_controls, textvariable=preview_label).pack(side="left", padx=5)
     button(controls, "Просмотр MP4", reported(play))
     progress = ttk.Progressbar(shell, mode="indeterminate")
     progress.pack(fill="x", pady=(12, 3))
@@ -510,4 +618,5 @@ def launch():
                           (current() or {}).get("voice", "") else None)
     root.protocol("WM_DELETE_WINDOW", close)
     root.after(100, poll)
+    root.after(500, update_preview_status)
     root.mainloop()

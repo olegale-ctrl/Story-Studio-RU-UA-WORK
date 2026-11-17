@@ -5,12 +5,77 @@ import shutil
 from unittest.mock import patch
 import wave
 
-from experimental_mvp.pipeline import (DEMOS, brief, build, executable, intervals,
-                                       load, save, subtitles)
+from experimental_mvp.pipeline import (DEMOS, BuildStopped, brief, build, check_project,
+                                       executable, export_history, intervals, load,
+                                       preview_signature, save, subtitles)
 from experimental_mvp.captions import CueError, render_srt
 
 
 class PipelineTests(unittest.TestCase):
+    def test_missing_media_repair_preserves_scene_identity_and_captions(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            image = root / "frame.bmp"
+            # A minimal 1x1 local RGB image.
+            image.write_bytes(bytes.fromhex(
+                "424d3a00000000000000360000002800000001000000010000000100180000000000"
+                "04000000000000000000000000000000000000000000ff00"))
+            project_path = root / "project.json"
+            project = {"locale": "ru", "scenes": [{"text": "Первый", "image": str(image)}]}
+            save(project_path, project)
+            scene_id = project["scenes"][0]["id"]
+            captions = {scene_id: [{"start_ms": 0, "end_ms": 250, "text": "Правка"}]}
+            project["captions_by_scene"] = captions
+            before = preview_signature(project)
+            moved = image.rename(root / "moved.bmp")
+            self.assertNotEqual(preview_signature(project), before)
+            issues = check_project(project, root)
+            self.assertTrue(any(row[:2] == (scene_id, "image") and not row[3] for row in issues))
+            project["scenes"][0]["image"] = str(moved)
+            save(project_path, project)
+            reopened = load(project_path)
+            self.assertEqual(reopened["scenes"][0]["id"], scene_id)
+            self.assertEqual(reopened["captions_by_scene"], captions)
+            issues = check_project(reopened, root)
+            self.assertEqual([(row[1], row[3]) for row in issues], [("captions", True)])
+
+    def test_interruption_after_audio_retains_cache_and_never_exposes_export(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            audio = root / "fixture.wav"
+            with wave.open(str(audio), "wb") as stream:
+                stream.setparams((1, 2, 24000, 0, "NONE", "not compressed"))
+                stream.writeframes(bytes(24000))
+            project = {"locale": "ru", "approved": True, "scenes": [{"text": "Работа"}]}
+            project_file = root / "project.json"
+            save(project_file, project)
+            workspace = root / "runs"
+            stopped = False
+
+            def notify(message):
+                nonlocal stopped
+                if message == "Озвучка подготовлена":
+                    stopped = True
+
+            def fake_synthesis(voice, text, output, **_):
+                shutil.copyfile(audio, output)
+
+            with patch("experimental_mvp.pipeline.synthesize", side_effect=fake_synthesis) as synth:
+                with self.assertRaises(BuildStopped):
+                    build(project, workspace, notify, cancelled=lambda: stopped)
+                self.assertEqual(synth.call_count, 1)
+                [(folder, status)] = export_history(workspace)
+                self.assertEqual(status, "interrupted")
+                self.assertFalse((folder / "final.mp4").exists())
+                build(load(project_file), workspace)
+                self.assertEqual(synth.call_count, 1)
+            journal = next((workspace / "scene-audio").rglob("audio.log"))
+            self.assertIn("reuse", journal.read_text(encoding="utf-8"))
+            crashed = workspace / "run-crashed"
+            crashed.mkdir()
+            save(crashed / "result.json", {"status": "running"})
+            (crashed / "final.mp4").touch()
+            self.assertIn((crashed, "interrupted"), export_history(workspace))
     def test_manual_cues_round_trip_and_follow_scene_after_reorder(self):
         with tempfile.TemporaryDirectory() as temp:
             file = Path(temp) / "project.json"

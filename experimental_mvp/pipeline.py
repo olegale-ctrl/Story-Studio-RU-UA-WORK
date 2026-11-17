@@ -13,7 +13,7 @@ import tempfile
 import uuid
 
 from scripts.edge_voice_demo import synthesize
-from experimental_mvp.captions import render_srt
+from experimental_mvp.captions import CueError, calculated, render_srt, validate
 
 VOICES = {"ru": "ru-RU-SvetlanaNeural", "uk": "uk-UA-PolinaNeural"}
 ROOT = Path(os.environ.get("STORY_MVP_HOME") or (Path(os.environ.get("LOCALAPPDATA", str(Path.home()))) / "StoryStudioMVP")).resolve()
@@ -254,7 +254,6 @@ def preview_audio(project, index, workspace):
 def render_preview(project, index, workspace, audio):
     source, start, length, approximate = audio
     scene = project["scenes"][index]
-    from experimental_mvp.captions import calculated, validate
     overrides = project.get("captions_by_scene", {})
     validate(overrides.get(scene["id"], calculated(scene["text"], length)), length, index + 1)
     captions = render_srt([scene], [(0, length)], overrides)
@@ -297,23 +296,139 @@ def render_scene(scene, index, length, folder, log, ffmpeg):
     return clip
 
 
-def build(project, workspace, notify=print):
+def check_project(project, workspace):
+    """Inspect effective local inputs without generating speech."""
+    issues = []
+    scenes = project["scenes"]
+    if not scenes:
+        return [(None, "scenes", "Добавьте хотя бы одну сцену.", False)]
+    ffmpeg, ffprobe = executable("ffmpeg"), executable("ffprobe")
+
+    def inspect(value, field, scene_id):
+        try:
+            path = Path(value).expanduser().resolve(strict=True)
+            audio = field != "image"
+            allowed = {".wav", ".mp3"} if audio else {".png", ".jpg", ".jpeg", ".webp", ".bmp"}
+            if not path.is_file() or path.suffix.lower() not in allowed:
+                raise ValueError("Неподдерживаемый файл.")
+            length = duration(path, ffprobe) if audio else None
+            limit = ["-t", "1"] if audio else ["-frames:v", "1"]
+            subprocess.run([ffmpeg, "-nostdin", "-v", "error", "-xerror", "-i", str(path),
+                            "-map", "0:a:0" if audio else "0:v:0", *limit, "-f", "null", "-"],
+                           capture_output=True, check=True, timeout=25)
+            return length
+        except (ValueError, OSError, KeyError, subprocess.SubprocessError) as exc:
+            issues.append((scene_id, field, f"Файл отсутствует или не читается: {value} ({exc})", False))
+            return None
+
+    whole = project.get("audio")
+    spans = None
+    if whole:
+        length = inspect(whole, "audio", None)
+        if length is not None:
+            try:
+                spans = list(intervals([s["text"] for s in scenes], length))
+            except ValueError as exc:
+                issues.append((None, "audio", str(exc), False))
+    overrides = project.get("captions_by_scene", {})
+    for index, scene in enumerate(scenes, 1):
+        key = scene["id"]
+        if not scene["text"].strip():
+            issues.append((key, "text", "Пустой текст сцены.", False))
+        if scene.get("image"):
+            inspect(scene["image"], "image", key)
+        if whole:
+            length = spans[index - 1][1] - spans[index - 1][0] if spans else None
+        elif scene.get("audio"):
+            length = inspect(scene["audio"], "scene_audio", key)
+        else:
+            length = None
+            try:
+                _, entry = audio_key(project, scene, workspace / "scene-audio")
+            except (ValueError, OSError, KeyError) as exc:
+                issues.append((key, "voice", str(exc), False))
+            else:
+                if (entry / "audio.wav").is_file():
+                    try:
+                        length = duration(entry / "audio.wav", ffprobe)
+                    except (ValueError, OSError, KeyError, subprocess.SubprocessError):
+                        pass
+            if length is None:
+                issues.append((key, "captions", "Длительность и таймкоды ожидают озвучку.", True))
+        if key in overrides:
+            try:
+                validate(overrides[key], length if length is not None else float("inf"), index)
+            except CueError as exc:
+                issues.append((key, "captions", str(exc), False))
+    return issues
+
+
+def preview_signature(project):
+    """Determine staleness without opening or transmitting media contents."""
+    selection = {k: project.get(k) for k in ("locale", "voice", "audio", "scenes", "captions_by_scene")}
+    sources = [project.get("audio")]
+    for scene in project["scenes"]:
+        sources.extend((scene.get("image"), None if project.get("audio") else scene.get("audio")))
+    stamps = []
+    for value in filter(None, sources):
+        try:
+            stat = Path(value).expanduser().stat()
+            stamps.append((value, stat.st_size, stat.st_mtime_ns))
+        except OSError:
+            stamps.append((value, None))
+    return sha256(json.dumps([selection, stamps], sort_keys=True).encode()).hexdigest()
+
+
+def export_history(workspace):
+    """Incomplete or failed exports are never candidates for playback."""
+    history = []
+    for folder in workspace.glob("run-*"):
+        try:
+            result = load(folder / "result.json")
+            status = result["status"]
+        except (OSError, ValueError, KeyError):
+            status = "interrupted"
+        if status == "running":
+            status = "interrupted"
+        video = folder / "final.mp4"
+        history.append((folder, status if status != "complete" or video.is_file() else "interrupted"))
+    return sorted(history, key=lambda item: item[0].stat().st_mtime_ns, reverse=True)
+
+
+class BuildStopped(RuntimeError):
+    pass
+
+
+def build(project, workspace, notify=print, *, preview=False, cancelled=lambda: False):
     if project.get("approved") is not True:
         raise ValueError("Сначала подтвердите переход к производству.")
     identify(project)
     scenes = project["scenes"]
     texts = [scene["text"].strip() for scene in scenes]
-    if not texts or any(not text for text in texts):
-        raise ValueError("Добавьте текст диктора для каждой сцены.")
     ffmpeg, ffprobe = executable("ffmpeg"), executable("ffprobe")
     workspace = workspace.resolve()
     workspace.mkdir(parents=True, exist_ok=True)
-    folder = workspace / ("run-" + uuid.uuid4().hex[:12])
+    prefix = "movie-preview-" if preview else "run-"
+    folder = workspace / (prefix + uuid.uuid4().hex[:12])
     folder.mkdir()
     log = folder / "build.log"
     log.write_text(datetime.now(timezone.utc).isoformat() + "\n", encoding="utf-8")
+    save(folder / "result.json", {"status": "running"})
     save(folder / "project.json", project)
+
+    def checkpoint():
+        if cancelled():
+            raise BuildStopped("Сборка остановлена. Подготовленные сегменты сохранены.")
+
     try:
+        scene_numbers = {scene["id"]: index for index, scene in enumerate(scenes, 1)}
+        errors = [
+            f"{'Сцена ' + str(scene_numbers[key]) + ' / ' if key else ''}{field}: {message}"
+            for key, field, message, pending in check_project(project, workspace) if not pending
+        ]
+        if errors:
+            raise ValueError("\n".join(errors))
+        checkpoint()
         notify("Озвучка")
         audio = project.get("audio")
         if audio:
@@ -332,6 +447,7 @@ def build(project, workspace, notify=print):
             cache = workspace / "scene-audio"
             failures = []
             for index, scene in enumerate(scenes, 1):
+                checkpoint()
                 notify(f"Озвучка: сцена {index}/{len(scenes)}")
                 try:
                     ready, ms = scene_audio(project, scene, cache, ffmpeg, ffprobe, notify)
@@ -349,24 +465,33 @@ def build(project, workspace, notify=print):
                                                encoding="ascii")
             audio_args = ["-f", "concat", "-safe", "1", "-i", "speech.txt"]
             timing = "measured_scene_boundaries_estimated_cue_boundaries"
+        notify("Озвучка подготовлена")
+        checkpoint()
         (folder / "captions.srt").write_text(render_srt(scenes, spans, project.get("captions_by_scene", {})),
                                              encoding="utf-8")
         save(folder / "timing.json", {"method": timing, "scenes_ms": spans})
         clips = []
         for index, (scene, (start, end)) in enumerate(zip(scenes, spans), 1):
+            checkpoint()
             notify(f"Видео: сцена {index}/{len(scenes)}")
             clips.append(render_scene(scene, index, (end - start) / 1000, folder, log, ffmpeg))
         (folder / "scenes.txt").write_text("".join(f"file '{name}'\n" for name in clips),
                                           encoding="ascii")
+        checkpoint()
         notify("Сборка MP4")
         command([ffmpeg, "-nostdin", "-v", "error", "-f", "concat", "-safe", "1",
                  "-i", "scenes.txt", *audio_args, "-i", "captions.srt",
                  "-map", "0:v:0", "-map", "1:a:0", "-map", "2:s:0",
                  "-c:v", "copy", "-c:a", "aac", "-c:s", "mov_text",
                  "-metadata:s:s:0", "language=" + {"ru": "rus", "uk": "ukr"}[project["locale"]],
-                 "-disposition:s:0", "default", "-movflags", "+faststart", "final.mp4"], folder, log)
+                 "-disposition:s:0", "default", "-movflags", "+faststart", "pending.mp4"], folder, log)
+        checkpoint()
+        (folder / "pending.mp4").replace(folder / "final.mp4")
         save(folder / "result.json", {"status": "complete", "timing": timing})
         return folder / "final.mp4"
+    except (BuildStopped, KeyboardInterrupt):
+        save(folder / "result.json", {"status": "interrupted"})
+        raise
     except Exception as exc:
         save(folder / "result.json", {"status": "error", "message": str(exc)})
         raise RuntimeError(f"{exc}\nПапка сборки: {folder}") from exc
