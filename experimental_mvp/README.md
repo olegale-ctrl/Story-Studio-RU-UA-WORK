@@ -1,0 +1,54 @@
+# Story Studio MVP-01
+
+Экспериментальная локальная сборка для Windows. Редактор принимает тему, ручной сценарий и визуальные материалы, синтезирует озвучку или импортирует MP3/WAV и собирает MP4 на CPU. Ветка сохраняет существующие лицензии и файлы проекта.
+
+## Запуск из PowerShell
+
+Запустите PowerShell из корня репозитория. Используйте Python 3.10+ с Tcl/Tk и FFmpeg с ffprobe, libx264 и AAC. Укажите полные пути, если FFmpeg отсутствует в PATH. Отдельное окружение нужно для онлайн-синтеза.
+
+```powershell
+python -m venv "$env:LOCALAPPDATA\StoryStudioMVP-venv"
+$py = "$env:LOCALAPPDATA\StoryStudioMVP-venv\Scripts\python.exe"
+& $py -m pip install edge-tts==7.3.1
+# Если FFmpeg отсутствует в PATH:
+# $env:STORY_MVP_FFMPEG = 'C:\Tools\ffmpeg\bin\ffmpeg.exe'
+# $env:STORY_MVP_FFPROBE = 'C:\Tools\ffmpeg\bin\ffprobe.exe'
+& $py -m experimental_mvp.pipeline --check
+& $py -m experimental_mvp.pipeline
+```
+
+Для сборки из импортированного аудио установка edge-tts не требуется. Edge TTS требует доступа к сети и получает введённый текст. Для RU доступны Светлана и Дмитрий, для UA Полина. Значение языка UA хранится как `uk`. Этот эксперимент не устанавливает условия коммерческого использования голосов.
+
+## Проект и сборка
+
+1. Откройте демо или создайте проект. Введите тему, выберите язык и голос. «Анализ темы» формирует локальный редакционный шаблон с тремя hooks и списком проверок. Для вызова существующего Editorial Preview укажите JSON его установленного формата, например `examples/editor_input_example.json`. Шаблон не подтверждает утверждения и не требует модели.
+2. Введите по одному абзацу дикторского текста на сцену. Для каждой сцены в раскадровке задайте описание, промпт и при наличии путь к PNG, JPEG, WebP или BMP. Разделяйте сцены строкой `---`. Пустой путь создаёт цветовую заглушку. Используйте изображения, на которые у вас есть права.
+3. По желанию выберите готовый MP3/WAV. Подтвердите локальное производство и нажмите «Собрать MP4». После сборки доступны измеренные или оценочные длительности, SRT и MP4. Кнопка просмотра открывает системный проигрыватель, в котором можно выбрать встроенную дорожку субтитров.
+4. Сохранённые проекты находятся в `%LOCALAPPDATA%\StoryStudioMVP\projects`. Изменить корень можно переменной `STORY_MVP_HOME`. При открытии внешнего JSON сохранение создаёт копию в рабочей области. Каждая сборка получает собственную папку с исходным снимком, аудиосегментами или копией аудио, таймингом, журналом и результатом. Внешние изображения и аудио в проекте хранятся как ссылки на файлы и копируются при сборке.
+
+CLI запускает тот же конвейер и пригоден при отсутствии Tcl/Tk.
+
+```powershell
+& $py -m experimental_mvp.pipeline --project experimental_mvp/demos/ru.json --approve
+& $py -m experimental_mvp.pipeline --project experimental_mvp/demos/uk.json --approve
+# Добавьте --audio 'C:\Media\narration.wav' для импорта или --workspace 'C:\Media\MVP-runs'
+& $py -m unittest experimental_mvp.test_pipeline -v
+```
+
+В демо используется ручной сценарий. Автоматическое сочинение сценария через LLM, ASR и генерация изображений отсутствуют. При интеграции LLM потребуются отдельные модель, условия использования и проверка источников. Для Edge TTS границы сцен измеряются по сегментам, внутри сцен реплики распределяются оценочно. При импорте аудио время сцен распределяется по числу слов. SRT и встроенная дорожка mov_text используют тот же оценочный тайминг. Визуальные переходы выполняются через затемнение на стыках.
+
+## Происхождение и лицензии
+
+База RU/UA `4077e73c829f477d134e2bfe7b69118c3dde5552`. В `.gitmodules` и Git-дереве есть upstream gitlink `87c2bbf7093d7817d28a0f2b32cf21bb857b7cc1`, а [upstream/README.md](../upstream/README.md) фиксирует импорт снимка konlu. Это подтверждает происхождение импортированных материалов, без утверждения, что GitHub зарегистрировал весь проект как сетевой fork. Наблюдавшийся HEAD konlu `f502622bd1d0df4513b7126853772feb0140d510`. В обоих upstream-коммитах указан CC BY-NC-SA 4.0. [Лицензия закреплённого upstream](https://github.com/konlu/story-studio/blob/87c2bbf7093d7817d28a0f2b32cf21bb857b7cc1/LICENSE)
+
+| Функция konlu | Исходное место | Аналог RU/UA и готовность | Windows / CPU и ограничения | Решение |
+|---|---|---|---|---|
+| Сценарии и hooks | modules/history-writing/GUIDE.md, modules/characterstory-writing/GUIDE.md | Editor Preview и ручной сценарий | Шаблон работает без LLM; корпуса и Writing-DNA не импортированы | REIMPLEMENT |
+| Облачный TTS | scripts/doubao_tts.py | scripts/edge_voice_demo.py | Edge TTS работает по сети; аудио можно импортировать локально | REUSE существующего RU/UA |
+| ASR и SRT | modules/history-image/scripts/transcribe_with_coli.py | SRT из измеренной длины и оценочной разбивки | Windows CPU для оценочного режима; Coli, модели и их лицензии вне MVP | DEFER ASR |
+| Раскадровка и визуалы | modules/history-image/GUIDE.md | Локальные описания, промпты, изображения или заглушки | CPU; внешние изображения требуют собственных прав | REIMPLEMENT |
+| FFmpeg и монтаж | modules/render-history-video/scripts/render.py, export_jianying.py | scripts/first_video.py в базе; отдельная сборка MVP | CPU H.264/AAC, переходы и mov_text; установленный FFmpeg используется как отдельный процесс | ADAPT технического подхода без копирования |
+| Восстановление проекта | references/project-state.md | Рабочая область JSON и отдельные папки запусков | Windows; нет зависимости от production storage | REIMPLEMENT |
+| JianYing и CapCut | modules/render-history-video/scripts/export_jianying.py | MP4 без стороннего редактора | Совместимость CapCut International не проверена | DEFER |
+
+Код, модели, визуальные материалы, корпуса и исполняемые файлы konlu в добавления не входят. Edge TTS используется через существующий в RU/UA адаптер и отдельно устанавливаемый клиент `edge-tts`. Лицензия клиента версии 7.3.1 указывает LGPLv3 и исключение MIT для srt_composer.py. Условия сетевого сервиса действуют отдельно. Историческая копия MIT из LICENSES/ORIGINAL-MIT-LICENSE.txt не меняет CC BY-NC-SA у закреплённых снимков konlu. FFmpeg использован отдельным исполняемым файлом, который не включён в ветку. Для его распространения существенны конкретная конфигурация и лицензия сборки. См. [существующий реестр лицензий](../LICENSES/THIRD_PARTY_NOTICES.md).

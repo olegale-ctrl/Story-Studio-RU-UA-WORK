@@ -1,0 +1,269 @@
+"""Local experimental production, separate from Story Studio release storage."""
+import argparse
+from datetime import datetime, timezone
+import importlib.util
+import json
+import os
+from pathlib import Path
+import re
+import shutil
+import subprocess
+import tempfile
+import uuid
+
+from scripts.edge_voice_demo import synthesize
+
+VOICES = {"ru": "ru-RU-SvetlanaNeural", "uk": "uk-UA-PolinaNeural"}
+ROOT = Path(os.environ.get("STORY_MVP_HOME") or (Path(os.environ.get("LOCALAPPDATA", str(Path.home()))) / "StoryStudioMVP")).resolve()
+DEMOS = Path(__file__).with_name("demos")
+
+
+def save(path, project):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent,
+                                     delete=False) as stream:
+        temp = Path(stream.name)
+        try:
+            json.dump(project, stream, ensure_ascii=False, indent=2)
+            stream.write("\n")
+        except BaseException:
+            stream.close()
+            temp.unlink(missing_ok=True)
+            raise
+    try:
+        temp.replace(path)
+    finally:
+        temp.unlink(missing_ok=True)
+
+
+def load(path):
+    return json.loads(path.read_text(encoding="utf-8-sig"))
+
+
+def brief(topic, locale):
+    if locale == "uk":
+        return (f"Тема: {topic}\nОцінка: оберіть конкретне питання й часові межі.\n"
+                "Аудиторія: допитливі глядачі без спеціальної підготовки.\n"
+                f"Вступ 1: Що ми насправді знаємо про «{topic}»?\n"
+                "Вступ 2: Почнімо з однієї знахідки. Що вона може розповісти?\n"
+                "Вступ 3: Яке популярне пояснення варто перевірити?\n"
+                "Структура: питання → докази й альтернативи → межі висновку.\n"
+                "Твердження для перевірки: дати, місця, причинні зв’язки.\n"
+                "Джерела: звіти розкопок, наукові огляди, музейні каталоги.\n"
+                "Ризики: неповнота даних, суперечливі датування й узагальнення.\n"
+                "Візуальні варіанти: карта, хронологія, схема знахідки.\n"
+                "Чекає рішення редактора. Фактичні твердження не перевірено.")
+    return (f"Тема: {topic}\nОценка: выберите конкретный вопрос и временные рамки.\n"
+            "Аудитория: любознательные зрители без специальной подготовки.\n"
+            f"Вступление 1: Что мы на самом деле знаем о теме «{topic}»?\n"
+            "Вступление 2: Начнём с одной находки. О чём она может рассказать?\n"
+            "Вступление 3: Какое популярное объяснение стоит проверить?\n"
+            "Структура: вопрос → свидетельства и альтернативы → границы вывода.\n"
+            "Утверждения для проверки: даты, места, причинные связи.\n"
+            "Источники: отчёты раскопок, научные обзоры, музейные каталоги.\n"
+            "Риски: неполнота данных, спорные датировки и обобщения.\n"
+            "Визуальные варианты: карта, хронология, схема находки.\n"
+            "Ожидается решение редактора. Фактические утверждения не проверены.")
+
+
+def executable(name):
+    configured = os.environ.get("STORY_MVP_" + name.upper())
+    path = configured or shutil.which(name)
+    if not path:
+        raise RuntimeError(f"Не найден {name}. Укажите STORY_MVP_{name.upper()}.")
+    return path
+
+
+def command(args, folder, log, timeout=300):
+    with log.open("a", encoding="utf-8") as stream:
+        stream.write(f"\n{args[0]} {args[-1]}\n")
+        stream.flush()
+        result = subprocess.run(args, cwd=folder, stdout=stream, stderr=stream,
+                                timeout=timeout, check=False)
+        stream.write(f"exit={result.returncode}\n")
+    if result.returncode:
+        raise RuntimeError(f"Этап завершился с кодом {result.returncode}. Журнал: {log}")
+
+
+def duration(path, ffprobe):
+    result = subprocess.run([ffprobe, "-v", "error", "-select_streams", "a:0",
+                             "-show_entries", "stream=codec_type:format=duration",
+                             "-of", "json", str(path)], capture_output=True, check=True, timeout=25)
+    data = json.loads(result.stdout)
+    if not data.get("streams") or float(data["format"]["duration"]) <= 0:
+        raise ValueError("Файл должен содержать аудиодорожку положительной длительности.")
+    return round(float(data["format"]["duration"]) * 1000)
+
+
+def timestamp(ms):
+    hours, ms = divmod(ms, 3600000)
+    minutes, ms = divmod(ms, 60000)
+    seconds, ms = divmod(ms, 1000)
+    return f"{hours:02}:{minutes:02}:{seconds:02},{ms:03}"
+
+
+def intervals(texts, total):
+    weights = [max(1, len(text.split())) for text in texts]
+    if total < 250 * len(weights):
+        raise ValueError("Аудио слишком короткое для количества сцен.")
+    free = total - 250 * len(weights)
+    elapsed = 0
+    cumulative = 0
+    for index, weight in enumerate(weights, 1):
+        cumulative += weight
+        end = 250 * index + (free * cumulative // sum(weights))
+        yield elapsed, end
+        elapsed = end
+
+
+def subtitles(texts, spans):
+    cues = []
+    for text, (start, end) in zip(texts, spans):
+        words = text.split()
+        chunks, line = [], []
+        for word in words:
+            if line and len(" ".join(line + [word])) > 64:
+                chunks.append(" ".join(line))
+                line = []
+            line.append(word)
+        if line:
+            chunks.append(" ".join(line))
+        for i, chunk in enumerate(chunks):
+            a = start + (end - start) * i // len(chunks)
+            b = start + (end - start) * (i + 1) // len(chunks)
+            if b > a:
+                # Prevent user-entered markup from becoming subtitle formatting.
+                plain = chunk.replace("<", "‹").replace(">", "›").replace("{", "｛").replace("}", "｝")
+                cues.append(f"{len(cues)+1}\n{timestamp(a)} --> {timestamp(b)}\n{plain}\n")
+    return "\n".join(cues)
+
+
+def build(project, workspace, notify=print):
+    if project.get("approved") is not True:
+        raise ValueError("Сначала подтвердите переход к производству.")
+    scenes = project["scenes"]
+    texts = [scene["text"].strip() for scene in scenes]
+    if not texts or any(not text for text in texts):
+        raise ValueError("Добавьте текст диктора для каждой сцены.")
+    ffmpeg, ffprobe = executable("ffmpeg"), executable("ffprobe")
+    workspace = workspace.resolve()
+    workspace.mkdir(parents=True, exist_ok=True)
+    folder = workspace / ("run-" + uuid.uuid4().hex[:12])
+    folder.mkdir()
+    log = folder / "build.log"
+    log.write_text(datetime.now(timezone.utc).isoformat() + "\n", encoding="utf-8")
+    save(folder / "project.json", project)
+    try:
+        notify("Озвучка")
+        audio = project.get("audio")
+        if audio:
+            source = Path(audio).expanduser().resolve(strict=True)
+            if source.suffix.lower() not in {".mp3", ".wav"}:
+                raise ValueError("Импорт озвучки поддерживает MP3 и WAV.")
+            imported = folder / ("import" + source.suffix.lower())
+            shutil.copyfile(source, imported)
+            spans = list(intervals(texts, duration(imported, ffprobe)))
+            audio_args = ["-i", imported.name]
+            timing = "estimated_word_weighted_from_imported_audio"
+        else:
+            if importlib.util.find_spec("edge_tts") is None:
+                raise RuntimeError("Нет edge-tts. Установите в локальное окружение или импортируйте MP3/WAV.")
+            voice = project.get("voice") or VOICES[project["locale"]]
+            allowed = {VOICES[project["locale"]]}
+            if project["locale"] == "ru":
+                allowed.add("ru-RU-DmitryNeural")
+            if voice not in allowed:
+                raise ValueError("Выбранный голос не подходит языку проекта.")
+            segments = []
+            for index, text in enumerate(texts, 1):
+                notify(f"Edge TTS: {index}/{len(texts)}")
+                mp3 = folder / f"speech{index:03}.mp3"
+                synthesize(voice, text, mp3, ffprobe=ffprobe,
+                           attempts=3, allow_fallback=False)
+                wav = mp3.with_suffix(".wav")
+                command([ffmpeg, "-nostdin", "-v", "error", "-i", mp3.name,
+                         "-ac", "1", "-ar", "24000", wav.name], folder, log)
+                segments.append(wav.name)
+            (folder / "speech.txt").write_text("".join(f"file '{name}'\n" for name in segments),
+                                               encoding="ascii")
+            start = 0
+            spans = []
+            for name in segments:
+                end = start + duration(folder / name, ffprobe)
+                spans.append((start, end))
+                start = end
+            audio_args = ["-f", "concat", "-safe", "1", "-i", "speech.txt"]
+            timing = "measured_edge_scene_boundaries_estimated_cue_boundaries"
+        (folder / "captions.srt").write_text(subtitles(texts, spans), encoding="utf-8")
+        save(folder / "timing.json", {"method": timing, "scenes_ms": spans})
+        clips = []
+        colors = ["0x17365a", "0x275148", "0x603d44", "0x39466b"]
+        for index, (scene, (start, end)) in enumerate(zip(scenes, spans), 1):
+            notify(f"Видео: сцена {index}/{len(scenes)}")
+            length = (end - start) / 1000
+            image = scene.get("image")
+            if image:
+                source = Path(image).expanduser().resolve(strict=True)
+                if source.suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp", ".bmp"}:
+                    raise ValueError("Используйте PNG, JPEG, WebP или BMP.")
+                local = folder / f"image{index:03}{source.suffix.lower()}"
+                shutil.copyfile(source, local)
+                image_args = ["-loop", "1", "-framerate", "30", "-i", local.name]
+            else:
+                color = colors[(index - 1) % len(colors)]
+                image_args = ["-f", "lavfi", "-i", f"color=c={color}:s=1920x1080:r=30"]
+            fade = min(0.22, length / 3)
+            filters = ("scale=1920:1080:force_original_aspect_ratio=decrease:"
+                       "force_divisible_by=2,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,"
+                       f"setsar=1,format=yuv420p,fade=t=in:d={fade},"
+                       f"fade=t=out:st={length-fade}:d={fade}")
+            clip = f"scene{index:03}.mp4"
+            command([ffmpeg, "-nostdin", "-v", "error", *image_args, "-an", "-vf", filters,
+                     "-t", str(length), "-c:v", "libx264", "-preset", "ultrafast",
+                     "-threads", "4", clip], folder, log)
+            clips.append(clip)
+        (folder / "scenes.txt").write_text("".join(f"file '{name}'\n" for name in clips),
+                                          encoding="ascii")
+        notify("Сборка MP4")
+        command([ffmpeg, "-nostdin", "-v", "error", "-f", "concat", "-safe", "1",
+                 "-i", "scenes.txt", *audio_args, "-i", "captions.srt",
+                 "-map", "0:v:0", "-map", "1:a:0", "-map", "2:s:0",
+                 "-c:v", "copy", "-c:a", "aac", "-c:s", "mov_text",
+                 "-metadata:s:s:0", "language=" + {"ru": "rus", "uk": "ukr"}[project["locale"]],
+                 "-disposition:s:0", "default", "-movflags", "+faststart", "final.mp4"], folder, log)
+        save(folder / "result.json", {"status": "complete", "timing": timing})
+        return folder / "final.mp4"
+    except Exception as exc:
+        save(folder / "result.json", {"status": "error", "message": str(exc)})
+        raise RuntimeError(f"{exc}\nПапка сборки: {folder}") from exc
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--check", action="store_true")
+    parser.add_argument("--project", type=Path)
+    parser.add_argument("--workspace", type=Path, default=ROOT / "runs")
+    parser.add_argument("--audio", type=Path, help="Override the project audiobook with an MP3/WAV")
+    parser.add_argument("--approve", action="store_true", help="Confirm this local experimental render")
+    args = parser.parse_args()
+    if args.check:
+        for name in ("ffmpeg", "ffprobe"):
+            subprocess.run([executable(name), "-version"], check=True, stdout=subprocess.DEVNULL)
+            print(name, "OK")
+        print("Edge TTS client:", bool(importlib.util.find_spec("edge_tts")), "(network untested)")
+        from tkinter import Tcl
+        print("Tcl:", Tcl().eval("info patchlevel"))
+    elif args.project:
+        project = load(args.project)
+        if args.audio:
+            project["audio"] = str(args.audio.resolve())
+        if args.approve:
+            project["approved"] = True
+        print(build(project, args.workspace))
+    else:
+        from experimental_mvp.ui import launch
+        launch()
+
+
+if __name__ == "__main__":
+    main()
