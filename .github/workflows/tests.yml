@@ -8,22 +8,50 @@ on:
 
 jobs:
   unittest:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         python-version: ['3.10', '3.13']
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: false
-      - uses: actions/setup-python@v5
+          persist-credentials: false
+      - name: Record and verify tested SHA
+        run: |
+          git rev-parse HEAD
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+      - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install FFmpeg for local media regression tests
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
       - name: Install Python test runner
         run: python -m pip install 'pytest>=8,<10'
+      - name: Verify runtime tools
+        run: |
+          python --version
+          ffmpeg -version
+          ffprobe -version
+          python -m pytest --version
+      - name: Render the registered D1 fixture
+        if: matrix.python-version == '3.13'
+        run: python scripts/topic_to_video.py examples/topic_d1_synthetic.json --output-dir output-d1
+      - name: Save synthetic D1 evidence
+        if: matrix.python-version == '3.13'
+        uses: actions/upload-artifact@v6
+        with:
+          name: si-product-02-2-1-d1-evidence
+          path: |
+            output-d1/*.json
+            output-d1/ru/project.json
+            output-d1/uk/project.json
+            output-d1/ru/first-video.mp4
+            output-d1/uk/first-video.mp4
+          if-no-files-found: error
       - name: Run stdlib Python tests
         run: python -m unittest discover -s tests -v
       - name: Run full pytest suite
