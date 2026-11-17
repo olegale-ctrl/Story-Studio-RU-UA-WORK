@@ -2,7 +2,6 @@
 import argparse
 from datetime import datetime, timezone
 from hashlib import sha256
-import importlib.util
 import json
 import os
 from pathlib import Path
@@ -499,19 +498,17 @@ def build(project, workspace, notify=print, *, preview=False, cancelled=lambda: 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--check", action="store_true")
+    parser.add_argument("--check", action="store_true", help="Offline installation and codec check")
+    parser.add_argument("--check-edge", choices=VOICES,
+                        help="Also synthesize a short sample using the online service")
     parser.add_argument("--project", type=Path)
     parser.add_argument("--workspace", type=Path, default=ROOT / "runs")
     parser.add_argument("--audio", type=Path, help="Override the project audiobook with an MP3/WAV")
     parser.add_argument("--approve", action="store_true", help="Confirm this local experimental render")
     args = parser.parse_args()
-    if args.check:
-        for name in ("ffmpeg", "ffprobe"):
-            subprocess.run([executable(name), "-version"], check=True, stdout=subprocess.DEVNULL)
-            print(name, "OK")
-        print("Edge TTS client:", bool(importlib.util.find_spec("edge_tts")), "(network untested)")
-        from tkinter import Tcl
-        print("Tcl:", Tcl().eval("info patchlevel"))
+    if args.check or args.check_edge:
+        from experimental_mvp.diagnostics import check
+        return check(args.check_edge)
     elif args.project:
         project = load(args.project)
         if args.audio:
@@ -525,4 +522,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

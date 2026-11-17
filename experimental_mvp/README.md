@@ -4,20 +4,7 @@
 
 ## Запуск из PowerShell
 
-Запустите PowerShell из корня репозитория. Используйте Python 3.10+ с Tcl/Tk и FFmpeg с ffprobe, libx264 и AAC. Укажите полные пути, если FFmpeg отсутствует в PATH. Отдельное окружение нужно для онлайн-синтеза.
-
-```powershell
-python -m venv "$env:LOCALAPPDATA\StoryStudioMVP-venv"
-$py = "$env:LOCALAPPDATA\StoryStudioMVP-venv\Scripts\python.exe"
-& $py -m pip install edge-tts==7.3.1
-# Если FFmpeg отсутствует в PATH:
-# $env:STORY_MVP_FFMPEG = 'C:\Tools\ffmpeg\bin\ffmpeg.exe'
-# $env:STORY_MVP_FFPROBE = 'C:\Tools\ffmpeg\bin\ffprobe.exe'
-& $py -m experimental_mvp.pipeline --check
-& $py -m experimental_mvp.pipeline
-```
-
-Для сборки из импортированного аудио установка edge-tts не требуется. Edge TTS требует доступа к сети и получает введённый текст. Для RU доступны Светлана и Дмитрий, для UA Полина. Значение языка UA хранится как `uk`. Этот эксперимент не устанавливает условия коммерческого использования голосов.
+См. [установку RC-01 с точными версиями](INSTALL_RC01.md) и [состав пакета и лицензии](RC01_LICENSES.md). Опция --check проверяет локальную сборку. Опции --check-edge ru и --check-edge uk отдельно проверяют сетевой синтез.
 
 ## Проект и сборка
 
