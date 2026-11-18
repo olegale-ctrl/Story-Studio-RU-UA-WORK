@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-18",
+  "control_status": "RC02_BASELINE_BLOCKED",
+  "windows_status": "BLOCKED_ENVIRONMENT",
+  "windows_execution": "NOT_RUN",
+  "source_commit": "1f27a9bb024b4e2ad18121843f14fe57d0522f17",
+  "source_tree": "2fd1e0f9f121016827f726606b821b510f6806e3",
+  "linux_python": "3.12.14",
+  "linux_tk": "9.0.4",
+  "linux_ffmpeg": "7.1.5-0+deb13u1",
+  "edge_tts_installed": false,
+  "linux_uid": 1000,
+  "unittest": {
+    "tests": 9,
+    "skipped": 0,
+    "exit_code": 0,
+    "seconds": 3.272
+  },
+  "supplemental": {
+    "checks": 18,
+    "exit_code": 0
+  },
+  "gui_create": {
+    "exit_code": 0
+  },
+  "gui_reopen": {
+    "exit_code": 0
+  },
+  "installation_check": {
+    "exit_code": 0
+  },
+  "human_listening": "NOT_RUN",
+  "windows_powershell": "NOT_RUN",
+  "system_player": "NOT_RUN",
+  "live_edge_ru_uk": "NOT_RUN",
+  "critical_windows_defects": "NOT_ASSESSED",
+  "normative_or_implementation_changes": false
+}

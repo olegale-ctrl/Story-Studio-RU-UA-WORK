@@ -1,0 +1,288 @@
+{
+  "source_commit": "1f27a9bb024b4e2ad18121843f14fe57d0522f17",
+  "platform": "Linux",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "results": [
+    {
+      "check": "prepare-wav",
+      "command": [
+        "ffmpeg",
+        "-y",
+        "-v",
+        "error",
+        "-i",
+        "/workspace/work/experimental-media-hub/experimental_mvp/demos/media_hub/ru_speech.mp3",
+        "-t",
+        "6",
+        "-ar",
+        "24000",
+        "/workspace/work/rc02-addendum-evidence/Кириллица и пробелы/Озвучка сцены.wav"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "check": "prepare-mp3",
+      "command": [
+        "ffmpeg",
+        "-y",
+        "-v",
+        "error",
+        "-i",
+        "/workspace/work/experimental-media-hub/experimental_mvp/demos/media_hub/ru_speech.mp3",
+        "-t",
+        "6",
+        "-ar",
+        "24000",
+        "/workspace/work/rc02-addendum-evidence/Кириллица и пробелы/Озвучка сцены.mp3"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "check": "local-wav-export",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-m",
+        "experimental_mvp.pipeline",
+        "--project",
+        "/workspace/work/rc02-addendum-evidence/Кириллица и пробелы/Проект проверки.json",
+        "--workspace",
+        "/workspace/work/rc02-addendum-evidence/runs",
+        "--approve"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "check": "ffprobe",
+      "command": [
+        "ffprobe",
+        "-v",
+        "error",
+        "-show_streams",
+        "-show_format",
+        "-of",
+        "json",
+        "/workspace/work/rc02-addendum-evidence/runs/run-75bd87856ede/final.mp4"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "check": "full-decode",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-xerror",
+        "-i",
+        "/workspace/work/rc02-addendum-evidence/runs/run-75bd87856ede/final.mp4",
+        "-f",
+        "null",
+        "-"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "check": "frame",
+      "command": [
+        "ffmpeg",
+        "-v",
+        "error",
+        "-ss",
+        "1",
+        "-i",
+        "/workspace/work/rc02-addendum-evidence/runs/run-75bd87856ede/final.mp4",
+        "-frames:v",
+        "1",
+        "-threads",
+        "1",
+        "/workspace/work/rc02-addendum-evidence/checked-frame.png"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "check": "scene-preview",
+      "status": "PASS",
+      "exit_code": null,
+      "api_return": "/workspace/work/rc02-addendum-evidence/previews/preview-9eb2b9b80bd8/preview.mp4",
+      "approximate_audio_boundaries": true
+    },
+    {
+      "check": "movie-preview",
+      "status": "PASS",
+      "exit_code": null,
+      "api_return": "/workspace/work/rc02-addendum-evidence/movie/movie-preview-ea380f97d30c/final.mp4"
+    },
+    {
+      "check": "local-mp3-export",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-m",
+        "experimental_mvp.pipeline",
+        "--project",
+        "/workspace/work/rc02-addendum-evidence/Кириллица и пробелы/Проект проверки.json",
+        "--workspace",
+        "/workspace/work/rc02-addendum-evidence/runs",
+        "--approve"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "check": "missing-audio",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-m",
+        "experimental_mvp.pipeline",
+        "--project",
+        "/workspace/work/rc02-addendum-evidence/Кириллица и пробелы/Проект проверки.json",
+        "--workspace",
+        "/workspace/work/rc02-addendum-evidence/runs",
+        "--approve"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "status": "PASS"
+    },
+    {
+      "check": "corrupt-mp3",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-m",
+        "experimental_mvp.pipeline",
+        "--project",
+        "/workspace/work/rc02-addendum-evidence/Кириллица и пробелы/Проект проверки.json",
+        "--workspace",
+        "/workspace/work/rc02-addendum-evidence/runs",
+        "--approve"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "status": "PASS"
+    },
+    {
+      "check": "corrupt-wav",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-m",
+        "experimental_mvp.pipeline",
+        "--project",
+        "/workspace/work/rc02-addendum-evidence/Кириллица и пробелы/Проект проверки.json",
+        "--workspace",
+        "/workspace/work/rc02-addendum-evidence/runs",
+        "--approve"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "status": "PASS"
+    },
+    {
+      "check": "missing-ffmpeg",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-m",
+        "experimental_mvp.pipeline",
+        "--project",
+        "/workspace/work/rc02-addendum-evidence/Кириллица и пробелы/Проект проверки.json",
+        "--workspace",
+        "/workspace/work/rc02-addendum-evidence/runs",
+        "--approve"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "status": "PASS"
+    },
+    {
+      "check": "caption-overrun",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-m",
+        "experimental_mvp.pipeline",
+        "--project",
+        "/workspace/work/rc02-addendum-evidence/Кириллица и пробелы/Проект проверки.json",
+        "--workspace",
+        "/workspace/work/rc02-addendum-evidence/runs",
+        "--approve"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "status": "PASS"
+    },
+    {
+      "check": "corrupt-project-json",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-m",
+        "experimental_mvp.pipeline",
+        "--project",
+        "/workspace/work/rc02-addendum-evidence/Кириллица и пробелы/Проект проверки.json",
+        "--workspace",
+        "/workspace/work/rc02-addendum-evidence/runs",
+        "--approve"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "status": "PASS"
+    },
+    {
+      "check": "reopen-after-errors",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-m",
+        "experimental_mvp.pipeline",
+        "--project",
+        "/workspace/work/rc02-addendum-evidence/Кириллица и пробелы/Проект проверки.json",
+        "--workspace",
+        "/workspace/work/rc02-addendum-evidence/runs",
+        "--approve"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "check": "offline-export",
+      "command": [
+        "strace",
+        "-f",
+        "-e",
+        "trace=network",
+        "-e",
+        "inject=socket:error=ENETDOWN",
+        "-e",
+        "inject=connect:error=ENETUNREACH",
+        "-o",
+        "/workspace/work/rc02-addendum-evidence/offline.trace",
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-m",
+        "experimental_mvp.pipeline",
+        "--project",
+        "/workspace/work/rc02-addendum-evidence/Кириллица и пробелы/Проект проверки.json",
+        "--workspace",
+        "/workspace/work/rc02-addendum-evidence/runs",
+        "--approve"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "check": "no-false-success",
+      "status": "PASS",
+      "exit_code": null
+    }
+  ],
+  "output": "/workspace/work/rc02-addendum-evidence/runs/run-75bd87856ede/final.mp4",
+  "output_sha256": "79c7ca4065b4a4f58bdd433991a359a770e608f9549590cd93f59f9a39ae35ac"
+}

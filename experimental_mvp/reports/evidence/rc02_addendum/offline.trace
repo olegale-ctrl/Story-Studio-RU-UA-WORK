@@ -1,0 +1,107 @@
+16383 +++ exited with 0 +++
+16382 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=16383, si_uid=1000, si_status=0, si_utime=5 /* 0.05 s */, si_stime=2 /* 0.02 s */} ---
+16389 +++ exited with 0 +++
+16385 +++ exited with 0 +++
+16391 +++ exited with 0 +++
+16392 +++ exited with 0 +++
+16390 +++ exited with 0 +++
+16386 +++ exited with 0 +++
+16388 +++ exited with 0 +++
+16387 +++ exited with 0 +++
+16384 +++ exited with 0 +++
+16382 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=16384, si_uid=1000, si_status=0, si_utime=4 /* 0.04 s */, si_stime=3 /* 0.03 s */} ---
+16401 +++ exited with 0 +++
+16400 +++ exited with 0 +++
+16403 +++ exited with 0 +++
+16402 +++ exited with 0 +++
+16404 +++ exited with 0 +++
+16405 +++ exited with 0 +++
+16398 +++ exited with 0 +++
+16399 +++ exited with 0 +++
+16394 +++ exited with 0 +++
+16395 +++ exited with 0 +++
+16396 +++ exited with 0 +++
+16397 +++ exited with 0 +++
+16393 +++ exited with 0 +++
+16382 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=16393, si_uid=1000, si_status=0, si_utime=5 /* 0.05 s */, si_stime=1 /* 0.01 s */} ---
+16414 +++ exited with 0 +++
+16413 +++ exited with 0 +++
+16416 +++ exited with 0 +++
+16415 +++ exited with 0 +++
+16417 +++ exited with 0 +++
+16411 +++ exited with 0 +++
+16418 +++ exited with 0 +++
+16412 +++ exited with 0 +++
+16407 +++ exited with 0 +++
+16408 +++ exited with 0 +++
+16409 +++ exited with 0 +++
+16410 +++ exited with 0 +++
+16406 +++ exited with 0 +++
+16382 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=16406, si_uid=1000, si_status=0, si_utime=3 /* 0.03 s */, si_stime=3 /* 0.03 s */} ---
+16382 sendfile(4, 3, [0] => [288078], 8388608) = 288078
+16382 sendfile(4, 3, [288078], 8388608) = 0
+16419 +++ exited with 0 +++
+16382 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=16419, si_uid=1000, si_status=0, si_utime=6 /* 0.06 s */, si_stime=4 /* 0.04 s */} ---
+16382 sendfile(4, 3, [0] => [11256], 8388608) = 11256
+16382 sendfile(4, 3, [11256], 8388608)  = 0
+16432 +++ exited with 0 +++
+16434 +++ exited with 0 +++
+16439 +++ exited with 0 +++
+16433 +++ exited with 0 +++
+16430 +++ exited with 0 +++
+16431 +++ exited with 0 +++
+16429 +++ exited with 0 +++
+16426 +++ exited with 0 +++
+16427 +++ exited with 0 +++
+16428 +++ exited with 0 +++
+16425 +++ exited with 0 +++
+16440 +++ exited with 0 +++
+16436 +++ exited with 0 +++
+16435 +++ exited with 0 +++
+16437 +++ exited with 0 +++
+16438 +++ exited with 0 +++
+16421 +++ exited with 0 +++
+16422 +++ exited with 0 +++
+16423 +++ exited with 0 +++
+16424 +++ exited with 0 +++
+16420 +++ exited with 0 +++
+16382 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=16420, si_uid=1000, si_status=0, si_utime=85 /* 0.85 s */, si_stime=14 /* 0.14 s */} ---
+16382 sendfile(4, 3, [0] => [11256], 8388608) = 11256
+16382 sendfile(4, 3, [11256], 8388608)  = 0
+16455 +++ exited with 0 +++
+16453 +++ exited with 0 +++
+16454 +++ exited with 0 +++
+16450 +++ exited with 0 +++
+16451 +++ exited with 0 +++
+16452 +++ exited with 0 +++
+16448 +++ exited with 0 +++
+16447 +++ exited with 0 +++
+16449 +++ exited with 0 +++
+16460 +++ exited with 0 +++
+16461 +++ exited with 0 +++
+16446 +++ exited with 0 +++
+16456 +++ exited with 0 +++
+16459 +++ exited with 0 +++
+16458 +++ exited with 0 +++
+16457 +++ exited with 0 +++
+16442 +++ exited with 0 +++
+16443 +++ exited with 0 +++
+16444 +++ exited with 0 +++
+16445 +++ exited with 0 +++
+16441 +++ exited with 0 +++
+16382 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=16441, si_uid=1000, si_status=0, si_utime=79 /* 0.79 s */, si_stime=12 /* 0.12 s */} ---
+16470 +++ exited with 0 +++
+16467 +++ exited with 0 +++
+16464 +++ exited with 0 +++
+16469 +++ exited with 0 +++
+16466 +++ exited with 0 +++
+16468 +++ exited with 0 +++
+16471 +++ exited with 0 +++
+16472 +++ exited with 0 +++
+16473 +++ exited with 0 +++
+16465 +++ exited with 0 +++
+16474 +++ exited with 0 +++
+16463 +++ exited with 0 +++
+16462 +++ exited with 0 +++
+16382 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=16462, si_uid=1000, si_status=0, si_utime=17 /* 0.17 s */, si_stime=7 /* 0.07 s */} ---
+16382 +++ exited with 0 +++

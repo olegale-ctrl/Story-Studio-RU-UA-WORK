@@ -1,0 +1,8 @@
+Озвучка
+Озвучка подготовлена
+Видео: сцена 1/2
+Видео: сцена 2/2
+Сборка MP4
+/workspace/work/rc02-addendum-evidence/runs/run-1a11a4147cc1/final.mp4
+
+STDERR

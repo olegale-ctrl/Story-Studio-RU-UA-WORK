@@ -1,0 +1,22 @@
+
+STDERR
+Traceback (most recent call last):
+  File "/workspace/work/rc02-independent/experimental_mvp/pipeline.py", line 442, in build
+    raise ValueError("\n".join(errors))
+ValueError: Сцена 1 / captions: Сцена 1, реплика 1: нужно 0 ≤ начало < конец ≤ 3305 мс.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/workspace/work/rc02-independent/experimental_mvp/pipeline.py", line 538, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/workspace/work/rc02-independent/experimental_mvp/pipeline.py", line 531, in main
+    print(build(project, args.workspace))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/rc02-independent/experimental_mvp/pipeline.py", line 509, in build
+    raise RuntimeError(f"{exc}\nПапка сборки: {folder}") from exc
+RuntimeError: Сцена 1 / captions: Сцена 1, реплика 1: нужно 0 ≤ начало < конец ≤ 3305 мс.
+Папка сборки: /workspace/work/rc02-addendum-evidence/runs/run-5c6ac24ec592

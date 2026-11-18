@@ -1,5 +1,7 @@
 # RC-02 independent baseline — 2026-11-18
 
+Latest Addendum No. 1: [canonical report](../RC02_INDEPENDENT_BASELINE.md). Control status: **RC02_BASELINE_BLOCKED** for unavailable Windows. The results below are historical Linux evidence, not Windows verification.
+
 **Scope:** independent Linux reproduction in this task. **Windows 10/11: NOT_RUN**, no Windows machine was available. This is not Windows acceptance.
 
 - Exact detached baseline: `1f27a9bb024b4e2ad18121843f14fe57d0522f17`.

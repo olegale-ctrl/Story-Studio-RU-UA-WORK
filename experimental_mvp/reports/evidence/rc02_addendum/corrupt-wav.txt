@@ -1,0 +1,22 @@
+
+STDERR
+Traceback (most recent call last):
+  File "/workspace/work/rc02-independent/experimental_mvp/pipeline.py", line 442, in build
+    raise ValueError("\n".join(errors))
+ValueError: audio: Файл отсутствует или не читается: /workspace/work/rc02-addendum-evidence/Кириллица и пробелы/Испорчен.wav (Command '['/usr/bin/ffprobe', '-v', 'error', '-select_streams', 'a:0', '-show_entries', 'stream=codec_type:format=duration', '-of', 'json', '/workspace/work/rc02-addendum-evidence/Кириллица и пробелы/Испорчен.wav']' returned non-zero exit status 1.)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/workspace/work/rc02-independent/experimental_mvp/pipeline.py", line 538, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/workspace/work/rc02-independent/experimental_mvp/pipeline.py", line 531, in main
+    print(build(project, args.workspace))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/rc02-independent/experimental_mvp/pipeline.py", line 509, in build
+    raise RuntimeError(f"{exc}\nПапка сборки: {folder}") from exc
+RuntimeError: audio: Файл отсутствует или не читается: /workspace/work/rc02-addendum-evidence/Кириллица и пробелы/Испорчен.wav (Command '['/usr/bin/ffprobe', '-v', 'error', '-select_streams', 'a:0', '-show_entries', 'stream=codec_type:format=duration', '-of', 'json', '/workspace/work/rc02-addendum-evidence/Кириллица и пробелы/Испорчен.wav']' returned non-zero exit status 1.)
+Папка сборки: /workspace/work/rc02-addendum-evidence/runs/run-8aa8af816e07
