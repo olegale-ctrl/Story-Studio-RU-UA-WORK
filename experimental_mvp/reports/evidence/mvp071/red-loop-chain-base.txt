@@ -1,0 +1,14 @@
+test_loop_stream_duration_equals_its_frame_budget_at_24fps (probe.LoopTimestampRegressionTests.test_loop_stream_duration_equals_its_frame_budget_at_24fps) ... FAIL
+
+======================================================================
+FAIL: test_loop_stream_duration_equals_its_frame_budget_at_24fps (probe.LoopTimestampRegressionTests.test_loop_stream_duration_equals_its_frame_budget_at_24fps)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/mvp071/experimental_mvp/test_stabilization.py", line 313, in test_loop_stream_duration_equals_its_frame_budget_at_24fps
+    self.assertAlmostEqual(float(value['duration']),int(value['nb_frames'])/24,places=5)
+AssertionError: 10.0 != 10.041666666666666 within 5 places (0.041666666666666075 difference)
+
+----------------------------------------------------------------------
+Ran 1 test in 1.471s
+
+FAILED (failures=1)

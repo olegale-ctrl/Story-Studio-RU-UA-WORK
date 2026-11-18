@@ -322,10 +322,19 @@ class Editor:
         validate_project(self.project)
         if not allow_conflicts and self.conflicts():raise ValueError('Есть конфликты покрытия/субтитров; сохраните явно как черновик.')
         from experimental_mvp.pipeline import save
-        save(Path(path),deepcopy(self.project));self.saved=deepcopy(self.project)
+        candidate=deepcopy(self.project)
+        if allow_conflicts:candidate['approved']=False
+        save(Path(path),candidate)
+        self.project=candidate;self.saved=deepcopy(candidate)
 
 
 def preview(project, timing, workspace, *, scene_id=None, anchor_id=None, seek_ms=0, cancelled=lambda:False):
+    from experimental_mvp.pipeline import preview_session
+    with preview_session(cancelled):
+        return _preview(project,timing,workspace,scene_id=scene_id,anchor_id=anchor_id,seek_ms=seek_ms,cancelled=cancelled)
+
+
+def _preview(project, timing, workspace, *, scene_id=None, anchor_id=None, seek_ms=0, cancelled=lambda:False):
     """Temporary prerender, not interactive playback. Never edits the source project."""
     from experimental_mvp.pipeline import build, render_scene, preview_audio, command, executable, BuildStopped
     from experimental_mvp.captions import render_srt
@@ -353,6 +362,8 @@ def preview(project, timing, workspace, *, scene_id=None, anchor_id=None, seek_m
         # Render the scene unchanged, then seek the prerendered result; no destructive clipping of anchors.
         length+=local_seek;offset=0
     folder=workspace/('timeline-preview-'+uuid.uuid4().hex[:12]);folder.mkdir()
+    from experimental_mvp.pipeline import register_preview_folder
+    register_preview_folder(folder)
     ffmpeg=executable('ffmpeg');log=folder/'preview.log'
     if cancelled():raise BuildStopped('Предпросмотр отменён.')
     from experimental_mvp.storyboard import output_profile

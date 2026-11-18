@@ -1,5 +1,8 @@
 """Local experimental rendering, separate from Story Studio release storage."""
 import argparse
+from contextlib import contextmanager
+from contextvars import ContextVar
+import time
 from datetime import datetime, timezone
 from hashlib import sha256
 import json
@@ -40,21 +43,22 @@ def save(path, project):
         if project.get("timeline"):
             from experimental_mvp.timeline import validate_project
             validate_project(project)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent,
-                                     delete=False) as stream:
-        temp = Path(stream.name)
-        try:
-            json.dump(project, stream, ensure_ascii=False, indent=2)
-            stream.write("\n")
-        except BaseException:
-            stream.close()
-            temp.unlink(missing_ok=True)
-            raise
+    # Serialize before touching disk; verify the exact bytes read back before replace.
+    payload=json.dumps(project,ensure_ascii=False,indent=2,allow_nan=False)+"\n"
+    path.parent.mkdir(parents=True,exist_ok=True)
+    temp=None
     try:
+        with tempfile.NamedTemporaryFile(mode="w",encoding="utf-8",newline="",dir=path.parent,delete=False) as stream:
+            temp=Path(stream.name)
+            stream.write(payload)
+            stream.flush()
+            os.fsync(stream.fileno())
+        encoded=payload.encode("utf-8")
+        if temp.read_bytes()!=encoded:raise ValueError("Временный JSON не совпал с записываемым проектом.")
+        json.loads(temp.read_text(encoding="utf-8"))
         temp.replace(path)
     finally:
-        temp.unlink(missing_ok=True)
+        if temp is not None:temp.unlink(missing_ok=True)
 
 
 def load(path):
@@ -217,12 +221,75 @@ def executable(name):
     return path
 
 
+_preview_session=ContextVar('story_experimental_preview_session',default=None)
+
+
+@contextmanager
+def preview_session(cancelled):
+    current=_preview_session.get()
+    if current is not None:
+        yield current
+        return
+    session={'cancelled':cancelled,'folders':[],'processes':[],'started':time.monotonic()}
+    token=_preview_session.set(session)
+    try:
+        if cancelled():raise BuildStopped('Предпросмотр отменён до запуска.')
+        yield session
+        if cancelled():raise BuildStopped('Предпросмотр отменён.')
+    except BaseException:
+        for folder in reversed(session['folders']):
+            shutil.rmtree(folder)
+        raise
+    finally:
+        _preview_session.reset(token)
+
+
+def register_preview_folder(folder):
+    session=_preview_session.get()
+    if session is not None:session['folders'].append(Path(folder))
+
+
+def discard_preview_result(path,workspace):
+    """Delete only the exact result returned by this worker, never arbitrary siblings."""
+    path=Path(path);workspace=Path(workspace).resolve()
+    folder=path.parent
+    if path.name not in ('preview.mp4','final.mp4') or not re.fullmatch(r'(timeline-preview|movie-preview|preview)-[0-9a-f]{12}',folder.name):
+        raise ValueError('Неизвестная папка preview: удаление запрещено.')
+    if folder.resolve().parent!=workspace or folder.is_symlink():
+        raise ValueError('Результат preview вне рабочей папки.')
+    if folder.exists():shutil.rmtree(folder)
+
+
 def command(args, folder, log, timeout=300):
     with log.open("a", encoding="utf-8") as stream:
         stream.write(f"\n{args[0]} {args[-1]}\n")
         stream.flush()
-        result = subprocess.run(args, cwd=folder, stdout=stream, stderr=stream,
-                                timeout=timeout, check=False)
+        session=_preview_session.get()
+        if session is None:
+            result=subprocess.run(args,cwd=folder,stdout=stream,stderr=stream,timeout=timeout,check=False)
+        else:
+            if session['cancelled']():raise BuildStopped('Предпросмотр отменён до запуска FFmpeg.')
+            started=time.monotonic()
+            process=subprocess.Popen(args,cwd=folder,stdout=stream,stderr=stream)
+            record={'pid':process.pid,'returncode':None};session['processes'].append(record)
+            try:
+                while True:
+                    try:
+                        code=process.wait(timeout=.05)
+                        break
+                    except subprocess.TimeoutExpired:
+                        if session['cancelled']():raise BuildStopped('Предпросмотр отменён во время команды.')
+                        if time.monotonic()-started>=timeout:raise subprocess.TimeoutExpired(args,timeout)
+                result=subprocess.CompletedProcess(args,code)
+                if session['cancelled']():raise BuildStopped('Предпросмотр отменён после команды.')
+            finally:
+                if process.poll() is None:
+                    process.terminate()
+                    try:process.wait(timeout=2)
+                    except subprocess.TimeoutExpired:
+                        process.kill();process.wait(timeout=2)
+                record['returncode']=process.returncode
+                stream.write(f"owned_pid={process.pid} exit={process.returncode} elapsed={time.monotonic()-started:.3f}s\n")
         stream.write(f"exit={result.returncode}\n")
     if result.returncode:
         raise RuntimeError(f"Этап завершился с кодом {result.returncode}. Журнал: {log}")
@@ -284,7 +351,12 @@ def preview_audio(project, index, workspace):
     raise ValueError(f"Сцена {index + 1}: подготовьте озвучку кнопкой «Подготовить / повторить сцену».")
 
 
-def render_preview(project, index, workspace, audio):
+def render_preview(project, index, workspace, audio, *, cancelled=lambda:False):
+    with preview_session(cancelled):
+        return _render_preview(project,index,workspace,audio,cancelled=cancelled)
+
+
+def _render_preview(project, index, workspace, audio, *, cancelled=lambda:False):
     source, start, length, approximate = audio
     scene = project["scenes"][index]
     overrides = project.get("captions_by_scene", {})
@@ -292,6 +364,7 @@ def render_preview(project, index, workspace, audio):
     captions = render_srt([scene], [(0, length)], overrides)
     folder = workspace.resolve() / ("preview-" + uuid.uuid4().hex[:12])
     folder.mkdir(parents=True)
+    register_preview_folder(folder)
     log = folder / "preview.log"
     (folder / "captions.srt").write_text(captions, encoding="utf-8")
     ffmpeg = executable("ffmpeg")
@@ -300,7 +373,7 @@ def render_preview(project, index, workspace, audio):
         from experimental_mvp.storyboard import output_profile
         profile={**(profile or {}),"timeline_version":1,"scene_start_ms":0,
                  "frame_count":round(length*output_profile(profile)[2]/1000)}
-    clip = render_scene(scene, index + 1, length / 1000, folder, log, ffmpeg, profile)
+    clip = render_scene(scene, index + 1, length / 1000, folder, log, ffmpeg, profile,cancelled)
     command([ffmpeg, "-nostdin", "-v", "error", "-i", clip, "-ss", str(start / 1000),
              "-i", str(source), "-map", "0:v:0", "-map", "1:a:0",
              "-vf", "subtitles=captions.srt", "-t", str(length / 1000),
@@ -469,6 +542,13 @@ class BuildStopped(RuntimeError):
 
 
 def build(project, workspace, notify=print, *, preview=False, cancelled=lambda: False):
+    if preview:
+        with preview_session(cancelled):
+            return _build(project,workspace,notify,preview=preview,cancelled=cancelled)
+    return _build(project,workspace,notify,preview=preview,cancelled=cancelled)
+
+
+def _build(project, workspace, notify=print, *, preview=False, cancelled=lambda: False):
     from copy import deepcopy
     project = deepcopy(project)
     if project.get("approved") is not True:
@@ -482,6 +562,7 @@ def build(project, workspace, notify=print, *, preview=False, cancelled=lambda: 
     prefix = "movie-preview-" if preview else "run-"
     folder = workspace / (prefix + uuid.uuid4().hex[:12])
     folder.mkdir()
+    if preview:register_preview_folder(folder)
     log = folder / "build.log"
     log.write_text(datetime.now(timezone.utc).isoformat() + "\n", encoding="utf-8")
     save(folder / "result.json", {"status": "running"})

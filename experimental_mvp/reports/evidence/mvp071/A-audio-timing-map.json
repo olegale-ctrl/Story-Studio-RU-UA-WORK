@@ -1,0 +1,18 @@
+{
+  "total_ms": 151445,
+  "scenes": [
+    {
+      "scene_id": "0557c23d5da249c9854eaa9d9a42efdf",
+      "start_ms": 0,
+      "end_ms": 151445,
+      "duration_ms": 151445,
+      "audio_duration_kind": "MEASURED_AUDIO_DURATION",
+      "boundary_kind": "ESTIMATED_SCENE_BOUNDARY",
+      "caption_kind": "ESTIMATED_CAPTION_TIMING",
+      "id": "20cc9c0e794b495696fc9020fba33af0"
+    }
+  ],
+  "whole_audio": true,
+  "measured": true,
+  "warning": "Границы оценочные, если не заданы вручную; запись не переставляется вместе со сценами."
+}

@@ -1,0 +1,11 @@
+{
+  "expected_seconds": 302.958,
+  "actual_seconds": 302.96,
+  "video_seconds": 302.96,
+  "audio_seconds": 302.958,
+  "video_audio_delta_seconds": 0.0019999999999527063,
+  "expected_frames": 7574,
+  "actual_frames": 7574,
+  "tolerance_seconds": 0.1,
+  "passed": true
+}

@@ -1,0 +1,23 @@
+START A 30 24 151445
+Traceback (most recent call last):
+  File "/workspace/work/mvp071/experimental_mvp/pipeline.py", line 672, in _build
+    if not passed:raise ValueError("Длительность/кадры MP4 не совпали с озвучкой в допустимом допуске.")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Длительность/кадры MP4 не совпали с озвучкой в допустимом допуске.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/work/mvp071/experimental_mvp/reports/evidence/mvp071/run_frame_matrix.py", line 64, in <module>
+    args=parser.parse_args();matrix(args.output)
+                             ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/mvp071/experimental_mvp/reports/evidence/mvp071/run_frame_matrix.py", line 46, in matrix
+    output=pipe.build(project,folder/'runs',lambda _:None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/mvp071/experimental_mvp/pipeline.py", line 542, in build
+    return _build(project,workspace,notify,preview=preview,cancelled=cancelled)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/mvp071/experimental_mvp/pipeline.py", line 696, in _build
+    raise RuntimeError(f"{exc}\nПапка сборки: {folder}") from exc
+RuntimeError: Длительность/кадры MP4 не совпали с озвучкой в допустимом допуске.
+Папка сборки: /workspace/work/mvp071-evidence/frame-matrix/A/runs/run-386c7e245e62

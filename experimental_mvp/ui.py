@@ -395,7 +395,7 @@ def launch():
 
     def preview_scene():
         project, index, workspace, audio_data = selected_audio()
-        perform(lambda: render_preview(project, index, workspace, audio_data), "preview")
+        perform(lambda: render_preview(project, index, workspace, audio_data,cancelled=stop_requested.is_set), "preview",stoppable=True)
 
     def retry():
         if current() is None:
@@ -530,6 +530,13 @@ def launch():
             stop_button.state(["disabled"])
             for widget in buttons:
                 widget.state(["!disabled"])
+            if kind in ("preview","movie") and stop_requested.is_set():
+                from experimental_mvp.pipeline import discard_preview_result
+                try:discard_preview_result(value[0],value[0].parent.parent)
+                except (OSError,ValueError) as exc:
+                    messagebox.showerror("Очистка preview",str(exc))
+                status.set("Предпросмотр отменён; результат не открыт.")
+                continue
             commit_scene()
             refresh(selected)
             if kind == "checked":

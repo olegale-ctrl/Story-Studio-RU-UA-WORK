@@ -1,0 +1,16 @@
+{
+    "programs": [
+
+    ],
+    "stream_groups": [
+
+    ],
+    "streams": [
+        {
+            "r_frame_rate": "30/1",
+            "duration": "606.066667",
+            "nb_frames": "18182",
+            "nb_read_frames": "18182"
+        }
+    ]
+}

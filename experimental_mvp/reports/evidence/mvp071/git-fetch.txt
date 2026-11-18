@@ -1,0 +1,4 @@
+
+STDERR
+
+EXIT=0

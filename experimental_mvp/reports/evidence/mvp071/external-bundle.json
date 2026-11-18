@@ -1,0 +1,8 @@
+{
+  "path": "/workspace/work/mvp071-evidence/MVP_07_1_EXTERNAL_EVIDENCE.tar.gz",
+  "bytes": 36925922,
+  "sha256": "41a67961a07e3c3497b2f5d099029897a3bd980d71fccc71c320b8a04ceaa23a",
+  "status": "WORKSPACE_ARTIFACT_NOT_PUBLISHED_TO_GITHUB",
+  "manifest_path": "/workspace/work/mvp071-evidence/EXTERNAL_EVIDENCE_CONTENTS.json",
+  "payload_files": 64
+}

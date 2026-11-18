@@ -1,0 +1,16 @@
+test_loop_stream_duration_equals_its_frame_budget_at_24fps (experimental_mvp.test_stabilization.LoopTimestampRegressionTests.test_loop_stream_duration_equals_its_frame_budget_at_24fps) ... ok
+test_manual_poll_then_destroy_leaves_no_tk_after_callback (experimental_mvp.test_stabilization.TimerCleanupRegressionTests.test_manual_poll_then_destroy_leaves_no_tk_after_callback) ... FAIL
+
+======================================================================
+FAIL: test_manual_poll_then_destroy_leaves_no_tk_after_callback (experimental_mvp.test_stabilization.TimerCleanupRegressionTests.test_manual_poll_then_destroy_leaves_no_tk_after_callback)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/mvp071/experimental_mvp/test_stabilization.py", line 325, in test_manual_poll_then_destroy_leaves_no_tk_after_callback
+    self.assertEqual(set(root.tk.call('after','info'))-before,set())
+AssertionError: Items in the first set but not the second:
+'after#0'
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.212s
+
+FAILED (failures=1)

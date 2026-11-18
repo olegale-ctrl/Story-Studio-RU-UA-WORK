@@ -1,0 +1,64 @@
+test_cancel_queued_success_before_poll_never_opens_or_retains_result (experimental_mvp.test_stabilization.CancelRaceReproducer.test_cancel_queued_success_before_poll_never_opens_or_retains_result) ... FAIL
+test_cancel_after_scene_render_removes_only_this_preview (experimental_mvp.test_stabilization.DefectReproducers.test_cancel_after_scene_render_removes_only_this_preview) ... FAIL
+test_close_failure_removes_temporary_file_preserves_original (experimental_mvp.test_stabilization.DefectReproducers.test_close_failure_removes_temporary_file_preserves_original) ... FAIL
+test_confirmed_conflict_draft_never_keeps_approved_true (experimental_mvp.test_stabilization.DefectReproducers.test_confirmed_conflict_draft_never_keeps_approved_true) ... FAIL
+test_readback_validation_rejects_silent_valid_json_corruption (experimental_mvp.test_stabilization.DefectReproducers.test_readback_validation_rejects_silent_valid_json_corruption) ... FAIL
+
+======================================================================
+FAIL: test_cancel_queued_success_before_poll_never_opens_or_retains_result (experimental_mvp.test_stabilization.CancelRaceReproducer.test_cancel_queued_success_before_poll_never_opens_or_retains_result)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/mvp071/experimental_mvp/test_stabilization.py", line 79, in test_cancel_queued_success_before_poll_never_opens_or_retains_result
+    self.assertFalse(opened);self.assertIsNone(panel.last_preview);self.assertFalse(artifact.exists());panel.destroy()
+    ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [PosixPath('/tmp/tmpvy5v3cmb/timeline-preview-aaaaaaaaaaaa/preview.mp4')] is not false
+
+======================================================================
+FAIL: test_cancel_after_scene_render_removes_only_this_preview (experimental_mvp.test_stabilization.DefectReproducers.test_cancel_after_scene_render_removes_only_this_preview)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/mvp071/experimental_mvp/test_stabilization.py", line 61, in test_cancel_after_scene_render_removes_only_this_preview
+    self.assertEqual([f.name for f in root.glob('timeline-preview-*')],['timeline-preview-user-file'])
+AssertionError: Lists differ: ['timeline-preview-9961400cf573', 'timeline-preview-user-file'] != ['timeline-preview-user-file']
+
+First differing element 0:
+'timeline-preview-9961400cf573'
+'timeline-preview-user-file'
+
+First list contains 1 additional elements.
+First extra element 1:
+'timeline-preview-user-file'
+
+- ['timeline-preview-9961400cf573', 'timeline-preview-user-file']
++ ['timeline-preview-user-file']
+
+======================================================================
+FAIL: test_close_failure_removes_temporary_file_preserves_original (experimental_mvp.test_stabilization.DefectReproducers.test_close_failure_removes_temporary_file_preserves_original)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/mvp071/experimental_mvp/test_stabilization.py", line 35, in test_close_failure_removes_temporary_file_preserves_original
+    self.assertEqual({f.name for f in root.iterdir()},{'project.json'})
+AssertionError: Items in the first set but not the second:
+'tmpi67fm86q'
+
+======================================================================
+FAIL: test_confirmed_conflict_draft_never_keeps_approved_true (experimental_mvp.test_stabilization.DefectReproducers.test_confirmed_conflict_draft_never_keeps_approved_true)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/mvp071/experimental_mvp/test_stabilization.py", line 21, in test_confirmed_conflict_draft_never_keeps_approved_true
+    self.assertFalse(pipe.load(path)['approved'])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_readback_validation_rejects_silent_valid_json_corruption (experimental_mvp.test_stabilization.DefectReproducers.test_readback_validation_rejects_silent_valid_json_corruption)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/mvp071/experimental_mvp/test_stabilization.py", line 47, in test_readback_validation_rejects_silent_valid_json_corruption
+    with self.assertRaises(ValueError):pipe.save(path,{'topic':'changed'})
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.818s
+
+FAILED (failures=5)

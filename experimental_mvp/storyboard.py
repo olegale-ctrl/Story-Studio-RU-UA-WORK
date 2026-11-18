@@ -216,7 +216,7 @@ def render(scene, index, length, folder, log, ffmpeg, command, profile=None, can
         filters = prefix+sizing+f',setsar=1,fps={fps},format=yuv420p'
         if spec and spec['policy']=='LOOP':
             count=max(1,round(spec['available_ms']*fps/1000))
-            filters += f',loop=loop=-1:size={count}:start=0,setpts=N/({fps}*TB)'
+            filters += f',loop=loop=-1:size={count}:start=0,settb=expr=1/{fps},setpts=N'
         # Padding is explicit in timeline projects. Legacy projects retain published behavior.
         if not spec or spec['policy']=='HOLD_LAST_FRAME' or not strict:
             filters += f',tpad=stop_mode=clone:stop_duration={seconds}'
@@ -239,7 +239,8 @@ def render(scene, index, length, folder, log, ffmpeg, command, profile=None, can
             filters += f",zoompan=z='min(zoom+0.0005,1.08)':d=1:s={width}x{height}:fps={fps}"
         name = f'visual{index:03}_{n:03}.mp4'
         command([ffmpeg, '-nostdin', '-v', 'error', '-xerror', *args, '-an', '-vf', filters,
-                 *(['-frames:v',str(frames)] if strict else ['-t',str(seconds)]), '-c:v', 'libx264', '-preset', 'ultrafast', '-threads', '4', name], folder, log)
+                 *(['-frames:v',str(frames)] if strict else ['-t',str(seconds)]),
+                 *(['-r',str(fps)] if strict or (spec and spec['policy']=='LOOP') else []), '-c:v', 'libx264', '-preset', 'ultrafast', '-threads', '4', name], folder, log)
         clips.append(name)
     (folder / f'anchor-inputs{index:03}.json').write_text(json.dumps(inputs, ensure_ascii=False, indent=2), encoding='utf-8')
     listing = f'anchors{index:03}.txt'

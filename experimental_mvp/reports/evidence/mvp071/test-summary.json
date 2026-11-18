@@ -1,0 +1,71 @@
+{
+  "base_commit": "91d274c554433fbc2145d5fc6b6a591199c0243f",
+  "base_tree": "38e2579cc3294fa5cf57b4d1bc267a37bfe078f8",
+  "status": "READY_FOR_INDEPENDENT_MVP_07_1_REVIEW",
+  "windows": "WINDOWS_NOT_RUN",
+  "python": "3.12.14",
+  "tk": "9.0.4",
+  "ffmpeg": "7.1.5-0+deb13u1",
+  "ffprobe": "7.1.5-0+deb13u1",
+  "pytest": "9.2.0",
+  "baseline": {
+    "passed": 767,
+    "skipped": 1,
+    "subtests_passed": 3616,
+    "seconds": 210.42,
+    "exit_code": 0
+  },
+  "final": {
+    "passed": 787,
+    "skipped": 1,
+    "subtests_passed": 3639,
+    "warnings": 1,
+    "seconds": 223.28,
+    "exit_code": 0
+  },
+  "experimental_unittest": {
+    "tests": 61,
+    "skipped": 0,
+    "seconds": 36.076,
+    "exit_code": 0
+  },
+  "cancel_measurement": {
+    "total_seconds": 0.5658,
+    "request_to_exit_seconds": 0.2656,
+    "owned_ffmpeg_reaped": 1
+  },
+  "red": {
+    "initial_reproducers": {
+      "tests": 5,
+      "failures": 5,
+      "exit_code": 1
+    },
+    "loop_chain_exact_base": {
+      "failures": 1,
+      "exit_code": 1
+    },
+    "timer_oracle": {
+      "failures": 1,
+      "exit_code": 1
+    },
+    "windows_newline_model": {
+      "errors": 1,
+      "exit_code": 1,
+      "actual_windows_execution": false
+    }
+  },
+  "matrix": {
+    "configurations": 4,
+    "actual_render_decode_passed": 4,
+    "resolution": "160x90",
+    "source_fps": [
+      15,
+      60
+    ],
+    "full_1080p_stress": "NOT_RUN"
+  },
+  "json_version_change": false,
+  "paid_generation": false,
+  "production_permissions": false,
+  "existing_tests_modified": false
+}

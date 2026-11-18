@@ -1,0 +1,8 @@
+{
+  "repository": "https://github.com/olegale-ctrl/Story-Studio-RU-UA-WORK.git",
+  "fetch_exit": 0,
+  "base_type": "commit",
+  "base_tree": "38e2579cc3294fa5cf57b4d1bc267a37bfe078f8",
+  "branch": "fix/story-studio-experimental-mvp-07-1-stabilization",
+  "head_before_commit": "91d274c554433fbc2145d5fc6b6a591199c0243f"
+}

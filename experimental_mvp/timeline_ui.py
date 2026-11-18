@@ -23,6 +23,7 @@ class TimelinePanel(ttk.Frame):
         self.editor=None;self.base=None;self.aid=None;self.sid=None;self.cue=None
         self.zoom=40.;self.position=0;self.drag=None;self.regions=[];self.events=queue.Queue()
         self.stop=threading.Event();self.busy=False;self.last_preview=None
+        self.closed=False;self.result_lock=threading.Lock()
         row=ttk.Frame(self);row.pack(fill='x')
         for label,fn in [('Загрузить / Audio Map',self.refresh),('Применить',self.apply),('Сохранить JSON',self.save),
                          ('Undo',self.undo),('Redo',self.redo),('− масштаб',lambda:self.scale(.75)),('+ масштаб',lambda:self.scale(1.33))]:self.button(row,label,fn)
@@ -319,16 +320,35 @@ class TimelinePanel(ttk.Frame):
         elif scope=='scene':kw['scene_id']=self.sid
         elif scope=='position':kw['seek_ms']=self.position
         self.stop.clear();self.busy=True;self.progress.start(15);self.info.set('Создание временного preview…')
+        workspace=self.workspace()
         def work():
-            try:self.events.put(('preview',(model.preview(p,timing,self.workspace(),cancelled=self.stop.is_set,**kw),content(p))))
-            except Exception as exc:self.events.put(('error',str(exc)))
+            try:
+                result=model.preview(p,timing,workspace,cancelled=self.stop.is_set,**kw)
+                with self.result_lock:
+                    if self.stop.is_set() or self.closed:
+                        from experimental_mvp.pipeline import discard_preview_result
+                        discard_preview_result(result,workspace)
+                        if not self.closed:self.events.put(('error','Предпросмотр отменён.'))
+                    else:self.events.put(('preview',(result,content(p),workspace)))
+            except Exception as exc:
+                with self.result_lock:
+                    if not self.closed:self.events.put(('error',str(exc)))
         threading.Thread(target=work,daemon=True).start()
 
     def poll(self):
+        if self.closed:return
+        if getattr(self,'poll_id',None):
+            try:self.after_cancel(self.poll_id)
+            except tk.TclError:pass
         while not self.events.empty():
             kind,value=self.events.get();self.busy=False;self.progress.stop()
             if kind=='preview':
-                path,snapshot=value
+                path,snapshot,workspace=value
+                if self.stop.is_set():
+                    from experimental_mvp.pipeline import discard_preview_result
+                    self.safe(lambda:discard_preview_result(path,workspace))
+                    self.last_preview=None;self.info.set('Предпросмотр отменён; результат удалён.')
+                    continue
                 self.last_preview=path
                 stale=not self.editor or content(self.editor.project)!=snapshot
                 self.info.set(('Preview УСТАРЕЛ: проект изменён. ' if stale else 'Preview создан. ')+'Системный проигрыватель не синхронизирован с указателем шкалы.')
@@ -337,7 +357,16 @@ class TimelinePanel(ttk.Frame):
         self.poll_id=self.after(100,self.poll)
 
     def destroy(self):
-        self.stop.set()
+        self.progress.stop()
+        with self.result_lock:
+            self.closed=True;self.stop.set()
+            while not self.events.empty():
+                kind,value=self.events.get()
+                if kind=='preview':
+                    from experimental_mvp.pipeline import discard_preview_result
+                    path,_,workspace=value
+                    try:discard_preview_result(path,workspace)
+                    except OSError:pass
         if getattr(self,'poll_id',None):
             try:self.after_cancel(self.poll_id)
             except tk.TclError:pass

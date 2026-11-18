@@ -1,0 +1,17 @@
+test_explicit_newline_policy_survives_windows_translation_model (experimental_mvp.test_stabilization.SaveAndDraftRegressionTests.test_explicit_newline_policy_survives_windows_translation_model) ... ERROR
+
+======================================================================
+ERROR: test_explicit_newline_policy_survives_windows_translation_model (experimental_mvp.test_stabilization.SaveAndDraftRegressionTests.test_explicit_newline_policy_survives_windows_translation_model)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/work/mvp071/experimental_mvp/test_stabilization.py", line 122, in test_explicit_newline_policy_survives_windows_translation_model
+    pipe.save(target,{'topic':'Київ / русский'})
+  File "/workspace/work/mvp071/experimental_mvp/pipeline.py", line 57, in save
+    if temp.read_bytes()!=encoded:raise ValueError("Временный JSON не совпал с записываемым проектом.")
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Временный JSON не совпал с записываемым проектом.
+
+----------------------------------------------------------------------
+Ran 1 test in 0.007s
+
+FAILED (errors=1)

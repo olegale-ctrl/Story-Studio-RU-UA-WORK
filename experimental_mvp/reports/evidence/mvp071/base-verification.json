@@ -1,0 +1,23 @@
+{
+  "base_commit": "91d274c554433fbc2145d5fc6b6a591199c0243f",
+  "base_tree": "38e2579cc3294fa5cf57b4d1bc267a37bfe078f8",
+  "working_tree_clean": true,
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "windows": "WINDOWS_NOT_RUN",
+  "planned_changes": [
+    "pipeline.py",
+    "timeline.py",
+    "timeline_ui.py",
+    "new regression tests",
+    "six reports + evidence"
+  ],
+  "baseline_hashes": {
+    "experimental_mvp/pipeline.py": "6f6b6124948005baf45645724f9ed492cbe02f23d9c2b8033dd964cd44350bc8",
+    "experimental_mvp/timeline.py": "6782894d7d8b41724dc11ea3424b03f123d87f7fe9e7c6423d9c84ab8769a1be",
+    "experimental_mvp/timeline_ui.py": "7b8789b83357c38ab38de7454fd73087f0ea840cc3ba304d88acfe5ba13fb8d8",
+    "experimental_mvp/storyboard.py": "7fdff61df1a7a1ab1399afeadf9068cd06725b153e33eb4b472484164cbf11db",
+    "experimental_mvp/test_timeline.py": "d922ff3ce52072c11442c06520c8174597d388fd2a80f7a5fc5b2de8e18429cc",
+    "experimental_mvp/test_timeline_ui.py": "d8cb9ad6f3597e8e800cf582aaa4dd367d090891a5e7d4eba8d9599397617f13"
+  }
+}

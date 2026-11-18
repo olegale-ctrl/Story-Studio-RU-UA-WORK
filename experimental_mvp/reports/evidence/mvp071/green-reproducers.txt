@@ -1,0 +1,10 @@
+test_cancel_queued_success_before_poll_never_opens_or_retains_result (experimental_mvp.test_stabilization.CancelRaceReproducer.test_cancel_queued_success_before_poll_never_opens_or_retains_result) ... ok
+test_cancel_after_scene_render_removes_only_this_preview (experimental_mvp.test_stabilization.DefectReproducers.test_cancel_after_scene_render_removes_only_this_preview) ... ok
+test_close_failure_removes_temporary_file_preserves_original (experimental_mvp.test_stabilization.DefectReproducers.test_close_failure_removes_temporary_file_preserves_original) ... ok
+test_confirmed_conflict_draft_never_keeps_approved_true (experimental_mvp.test_stabilization.DefectReproducers.test_confirmed_conflict_draft_never_keeps_approved_true) ... ok
+test_readback_validation_rejects_silent_valid_json_corruption (experimental_mvp.test_stabilization.DefectReproducers.test_readback_validation_rejects_silent_valid_json_corruption) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.710s
+
+OK
