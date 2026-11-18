@@ -21,6 +21,7 @@ IMAGE_TYPES = {".png", ".jpg", ".jpeg", ".webp", ".bmp"}
 AUDIO_TYPES = {".wav", ".mp3"}
 VISUAL_MODES = {"photo", "camera", "video"}
 CAMERA_PRESETS = {"push_in", "pull_out", "pan"}
+FOG_DIRECTIONS = {"right": (1, 0), "left": (-1, 0), "up": (0, -1), "down": (0, 1)}
 
 
 def synthesize(*args, **kwargs):
@@ -299,6 +300,45 @@ def visual_input(scene):
     return "image", scene.get("image"), IMAGE_TYPES
 
 
+def fog_settings(scene):
+    settings = scene.get("fog")
+    if settings is None or scene.get("visual_mode") == "video":
+        return None
+    if not scene.get("image"):
+        raise ValueError("Для дымки укажите фото.")
+    if isinstance(settings, dict):
+        area = settings.get("area")
+        direction = settings.get("direction")
+        strength = settings.get("strength")
+        if (isinstance(area, list) and len(area) == 4
+                and all(type(value) is int and 0 <= value <= 100 for value in area)
+                and area[0] < area[2] and area[1] < area[3]
+                and isinstance(direction, str) and direction in FOG_DIRECTIONS
+                and type(strength) is int and 1 <= strength <= 100):
+            return area, direction, strength
+    raise ValueError("Проверьте область, направление и интенсивность дымки.")
+
+
+def fog_overlay(fog, duration, fit, filters, mode):
+    (left, top, right, bottom), direction, strength = fog
+    dx, dy = FOG_DIRECTIONS[direction]
+    x = f"((X+0.5)/W*100-{(left + right) / 2})/{(right-left)/2}"
+    y = f"((Y+0.5)/H*100-{(top + bottom) / 2})/{(bottom-top)/2}"
+    phase = f"(2*min(T/{max(duration - 1/30, 1/30)},1)-1)"
+    mask = f"pow(max(0,1-pow({x},2)-pow({y},2)),2)"
+    plume = (f"exp(-pow(({x})-0.57*{dx}*{phase},2)/0.30"
+             f"-pow(({y})-0.57*{dy}*{phase}-0.12*({x}),2)/0.16)")
+    alpha = f"{0.98 * strength:.3f}*{mask}*{plume}"
+    # Animate a small alpha plane before applying the shared camera transform.
+    chroma = "yuv420" if mode == "photo" else "yuv444"
+    return (f"[0:v]{fit},format={chroma}p[photo];"
+            f"nullsrc=s=240x135:r=30,format=gray,geq=lum='{alpha}':"
+            f"interpolation=bilinear,scale=1920:1080:flags=bilinear[alpha];"
+            f"color=c=0xcfbfaf:s=1920x1080:r=30,format={chroma}p[fog];"
+            "[fog][alpha]alphamerge[layer];"
+            f"[photo][layer]overlay=format={chroma}:shortest=1,{filters}[visual]")
+
+
 def render_scene(scene, index, length, folder, log, ffmpeg):
     try:
         return render_visual(scene, index, length, folder, log, ffmpeg)
@@ -321,6 +361,7 @@ def render_visual(scene, index, length, folder, log, ffmpeg):
     scale = "scale=1920:1080:force_original_aspect_ratio=decrease:force_divisible_by=2"
     pad = "pad=1920:1080:(ow-iw)/2:(oh-ih)/2"
     fit = f"{scale}:reset_sar=1,{pad}"
+    fog = fog_settings(scene)
     if mode == "video":
         args = ["-i", str(source)]
         filters = (f"{fit},setpts=PTS-STARTPTS,tpad=stop_mode=clone:stop_duration={length},"
@@ -334,22 +375,32 @@ def render_visual(scene, index, length, folder, log, ffmpeg):
             "pan": ("1.16", f"(iw-iw/zoom)*{progress}"),
         }[scene.get("camera_preset", "push_in")]
         args = ["-i", str(source)]
-        filters = (f"{fit},scale=3840:2160,zoompan=z='{zoom}':x='{x}':y='ih/2-ih/zoom/2':"
-                   f"d={frames}:s=1920x1080:fps=30,setsar=1,format=yuv420p")
-    elif value:
+        camera = (f"scale=3840:2160,zoompan=z='{zoom}':x='{x}':y='ih/2-ih/zoom/2':"
+                  f"d={1 if fog else frames}:s=1920x1080:fps=30,setsar=1,format=yuv420p")
+        filters = camera if fog else f"{fit},{camera}"
+    elif value and not fog:
         local = folder / f"image{index:03}{source.suffix.lower()}"
         shutil.copyfile(source, local)
         args = ["-loop", "1", "-framerate", "30", "-i", local.name]
-    else:
+    elif not value:
         color = colors[(index - 1) % len(colors)]
         args = ["-f", "lavfi", "-i", f"color=c={color}:s=1920x1080:r=30"]
     if mode == "photo":
         fade = min(0.22, length / 3)
-        filters = (f"{scale},{pad},setsar=1,format=yuv420p,fade=t=in:d={fade},"
+        filters = (f"setsar=1,format=yuv420p,fade=t=in:d={fade},"
                    f"fade=t=out:st={length-fade}:d={fade}")
+        if not fog:
+            filters = f"{scale},{pad},{filters}"
+    if fog:
+        args = ["-loop", "1", "-framerate", "30", "-i", str(source)]
+        graph = fog_overlay(fog, length, f"{scale},{pad}" if mode == "photo" else fit,
+                            filters, mode)
+        mapping = ["-filter_complex_threads", "2", "-filter_complex", graph, "-map", "[visual]"]
+    else:
+        mapping = ["-map", "0:v:0", "-vf", filters]
     clip = f"scene{index:03}.mp4"
     command([ffmpeg, "-nostdin", "-v", "error", "-xerror", "-abort_on", "empty_output", *args,
-             "-map", "0:v:0", "-an", "-vf", filters,
+             *mapping, "-an",
              "-t", str(length), "-c:v", "libx264", "-preset", "ultrafast",
              "-threads", "4", clip], folder, log)
     return clip
@@ -404,6 +455,10 @@ def check_project(project, workspace):
                 inspect(value, field, key, allowed)
             elif scene.get("visual_mode", "photo") != "photo":
                 issues.append((key, field, "Укажите файл или выберите режим «Фото».", False))
+        try:
+            fog_settings(scene)
+        except ValueError as exc:
+            issues.append((key, "fog", str(exc), False))
         if whole:
             length = spans[index - 1][1] - spans[index - 1][0] if spans else None
         elif scene.get("audio"):

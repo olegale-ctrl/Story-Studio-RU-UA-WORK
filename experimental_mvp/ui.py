@@ -2,6 +2,7 @@
 import os
 from pathlib import Path
 import queue
+import subprocess
 import threading
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
@@ -10,7 +11,7 @@ import uuid
 from experimental_mvp.captions import CueError, calculated, validate
 
 from experimental_mvp.pipeline import (DEMOS, ROOT, BuildStopped, audio_status, brief, build,
-                                       check_project, executable, export_history, preview_signature,
+                                       check_project, executable, export_history, fog_settings, preview_signature,
                                        identify, load, preview_audio, render_preview, save, scene_audio)
 
 
@@ -249,6 +250,98 @@ def launch():
                 visual_mode.set(visual_labels["video"])
                 approved.set(False)
 
+    def edit_fog():
+        commit_scene()
+        scene = current()
+        if scene is None:
+            return
+        if scene["visual_mode"] == "video":
+            raise ValueError("Дымка доступна в режимах «Фото» и «Движение камеры».")
+        labels = {"Вправо": "right", "Влево": "left", "Вверх": "up", "Вниз": "down"}
+        previous = scene.get("fog")
+        try:
+            area, direction, strength = fog_settings(scene) or ([8, 34, 32, 50], "right", 28)
+        except ValueError:
+            area, direction, strength = [8, 34, 32, 50], "right", 28
+        data = None
+        if scene["image"]:
+            source = Path(scene["image"]).expanduser().resolve()
+            result = subprocess.run(
+                [executable("ffmpeg"), "-nostdin", "-v", "error", "-i", str(source),
+                 "-vf", "scale=480:270:force_original_aspect_ratio=decrease:force_divisible_by=2:reset_sar=1,"
+                        "pad=480:270:(ow-iw)/2:(oh-ih)/2", "-frames:v", "1",
+                 "-c:v", "png", "-f", "image2pipe", "-"],
+                capture_output=True, timeout=15,
+            )
+            data = result.stdout if result.returncode == 0 else None
+        dialog = tk.Toplevel(root)
+        dialog.title("Дымка")
+        dialog.transient(root)
+        dialog.grab_set()
+        enabled = tk.BooleanVar(dialog, value=previous is not None)
+        heading = "Перетащите мышью, чтобы выделить область дымки."
+        if data is None:
+            heading = "Для выбора области сначала укажите читаемое фото."
+        ttk.Label(dialog, text=heading).pack(padx=12, pady=(10, 4))
+        canvas = tk.Canvas(dialog, width=480, height=270, highlightthickness=0, bg="#303030")
+        canvas.pack(padx=12)
+        if data:
+            canvas.photo = tk.PhotoImage(master=dialog, data=data, format="png")
+            canvas.create_image(0, 0, anchor="nw", image=canvas.photo)
+        rect = canvas.create_rectangle(*(v*s/100 for v, s in zip(area, (480, 270, 480, 270))),
+                                       outline="#f8d982", width=2)
+        anchor = None
+        selection = list(area)
+
+        def point(event):
+            return [max(0, min(100, round(event.x*100/480))),
+                    max(0, min(100, round(event.y*100/270)))]
+
+        def begin(event):
+            nonlocal anchor
+            anchor = point(event)
+
+        def resize(event):
+            if anchor is None:
+                return
+            trailing = point(event)
+            x1, x2 = sorted((anchor[0], trailing[0]))
+            y1, y2 = sorted((anchor[1], trailing[1]))
+            if x2 > x1 and y2 > y1:
+                selection[:] = [x1, y1, x2, y2]
+                canvas.coords(rect, x1*4.8, y1*2.7, x2*4.8, y2*2.7)
+                enabled.set(True)
+
+        if data:
+            canvas.bind("<Button-1>", begin)
+            canvas.bind("<B1-Motion>", resize)
+        row = ttk.Frame(dialog, padding=10)
+        row.pack(fill="x")
+        option = next(label for label, key in labels.items() if key == direction)
+        movement = tk.StringVar(dialog, value=option)
+        intensity = tk.IntVar(dialog, value=strength)
+        toggle = ttk.Checkbutton(row, text="Включить", variable=enabled)
+        toggle.pack(side="left")
+        if not data:
+            toggle.state(["disabled"])
+        ttk.Label(row, text="Направление").pack(side="left", padx=(12, 4))
+        ttk.Combobox(row, values=tuple(labels), textvariable=movement, width=8,
+                     state="readonly").pack(side="left")
+        ttk.Label(row, text="Интенсивность").pack(side="left", padx=(12, 4))
+        ttk.Scale(row, from_=1, to=100, variable=intensity, length=115).pack(side="left")
+
+        def apply():
+            if enabled.get() and data:
+                scene["fog"] = {"area": selection, "direction": labels[movement.get()],
+                                "strength": intensity.get()}
+            else:
+                scene.pop("fog", None)
+            if scene.get("fog") != previous:
+                approved.set(False)
+            dialog.destroy()
+
+        ttk.Button(dialog, text="Применить", command=apply).pack(pady=(0, 10))
+
     def selected_audio():
         if current() is None:
             raise ValueError("Выберите сцену.")
@@ -418,6 +511,8 @@ def launch():
                 visual_mode_box.focus_set()
             elif field == "visual_mode":
                 visual_mode_box.focus_set()
+            elif field == "fog":
+                reported(edit_fog)()
             elif field == "scene_audio":
                 choose(scene_audio_path, [("Аудио", "*.mp3 *.wav")])
             elif field == "audio":
@@ -627,6 +722,7 @@ def launch():
     preset_box.pack(side="left", padx=5)
     ttk.Entry(row, textvariable=scene_video_path).pack(side="left", expand=True, fill="x")
     button(row, "Выбрать MP4", video)
+    button(row, "Дымка…", reported(edit_fog))
     row = ttk.Frame(scenes_tab)
     row.pack(fill="x", pady=4)
     ttk.Label(row, text="Аудиофайл сцены", width=24).pack(side="left")

@@ -9,12 +9,62 @@ from unittest.mock import patch
 import wave
 
 from experimental_mvp.pipeline import (DEMOS, BuildStopped, brief, build, check_project,
-                                       audio_key, executable, export_history, intervals, load,
+                                       audio_key, executable, export_history, fog_settings, intervals, load,
                                        preview_signature, render_scene, save, subtitles)
 from experimental_mvp.captions import CueError, render_srt
 
 
 class PipelineTests(unittest.TestCase):
+    def test_fog_round_trip_invalidates_preview_without_changing_audio_key(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            path = root / "project.json"
+            project = {"locale": "ru", "scenes": [{"text": "Текст", "image": "photo.png"}]}
+            save(path, project)
+            scene = project["scenes"][0]
+            self.assertIsNone(fog_settings(scene))
+            cached_audio = audio_key(project, scene, root)
+            before = preview_signature(project)
+            scene["fog"] = {"area": [5, 15, 40, 70], "direction": "right", "strength": 40}
+            save(path, project)
+            saved = load(path)
+            scene = saved["scenes"][0]
+            self.assertEqual(fog_settings(scene), ([5, 15, 40, 70], "right", 40))
+            self.assertNotEqual(preview_signature(saved), before)
+            self.assertEqual(audio_key(saved, scene, root), cached_audio)
+            scene["fog"]["area"][2] = 1
+            with self.assertRaisesRegex(ValueError, "область"):
+                fog_settings(scene)
+
+    def test_static_fog_moves_inside_selected_area(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            ffmpeg = executable("ffmpeg")
+            photo = root / "photo.png"
+            subprocess.run([ffmpeg, "-v", "error", "-f", "lavfi", "-i", "color=0x222222:s=320x180",
+                            "-frames:v", "1", "-threads", "1", str(photo)], check=True, timeout=30)
+            scene = {"image": str(photo), "fog": {"area": [10, 20, 50, 65],
+                                                 "direction": "right", "strength": 80}}
+            clip = render_scene(scene, 1, 2, root, root / "log", ffmpeg)
+            data = subprocess.check_output(
+                [ffmpeg, "-v", "error", "-i", str(root / clip),
+                 "-vf", r"select=eq(n\,8)+eq(n\,39)+eq(n\,52),scale=120:68",
+                 "-fps_mode", "passthrough", "-pix_fmt", "gray", "-f", "rawvideo", "-"], timeout=30)
+            width, height = 120, 68
+            size = width * height
+            self.assertEqual(len(data), 3 * size)
+            centers = []
+            for offset in range(0, len(data), size):
+                frame = data[offset:offset + size]
+                background = frame[0]
+                weights = [max(0, value - background - 5) for value in frame]
+                self.assertGreater(sum(weights), 100)
+                self.assertFalse(any(value > 2 for i, value in enumerate(weights)
+                                     if not (10 <= i % width < 62 and 12 <= i // width < 46)))
+                centers.append(sum((i % width) * value for i, value in enumerate(weights)) / sum(weights))
+            self.assertGreater(centers[1], centers[0] + 2)
+            self.assertGreater(centers[2], centers[1] + 1)
+
     def test_legacy_project_defaults_to_photo_and_keeps_scene_identity(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
