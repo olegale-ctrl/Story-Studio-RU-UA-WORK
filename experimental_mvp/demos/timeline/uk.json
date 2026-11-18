@@ -1,0 +1,1308 @@
+{
+  "topic": "Як виникли перші міста?",
+  "locale": "uk",
+  "claims_status": "UNVERIFIED_EDITORIAL_TRAINING",
+  "scenes": [
+    {
+      "text": "Як виникли перші міста? Зручна коротка відповідь може приховувати відразу кілька різних запитань. Коли поселення стає містом? Чи достатньо великої кількості мешканців? Які ознаки ми взагалі можемо побачити в археологічних матеріалах? У цьому навчальному ролику ми не встановлюємо єдину дату й не оголошуємо переможця серед усіх поселень світу. Ми розбираємо, як підготувати обережну розповідь про тривалий процес і не видати умовну схему за доказ.",
+      "visual": "Почнемо із запитання",
+      "prompt": "Original local teaching diagram, not a historical reconstruction",
+      "id": "cecd6af14cd85c4fb5192218f25518a6",
+      "anchors": [
+        {
+          "anchor_id": "88635e7190fa58c09b4a53a1ecd84c2e",
+          "scene_id": "cecd6af14cd85c4fb5192218f25518a6",
+          "start_ms": 0,
+          "duration_ms": 7410,
+          "narration_excerpt": "Як виникли перші міста? Зручна коротка відповідь може приховувати відразу кілька різних запитань. Коли поселення стає містом? Чи достатньо великої кількості мешканців? Які ознаки ми взагалі можемо побачити в археологічних матеріалах? У цьому навчальному ролику ми не встановлюємо єдину дату й не оголошуємо переможця серед усіх поселень світу. Ми розбираємо, як підготувати обережну розповідь про тривалий процес і не видати умовну схему за доказ.",
+          "visual_description": "Почнемо із запитання",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "LOCAL_VIDEO",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_local_motion.mp4",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "2f0b5bb5205c3d3aaa2daa6930a501eaaa184c0ae81869be45d09aa3b2e1d166",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_local_motion.mp4",
+            "sha256": "2f0b5bb5205c3d3aaa2daa6930a501eaaa184c0ae81869be45d09aa3b2e1d166"
+          },
+          "source_start_ms": 0,
+          "source_end_ms": 5000,
+          "source_duration_ms": 5000,
+          "short_clip_policy": "HOLD_LAST_FRAME"
+        },
+        {
+          "anchor_id": "8dc092dfe7085419b5b5691355faa5bd",
+          "scene_id": "cecd6af14cd85c4fb5192218f25518a6",
+          "start_ms": 7410,
+          "duration_ms": 7411,
+          "narration_excerpt": "Як виникли перші міста? Зручна коротка відповідь може приховувати відразу кілька різних запитань. Коли поселення стає містом? Чи достатньо великої кількості мешканців? Які ознаки ми взагалі можемо побачити в археологічних матеріалах? У цьому навчальному ролику ми не встановлюємо єдину дату й не оголошуємо переможця серед усіх поселень світу. Ми розбираємо, як підготувати обережну розповідь про тривалий процес і не видати умовну схему за доказ.",
+          "visual_description": "Почнемо із запитання",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_0.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "3799638e7312638525e3ff2580e15019ee3d74534b58e209977ee2c8f959c971",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_0.png",
+            "sha256": "3799638e7312638525e3ff2580e15019ee3d74534b58e209977ee2c8f959c971"
+          }
+        },
+        {
+          "anchor_id": "df994c3e36ac59ba9abaebf413713841",
+          "scene_id": "cecd6af14cd85c4fb5192218f25518a6",
+          "start_ms": 14821,
+          "duration_ms": 7411,
+          "narration_excerpt": "Як виникли перші міста? Зручна коротка відповідь може приховувати відразу кілька різних запитань. Коли поселення стає містом? Чи достатньо великої кількості мешканців? Які ознаки ми взагалі можемо побачити в археологічних матеріалах? У цьому навчальному ролику ми не встановлюємо єдину дату й не оголошуємо переможця серед усіх поселень світу. Ми розбираємо, як підготувати обережну розповідь про тривалий процес і не видати умовну схему за доказ.",
+          "visual_description": "Почнемо із запитання",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_0.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "3799638e7312638525e3ff2580e15019ee3d74534b58e209977ee2c8f959c971",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_0.png",
+            "sha256": "3799638e7312638525e3ff2580e15019ee3d74534b58e209977ee2c8f959c971"
+          }
+        }
+      ]
+    },
+    {
+      "text": "Спершу потрібно пояснити, що саме автор називає містом. Можна обговорювати розмір поселення, щільність забудови, різноманітність занять або його роль для навколишньої території. Для конкретної історії ці ознаки слід звірити з фаховою літературою. Якщо визначення змінюється посеред ролика, висновок стає непомітно підлаштованим під відповідь. На нашій картці кілька критеріїв стоять поряд. Це перелік запитань до джерела, а не універсальний тест, який самостійно визначає найперше місто.",
+      "visual": "Визначення має значення",
+      "prompt": "Original local teaching diagram, not a historical reconstruction",
+      "id": "d22cc073a51c5f47a1d4720581242cbd",
+      "anchors": [
+        {
+          "anchor_id": "a462915097ca5537a7aedae1dfa39cc6",
+          "scene_id": "d22cc073a51c5f47a1d4720581242cbd",
+          "start_ms": 0,
+          "duration_ms": 6613,
+          "narration_excerpt": "Спершу потрібно пояснити, що саме автор називає містом. Можна обговорювати розмір поселення, щільність забудови, різноманітність занять або його роль для навколишньої території. Для конкретної історії ці ознаки слід звірити з фаховою літературою. Якщо визначення змінюється посеред ролика, висновок стає непомітно підлаштованим під відповідь. На нашій картці кілька критеріїв стоять поряд. Це перелік запитань до джерела, а не універсальний тест, який самостійно визначає найперше місто.",
+          "visual_description": "Визначення має значення",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_1.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "2f45b30e543bb17b1afce243f4da56affc150157d04b9e4c6ab8f88c53a6bdf9",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_1.png",
+            "sha256": "2f45b30e543bb17b1afce243f4da56affc150157d04b9e4c6ab8f88c53a6bdf9"
+          }
+        },
+        {
+          "anchor_id": "947fed8c36995b01a890443d66fe131f",
+          "scene_id": "d22cc073a51c5f47a1d4720581242cbd",
+          "start_ms": 6613,
+          "duration_ms": 5814,
+          "narration_excerpt": "Спершу потрібно пояснити, що саме автор називає містом. Можна обговорювати розмір поселення, щільність забудови, різноманітність занять або його роль для навколишньої території. Для конкретної історії ці ознаки слід звірити з фаховою літературою. Якщо визначення змінюється посеред ролика, висновок стає непомітно підлаштованим під відповідь. На нашій картці кілька критеріїв стоять поряд. Це перелік запитань до джерела, а не універсальний тест, який самостійно визначає найперше місто.",
+          "visual_description": "Визначення має значення",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_1.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "2f45b30e543bb17b1afce243f4da56affc150157d04b9e4c6ab8f88c53a6bdf9",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_1.png",
+            "sha256": "2f45b30e543bb17b1afce243f4da56affc150157d04b9e4c6ab8f88c53a6bdf9"
+          }
+        },
+        {
+          "anchor_id": "6e832543d79d544db1bc82f19671761b",
+          "scene_id": "d22cc073a51c5f47a1d4720581242cbd",
+          "start_ms": 12427,
+          "duration_ms": 6213,
+          "narration_excerpt": "Спершу потрібно пояснити, що саме автор називає містом. Можна обговорювати розмір поселення, щільність забудови, різноманітність занять або його роль для навколишньої території. Для конкретної історії ці ознаки слід звірити з фаховою літературою. Якщо визначення змінюється посеред ролика, висновок стає непомітно підлаштованим під відповідь. На нашій картці кілька критеріїв стоять поряд. Це перелік запитань до джерела, а не універсальний тест, який самостійно визначає найперше місто.",
+          "visual_description": "Визначення має значення",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_1.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "2f45b30e543bb17b1afce243f4da56affc150157d04b9e4c6ab8f88c53a6bdf9",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_1.png",
+            "sha256": "2f45b30e543bb17b1afce243f4da56affc150157d04b9e4c6ab8f88c53a6bdf9"
+          }
+        },
+        {
+          "anchor_id": "fc063776e79b518b9204f83a75412c0f",
+          "scene_id": "d22cc073a51c5f47a1d4720581242cbd",
+          "start_ms": 18640,
+          "duration_ms": 6214,
+          "narration_excerpt": "Спершу потрібно пояснити, що саме автор називає містом. Можна обговорювати розмір поселення, щільність забудови, різноманітність занять або його роль для навколишньої території. Для конкретної історії ці ознаки слід звірити з фаховою літературою. Якщо визначення змінюється посеред ролика, висновок стає непомітно підлаштованим під відповідь. На нашій картці кілька критеріїв стоять поряд. Це перелік запитань до джерела, а не універсальний тест, який самостійно визначає найперше місто.",
+          "visual_description": "Визначення має значення",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_1.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "2f45b30e543bb17b1afce243f4da56affc150157d04b9e4c6ab8f88c53a6bdf9",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_1.png",
+            "sha256": "2f45b30e543bb17b1afce243f4da56affc150157d04b9e4c6ab8f88c53a6bdf9"
+          }
+        }
+      ]
+    },
+    {
+      "text": "Далі погляньмо на місце. Для обраного прикладу потрібно дослідити воду, землю, доступні матеріали та зв’язки з іншими поселеннями. Але сприятливе довкілля саме по собі ще не пояснює всіх суспільних змін. Слід запитати, які дані підтверджують конкретний зв’язок і які інші умови могли діяти одночасно. Наша анімація показує абстрактні блоки, а не справжній план давнього поселення. Вона допомагає втримати запитання в пам’яті, проте не замінює археологічної карти.",
+      "visual": "Поселення та довкілля",
+      "prompt": "Original local teaching diagram, not a historical reconstruction",
+      "id": "d4862b56a60b52db9f4f44d2ff2f8645",
+      "anchors": [
+        {
+          "anchor_id": "dc0709933b89510d910921b0a44324dc",
+          "scene_id": "d4862b56a60b52db9f4f44d2ff2f8645",
+          "start_ms": 8009,
+          "duration_ms": 8009,
+          "narration_excerpt": "Далі погляньмо на місце. Для обраного прикладу потрібно дослідити воду, землю, доступні матеріали та зв’язки з іншими поселеннями. Але сприятливе довкілля саме по собі ще не пояснює всіх суспільних змін. Слід запитати, які дані підтверджують конкретний зв’язок і які інші умови могли діяти одночасно. Наша анімація показує абстрактні блоки, а не справжній план давнього поселення. Вона допомагає втримати запитання в пам’яті, проте не замінює археологічної карти.",
+          "visual_description": "Поселення та довкілля",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_2.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "d5c9a32132c186b8caa3ae41bfbbdfab64a57ff95192b02681d24f8895809261",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_2.png",
+            "sha256": "d5c9a32132c186b8caa3ae41bfbbdfab64a57ff95192b02681d24f8895809261"
+          }
+        },
+        {
+          "anchor_id": "be5596870abf50919f4e063a374ef7d2",
+          "scene_id": "d4862b56a60b52db9f4f44d2ff2f8645",
+          "start_ms": 0,
+          "duration_ms": 8009,
+          "narration_excerpt": "Далі погляньмо на місце. Для обраного прикладу потрібно дослідити воду, землю, доступні матеріали та зв’язки з іншими поселеннями. Але сприятливе довкілля саме по собі ще не пояснює всіх суспільних змін. Слід запитати, які дані підтверджують конкретний зв’язок і які інші умови могли діяти одночасно. Наша анімація показує абстрактні блоки, а не справжній план давнього поселення. Вона допомагає втримати запитання в пам’яті, проте не замінює археологічної карти.",
+          "visual_description": "Поселення та довкілля",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_2.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "d5c9a32132c186b8caa3ae41bfbbdfab64a57ff95192b02681d24f8895809261",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_2.png",
+            "sha256": "d5c9a32132c186b8caa3ae41bfbbdfab64a57ff95192b02681d24f8895809261"
+          }
+        },
+        {
+          "anchor_id": "8bf37ec63e605b21a965310995b38fd3",
+          "scene_id": "d4862b56a60b52db9f4f44d2ff2f8645",
+          "start_ms": 16018,
+          "duration_ms": 8009,
+          "narration_excerpt": "Далі погляньмо на місце. Для обраного прикладу потрібно дослідити воду, землю, доступні матеріали та зв’язки з іншими поселеннями. Але сприятливе довкілля саме по собі ще не пояснює всіх суспільних змін. Слід запитати, які дані підтверджують конкретний зв’язок і які інші умови могли діяти одночасно. Наша анімація показує абстрактні блоки, а не справжній план давнього поселення. Вона допомагає втримати запитання в пам’яті, проте не замінює археологічної карти.",
+          "visual_description": "Поселення та довкілля",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_2.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "d5c9a32132c186b8caa3ae41bfbbdfab64a57ff95192b02681d24f8895809261",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_2.png",
+            "sha256": "d5c9a32132c186b8caa3ae41bfbbdfab64a57ff95192b02681d24f8895809261"
+          }
+        }
+      ]
+    },
+    {
+      "text": "Ще одне коло запитань стосується занять і обміну. Чи можемо ми простежити різні види праці? Які матеріали вказують на зв’язки між місцями? Чи достатньо цих свідчень, щоб говорити про певний спосіб організації? Важливо не переносити знайомі сучасні установи в минуле лише тому, що так простіше пояснювати. Робочий сценарій має відокремлювати спостереження від тлумачення. Конкретні твердження про спеціалізацію, торгівлю або управління залишаються предметом окремої перевірки за науковими публікаціями.",
+      "visual": "Праця й обмін",
+      "prompt": "Original local teaching diagram, not a historical reconstruction",
+      "id": "96b1f63268605340a4ba83be15069435",
+      "anchors": [
+        {
+          "anchor_id": "db0f68ce34ea56099ffcbc93771c3b71",
+          "scene_id": "96b1f63268605340a4ba83be15069435",
+          "start_ms": 0,
+          "duration_ms": 6579,
+          "narration_excerpt": "Ще одне коло запитань стосується занять і обміну. Чи можемо ми простежити різні види праці? Які матеріали вказують на зв’язки між місцями? Чи достатньо цих свідчень, щоб говорити про певний спосіб організації? Важливо не переносити знайомі сучасні установи в минуле лише тому, що так простіше пояснювати. Робочий сценарій має відокремлювати спостереження від тлумачення. Конкретні твердження про спеціалізацію, торгівлю або управління залишаються предметом окремої перевірки за науковими публікаціями.",
+          "visual_description": "Праця й обмін",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_3.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "d6a0983a6e1682f758737485f379d4559f6355838883b070789946d0059fc1d2",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_3.png",
+            "sha256": "d6a0983a6e1682f758737485f379d4559f6355838883b070789946d0059fc1d2"
+          }
+        },
+        {
+          "anchor_id": "6926914287d45e5986116a953e1a543e",
+          "scene_id": "96b1f63268605340a4ba83be15069435",
+          "start_ms": 6579,
+          "duration_ms": 6579,
+          "narration_excerpt": "Ще одне коло запитань стосується занять і обміну. Чи можемо ми простежити різні види праці? Які матеріали вказують на зв’язки між місцями? Чи достатньо цих свідчень, щоб говорити про певний спосіб організації? Важливо не переносити знайомі сучасні установи в минуле лише тому, що так простіше пояснювати. Робочий сценарій має відокремлювати спостереження від тлумачення. Конкретні твердження про спеціалізацію, торгівлю або управління залишаються предметом окремої перевірки за науковими публікаціями.",
+          "visual_description": "Праця й обмін",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_3.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "d6a0983a6e1682f758737485f379d4559f6355838883b070789946d0059fc1d2",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_3.png",
+            "sha256": "d6a0983a6e1682f758737485f379d4559f6355838883b070789946d0059fc1d2"
+          }
+        },
+        {
+          "anchor_id": "60dd92bc27fa58e09c3ed41ed80fb57e",
+          "scene_id": "96b1f63268605340a4ba83be15069435",
+          "start_ms": 13158,
+          "duration_ms": 6579,
+          "narration_excerpt": "Ще одне коло запитань стосується занять і обміну. Чи можемо ми простежити різні види праці? Які матеріали вказують на зв’язки між місцями? Чи достатньо цих свідчень, щоб говорити про певний спосіб організації? Важливо не переносити знайомі сучасні установи в минуле лише тому, що так простіше пояснювати. Робочий сценарій має відокремлювати спостереження від тлумачення. Конкретні твердження про спеціалізацію, торгівлю або управління залишаються предметом окремої перевірки за науковими публікаціями.",
+          "visual_description": "Праця й обмін",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_3.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "d6a0983a6e1682f758737485f379d4559f6355838883b070789946d0059fc1d2",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_3.png",
+            "sha256": "d6a0983a6e1682f758737485f379d4559f6355838883b070789946d0059fc1d2"
+          }
+        },
+        {
+          "anchor_id": "53488bd9e883574b997f1b51ac14f86f",
+          "scene_id": "96b1f63268605340a4ba83be15069435",
+          "start_ms": 19737,
+          "duration_ms": 6579,
+          "narration_excerpt": "Ще одне коло запитань стосується занять і обміну. Чи можемо ми простежити різні види праці? Які матеріали вказують на зв’язки між місцями? Чи достатньо цих свідчень, щоб говорити про певний спосіб організації? Важливо не переносити знайомі сучасні установи в минуле лише тому, що так простіше пояснювати. Робочий сценарій має відокремлювати спостереження від тлумачення. Конкретні твердження про спеціалізацію, торгівлю або управління залишаються предметом окремої перевірки за науковими публікаціями.",
+          "visual_description": "Праця й обмін",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_3.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "d6a0983a6e1682f758737485f379d4559f6355838883b070789946d0059fc1d2",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_3.png",
+            "sha256": "d6a0983a6e1682f758737485f379d4559f6355838883b070789946d0059fc1d2"
+          }
+        }
+      ]
+    },
+    {
+      "text": "Тепер побудуймо послідовність. Потрібно зіставити етапи забудови, датування матеріалів і зміни в оточенні поселення. Якщо дві події відбулися приблизно одночасно, це ще не доводить, що одна спричинила іншу. У редакційному плані варто зберегти альтернативні пояснення та позначити невизначеність. Монтажна шкала вимірює секунди нашого ролика; вона нічого не говорить про точність історичних дат. Саме тому візуальний порядок кадрів не має приховано створювати сильнішу причинну історію, ніж дозволяють джерела.",
+      "visual": "Час і послідовність",
+      "prompt": "Original local teaching diagram, not a historical reconstruction",
+      "id": "794e2da1de555c2995193917dfab9048",
+      "anchors": [
+        {
+          "anchor_id": "0af5c3e61b4455a5adf5c48802132c7d",
+          "scene_id": "794e2da1de555c2995193917dfab9048",
+          "start_ms": 0,
+          "duration_ms": 6370,
+          "narration_excerpt": "Тепер побудуймо послідовність. Потрібно зіставити етапи забудови, датування матеріалів і зміни в оточенні поселення. Якщо дві події відбулися приблизно одночасно, це ще не доводить, що одна спричинила іншу. У редакційному плані варто зберегти альтернативні пояснення та позначити невизначеність. Монтажна шкала вимірює секунди нашого ролика; вона нічого не говорить про точність історичних дат. Саме тому візуальний порядок кадрів не має приховано створювати сильнішу причинну історію, ніж дозволяють джерела.",
+          "visual_description": "Час і послідовність",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_4.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "f1db6549c215000051e487cba17879ec9e8bbcf2edf0e8734e39b590b868370f",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_4.png",
+            "sha256": "f1db6549c215000051e487cba17879ec9e8bbcf2edf0e8734e39b590b868370f"
+          }
+        },
+        {
+          "anchor_id": "39773cd17f0957cfb7648894fec29147",
+          "scene_id": "794e2da1de555c2995193917dfab9048",
+          "start_ms": 6370,
+          "duration_ms": 6371,
+          "narration_excerpt": "Тепер побудуймо послідовність. Потрібно зіставити етапи забудови, датування матеріалів і зміни в оточенні поселення. Якщо дві події відбулися приблизно одночасно, це ще не доводить, що одна спричинила іншу. У редакційному плані варто зберегти альтернативні пояснення та позначити невизначеність. Монтажна шкала вимірює секунди нашого ролика; вона нічого не говорить про точність історичних дат. Саме тому візуальний порядок кадрів не має приховано створювати сильнішу причинну історію, ніж дозволяють джерела.",
+          "visual_description": "Час і послідовність",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_4.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "f1db6549c215000051e487cba17879ec9e8bbcf2edf0e8734e39b590b868370f",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_4.png",
+            "sha256": "f1db6549c215000051e487cba17879ec9e8bbcf2edf0e8734e39b590b868370f"
+          }
+        },
+        {
+          "anchor_id": "64cef3a15ac25579b00ca66be9de42b1",
+          "scene_id": "794e2da1de555c2995193917dfab9048",
+          "start_ms": 12741,
+          "duration_ms": 6371,
+          "narration_excerpt": "Тепер побудуймо послідовність. Потрібно зіставити етапи забудови, датування матеріалів і зміни в оточенні поселення. Якщо дві події відбулися приблизно одночасно, це ще не доводить, що одна спричинила іншу. У редакційному плані варто зберегти альтернативні пояснення та позначити невизначеність. Монтажна шкала вимірює секунди нашого ролика; вона нічого не говорить про точність історичних дат. Саме тому візуальний порядок кадрів не має приховано створювати сильнішу причинну історію, ніж дозволяють джерела.",
+          "visual_description": "Час і послідовність",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_4.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "f1db6549c215000051e487cba17879ec9e8bbcf2edf0e8734e39b590b868370f",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_4.png",
+            "sha256": "f1db6549c215000051e487cba17879ec9e8bbcf2edf0e8734e39b590b868370f"
+          }
+        },
+        {
+          "anchor_id": "00b91fc6a0e057888d54044b12263da4",
+          "scene_id": "794e2da1de555c2995193917dfab9048",
+          "start_ms": 19112,
+          "duration_ms": 6371,
+          "narration_excerpt": "Тепер побудуймо послідовність. Потрібно зіставити етапи забудови, датування матеріалів і зміни в оточенні поселення. Якщо дві події відбулися приблизно одночасно, це ще не доводить, що одна спричинила іншу. У редакційному плані варто зберегти альтернативні пояснення та позначити невизначеність. Монтажна шкала вимірює секунди нашого ролика; вона нічого не говорить про точність історичних дат. Саме тому візуальний порядок кадрів не має приховано створювати сильнішу причинну історію, ніж дозволяють джерела.",
+          "visual_description": "Час і послідовність",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_4.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "f1db6549c215000051e487cba17879ec9e8bbcf2edf0e8734e39b590b868370f",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_4.png",
+            "sha256": "f1db6549c215000051e487cba17879ec9e8bbcf2edf0e8734e39b590b868370f"
+          }
+        }
+      ]
+    },
+    {
+      "text": "Корисно порівняти кілька прикладів, але не зводити їх до однакового шаблону. Подібні зовнішні ознаки можуть виникати за різних обставин. Для кожного порівняння потрібно перевірити масштаб, час і доступність матеріалів. Якщо одне поселення досліджене краще за інше, це теж впливає на наші висновки. Умовні прямокутники на екрані не позначають реальні міста. Вони показують місця для майбутніх перевірених прикладів, які редактор має обрати разом із джерелами та відповідними застереженнями.",
+      "visual": "Різні шляхи змін",
+      "prompt": "Original local teaching diagram, not a historical reconstruction",
+      "id": "bc60f05cc3b45be28869d2cb76782d68",
+      "anchors": [
+        {
+          "anchor_id": "5158d3daa4b45d4194bee760b9d3ca4e",
+          "scene_id": "bc60f05cc3b45be28869d2cb76782d68",
+          "start_ms": 0,
+          "duration_ms": 6158,
+          "narration_excerpt": "Корисно порівняти кілька прикладів, але не зводити їх до однакового шаблону. Подібні зовнішні ознаки можуть виникати за різних обставин. Для кожного порівняння потрібно перевірити масштаб, час і доступність матеріалів. Якщо одне поселення досліджене краще за інше, це теж впливає на наші висновки. Умовні прямокутники на екрані не позначають реальні міста. Вони показують місця для майбутніх перевірених прикладів, які редактор має обрати разом із джерелами та відповідними застереженнями.",
+          "visual_description": "Різні шляхи змін",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_5.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "8468778e64c1972f846ca9ebc0c9536fb50f87397bfba366803bc585ad1bd930",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_5.png",
+            "sha256": "8468778e64c1972f846ca9ebc0c9536fb50f87397bfba366803bc585ad1bd930"
+          }
+        },
+        {
+          "anchor_id": "3c5b9084f36c56ff9d6df75182c70aaa",
+          "scene_id": "bc60f05cc3b45be28869d2cb76782d68",
+          "start_ms": 6158,
+          "duration_ms": 6159,
+          "narration_excerpt": "Корисно порівняти кілька прикладів, але не зводити їх до однакового шаблону. Подібні зовнішні ознаки можуть виникати за різних обставин. Для кожного порівняння потрібно перевірити масштаб, час і доступність матеріалів. Якщо одне поселення досліджене краще за інше, це теж впливає на наші висновки. Умовні прямокутники на екрані не позначають реальні міста. Вони показують місця для майбутніх перевірених прикладів, які редактор має обрати разом із джерелами та відповідними застереженнями.",
+          "visual_description": "Різні шляхи змін",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_5.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "8468778e64c1972f846ca9ebc0c9536fb50f87397bfba366803bc585ad1bd930",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_5.png",
+            "sha256": "8468778e64c1972f846ca9ebc0c9536fb50f87397bfba366803bc585ad1bd930"
+          }
+        },
+        {
+          "anchor_id": "69e76ffe97d852779e825789381a6232",
+          "scene_id": "bc60f05cc3b45be28869d2cb76782d68",
+          "start_ms": 12317,
+          "duration_ms": 6159,
+          "narration_excerpt": "Корисно порівняти кілька прикладів, але не зводити їх до однакового шаблону. Подібні зовнішні ознаки можуть виникати за різних обставин. Для кожного порівняння потрібно перевірити масштаб, час і доступність матеріалів. Якщо одне поселення досліджене краще за інше, це теж впливає на наші висновки. Умовні прямокутники на екрані не позначають реальні міста. Вони показують місця для майбутніх перевірених прикладів, які редактор має обрати разом із джерелами та відповідними застереженнями.",
+          "visual_description": "Різні шляхи змін",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_5.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "8468778e64c1972f846ca9ebc0c9536fb50f87397bfba366803bc585ad1bd930",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_5.png",
+            "sha256": "8468778e64c1972f846ca9ebc0c9536fb50f87397bfba366803bc585ad1bd930"
+          }
+        },
+        {
+          "anchor_id": "649852d3d033504eb3fc045d47f78b32",
+          "scene_id": "bc60f05cc3b45be28869d2cb76782d68",
+          "start_ms": 18476,
+          "duration_ms": 6159,
+          "narration_excerpt": "Корисно порівняти кілька прикладів, але не зводити їх до однакового шаблону. Подібні зовнішні ознаки можуть виникати за різних обставин. Для кожного порівняння потрібно перевірити масштаб, час і доступність матеріалів. Якщо одне поселення досліджене краще за інше, це теж впливає на наші висновки. Умовні прямокутники на екрані не позначають реальні міста. Вони показують місця для майбутніх перевірених прикладів, які редактор має обрати разом із джерелами та відповідними застереженнями.",
+          "visual_description": "Різні шляхи змін",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_5.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "8468778e64c1972f846ca9ebc0c9536fb50f87397bfba366803bc585ad1bd930",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_5.png",
+            "sha256": "8468778e64c1972f846ca9ebc0c9536fb50f87397bfba366803bc585ad1bd930"
+          }
+        }
+      ]
+    },
+    {
+      "text": "Перш ніж завершити ролик, перевірмо спосіб показу. Синтетичний рух камери не перетворює малюнок на документальний кадр. Безкоштовний матеріал не означає автоматичного дозволу на будь-яке використання. У нашому прикладі використані власні локальні схеми й короткі відеофрагменти з них, без сторонніх фотографій або музики. Права та походження все одно записані поруч із файлами. Ручні субтитри й виміряна тривалість аудіо допомагають монтувати, але остаточний перегляд і прослуховування має зробити людина.",
+      "visual": "Чесна візуальна розповідь",
+      "prompt": "Original local teaching diagram, not a historical reconstruction",
+      "id": "e2b5e219566f533d931439d24ba85389",
+      "anchors": [
+        {
+          "anchor_id": "39bb33e7bec25f2e8bd958829e8bd16a",
+          "scene_id": "e2b5e219566f533d931439d24ba85389",
+          "start_ms": 0,
+          "duration_ms": 6330,
+          "narration_excerpt": "Перш ніж завершити ролик, перевірмо спосіб показу. Синтетичний рух камери не перетворює малюнок на документальний кадр. Безкоштовний матеріал не означає автоматичного дозволу на будь-яке використання. У нашому прикладі використані власні локальні схеми й короткі відеофрагменти з них, без сторонніх фотографій або музики. Права та походження все одно записані поруч із файлами. Ручні субтитри й виміряна тривалість аудіо допомагають монтувати, але остаточний перегляд і прослуховування має зробити людина.",
+          "visual_description": "Чесна візуальна розповідь",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_6.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "d72eb53116e671b2af7094b0b961e7d6877ad76e7877a267b57e00ad1e79ab28",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_6.png",
+            "sha256": "d72eb53116e671b2af7094b0b961e7d6877ad76e7877a267b57e00ad1e79ab28"
+          }
+        },
+        {
+          "anchor_id": "4588e4d33dca577697b325fd043d365f",
+          "scene_id": "e2b5e219566f533d931439d24ba85389",
+          "start_ms": 6330,
+          "duration_ms": 6331,
+          "narration_excerpt": "Перш ніж завершити ролик, перевірмо спосіб показу. Синтетичний рух камери не перетворює малюнок на документальний кадр. Безкоштовний матеріал не означає автоматичного дозволу на будь-яке використання. У нашому прикладі використані власні локальні схеми й короткі відеофрагменти з них, без сторонніх фотографій або музики. Права та походження все одно записані поруч із файлами. Ручні субтитри й виміряна тривалість аудіо допомагають монтувати, але остаточний перегляд і прослуховування має зробити людина.",
+          "visual_description": "Чесна візуальна розповідь",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_6.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "d72eb53116e671b2af7094b0b961e7d6877ad76e7877a267b57e00ad1e79ab28",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_6.png",
+            "sha256": "d72eb53116e671b2af7094b0b961e7d6877ad76e7877a267b57e00ad1e79ab28"
+          }
+        },
+        {
+          "anchor_id": "4c1832290ae15ccf978ebd34847a89f4",
+          "scene_id": "e2b5e219566f533d931439d24ba85389",
+          "start_ms": 12661,
+          "duration_ms": 6330,
+          "narration_excerpt": "Перш ніж завершити ролик, перевірмо спосіб показу. Синтетичний рух камери не перетворює малюнок на документальний кадр. Безкоштовний матеріал не означає автоматичного дозволу на будь-яке використання. У нашому прикладі використані власні локальні схеми й короткі відеофрагменти з них, без сторонніх фотографій або музики. Права та походження все одно записані поруч із файлами. Ручні субтитри й виміряна тривалість аудіо допомагають монтувати, але остаточний перегляд і прослуховування має зробити людина.",
+          "visual_description": "Чесна візуальна розповідь",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_6.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "d72eb53116e671b2af7094b0b961e7d6877ad76e7877a267b57e00ad1e79ab28",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_6.png",
+            "sha256": "d72eb53116e671b2af7094b0b961e7d6877ad76e7877a267b57e00ad1e79ab28"
+          }
+        },
+        {
+          "anchor_id": "21fb677d20275c55ad8ee8cef307972a",
+          "scene_id": "e2b5e219566f533d931439d24ba85389",
+          "start_ms": 18991,
+          "duration_ms": 6331,
+          "narration_excerpt": "Перш ніж завершити ролик, перевірмо спосіб показу. Синтетичний рух камери не перетворює малюнок на документальний кадр. Безкоштовний матеріал не означає автоматичного дозволу на будь-яке використання. У нашому прикладі використані власні локальні схеми й короткі відеофрагменти з них, без сторонніх фотографій або музики. Права та походження все одно записані поруч із файлами. Ручні субтитри й виміряна тривалість аудіо допомагають монтувати, але остаточний перегляд і прослуховування має зробити людина.",
+          "visual_description": "Чесна візуальна розповідь",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_6.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "d72eb53116e671b2af7094b0b961e7d6877ad76e7877a267b57e00ad1e79ab28",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_6.png",
+            "sha256": "d72eb53116e671b2af7094b0b961e7d6877ad76e7877a267b57e00ad1e79ab28"
+          }
+        }
+      ]
+    },
+    {
+      "text": "Отже, розповідь про перші міста починається не з гучної дати, а з визначення, свідчень і меж висновку. Цей навчальний матеріал показує підготовку редакційного запитання, а не готову наукову експертизу. Для справжнього випуску потрібні конкретні перевірені приклади, посилання на дослідження, рішення редактора та підтвердження прав. Ми зберігаємо сценарій, монтажні інтервали й контрольні суми, щоб технічну перевірку можна було повторити. Успішний експорт означає, що файл зібрано, а не те, що історію вже дозволено публікувати.",
+      "visual": "Що залишаємо відкритим",
+      "prompt": "Original local teaching diagram, not a historical reconstruction",
+      "id": "23fd73b7c79758b0943d60bb43ce0f9d",
+      "anchors": [
+        {
+          "anchor_id": "2a852e39f2125e60ae22f869994804f0",
+          "scene_id": "23fd73b7c79758b0943d60bb43ce0f9d",
+          "start_ms": 0,
+          "duration_ms": 7038,
+          "narration_excerpt": "Отже, розповідь про перші міста починається не з гучної дати, а з визначення, свідчень і меж висновку. Цей навчальний матеріал показує підготовку редакційного запитання, а не готову наукову експертизу. Для справжнього випуску потрібні конкретні перевірені приклади, посилання на дослідження, рішення редактора та підтвердження прав. Ми зберігаємо сценарій, монтажні інтервали й контрольні суми, щоб технічну перевірку можна було повторити. Успішний експорт означає, що файл зібрано, а не те, що історію вже дозволено публікувати.",
+          "visual_description": "Що залишаємо відкритим",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_7.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "5dab8a624e80ced61423c036b56d0e0296d981ab0902495e22d35d4fb2643ea4",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_7.png",
+            "sha256": "5dab8a624e80ced61423c036b56d0e0296d981ab0902495e22d35d4fb2643ea4"
+          }
+        },
+        {
+          "anchor_id": "4feed0cf20105207b4a4eda3ba12728e",
+          "scene_id": "23fd73b7c79758b0943d60bb43ce0f9d",
+          "start_ms": 7038,
+          "duration_ms": 7039,
+          "narration_excerpt": "Отже, розповідь про перші міста починається не з гучної дати, а з визначення, свідчень і меж висновку. Цей навчальний матеріал показує підготовку редакційного запитання, а не готову наукову експертизу. Для справжнього випуску потрібні конкретні перевірені приклади, посилання на дослідження, рішення редактора та підтвердження прав. Ми зберігаємо сценарій, монтажні інтервали й контрольні суми, щоб технічну перевірку можна було повторити. Успішний експорт означає, що файл зібрано, а не те, що історію вже дозволено публікувати.",
+          "visual_description": "Що залишаємо відкритим",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_7.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "5dab8a624e80ced61423c036b56d0e0296d981ab0902495e22d35d4fb2643ea4",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_7.png",
+            "sha256": "5dab8a624e80ced61423c036b56d0e0296d981ab0902495e22d35d4fb2643ea4"
+          }
+        },
+        {
+          "anchor_id": "5ff86dd8ff8c5cf88eea0d072ae48d27",
+          "scene_id": "23fd73b7c79758b0943d60bb43ce0f9d",
+          "start_ms": 14077,
+          "duration_ms": 7039,
+          "narration_excerpt": "Отже, розповідь про перші міста починається не з гучної дати, а з визначення, свідчень і меж висновку. Цей навчальний матеріал показує підготовку редакційного запитання, а не готову наукову експертизу. Для справжнього випуску потрібні конкретні перевірені приклади, посилання на дослідження, рішення редактора та підтвердження прав. Ми зберігаємо сценарій, монтажні інтервали й контрольні суми, щоб технічну перевірку можна було повторити. Успішний експорт означає, що файл зібрано, а не те, що історію вже дозволено публікувати.",
+          "visual_description": "Що залишаємо відкритим",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_7.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "5dab8a624e80ced61423c036b56d0e0296d981ab0902495e22d35d4fb2643ea4",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_7.png",
+            "sha256": "5dab8a624e80ced61423c036b56d0e0296d981ab0902495e22d35d4fb2643ea4"
+          }
+        },
+        {
+          "anchor_id": "9e4f152a8e7b5f1a91a8d456cff7dcc3",
+          "scene_id": "23fd73b7c79758b0943d60bb43ce0f9d",
+          "start_ms": 21116,
+          "duration_ms": 7039,
+          "narration_excerpt": "Отже, розповідь про перші міста починається не з гучної дати, а з визначення, свідчень і меж висновку. Цей навчальний матеріал показує підготовку редакційного запитання, а не готову наукову експертизу. Для справжнього випуску потрібні конкретні перевірені приклади, посилання на дослідження, рішення редактора та підтвердження прав. Ми зберігаємо сценарій, монтажні інтервали й контрольні суми, щоб технічну перевірку можна було повторити. Успішний експорт означає, що файл зібрано, а не те, що історію вже дозволено публікувати.",
+          "visual_description": "Що залишаємо відкритим",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_7.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "5dab8a624e80ced61423c036b56d0e0296d981ab0902495e22d35d4fb2643ea4",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_7.png",
+            "sha256": "5dab8a624e80ced61423c036b56d0e0296d981ab0902495e22d35d4fb2643ea4"
+          }
+        }
+      ]
+    }
+  ],
+  "approved": false,
+  "timeline": {
+    "version": 1,
+    "scene_durations_ms": {
+      "cecd6af14cd85c4fb5192218f25518a6": 22232,
+      "d22cc073a51c5f47a1d4720581242cbd": 24854,
+      "d4862b56a60b52db9f4f44d2ff2f8645": 24027,
+      "96b1f63268605340a4ba83be15069435": 26316,
+      "794e2da1de555c2995193917dfab9048": 25483,
+      "bc60f05cc3b45be28869d2cb76782d68": 24635,
+      "e2b5e219566f533d931439d24ba85389": 25322,
+      "23fd73b7c79758b0943d60bb43ce0f9d": 28155
+    }
+  },
+  "output_profile": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30
+  },
+  "captions_by_scene": {
+    "cecd6af14cd85c4fb5192218f25518a6": [
+      {
+        "start_ms": 100,
+        "end_ms": 2679,
+        "text": "Як виникли перші міста? Зручна коротка відповідь може",
+        "timing_kind": "MANUAL_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 2779,
+        "end_ms": 5558,
+        "text": "приховувати відразу кілька різних запитань. Коли поселення стає",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 5558,
+        "end_ms": 8337,
+        "text": "містом? Чи достатньо великої кількості мешканців? Які ознаки ми",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 8337,
+        "end_ms": 11116,
+        "text": "взагалі можемо побачити в археологічних матеріалах? У цьому",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 11116,
+        "end_ms": 13895,
+        "text": "навчальному ролику ми не встановлюємо єдину дату й не оголошуємо",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 13895,
+        "end_ms": 16674,
+        "text": "переможця серед усіх поселень світу. Ми розбираємо, як",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 16674,
+        "end_ms": 19453,
+        "text": "підготувати обережну розповідь про тривалий процес і не видати",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 19453,
+        "end_ms": 22232,
+        "text": "умовну схему за доказ.",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      }
+    ],
+    "d22cc073a51c5f47a1d4720581242cbd": [
+      {
+        "start_ms": 100,
+        "end_ms": 3006,
+        "text": "Спершу потрібно пояснити, що саме автор називає містом. Можна",
+        "timing_kind": "MANUAL_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 3106,
+        "end_ms": 6213,
+        "text": "обговорювати розмір поселення, щільність забудови,",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 6213,
+        "end_ms": 9320,
+        "text": "різноманітність занять або його роль для навколишньої території.",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 9320,
+        "end_ms": 12427,
+        "text": "Для конкретної історії ці ознаки слід звірити з фаховою",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 12427,
+        "end_ms": 15533,
+        "text": "літературою. Якщо визначення змінюється посеред ролика, висновок",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 15533,
+        "end_ms": 18640,
+        "text": "стає непомітно підлаштованим під відповідь. На нашій картці",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 18640,
+        "end_ms": 21747,
+        "text": "кілька критеріїв стоять поряд. Це перелік запитань до джерела, а",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 21747,
+        "end_ms": 24854,
+        "text": "не універсальний тест, який самостійно визначає найперше місто.",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      }
+    ],
+    "d4862b56a60b52db9f4f44d2ff2f8645": [
+      {
+        "start_ms": 100,
+        "end_ms": 2903,
+        "text": "Далі погляньмо на місце. Для обраного прикладу потрібно",
+        "timing_kind": "MANUAL_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 3003,
+        "end_ms": 6006,
+        "text": "дослідити воду, землю, доступні матеріали та зв’язки з іншими",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 6006,
+        "end_ms": 9010,
+        "text": "поселеннями. Але сприятливе довкілля саме по собі ще не пояснює",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 9010,
+        "end_ms": 12013,
+        "text": "всіх суспільних змін. Слід запитати, які дані підтверджують",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 12013,
+        "end_ms": 15016,
+        "text": "конкретний зв’язок і які інші умови могли діяти одночасно. Наша",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 15016,
+        "end_ms": 18020,
+        "text": "анімація показує абстрактні блоки, а не справжній план давнього",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 18020,
+        "end_ms": 21023,
+        "text": "поселення. Вона допомагає втримати запитання в пам’яті, проте не",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 21023,
+        "end_ms": 24027,
+        "text": "замінює археологічної карти.",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      }
+    ],
+    "96b1f63268605340a4ba83be15069435": [
+      {
+        "start_ms": 100,
+        "end_ms": 2824,
+        "text": "Ще одне коло запитань стосується занять і обміну. Чи можемо ми",
+        "timing_kind": "MANUAL_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 2924,
+        "end_ms": 5848,
+        "text": "простежити різні види праці? Які матеріали вказують на зв’язки",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 5848,
+        "end_ms": 8772,
+        "text": "між місцями? Чи достатньо цих свідчень, щоб говорити про певний",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 8772,
+        "end_ms": 11696,
+        "text": "спосіб організації? Важливо не переносити знайомі сучасні",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 11696,
+        "end_ms": 14620,
+        "text": "установи в минуле лише тому, що так простіше пояснювати. Робочий",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 14620,
+        "end_ms": 17544,
+        "text": "сценарій має відокремлювати спостереження від тлумачення.",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 17544,
+        "end_ms": 20468,
+        "text": "Конкретні твердження про спеціалізацію, торгівлю або управління",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 20468,
+        "end_ms": 23392,
+        "text": "залишаються предметом окремої перевірки за науковими",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 23392,
+        "end_ms": 26316,
+        "text": "публікаціями.",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      }
+    ],
+    "794e2da1de555c2995193917dfab9048": [
+      {
+        "start_ms": 100,
+        "end_ms": 2731,
+        "text": "Тепер побудуймо послідовність. Потрібно зіставити етапи",
+        "timing_kind": "MANUAL_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 2831,
+        "end_ms": 5662,
+        "text": "забудови, датування матеріалів і зміни в оточенні поселення.",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 5662,
+        "end_ms": 8494,
+        "text": "Якщо дві події відбулися приблизно одночасно, це ще не доводить,",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 8494,
+        "end_ms": 11325,
+        "text": "що одна спричинила іншу. У редакційному плані варто зберегти",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 11325,
+        "end_ms": 14157,
+        "text": "альтернативні пояснення та позначити невизначеність. Монтажна",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 14157,
+        "end_ms": 16988,
+        "text": "шкала вимірює секунди нашого ролика; вона нічого не говорить про",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 16988,
+        "end_ms": 19820,
+        "text": "точність історичних дат. Саме тому візуальний порядок кадрів не",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 19820,
+        "end_ms": 22651,
+        "text": "має приховано створювати сильнішу причинну історію, ніж",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 22651,
+        "end_ms": 25483,
+        "text": "дозволяють джерела.",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      }
+    ],
+    "bc60f05cc3b45be28869d2cb76782d68": [
+      {
+        "start_ms": 100,
+        "end_ms": 2637,
+        "text": "Корисно порівняти кілька прикладів, але не зводити їх до",
+        "timing_kind": "MANUAL_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 2737,
+        "end_ms": 5474,
+        "text": "однакового шаблону. Подібні зовнішні ознаки можуть виникати за",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 5474,
+        "end_ms": 8211,
+        "text": "різних обставин. Для кожного порівняння потрібно перевірити",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 8211,
+        "end_ms": 10948,
+        "text": "масштаб, час і доступність матеріалів. Якщо одне поселення",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 10948,
+        "end_ms": 13686,
+        "text": "досліджене краще за інше, це теж впливає на наші висновки.",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 13686,
+        "end_ms": 16423,
+        "text": "Умовні прямокутники на екрані не позначають реальні міста. Вони",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 16423,
+        "end_ms": 19160,
+        "text": "показують місця для майбутніх перевірених прикладів, які",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 19160,
+        "end_ms": 21897,
+        "text": "редактор має обрати разом із джерелами та відповідними",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 21897,
+        "end_ms": 24635,
+        "text": "застереженнями.",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      }
+    ],
+    "e2b5e219566f533d931439d24ba85389": [
+      {
+        "start_ms": 100,
+        "end_ms": 2713,
+        "text": "Перш ніж завершити ролик, перевірмо спосіб показу. Синтетичний",
+        "timing_kind": "MANUAL_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 2813,
+        "end_ms": 5627,
+        "text": "рух камери не перетворює малюнок на документальний кадр.",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 5627,
+        "end_ms": 8440,
+        "text": "Безкоштовний матеріал не означає автоматичного дозволу на",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 8440,
+        "end_ms": 11254,
+        "text": "будь-яке використання. У нашому прикладі використані власні",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 11254,
+        "end_ms": 14067,
+        "text": "локальні схеми й короткі відеофрагменти з них, без сторонніх",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 14067,
+        "end_ms": 16881,
+        "text": "фотографій або музики. Права та походження все одно записані",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 16881,
+        "end_ms": 19694,
+        "text": "поруч із файлами. Ручні субтитри й виміряна тривалість аудіо",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 19694,
+        "end_ms": 22508,
+        "text": "допомагають монтувати, але остаточний перегляд і прослуховування",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 22508,
+        "end_ms": 25322,
+        "text": "має зробити людина.",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      }
+    ],
+    "23fd73b7c79758b0943d60bb43ce0f9d": [
+      {
+        "start_ms": 100,
+        "end_ms": 3028,
+        "text": "Отже, розповідь про перші міста починається не з гучної дати, а",
+        "timing_kind": "MANUAL_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 3128,
+        "end_ms": 6256,
+        "text": "з визначення, свідчень і меж висновку. Цей навчальний матеріал",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 6256,
+        "end_ms": 9385,
+        "text": "показує підготовку редакційного запитання, а не готову наукову",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 9385,
+        "end_ms": 12513,
+        "text": "експертизу. Для справжнього випуску потрібні конкретні",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 12513,
+        "end_ms": 15641,
+        "text": "перевірені приклади, посилання на дослідження, рішення редактора",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 15641,
+        "end_ms": 18770,
+        "text": "та підтвердження прав. Ми зберігаємо сценарій, монтажні",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 18770,
+        "end_ms": 21898,
+        "text": "інтервали й контрольні суми, щоб технічну перевірку можна було",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 21898,
+        "end_ms": 25026,
+        "text": "повторити. Успішний експорт означає, що файл зібрано, а не те,",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 25026,
+        "end_ms": 28155,
+        "text": "що історію вже дозволено публікувати.",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      }
+    ]
+  },
+  "brief": "UNVERIFIED editorial-training draft; original diagrams are illustrative, not historical evidence.",
+  "audio": "./uk_narration.mp3"
+}

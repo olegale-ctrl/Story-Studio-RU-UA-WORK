@@ -1,0 +1,55 @@
+{
+  "date": "2026-11-18",
+  "status": "READY_FOR_INDEPENDENT_MVP_07_REVIEW",
+  "windows": "WINDOWS_NOT_RUN",
+  "base_commit": "a80aa0a71a41057bbe031d2a3bbbc1b210f2ab43",
+  "base_tree": "f528421025ee72a2ac70cd484fe4bc12a3b0505d",
+  "python": "3.12.14",
+  "tk": "9.0.4",
+  "ffmpeg": "7.1.5-0+deb13u1",
+  "ffprobe": "7.1.5-0+deb13u1",
+  "pytest": "9.2.0",
+  "full_suite": {
+    "passed": 767,
+    "skipped": 1,
+    "subtests_passed": 3616,
+    "warning_count": 1,
+    "seconds": 269.44,
+    "exit_code": 0,
+    "skip_reason": "Windows junction requires NTFS"
+  },
+  "experimental_unittest": {
+    "tests": 41,
+    "skipped": 0,
+    "seconds": 49.07,
+    "exit_code": 0
+  },
+  "gui_smoke": {
+    "exit_code": 0,
+    "canvas_items": 515,
+    "scenes": 8,
+    "anchors": 31,
+    "main_tabs": 7,
+    "callback_errors": 0
+  },
+  "final_exports": {
+    "count": 2,
+    "ffprobe_exit_code": 0,
+    "full_decode_exit_code": 0,
+    "duration_and_frames_passed": true
+  },
+  "previews": {
+    "count": 8,
+    "full_decode_exit_code": 0,
+    "duration_checks_passed": true
+  },
+  "not_run": [
+    "Windows 10/11",
+    "Windows OS player",
+    "human listening and end-to-end editorial review",
+    "HiDPI/non-admin Windows qualification"
+  ],
+  "production_permissions": false,
+  "ci_changes": false,
+  "existing_test_expectations_modified": false
+}

@@ -147,12 +147,34 @@ def import_asset(anchor, source, workspace, *, provider='MANUAL', license_status
     return target
 
 
+def video_spec(anchor, strict=True):
+    """Probe actual input, do not trust project duration metadata."""
+    import subprocess
+    from experimental_mvp.pipeline import executable
+    source=Path(anchor['local_asset_path']).expanduser().resolve(strict=True)
+    probe=subprocess.run([executable('ffprobe'),'-v','error','-select_streams','v:0',
+                          '-show_entries','stream=codec_type:format=duration','-of','json',str(source)],
+                         capture_output=True,check=True,timeout=25)
+    value=json.loads(probe.stdout)
+    if not value.get('streams'):raise ValueError('Нет видеопотока.')
+    measured=round(float(value['format']['duration'])*1000)
+    start=anchor.get('source_start_ms',0);end=anchor.get('source_end_ms',measured)
+    if type(start) is not int or type(end) is not int or not 0<=start<end<=measured+1:
+        raise ValueError('Неверный исходный интервал видеоклипа.')
+    policy=anchor.get('short_clip_policy','ERROR' if strict else 'HOLD_LAST_FRAME')
+    if policy not in ('ERROR','HOLD_LAST_FRAME','LOOP'):raise ValueError('Неверное решение для короткого клипа.')
+    if end-start<anchor['duration_ms'] and policy=='ERROR':
+        raise ValueError(f"Клип {measured} мс, используемый интервал {end-start} мс короче якоря {anchor['duration_ms']} мс. Выберите trim / HOLD_LAST_FRAME / LOOP явно.")
+    return dict(measured_ms=measured,start_ms=start,end_ms=end,available_ms=end-start,policy=policy)
+
+
 def render(scene, index, length, folder, log, ffmpeg, command, profile=None, cancelled=lambda: False):
     """Normalize every anchor to the same profile. Short video holds its last frame."""
     errors = validate(scene, round(length * 1000))
     if errors:
         raise ValueError('\n'.join(errors))
     width, height, fps = output_profile(profile)
+    strict = bool(profile and profile.get("timeline_version"))
     clips = []
     inputs = []
     for n, anchor in enumerate(sorted(scene['anchors'], key=lambda a: a['start_ms'])):
@@ -160,6 +182,10 @@ def render(scene, index, length, folder, log, ffmpeg, command, profile=None, can
             from experimental_mvp.pipeline import BuildStopped
             raise BuildStopped('Сборка остановлена между якорями.')
         seconds = anchor['duration_ms'] / 1000
+        absolute = (profile or {}).get('scene_start_ms',0)
+        frames = round((absolute+anchor['start_ms']+anchor['duration_ms'])*fps/1000)-round((absolute+anchor['start_ms'])*fps/1000)
+        if strict and frames<1:raise ValueError('Якорь короче одного выходного кадра.')
+        spec = None
         source = anchor.get('local_asset_path')
         args = []
         if source:
@@ -171,16 +197,29 @@ def render(scene, index, length, folder, log, ffmpeg, command, profile=None, can
                 raise ValueError('Материал подменён перед исполнением.')
             args = ['-loop', '1', '-framerate', str(fps)] if suffix in IMAGES else []
             args += ['-i', local.name]
-            if suffix in VIDEOS and anchor.get('source_start_ms', 0):
-                args += ['-ss', str(anchor['source_start_ms']/1000)]
+            if suffix in VIDEOS:
+                spec = video_spec({**anchor,'local_asset_path':str(local)}, strict)
+                if not strict and 'short_clip_policy' not in anchor:
+                    with log.open('a',encoding='utf-8') as stream:stream.write('LEGACY: implicit hold-last-frame; choose an explicit policy in timeline v1.\n')
             inputs.append({'anchor_id': anchor['anchor_id'], 'sha256': sha256(local.read_bytes()).hexdigest(),
                            'copied_input': local.name, 'source_start_ms': anchor.get('source_start_ms', 0),
+                           'source_interval': spec, 'fit_mode': anchor.get('fit_mode','FIT'),
+                           'timeline_duration_ms': anchor['duration_ms'], 'output_frames': frames if strict else None,
                            'license_status': anchor.get('license_status', 'UNKNOWN')})
         else:
             args = ['-f', 'lavfi', '-i', f'color=c=0x17365a:s={width}x{height}:r={fps}']
-        filters = (f'scale={width}:{height}:force_original_aspect_ratio=decrease,'
-                   f'pad={width}:{height}:(ow-iw)/2:(oh-ih)/2,setsar=1,fps={fps},'
-                   f'format=yuv420p,tpad=stop_mode=clone:stop_duration={seconds}')
+        if anchor.get('fit_mode','FIT') == 'CROP':
+            sizing=f'scale={width}:{height}:force_original_aspect_ratio=increase,crop={width}:{height}'
+        else:
+            sizing=f'scale={width}:{height}:force_original_aspect_ratio=decrease,pad={width}:{height}:(ow-iw)/2:(oh-ih)/2'
+        prefix = f"trim=start={spec['start_ms']/1000}:end={spec['end_ms']/1000},setpts=PTS-STARTPTS," if spec else ''
+        filters = prefix+sizing+f',setsar=1,fps={fps},format=yuv420p'
+        if spec and spec['policy']=='LOOP':
+            count=max(1,round(spec['available_ms']*fps/1000))
+            filters += f',loop=loop=-1:size={count}:start=0,setpts=N/({fps}*TB)'
+        # Padding is explicit in timeline projects. Legacy projects retain published behavior.
+        if not spec or spec['policy']=='HOLD_LAST_FRAME' or not strict:
+            filters += f',tpad=stop_mode=clone:stop_duration={seconds}'
         if not source and anchor['generation_mode'] == 'TEXT_ANIMATION':
             import os
             import textwrap
@@ -200,14 +239,14 @@ def render(scene, index, length, folder, log, ffmpeg, command, profile=None, can
             filters += f",zoompan=z='min(zoom+0.0005,1.08)':d=1:s={width}x{height}:fps={fps}"
         name = f'visual{index:03}_{n:03}.mp4'
         command([ffmpeg, '-nostdin', '-v', 'error', '-xerror', *args, '-an', '-vf', filters,
-                 '-t', str(seconds), '-c:v', 'libx264', '-preset', 'ultrafast', '-threads', '4', name], folder, log)
+                 *(['-frames:v',str(frames)] if strict else ['-t',str(seconds)]), '-c:v', 'libx264', '-preset', 'ultrafast', '-threads', '4', name], folder, log)
         clips.append(name)
     (folder / f'anchor-inputs{index:03}.json').write_text(json.dumps(inputs, ensure_ascii=False, indent=2), encoding='utf-8')
     listing = f'anchors{index:03}.txt'
     (folder / listing).write_text(''.join(f"file '{name}'\n" for name in clips), encoding='ascii')
     name = f'scene{index:03}.mp4'
     command([ffmpeg, '-nostdin', '-v', 'error', '-f', 'concat', '-safe', '1', '-i', listing,
-             '-t', str(length), '-c', 'copy', name], folder, log)
+             *(['-frames:v',str(sum(round((absolute+a['start_ms']+a['duration_ms'])*fps/1000)-round((absolute+a['start_ms'])*fps/1000) for a in scene['anchors']))] if strict else ['-t',str(length)]), '-c', 'copy', name], folder, log)
     return name
 
 

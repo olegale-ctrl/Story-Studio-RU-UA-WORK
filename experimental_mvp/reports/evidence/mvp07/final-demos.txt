@@ -1,0 +1,27 @@
+START ru
+ru Озвучка
+ru Озвучка подготовлена
+ru Видео: сцена 1/8
+ru Видео: сцена 2/8
+ru Видео: сцена 3/8
+ru Видео: сцена 4/8
+ru Видео: сцена 5/8
+ru Видео: сцена 6/8
+ru Видео: сцена 7/8
+ru Видео: сцена 8/8
+ru Сборка MP4
+RESULT {'locale': 'ru', 'path': '/workspace/work/mvp07-evidence/rendered/ru/run-395a7d76bb59/final.mp4', 'sha256': 'd74305de401a91710fd7d64cd3a2748edd26bfe4f2360e56193f950acdf4555c', 'duration': '220.248000', 'decode_exit': 0, 'probe_exit': 0, 'duration_check': {'expected_seconds': 220.248, 'actual_seconds': 220.248, 'tolerance_seconds': 0.1, 'passed': True}, 'previews': {'anchor': '/workspace/work/mvp07-evidence/rendered/ru-previews/timeline-preview-6007950855bf/preview.mp4', 'scene': '/workspace/work/mvp07-evidence/rendered/ru-previews/timeline-preview-c43bc8b5fbb5/preview.mp4', 'position': '/workspace/work/mvp07-evidence/rendered/ru-previews/timeline-preview-5ec2a1d8c0f0/preview.mp4', 'project': '/workspace/work/mvp07-evidence/rendered/ru-previews/movie-preview-142d60d47dc2/final.mp4'}}
+START uk
+uk Озвучка
+uk Озвучка подготовлена
+uk Видео: сцена 1/8
+uk Видео: сцена 2/8
+uk Видео: сцена 3/8
+uk Видео: сцена 4/8
+uk Видео: сцена 5/8
+uk Видео: сцена 6/8
+uk Видео: сцена 7/8
+uk Видео: сцена 8/8
+uk Сборка MP4
+RESULT {'locale': 'uk', 'path': '/workspace/work/mvp07-evidence/rendered/uk/run-352dfa5fe514/final.mp4', 'sha256': 'a2a226eba1911e1531c5e5bce0f123ab0e62c8644235b570351b8efbac5a03db', 'duration': '201.033333', 'decode_exit': 0, 'probe_exit': 0, 'duration_check': {'expected_seconds': 201.024, 'actual_seconds': 201.033333, 'tolerance_seconds': 0.1, 'passed': True}, 'previews': {'anchor': '/workspace/work/mvp07-evidence/rendered/uk-previews/timeline-preview-29935de2fb17/preview.mp4', 'scene': '/workspace/work/mvp07-evidence/rendered/uk-previews/timeline-preview-1479c28a705f/preview.mp4', 'position': '/workspace/work/mvp07-evidence/rendered/uk-previews/timeline-preview-6830a3c6d134/preview.mp4', 'project': '/workspace/work/mvp07-evidence/rendered/uk-previews/movie-preview-b9eb0bda4012/final.mp4'}}
+DEMO_RENDER_EXIT=0

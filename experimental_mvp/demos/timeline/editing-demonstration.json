@@ -1,0 +1,30 @@
+[
+  {
+    "locale": "ru",
+    "topic": "Почему исчезли древние цивилизации?",
+    "duration_ms": 220248,
+    "anchors": 31,
+    "demonstrated": [
+      "explicit duration edit + adjacent trim",
+      "two anchor position swap",
+      "manual captions",
+      "atomic save/reopen"
+    ],
+    "audio_timing": "manual boundaries from measured local segment durations; MP3 encoder tail assigned to last scene",
+    "external_services": false
+  },
+  {
+    "locale": "uk",
+    "topic": "Як виникли перші міста?",
+    "duration_ms": 201024,
+    "anchors": 30,
+    "demonstrated": [
+      "explicit duration edit + adjacent trim",
+      "two anchor position swap",
+      "manual captions",
+      "atomic save/reopen"
+    ],
+    "audio_timing": "manual boundaries from measured local segment durations; MP3 encoder tail assigned to last scene",
+    "external_services": false
+  }
+]

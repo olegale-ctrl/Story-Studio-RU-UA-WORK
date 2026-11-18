@@ -31,7 +31,13 @@ class MediaWorkbench:
         self.make_writer()
         self.make_board()
         self.make_services()
-        self.writer.after(150, self.poll)
+        self.writer.bind('<Destroy>',self.cleanup,add='+')
+        self.poll_id=self.writer.after(150, self.poll)
+
+    def cleanup(self,event):
+        if event.widget is self.writer and getattr(self,'poll_id',None):
+            try:self.writer.after_cancel(self.poll_id)
+            except tk.TclError:pass
 
     def action(self, fn):
         def run(*_):
@@ -129,7 +135,7 @@ class MediaWorkbench:
                 self.writer_status.set('Черновик получен. Отредактируйте, проверьте факты, затем явно примените.')
             else:
                 self.writer_status.set(value)
-        self.writer.after(150, self.poll)
+        self.poll_id=self.writer.after(150, self.poll)
 
     def apply_draft(self):
         project = self.get_project()

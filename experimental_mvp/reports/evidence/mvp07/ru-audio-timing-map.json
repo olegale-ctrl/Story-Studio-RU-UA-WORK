@@ -1,0 +1,88 @@
+{
+  "total_ms": 220248,
+  "scenes": [
+    {
+      "scene_id": "64fe73e68bb6524d980395303b95ae27",
+      "start_ms": 0,
+      "end_ms": 23687,
+      "duration_ms": 23687,
+      "audio_duration_kind": "MEASURED_AUDIO_DURATION",
+      "boundary_kind": "MANUAL_SCENE_BOUNDARY",
+      "caption_kind": "MANUAL_CAPTION_TIMING",
+      "id": "114399455ff74afba20523c0ba8d0b92"
+    },
+    {
+      "scene_id": "55884e2c64565396ae8b45d412c84579",
+      "start_ms": 23687,
+      "end_ms": 50208,
+      "duration_ms": 26521,
+      "audio_duration_kind": "MEASURED_AUDIO_DURATION",
+      "boundary_kind": "MANUAL_SCENE_BOUNDARY",
+      "caption_kind": "MANUAL_CAPTION_TIMING",
+      "id": "920a2a9455d946ecb8803badf8c5f566"
+    },
+    {
+      "scene_id": "f5e506be4db95b8abb07050815fea469",
+      "start_ms": 50208,
+      "end_ms": 76580,
+      "duration_ms": 26372,
+      "audio_duration_kind": "MEASURED_AUDIO_DURATION",
+      "boundary_kind": "MANUAL_SCENE_BOUNDARY",
+      "caption_kind": "MANUAL_CAPTION_TIMING",
+      "id": "73afc2bb7ac046ca9480dd8e9f763712"
+    },
+    {
+      "scene_id": "f69888e7c4fa582aadd58dad13733951",
+      "start_ms": 76580,
+      "end_ms": 105081,
+      "duration_ms": 28501,
+      "audio_duration_kind": "MEASURED_AUDIO_DURATION",
+      "boundary_kind": "MANUAL_SCENE_BOUNDARY",
+      "caption_kind": "MANUAL_CAPTION_TIMING",
+      "id": "996631acb12246d989075d8b8b6bc5e1"
+    },
+    {
+      "scene_id": "201a741a247857d5bd704976aa831c52",
+      "start_ms": 105081,
+      "end_ms": 134090,
+      "duration_ms": 29009,
+      "audio_duration_kind": "MEASURED_AUDIO_DURATION",
+      "boundary_kind": "MANUAL_SCENE_BOUNDARY",
+      "caption_kind": "MANUAL_CAPTION_TIMING",
+      "id": "3515498713f345a1893e8a951cf4cfc5"
+    },
+    {
+      "scene_id": "db6d886fe71050bb8cdddf2329519fc4",
+      "start_ms": 134090,
+      "end_ms": 162810,
+      "duration_ms": 28720,
+      "audio_duration_kind": "MEASURED_AUDIO_DURATION",
+      "boundary_kind": "MANUAL_SCENE_BOUNDARY",
+      "caption_kind": "MANUAL_CAPTION_TIMING",
+      "id": "ea7460891f894b8e964b785cb62fab3b"
+    },
+    {
+      "scene_id": "e328bf6b79fe50e8b8306a7b67beac5e",
+      "start_ms": 162810,
+      "end_ms": 190079,
+      "duration_ms": 27269,
+      "audio_duration_kind": "MEASURED_AUDIO_DURATION",
+      "boundary_kind": "MANUAL_SCENE_BOUNDARY",
+      "caption_kind": "MANUAL_CAPTION_TIMING",
+      "id": "347df412734c4f828d9b4d4e405bf137"
+    },
+    {
+      "scene_id": "bffedca3c99f58bb858835544623674d",
+      "start_ms": 190079,
+      "end_ms": 220248,
+      "duration_ms": 30169,
+      "audio_duration_kind": "MEASURED_AUDIO_DURATION",
+      "boundary_kind": "MANUAL_SCENE_BOUNDARY",
+      "caption_kind": "MANUAL_CAPTION_TIMING",
+      "id": "49f10007d7b143dc8247eafd53d4350d"
+    }
+  ],
+  "whole_audio": true,
+  "measured": true,
+  "warning": "Границы оценочные, если не заданы вручную; запись не переставляется вместе со сценами."
+}

@@ -65,3 +65,14 @@ See [Windows/offline walkthrough](MVP_05_06_WINDOWS.md),
 The RU/UA GUI demo buttons now load the complete local media-hub demonstrations.
 Media generation remains a manual official-browser/import workflow; an optional
 OpenAI-compatible LLM produces unverified drafts only. No production permissions.
+
+## MVP-07 · visual timeline
+
+New **Временная шкала** tab: explicit audio timing, visual editing, Undo/Redo,
+source intervals, short-clip policies and temporary prerenders. Демо RU/UA now
+open the new 3–5 minute timeline fixtures; earlier demo JSONs remain available.
+See [MVP-07 acceptance](reports/MVP_07_ACCEPTANCE.md),
+[test results](reports/MVP_07_TEST_RESULTS.md),
+[limitations / project fields](reports/MVP_07_LIMITATIONS.md) and
+[Windows checklist](reports/MVP_07_WINDOWS_CHECKLIST.md).
+**WINDOWS_NOT_RUN**; no production permissions or release.

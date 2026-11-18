@@ -1,0 +1,84 @@
+test_imported_audio_intervals_are_contiguous (experimental_mvp.test_pipeline.PipelineTests.test_imported_audio_intervals_are_contiguous) ... ok
+test_interruption_after_audio_retains_cache_and_never_exposes_export (experimental_mvp.test_pipeline.PipelineTests.test_interruption_after_audio_retains_cache_and_never_exposes_export) ... ok
+test_manual_cues_round_trip_and_follow_scene_after_reorder (experimental_mvp.test_pipeline.PipelineTests.test_manual_cues_round_trip_and_follow_scene_after_reorder) ... ok
+test_missing_media_repair_preserves_scene_identity_and_captions (experimental_mvp.test_pipeline.PipelineTests.test_missing_media_repair_preserves_scene_identity_and_captions) ... ok
+test_offline_cli_starts_without_edge_adapter (experimental_mvp.test_pipeline.PipelineTests.test_offline_cli_starts_without_edge_adapter) ... ok
+test_projects_round_trip_and_default_to_unapproved (experimental_mvp.test_pipeline.PipelineTests.test_projects_round_trip_and_default_to_unapproved) ... ok
+test_resume_failure_edit_and_reorder (experimental_mvp.test_pipeline.PipelineTests.test_resume_failure_edit_and_reorder) ... ok
+test_shortened_audio_rejects_manual_interval_and_reset_recovers (experimental_mvp.test_pipeline.PipelineTests.test_shortened_audio_rejects_manual_interval_and_reset_recovers) ... ok
+test_srt_preserves_cyrillic_and_does_not_emit_user_markup (experimental_mvp.test_pipeline.PipelineTests.test_srt_preserves_cyrillic_and_does_not_emit_user_markup) ... ok
+test_manual_edit_apply_and_no_asset_loss (experimental_mvp.test_media_hub.IntelligenceTests.test_manual_edit_apply_and_no_asset_loss) ... ok
+test_real_http_compatible_mock_and_invalid_provider_response (experimental_mvp.test_media_hub.IntelligenceTests.test_real_http_compatible_mock_and_invalid_provider_response) ... ok
+test_different_fps_resolution_short_clips_cyrillic_mp3_and_full_decode (experimental_mvp.test_media_hub.MediaIntegrationTests.test_different_fps_resolution_short_clips_cyrillic_mp3_and_full_decode) ... ok
+test_gap_rejected_and_explicit_fallback_can_render (experimental_mvp.test_media_hub.MediaIntegrationTests.test_gap_rejected_and_explicit_fallback_can_render) ... ok
+test_native_text_animation_offline (experimental_mvp.test_media_hub.MediaIntegrationTests.test_native_text_animation_offline) ... ok
+test_duration_provider_unavailable_and_no_catalog_balance (experimental_mvp.test_media_hub.PlannerTests.test_duration_provider_unavailable_and_no_catalog_balance) ... ok
+test_offline_no_account_login_refusal_unknown_and_exhausted (experimental_mvp.test_media_hub.PlannerTests.test_offline_no_account_login_refusal_unknown_and_exhausted) ... ok
+test_anchor_counts_are_guidance_not_provider_limits (experimental_mvp.test_media_hub.StoryboardTests.test_anchor_counts_are_guidance_not_provider_limits) ... ok
+test_explicit_coverage_fallback_modes_and_invalid_times (experimental_mvp.test_media_hub.StoryboardTests.test_explicit_coverage_fallback_modes_and_invalid_times) ... ok
+test_explicit_split_preserves_asset_and_offsets (experimental_mvp.test_media_hub.StoryboardTests.test_explicit_split_preserves_asset_and_offsets) ... ok
+test_material_reuse_and_tamper_detection (experimental_mvp.test_media_hub.StoryboardTests.test_material_reuse_and_tamper_detection) ... ok
+test_roundtrip_script_edit_reorder_preserve_ids_and_assets (experimental_mvp.test_media_hub.StoryboardTests.test_roundtrip_script_edit_reorder_preserve_ids_and_assets) ... ok
+test_tabs_anchor_edit_reorder_save_and_manual_writer (experimental_mvp.test_media_ui.WorkbenchWidgetTests.test_tabs_anchor_edit_reorder_save_and_manual_writer) ... ok
+test_captions_no_automatic_replacement_and_failed_edit (experimental_mvp.test_timeline.PureTests.test_captions_no_automatic_replacement_and_failed_edit) ... ok
+test_create_duplicate_split_merge_determinism (experimental_mvp.test_timeline.PureTests.test_create_duplicate_split_merge_determinism) ... ok
+test_duration_change_retains_intervals_and_caption_conflicts (experimental_mvp.test_timeline.PureTests.test_duration_change_retains_intervals_and_caption_conflicts) ... ok
+test_legacy_roundtrip_save_failure_and_dirty (experimental_mvp.test_timeline.PureTests.test_legacy_roundtrip_save_failure_and_dirty) ... ok
+test_manual_vs_estimated_audio_and_reorder (experimental_mvp.test_timeline.PureTests.test_manual_vs_estimated_audio_and_reorder) ... ok
+test_merge_incompatible_atomic_and_delete_keeps_file (experimental_mvp.test_timeline.PureTests.test_merge_incompatible_atomic_and_delete_keeps_file) ... ok
+test_move_resize_ids_and_atomic_failure (experimental_mvp.test_timeline.PureTests.test_move_resize_ids_and_atomic_failure) ... ok
+test_reconcile_fallback_redistribute_and_bounds (experimental_mvp.test_timeline.PureTests.test_reconcile_fallback_redistribute_and_bounds) ... ok
+test_repair_one_scene_does_not_require_atomic_repair_of_all_other_scenes (experimental_mvp.test_timeline.PureTests.test_repair_one_scene_does_not_require_atomic_repair_of_all_other_scenes) ... ok
+test_video_split_preserves_source_intervals_and_provenance (experimental_mvp.test_timeline.PureTests.test_video_split_preserves_source_intervals_and_provenance) ... ok
+test_many_mixed_anchors_fps_short_policy_duration_and_decode (experimental_mvp.test_timeline.RenderTests.test_many_mixed_anchors_fps_short_policy_duration_and_decode) ... ok
+test_png_jpeg_webp_crop_and_corrupt_media (experimental_mvp.test_timeline.RenderTests.test_png_jpeg_webp_crop_and_corrupt_media) ... ok
+test_preview_cancel_nonmutating_and_measured_cache (experimental_mvp.test_timeline.RenderTests.test_preview_cancel_nonmutating_and_measured_cache) ... ok
+test_probe_long_trim_corrupt_missing_and_explicit_loop (experimental_mvp.test_timeline.RenderTests.test_probe_long_trim_corrupt_missing_and_explicit_loop) ... ok
+test_subtitle_container_duration_cannot_hide_short_video (experimental_mvp.test_timeline.RenderTests.test_subtitle_container_duration_cannot_hide_short_video) ... ok
+test_main_window_protects_fresh_unsaved_edits_and_save_failure (experimental_mvp.test_timeline_ui.CanvasTests.test_main_window_protects_fresh_unsaved_edits_and_save_failure) ... ok
+test_missing_audio_estimate_never_becomes_measured (experimental_mvp.test_timeline_ui.CanvasTests.test_missing_audio_estimate_never_becomes_measured) ... ok
+test_preview_worker_cancel_and_no_source_mutation (experimental_mvp.test_timeline_ui.CanvasTests.test_preview_worker_cancel_and_no_source_mutation) ... ok
+test_selection_drag_resize_keyboard_undo_save_and_stale_apply (experimental_mvp.test_timeline_ui.CanvasTests.test_selection_drag_resize_keyboard_undo_save_and_stale_apply) ... ok
+
+----------------------------------------------------------------------
+Ran 41 tests in 49.070s
+
+OK
+Озвучка
+Озвучка: сцена 1/1
+14433941b6a84b2b89ae71f628541cca: повторное использование
+Озвучка подготовлена
+Видео: сцена 1/1
+Сборка MP4
+Озвучка
+Озвучка: сцена 1/3
+9509a45f829942bf85f385202d5ca458: синтез ru-RU-SvetlanaNeural
+Озвучка: сцена 2/3
+d61bae6825ff485db89a6d50b478e326: синтез ru-RU-SvetlanaNeural
+Озвучка: сцена 3/3
+f37f3e4497ac4db6a191d1adc3cc63d1: синтез ru-RU-SvetlanaNeural
+Озвучка
+Озвучка: сцена 1/3
+9509a45f829942bf85f385202d5ca458: повторное использование
+Озвучка: сцена 2/3
+d61bae6825ff485db89a6d50b478e326: синтез ru-RU-SvetlanaNeural
+Озвучка: сцена 3/3
+f37f3e4497ac4db6a191d1adc3cc63d1: повторное использование
+Озвучка подготовлена
+Видео: сцена 1/3
+Видео: сцена 2/3
+Видео: сцена 3/3
+Сборка MP4
+Озвучка
+Озвучка: сцена 1/3
+f37f3e4497ac4db6a191d1adc3cc63d1: повторное использование
+Озвучка: сцена 2/3
+d61bae6825ff485db89a6d50b478e326: повторное использование
+Озвучка: сцена 3/3
+9509a45f829942bf85f385202d5ca458: синтез ru-RU-SvetlanaNeural
+Озвучка подготовлена
+Видео: сцена 1/3
+Видео: сцена 2/3
+Видео: сцена 3/3
+Сборка MP4
+Deterministic synthesis calls: ['first', 'middle', 'last', 'middle', 'updated']

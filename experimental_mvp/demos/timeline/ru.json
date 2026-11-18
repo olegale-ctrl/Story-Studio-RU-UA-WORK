@@ -1,0 +1,1316 @@
+{
+  "topic": "Почему исчезли древние цивилизации?",
+  "locale": "ru",
+  "claims_status": "UNVERIFIED_EDITORIAL_TRAINING",
+  "scenes": [
+    {
+      "text": "Почему исчезли древние цивилизации? В таком вопросе скрыта ловушка: разные общества существовали в разных местах и менялись в разное время. Удобная история об одной великой катастрофе может оказаться слишком простой. В этом учебном ролике мы не объявляем окончательный ответ. Мы покажем, как разложить вопрос на проверяемые части: что именно исчезло, какие свидетельства остались и какие объяснения ещё нужно сопоставить.",
+      "visual": "Вопрос вместо сенсации",
+      "prompt": "Original local teaching diagram, not a historical reconstruction",
+      "id": "64fe73e68bb6524d980395303b95ae27",
+      "anchors": [
+        {
+          "anchor_id": "0bcdcab3eeae5a4190d0abb860cf5b64",
+          "scene_id": "64fe73e68bb6524d980395303b95ae27",
+          "start_ms": 0,
+          "duration_ms": 7895,
+          "narration_excerpt": "Почему исчезли древние цивилизации? В таком вопросе скрыта ловушка: разные общества существовали в разных местах и менялись в разное время. Удобная история об одной великой катастрофе может оказаться слишком простой. В этом учебном ролике мы не объявляем окончательный ответ. Мы покажем, как разложить вопрос на проверяемые части: что именно исчезло, какие свидетельства остались и какие объяснения ещё нужно сопоставить.",
+          "visual_description": "Вопрос вместо сенсации",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "LOCAL_VIDEO",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_local_motion.mp4",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "cba20de019e9f93abe341341319aef6e8f2be212506af67956a2a89f07a88431",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_local_motion.mp4",
+            "sha256": "cba20de019e9f93abe341341319aef6e8f2be212506af67956a2a89f07a88431"
+          },
+          "source_start_ms": 0,
+          "source_end_ms": 5000,
+          "source_duration_ms": 5000,
+          "short_clip_policy": "HOLD_LAST_FRAME"
+        },
+        {
+          "anchor_id": "a125d6cb104c5cb7bff17e6a934333f6",
+          "scene_id": "64fe73e68bb6524d980395303b95ae27",
+          "start_ms": 7895,
+          "duration_ms": 7896,
+          "narration_excerpt": "Почему исчезли древние цивилизации? В таком вопросе скрыта ловушка: разные общества существовали в разных местах и менялись в разное время. Удобная история об одной великой катастрофе может оказаться слишком простой. В этом учебном ролике мы не объявляем окончательный ответ. Мы покажем, как разложить вопрос на проверяемые части: что именно исчезло, какие свидетельства остались и какие объяснения ещё нужно сопоставить.",
+          "visual_description": "Вопрос вместо сенсации",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_0.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "a177e848978bc752acfa7514bd9f8587e69fe3d582260afa1280c6448b6c7674",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_0.png",
+            "sha256": "a177e848978bc752acfa7514bd9f8587e69fe3d582260afa1280c6448b6c7674"
+          }
+        },
+        {
+          "anchor_id": "9e9a8c2903585567890ba28c72be3c37",
+          "scene_id": "64fe73e68bb6524d980395303b95ae27",
+          "start_ms": 15791,
+          "duration_ms": 7896,
+          "narration_excerpt": "Почему исчезли древние цивилизации? В таком вопросе скрыта ловушка: разные общества существовали в разных местах и менялись в разное время. Удобная история об одной великой катастрофе может оказаться слишком простой. В этом учебном ролике мы не объявляем окончательный ответ. Мы покажем, как разложить вопрос на проверяемые части: что именно исчезло, какие свидетельства остались и какие объяснения ещё нужно сопоставить.",
+          "visual_description": "Вопрос вместо сенсации",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_0.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "a177e848978bc752acfa7514bd9f8587e69fe3d582260afa1280c6448b6c7674",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_0.png",
+            "sha256": "a177e848978bc752acfa7514bd9f8587e69fe3d582260afa1280c6448b6c7674"
+          }
+        }
+      ]
+    },
+    {
+      "text": "Прежде всего уточним слово «исчезли». Мы можем иметь в виду оставленный город, прекращение работы административного центра, изменение письменной традиции или перемещение жителей. Эти события нельзя автоматически считать одним и тем же. Пустое здание не сообщает, что стало со всеми людьми вокруг него. Для каждой версии сценария нужна своя формулировка вопроса. На экране условная схема, а не карта реальной миграции и не изображение конкретной археологической находки.",
+      "visual": "Что значит исчезновение",
+      "prompt": "Original local teaching diagram, not a historical reconstruction",
+      "id": "55884e2c64565396ae8b45d412c84579",
+      "anchors": [
+        {
+          "anchor_id": "6db3004bb7bf50ecaf0fe185dd7f1d56",
+          "scene_id": "55884e2c64565396ae8b45d412c84579",
+          "start_ms": 0,
+          "duration_ms": 7030,
+          "narration_excerpt": "Прежде всего уточним слово «исчезли». Мы можем иметь в виду оставленный город, прекращение работы административного центра, изменение письменной традиции или перемещение жителей. Эти события нельзя автоматически считать одним и тем же. Пустое здание не сообщает, что стало со всеми людьми вокруг него. Для каждой версии сценария нужна своя формулировка вопроса. На экране условная схема, а не карта реальной миграции и не изображение конкретной археологической находки.",
+          "visual_description": "Что значит исчезновение",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_1.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "7f8b2f0743c4b1adfaa4738432425a004682b8d4cac8a1f0b1ad90f4cf125951",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_1.png",
+            "sha256": "7f8b2f0743c4b1adfaa4738432425a004682b8d4cac8a1f0b1ad90f4cf125951"
+          }
+        },
+        {
+          "anchor_id": "895f7ba259f95195b72de51245be3e7b",
+          "scene_id": "55884e2c64565396ae8b45d412c84579",
+          "start_ms": 7030,
+          "duration_ms": 6230,
+          "narration_excerpt": "Прежде всего уточним слово «исчезли». Мы можем иметь в виду оставленный город, прекращение работы административного центра, изменение письменной традиции или перемещение жителей. Эти события нельзя автоматически считать одним и тем же. Пустое здание не сообщает, что стало со всеми людьми вокруг него. Для каждой версии сценария нужна своя формулировка вопроса. На экране условная схема, а не карта реальной миграции и не изображение конкретной археологической находки.",
+          "visual_description": "Что значит исчезновение",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_1.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "7f8b2f0743c4b1adfaa4738432425a004682b8d4cac8a1f0b1ad90f4cf125951",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_1.png",
+            "sha256": "7f8b2f0743c4b1adfaa4738432425a004682b8d4cac8a1f0b1ad90f4cf125951"
+          }
+        },
+        {
+          "anchor_id": "6f5497d4ee825fcca8a2a7386600acb1",
+          "scene_id": "55884e2c64565396ae8b45d412c84579",
+          "start_ms": 13260,
+          "duration_ms": 6630,
+          "narration_excerpt": "Прежде всего уточним слово «исчезли». Мы можем иметь в виду оставленный город, прекращение работы административного центра, изменение письменной традиции или перемещение жителей. Эти события нельзя автоматически считать одним и тем же. Пустое здание не сообщает, что стало со всеми людьми вокруг него. Для каждой версии сценария нужна своя формулировка вопроса. На экране условная схема, а не карта реальной миграции и не изображение конкретной археологической находки.",
+          "visual_description": "Что значит исчезновение",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_1.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "7f8b2f0743c4b1adfaa4738432425a004682b8d4cac8a1f0b1ad90f4cf125951",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_1.png",
+            "sha256": "7f8b2f0743c4b1adfaa4738432425a004682b8d4cac8a1f0b1ad90f4cf125951"
+          }
+        },
+        {
+          "anchor_id": "abe2bc06da2c5ff8ac2a46ffcd8d193e",
+          "scene_id": "55884e2c64565396ae8b45d412c84579",
+          "start_ms": 19890,
+          "duration_ms": 6631,
+          "narration_excerpt": "Прежде всего уточним слово «исчезли». Мы можем иметь в виду оставленный город, прекращение работы административного центра, изменение письменной традиции или перемещение жителей. Эти события нельзя автоматически считать одним и тем же. Пустое здание не сообщает, что стало со всеми людьми вокруг него. Для каждой версии сценария нужна своя формулировка вопроса. На экране условная схема, а не карта реальной миграции и не изображение конкретной археологической находки.",
+          "visual_description": "Что значит исчезновение",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_1.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "7f8b2f0743c4b1adfaa4738432425a004682b8d4cac8a1f0b1ad90f4cf125951",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_1.png",
+            "sha256": "7f8b2f0743c4b1adfaa4738432425a004682b8d4cac8a1f0b1ad90f4cf125951"
+          }
+        }
+      ]
+    },
+    {
+      "text": "Следующий шаг — временная шкала. Изменения, которые в коротком пересказе выглядят мгновенными, могли состоять из нескольких этапов. Поэтому редактор должен проверить даты, способ датировки и допустимую погрешность. Сначала мы располагаем свидетельства по времени и только потом обсуждаем причинную связь. Если даты приблизительны, графика тоже должна это показывать. Ровная линия в монтажной программе означает длительность кадра, а не точность исторического знания.",
+      "visual": "Время и масштаб",
+      "prompt": "Original local teaching diagram, not a historical reconstruction",
+      "id": "f5e506be4db95b8abb07050815fea469",
+      "anchors": [
+        {
+          "anchor_id": "2c1de2a62bcf570cbf5c03dfe49052d7",
+          "scene_id": "f5e506be4db95b8abb07050815fea469",
+          "start_ms": 6593,
+          "duration_ms": 6593,
+          "narration_excerpt": "Следующий шаг — временная шкала. Изменения, которые в коротком пересказе выглядят мгновенными, могли состоять из нескольких этапов. Поэтому редактор должен проверить даты, способ датировки и допустимую погрешность. Сначала мы располагаем свидетельства по времени и только потом обсуждаем причинную связь. Если даты приблизительны, графика тоже должна это показывать. Ровная линия в монтажной программе означает длительность кадра, а не точность исторического знания.",
+          "visual_description": "Время и масштаб",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_2.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "bd1b58e2ec2f88afc05121fba945373a2a88aa728bdd2423f653d26415d3dc84",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_2.png",
+            "sha256": "bd1b58e2ec2f88afc05121fba945373a2a88aa728bdd2423f653d26415d3dc84"
+          }
+        },
+        {
+          "anchor_id": "4ad6ee7557cf5d5381f519ba9d9c88d4",
+          "scene_id": "f5e506be4db95b8abb07050815fea469",
+          "start_ms": 0,
+          "duration_ms": 6593,
+          "narration_excerpt": "Следующий шаг — временная шкала. Изменения, которые в коротком пересказе выглядят мгновенными, могли состоять из нескольких этапов. Поэтому редактор должен проверить даты, способ датировки и допустимую погрешность. Сначала мы располагаем свидетельства по времени и только потом обсуждаем причинную связь. Если даты приблизительны, графика тоже должна это показывать. Ровная линия в монтажной программе означает длительность кадра, а не точность исторического знания.",
+          "visual_description": "Время и масштаб",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_2.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "bd1b58e2ec2f88afc05121fba945373a2a88aa728bdd2423f653d26415d3dc84",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_2.png",
+            "sha256": "bd1b58e2ec2f88afc05121fba945373a2a88aa728bdd2423f653d26415d3dc84"
+          }
+        },
+        {
+          "anchor_id": "7695beb385b45a49b42b8f06dde190ad",
+          "scene_id": "f5e506be4db95b8abb07050815fea469",
+          "start_ms": 13186,
+          "duration_ms": 6593,
+          "narration_excerpt": "Следующий шаг — временная шкала. Изменения, которые в коротком пересказе выглядят мгновенными, могли состоять из нескольких этапов. Поэтому редактор должен проверить даты, способ датировки и допустимую погрешность. Сначала мы располагаем свидетельства по времени и только потом обсуждаем причинную связь. Если даты приблизительны, графика тоже должна это показывать. Ровная линия в монтажной программе означает длительность кадра, а не точность исторического знания.",
+          "visual_description": "Время и масштаб",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_2.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "bd1b58e2ec2f88afc05121fba945373a2a88aa728bdd2423f653d26415d3dc84",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_2.png",
+            "sha256": "bd1b58e2ec2f88afc05121fba945373a2a88aa728bdd2423f653d26415d3dc84"
+          }
+        },
+        {
+          "anchor_id": "349425f5afcd5022b2b9ff240b0fac83",
+          "scene_id": "f5e506be4db95b8abb07050815fea469",
+          "start_ms": 19779,
+          "duration_ms": 6593,
+          "narration_excerpt": "Следующий шаг — временная шкала. Изменения, которые в коротком пересказе выглядят мгновенными, могли состоять из нескольких этапов. Поэтому редактор должен проверить даты, способ датировки и допустимую погрешность. Сначала мы располагаем свидетельства по времени и только потом обсуждаем причинную связь. Если даты приблизительны, графика тоже должна это показывать. Ровная линия в монтажной программе означает длительность кадра, а не точность исторического знания.",
+          "visual_description": "Время и масштаб",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_2.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "bd1b58e2ec2f88afc05121fba945373a2a88aa728bdd2423f653d26415d3dc84",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_2.png",
+            "sha256": "bd1b58e2ec2f88afc05121fba945373a2a88aa728bdd2423f653d26415d3dc84"
+          }
+        }
+      ]
+    },
+    {
+      "text": "Среди возможных объяснений исследователи рассматривают среду, обмен, конфликты и изменения управления. Для конкретного общества этот перечень нужно проверять по специальной литературе: наличие гипотезы ещё не подтверждает её применимость. Полезный приём — спросить, какие наблюдения отличали бы одну версию от другой. Если разные версии предсказывают одинаковый след, одного такого следа недостаточно для уверенного выбора. Мы оставляем альтернативы на экране вместе, не превращая монтаж в голосование.",
+      "visual": "Несколько объяснений",
+      "prompt": "Original local teaching diagram, not a historical reconstruction",
+      "id": "f69888e7c4fa582aadd58dad13733951",
+      "anchors": [
+        {
+          "anchor_id": "ac8eeb9fc0b651ef81f9f5d64db85df8",
+          "scene_id": "f69888e7c4fa582aadd58dad13733951",
+          "start_ms": 0,
+          "duration_ms": 7125,
+          "narration_excerpt": "Среди возможных объяснений исследователи рассматривают среду, обмен, конфликты и изменения управления. Для конкретного общества этот перечень нужно проверять по специальной литературе: наличие гипотезы ещё не подтверждает её применимость. Полезный приём — спросить, какие наблюдения отличали бы одну версию от другой. Если разные версии предсказывают одинаковый след, одного такого следа недостаточно для уверенного выбора. Мы оставляем альтернативы на экране вместе, не превращая монтаж в голосование.",
+          "visual_description": "Несколько объяснений",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_3.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "f65b022d64a009eec191dda8f6ff07f593e2fb50689db6412292444ef50c4755",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_3.png",
+            "sha256": "f65b022d64a009eec191dda8f6ff07f593e2fb50689db6412292444ef50c4755"
+          }
+        },
+        {
+          "anchor_id": "13b40aebf90753e683cbf9f25c4b31b1",
+          "scene_id": "f69888e7c4fa582aadd58dad13733951",
+          "start_ms": 7125,
+          "duration_ms": 7125,
+          "narration_excerpt": "Среди возможных объяснений исследователи рассматривают среду, обмен, конфликты и изменения управления. Для конкретного общества этот перечень нужно проверять по специальной литературе: наличие гипотезы ещё не подтверждает её применимость. Полезный приём — спросить, какие наблюдения отличали бы одну версию от другой. Если разные версии предсказывают одинаковый след, одного такого следа недостаточно для уверенного выбора. Мы оставляем альтернативы на экране вместе, не превращая монтаж в голосование.",
+          "visual_description": "Несколько объяснений",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_3.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "f65b022d64a009eec191dda8f6ff07f593e2fb50689db6412292444ef50c4755",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_3.png",
+            "sha256": "f65b022d64a009eec191dda8f6ff07f593e2fb50689db6412292444ef50c4755"
+          }
+        },
+        {
+          "anchor_id": "4f6bd31264c85a3f99be86cd6c57abbe",
+          "scene_id": "f69888e7c4fa582aadd58dad13733951",
+          "start_ms": 14250,
+          "duration_ms": 7125,
+          "narration_excerpt": "Среди возможных объяснений исследователи рассматривают среду, обмен, конфликты и изменения управления. Для конкретного общества этот перечень нужно проверять по специальной литературе: наличие гипотезы ещё не подтверждает её применимость. Полезный приём — спросить, какие наблюдения отличали бы одну версию от другой. Если разные версии предсказывают одинаковый след, одного такого следа недостаточно для уверенного выбора. Мы оставляем альтернативы на экране вместе, не превращая монтаж в голосование.",
+          "visual_description": "Несколько объяснений",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_3.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "f65b022d64a009eec191dda8f6ff07f593e2fb50689db6412292444ef50c4755",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_3.png",
+            "sha256": "f65b022d64a009eec191dda8f6ff07f593e2fb50689db6412292444ef50c4755"
+          }
+        },
+        {
+          "anchor_id": "5e5c998d9bcb5291931dc23d27fea30e",
+          "scene_id": "f69888e7c4fa582aadd58dad13733951",
+          "start_ms": 21375,
+          "duration_ms": 7126,
+          "narration_excerpt": "Среди возможных объяснений исследователи рассматривают среду, обмен, конфликты и изменения управления. Для конкретного общества этот перечень нужно проверять по специальной литературе: наличие гипотезы ещё не подтверждает её применимость. Полезный приём — спросить, какие наблюдения отличали бы одну версию от другой. Если разные версии предсказывают одинаковый след, одного такого следа недостаточно для уверенного выбора. Мы оставляем альтернативы на экране вместе, не превращая монтаж в голосование.",
+          "visual_description": "Несколько объяснений",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_3.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "f65b022d64a009eec191dda8f6ff07f593e2fb50689db6412292444ef50c4755",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_3.png",
+            "sha256": "f65b022d64a009eec191dda8f6ff07f593e2fb50689db6412292444ef50c4755"
+          }
+        }
+      ]
+    },
+    {
+      "text": "Какие свидетельства нам нужны? Для выбранного примера редактор может искать отчёты раскопок, исследования ландшафта, данные о поселениях и публикации письменных источников. Важно понимать происхождение каждого материала и границы интерпретации. Отсутствие находки в одном месте не равняется доказательству полного отсутствия явления. Все конкретные научные тезисы в рабочем сценарии должны получить отдельную проверку. Здесь показаны собственные учебные схемы; они иллюстрируют вопросы, но ничего не доказывают сами.",
+      "visual": "Материалы и пределы вывода",
+      "prompt": "Original local teaching diagram, not a historical reconstruction",
+      "id": "201a741a247857d5bd704976aa831c52",
+      "anchors": [
+        {
+          "anchor_id": "0c7096027a635c7b99d0c21598ff9cf7",
+          "scene_id": "201a741a247857d5bd704976aa831c52",
+          "start_ms": 0,
+          "duration_ms": 7252,
+          "narration_excerpt": "Какие свидетельства нам нужны? Для выбранного примера редактор может искать отчёты раскопок, исследования ландшафта, данные о поселениях и публикации письменных источников. Важно понимать происхождение каждого материала и границы интерпретации. Отсутствие находки в одном месте не равняется доказательству полного отсутствия явления. Все конкретные научные тезисы в рабочем сценарии должны получить отдельную проверку. Здесь показаны собственные учебные схемы; они иллюстрируют вопросы, но ничего не доказывают сами.",
+          "visual_description": "Материалы и пределы вывода",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_4.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "d10c252d9fccaf344095ffc20bf5cafef5387a0d89dae8afd3453e12d9f83e6a",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_4.png",
+            "sha256": "d10c252d9fccaf344095ffc20bf5cafef5387a0d89dae8afd3453e12d9f83e6a"
+          }
+        },
+        {
+          "anchor_id": "e962835cdd2b5ba0a6ab8a35efc89e06",
+          "scene_id": "201a741a247857d5bd704976aa831c52",
+          "start_ms": 7252,
+          "duration_ms": 7252,
+          "narration_excerpt": "Какие свидетельства нам нужны? Для выбранного примера редактор может искать отчёты раскопок, исследования ландшафта, данные о поселениях и публикации письменных источников. Важно понимать происхождение каждого материала и границы интерпретации. Отсутствие находки в одном месте не равняется доказательству полного отсутствия явления. Все конкретные научные тезисы в рабочем сценарии должны получить отдельную проверку. Здесь показаны собственные учебные схемы; они иллюстрируют вопросы, но ничего не доказывают сами.",
+          "visual_description": "Материалы и пределы вывода",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_4.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "d10c252d9fccaf344095ffc20bf5cafef5387a0d89dae8afd3453e12d9f83e6a",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_4.png",
+            "sha256": "d10c252d9fccaf344095ffc20bf5cafef5387a0d89dae8afd3453e12d9f83e6a"
+          }
+        },
+        {
+          "anchor_id": "4b3aedd85bee5aa2b9316ce04e54360e",
+          "scene_id": "201a741a247857d5bd704976aa831c52",
+          "start_ms": 14504,
+          "duration_ms": 7252,
+          "narration_excerpt": "Какие свидетельства нам нужны? Для выбранного примера редактор может искать отчёты раскопок, исследования ландшафта, данные о поселениях и публикации письменных источников. Важно понимать происхождение каждого материала и границы интерпретации. Отсутствие находки в одном месте не равняется доказательству полного отсутствия явления. Все конкретные научные тезисы в рабочем сценарии должны получить отдельную проверку. Здесь показаны собственные учебные схемы; они иллюстрируют вопросы, но ничего не доказывают сами.",
+          "visual_description": "Материалы и пределы вывода",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_4.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "d10c252d9fccaf344095ffc20bf5cafef5387a0d89dae8afd3453e12d9f83e6a",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_4.png",
+            "sha256": "d10c252d9fccaf344095ffc20bf5cafef5387a0d89dae8afd3453e12d9f83e6a"
+          }
+        },
+        {
+          "anchor_id": "66d104a75180527b9f4c644d47322a57",
+          "scene_id": "201a741a247857d5bd704976aa831c52",
+          "start_ms": 21756,
+          "duration_ms": 7253,
+          "narration_excerpt": "Какие свидетельства нам нужны? Для выбранного примера редактор может искать отчёты раскопок, исследования ландшафта, данные о поселениях и публикации письменных источников. Важно понимать происхождение каждого материала и границы интерпретации. Отсутствие находки в одном месте не равняется доказательству полного отсутствия явления. Все конкретные научные тезисы в рабочем сценарии должны получить отдельную проверку. Здесь показаны собственные учебные схемы; они иллюстрируют вопросы, но ничего не доказывают сами.",
+          "visual_description": "Материалы и пределы вывода",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_4.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "d10c252d9fccaf344095ffc20bf5cafef5387a0d89dae8afd3453e12d9f83e6a",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_4.png",
+            "sha256": "d10c252d9fccaf344095ffc20bf5cafef5387a0d89dae8afd3453e12d9f83e6a"
+          }
+        }
+      ]
+    },
+    {
+      "text": "Теперь вернём людей в рассказ. Даже если административный центр перестал работать, это ещё не описание дальнейшей судьбы каждого сообщества. Можно исследовать, менялись ли занятия, связи и места проживания. Вместо эффектной фразы «все исчезли» лучше задать более узкий вопрос, на который отвечают имеющиеся данные. Так рассказ становится менее сенсационным, но более честным. Для нашей условной последовательности кадров этот переход обозначен движением между блоками; реальных маршрутов на схеме нет.",
+      "visual": "Люди после центра",
+      "prompt": "Original local teaching diagram, not a historical reconstruction",
+      "id": "db6d886fe71050bb8cdddf2329519fc4",
+      "anchors": [
+        {
+          "anchor_id": "342aa015defe54c6820452e87d9be139",
+          "scene_id": "db6d886fe71050bb8cdddf2329519fc4",
+          "start_ms": 0,
+          "duration_ms": 7180,
+          "narration_excerpt": "Теперь вернём людей в рассказ. Даже если административный центр перестал работать, это ещё не описание дальнейшей судьбы каждого сообщества. Можно исследовать, менялись ли занятия, связи и места проживания. Вместо эффектной фразы «все исчезли» лучше задать более узкий вопрос, на который отвечают имеющиеся данные. Так рассказ становится менее сенсационным, но более честным. Для нашей условной последовательности кадров этот переход обозначен движением между блоками; реальных маршрутов на схеме нет.",
+          "visual_description": "Люди после центра",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_5.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "9006d5b6ff630006e9289f531117941f2154e882bfa7a8a3c8979be1b64be60c",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_5.png",
+            "sha256": "9006d5b6ff630006e9289f531117941f2154e882bfa7a8a3c8979be1b64be60c"
+          }
+        },
+        {
+          "anchor_id": "3b0ebde0204f51e5b8f2186f46262f1c",
+          "scene_id": "db6d886fe71050bb8cdddf2329519fc4",
+          "start_ms": 7180,
+          "duration_ms": 7180,
+          "narration_excerpt": "Теперь вернём людей в рассказ. Даже если административный центр перестал работать, это ещё не описание дальнейшей судьбы каждого сообщества. Можно исследовать, менялись ли занятия, связи и места проживания. Вместо эффектной фразы «все исчезли» лучше задать более узкий вопрос, на который отвечают имеющиеся данные. Так рассказ становится менее сенсационным, но более честным. Для нашей условной последовательности кадров этот переход обозначен движением между блоками; реальных маршрутов на схеме нет.",
+          "visual_description": "Люди после центра",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_5.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "9006d5b6ff630006e9289f531117941f2154e882bfa7a8a3c8979be1b64be60c",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_5.png",
+            "sha256": "9006d5b6ff630006e9289f531117941f2154e882bfa7a8a3c8979be1b64be60c"
+          }
+        },
+        {
+          "anchor_id": "ca167d7c67ff50fbae898b1a3bd4446f",
+          "scene_id": "db6d886fe71050bb8cdddf2329519fc4",
+          "start_ms": 14360,
+          "duration_ms": 7180,
+          "narration_excerpt": "Теперь вернём людей в рассказ. Даже если административный центр перестал работать, это ещё не описание дальнейшей судьбы каждого сообщества. Можно исследовать, менялись ли занятия, связи и места проживания. Вместо эффектной фразы «все исчезли» лучше задать более узкий вопрос, на который отвечают имеющиеся данные. Так рассказ становится менее сенсационным, но более честным. Для нашей условной последовательности кадров этот переход обозначен движением между блоками; реальных маршрутов на схеме нет.",
+          "visual_description": "Люди после центра",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_5.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "9006d5b6ff630006e9289f531117941f2154e882bfa7a8a3c8979be1b64be60c",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_5.png",
+            "sha256": "9006d5b6ff630006e9289f531117941f2154e882bfa7a8a3c8979be1b64be60c"
+          }
+        },
+        {
+          "anchor_id": "5b78411d208b525ea829b37b371cb9f5",
+          "scene_id": "db6d886fe71050bb8cdddf2329519fc4",
+          "start_ms": 21540,
+          "duration_ms": 7180,
+          "narration_excerpt": "Теперь вернём людей в рассказ. Даже если административный центр перестал работать, это ещё не описание дальнейшей судьбы каждого сообщества. Можно исследовать, менялись ли занятия, связи и места проживания. Вместо эффектной фразы «все исчезли» лучше задать более узкий вопрос, на который отвечают имеющиеся данные. Так рассказ становится менее сенсационным, но более честным. Для нашей условной последовательности кадров этот переход обозначен движением между блоками; реальных маршрутов на схеме нет.",
+          "visual_description": "Люди после центра",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_5.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "9006d5b6ff630006e9289f531117941f2154e882bfa7a8a3c8979be1b64be60c",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_5.png",
+            "sha256": "9006d5b6ff630006e9289f531117941f2154e882bfa7a8a3c8979be1b64be60c"
+          }
+        }
+      ]
+    },
+    {
+      "text": "Перед финалом проверим уже наш видеоряд. Не создаёт ли синтетическая анимация впечатление документальной съёмки? Не превращает ли музыка предположение в очевидность? У нас нет чужих фотографий, музыки или архивных кадров; короткие клипы собраны локально из подписанных схем. Однако даже такая схема может внушить лишнюю уверенность. Поэтому мы сохраняем оговорки в речи и субтитрах. Субтитры отредактированы вручную, но их синхронизацию всё равно должен проверить человек на слух.",
+      "visual": "Проверяем собственный ролик",
+      "prompt": "Original local teaching diagram, not a historical reconstruction",
+      "id": "e328bf6b79fe50e8b8306a7b67beac5e",
+      "anchors": [
+        {
+          "anchor_id": "b6d3f3a6d8065f24bae43ca8b01e33c8",
+          "scene_id": "e328bf6b79fe50e8b8306a7b67beac5e",
+          "start_ms": 0,
+          "duration_ms": 6817,
+          "narration_excerpt": "Перед финалом проверим уже наш видеоряд. Не создаёт ли синтетическая анимация впечатление документальной съёмки? Не превращает ли музыка предположение в очевидность? У нас нет чужих фотографий, музыки или архивных кадров; короткие клипы собраны локально из подписанных схем. Однако даже такая схема может внушить лишнюю уверенность. Поэтому мы сохраняем оговорки в речи и субтитрах. Субтитры отредактированы вручную, но их синхронизацию всё равно должен проверить человек на слух.",
+          "visual_description": "Проверяем собственный ролик",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_6.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "85938d4e81a81190876e49f586be1a0e5181c47d32cde96f3bffaa021dbf63c4",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_6.png",
+            "sha256": "85938d4e81a81190876e49f586be1a0e5181c47d32cde96f3bffaa021dbf63c4"
+          }
+        },
+        {
+          "anchor_id": "0f1438c8a81e5535a7d2c81eb2c6b1f6",
+          "scene_id": "e328bf6b79fe50e8b8306a7b67beac5e",
+          "start_ms": 6817,
+          "duration_ms": 6817,
+          "narration_excerpt": "Перед финалом проверим уже наш видеоряд. Не создаёт ли синтетическая анимация впечатление документальной съёмки? Не превращает ли музыка предположение в очевидность? У нас нет чужих фотографий, музыки или архивных кадров; короткие клипы собраны локально из подписанных схем. Однако даже такая схема может внушить лишнюю уверенность. Поэтому мы сохраняем оговорки в речи и субтитрах. Субтитры отредактированы вручную, но их синхронизацию всё равно должен проверить человек на слух.",
+          "visual_description": "Проверяем собственный ролик",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_6.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "85938d4e81a81190876e49f586be1a0e5181c47d32cde96f3bffaa021dbf63c4",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_6.png",
+            "sha256": "85938d4e81a81190876e49f586be1a0e5181c47d32cde96f3bffaa021dbf63c4"
+          }
+        },
+        {
+          "anchor_id": "54d8b9395cef5d2d83304904f521c25c",
+          "scene_id": "e328bf6b79fe50e8b8306a7b67beac5e",
+          "start_ms": 13634,
+          "duration_ms": 6817,
+          "narration_excerpt": "Перед финалом проверим уже наш видеоряд. Не создаёт ли синтетическая анимация впечатление документальной съёмки? Не превращает ли музыка предположение в очевидность? У нас нет чужих фотографий, музыки или архивных кадров; короткие клипы собраны локально из подписанных схем. Однако даже такая схема может внушить лишнюю уверенность. Поэтому мы сохраняем оговорки в речи и субтитрах. Субтитры отредактированы вручную, но их синхронизацию всё равно должен проверить человек на слух.",
+          "visual_description": "Проверяем собственный ролик",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_6.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "85938d4e81a81190876e49f586be1a0e5181c47d32cde96f3bffaa021dbf63c4",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_6.png",
+            "sha256": "85938d4e81a81190876e49f586be1a0e5181c47d32cde96f3bffaa021dbf63c4"
+          }
+        },
+        {
+          "anchor_id": "17d9ef2c74e1585abef50fc262ee64dc",
+          "scene_id": "e328bf6b79fe50e8b8306a7b67beac5e",
+          "start_ms": 20451,
+          "duration_ms": 6818,
+          "narration_excerpt": "Перед финалом проверим уже наш видеоряд. Не создаёт ли синтетическая анимация впечатление документальной съёмки? Не превращает ли музыка предположение в очевидность? У нас нет чужих фотографий, музыки или архивных кадров; короткие клипы собраны локально из подписанных схем. Однако даже такая схема может внушить лишнюю уверенность. Поэтому мы сохраняем оговорки в речи и субтитрах. Субтитры отредактированы вручную, но их синхронизацию всё равно должен проверить человек на слух.",
+          "visual_description": "Проверяем собственный ролик",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_6.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "85938d4e81a81190876e49f586be1a0e5181c47d32cde96f3bffaa021dbf63c4",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_6.png",
+            "sha256": "85938d4e81a81190876e49f586be1a0e5181c47d32cde96f3bffaa021dbf63c4"
+          }
+        }
+      ]
+    },
+    {
+      "text": "Итак, вопрос об исчезновении полезно заменить несколькими точными вопросами о местах, времени, институтах и людях. Ответ зависит от выбранного случая и качества свидетельств. Этот учебный монтаж демонстрирует способ постановки задачи, а не завершённую научную экспертизу. Перед настоящим выпуском нужны проверенные источники, редакционное решение и подтверждённые права на материалы. Сохранённый файл и его контрольная сумма позволяют повторить техническую проверку, но не дают разрешения на публикацию и не делают гипотезу фактом.",
+      "visual": "Открытый вывод",
+      "prompt": "Original local teaching diagram, not a historical reconstruction",
+      "id": "bffedca3c99f58bb858835544623674d",
+      "anchors": [
+        {
+          "anchor_id": "73f602708396579086c598cd50190708",
+          "scene_id": "bffedca3c99f58bb858835544623674d",
+          "start_ms": 0,
+          "duration_ms": 7542,
+          "narration_excerpt": "Итак, вопрос об исчезновении полезно заменить несколькими точными вопросами о местах, времени, институтах и людях. Ответ зависит от выбранного случая и качества свидетельств. Этот учебный монтаж демонстрирует способ постановки задачи, а не завершённую научную экспертизу. Перед настоящим выпуском нужны проверенные источники, редакционное решение и подтверждённые права на материалы. Сохранённый файл и его контрольная сумма позволяют повторить техническую проверку, но не дают разрешения на публикацию и не делают гипотезу фактом.",
+          "visual_description": "Открытый вывод",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_7.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "e7e196bbc603f05384ec9a5e61f7e057159de8fc346c8f999b8cd1dca4ab4c34",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_7.png",
+            "sha256": "e7e196bbc603f05384ec9a5e61f7e057159de8fc346c8f999b8cd1dca4ab4c34"
+          }
+        },
+        {
+          "anchor_id": "a6598bc400c0566abbfb0e83942850f1",
+          "scene_id": "bffedca3c99f58bb858835544623674d",
+          "start_ms": 7542,
+          "duration_ms": 7542,
+          "narration_excerpt": "Итак, вопрос об исчезновении полезно заменить несколькими точными вопросами о местах, времени, институтах и людях. Ответ зависит от выбранного случая и качества свидетельств. Этот учебный монтаж демонстрирует способ постановки задачи, а не завершённую научную экспертизу. Перед настоящим выпуском нужны проверенные источники, редакционное решение и подтверждённые права на материалы. Сохранённый файл и его контрольная сумма позволяют повторить техническую проверку, но не дают разрешения на публикацию и не делают гипотезу фактом.",
+          "visual_description": "Открытый вывод",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_7.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "e7e196bbc603f05384ec9a5e61f7e057159de8fc346c8f999b8cd1dca4ab4c34",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_7.png",
+            "sha256": "e7e196bbc603f05384ec9a5e61f7e057159de8fc346c8f999b8cd1dca4ab4c34"
+          }
+        },
+        {
+          "anchor_id": "cef0ddc68e895228a18b55acf41167d4",
+          "scene_id": "bffedca3c99f58bb858835544623674d",
+          "start_ms": 15084,
+          "duration_ms": 7542,
+          "narration_excerpt": "Итак, вопрос об исчезновении полезно заменить несколькими точными вопросами о местах, времени, институтах и людях. Ответ зависит от выбранного случая и качества свидетельств. Этот учебный монтаж демонстрирует способ постановки задачи, а не завершённую научную экспертизу. Перед настоящим выпуском нужны проверенные источники, редакционное решение и подтверждённые права на материалы. Сохранённый файл и его контрольная сумма позволяют повторить техническую проверку, но не дают разрешения на публикацию и не делают гипотезу фактом.",
+          "visual_description": "Открытый вывод",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_7.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "e7e196bbc603f05384ec9a5e61f7e057159de8fc346c8f999b8cd1dca4ab4c34",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_7.png",
+            "sha256": "e7e196bbc603f05384ec9a5e61f7e057159de8fc346c8f999b8cd1dca4ab4c34"
+          }
+        },
+        {
+          "anchor_id": "fde452bd1aad5230911e323f5a85c990",
+          "scene_id": "bffedca3c99f58bb858835544623674d",
+          "start_ms": 22626,
+          "duration_ms": 7543,
+          "narration_excerpt": "Итак, вопрос об исчезновении полезно заменить несколькими точными вопросами о местах, времени, институтах и людях. Ответ зависит от выбранного случая и качества свидетельств. Этот учебный монтаж демонстрирует способ постановки задачи, а не завершённую научную экспертизу. Перед настоящим выпуском нужны проверенные источники, редакционное решение и подтверждённые права на материалы. Сохранённый файл и его контрольная сумма позволяют повторить техническую проверку, но не дают разрешения на публикацию и не делают гипотезу фактом.",
+          "visual_description": "Открытый вывод",
+          "image_prompt": "",
+          "video_prompt": "",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./ru_7.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "e7e196bbc603f05384ec9a5e61f7e057159de8fc346c8f999b8cd1dca4ab4c34",
+          "fit_mode": "FIT",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "ru_7.png",
+            "sha256": "e7e196bbc603f05384ec9a5e61f7e057159de8fc346c8f999b8cd1dca4ab4c34"
+          }
+        }
+      ]
+    }
+  ],
+  "approved": false,
+  "timeline": {
+    "version": 1,
+    "scene_durations_ms": {
+      "64fe73e68bb6524d980395303b95ae27": 23687,
+      "55884e2c64565396ae8b45d412c84579": 26521,
+      "f5e506be4db95b8abb07050815fea469": 26372,
+      "f69888e7c4fa582aadd58dad13733951": 28501,
+      "201a741a247857d5bd704976aa831c52": 29009,
+      "db6d886fe71050bb8cdddf2329519fc4": 28720,
+      "e328bf6b79fe50e8b8306a7b67beac5e": 27269,
+      "bffedca3c99f58bb858835544623674d": 30169
+    }
+  },
+  "output_profile": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30
+  },
+  "captions_by_scene": {
+    "64fe73e68bb6524d980395303b95ae27": [
+      {
+        "start_ms": 100,
+        "end_ms": 3283,
+        "text": "Почему исчезли древние цивилизации? В таком вопросе скрыта",
+        "timing_kind": "MANUAL_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 3383,
+        "end_ms": 6767,
+        "text": "ловушка: разные общества существовали в разных местах и менялись",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 6767,
+        "end_ms": 10151,
+        "text": "в разное время. Удобная история об одной великой катастрофе",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 10151,
+        "end_ms": 13535,
+        "text": "может оказаться слишком простой. В этом учебном ролике мы не",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 13535,
+        "end_ms": 16919,
+        "text": "объявляем окончательный ответ. Мы покажем, как разложить вопрос",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 16919,
+        "end_ms": 20303,
+        "text": "на проверяемые части: что именно исчезло, какие свидетельства",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 20303,
+        "end_ms": 23687,
+        "text": "остались и какие объяснения ещё нужно сопоставить.",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      }
+    ],
+    "55884e2c64565396ae8b45d412c84579": [
+      {
+        "start_ms": 100,
+        "end_ms": 3215,
+        "text": "Прежде всего уточним слово «исчезли». Мы можем иметь в виду",
+        "timing_kind": "MANUAL_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 3315,
+        "end_ms": 6630,
+        "text": "оставленный город, прекращение работы административного центра,",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 6630,
+        "end_ms": 9945,
+        "text": "изменение письменной традиции или перемещение жителей. Эти",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 9945,
+        "end_ms": 13260,
+        "text": "события нельзя автоматически считать одним и тем же. Пустое",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 13260,
+        "end_ms": 16575,
+        "text": "здание не сообщает, что стало со всеми людьми вокруг него. Для",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 16575,
+        "end_ms": 19890,
+        "text": "каждой версии сценария нужна своя формулировка вопроса. На",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 19890,
+        "end_ms": 23205,
+        "text": "экране условная схема, а не карта реальной миграции и не",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 23205,
+        "end_ms": 26521,
+        "text": "изображение конкретной археологической находки.",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      }
+    ],
+    "f5e506be4db95b8abb07050815fea469": [
+      {
+        "start_ms": 100,
+        "end_ms": 3196,
+        "text": "Следующий шаг — временная шкала. Изменения, которые в коротком",
+        "timing_kind": "MANUAL_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 3296,
+        "end_ms": 6593,
+        "text": "пересказе выглядят мгновенными, могли состоять из нескольких",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 6593,
+        "end_ms": 9889,
+        "text": "этапов. Поэтому редактор должен проверить даты, способ датировки",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 9889,
+        "end_ms": 13186,
+        "text": "и допустимую погрешность. Сначала мы располагаем свидетельства",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 13186,
+        "end_ms": 16482,
+        "text": "по времени и только потом обсуждаем причинную связь. Если даты",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 16482,
+        "end_ms": 19779,
+        "text": "приблизительны, графика тоже должна это показывать. Ровная линия",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 19779,
+        "end_ms": 23075,
+        "text": "в монтажной программе означает длительность кадра, а не точность",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 23075,
+        "end_ms": 26372,
+        "text": "исторического знания.",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      }
+    ],
+    "f69888e7c4fa582aadd58dad13733951": [
+      {
+        "start_ms": 100,
+        "end_ms": 3066,
+        "text": "Среди возможных объяснений исследователи рассматривают среду,",
+        "timing_kind": "MANUAL_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 3166,
+        "end_ms": 6333,
+        "text": "обмен, конфликты и изменения управления. Для конкретного",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 6333,
+        "end_ms": 9500,
+        "text": "общества этот перечень нужно проверять по специальной",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 9500,
+        "end_ms": 12667,
+        "text": "литературе: наличие гипотезы ещё не подтверждает её",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 12667,
+        "end_ms": 15833,
+        "text": "применимость. Полезный приём — спросить, какие наблюдения",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 15833,
+        "end_ms": 19000,
+        "text": "отличали бы одну версию от другой. Если разные версии",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 19000,
+        "end_ms": 22167,
+        "text": "предсказывают одинаковый след, одного такого следа недостаточно",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 22167,
+        "end_ms": 25334,
+        "text": "для уверенного выбора. Мы оставляем альтернативы на экране",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 25334,
+        "end_ms": 28501,
+        "text": "вместе, не превращая монтаж в голосование.",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      }
+    ],
+    "201a741a247857d5bd704976aa831c52": [
+      {
+        "start_ms": 100,
+        "end_ms": 3123,
+        "text": "Какие свидетельства нам нужны? Для выбранного примера редактор",
+        "timing_kind": "MANUAL_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 3223,
+        "end_ms": 6446,
+        "text": "может искать отчёты раскопок, исследования ландшафта, данные о",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 6446,
+        "end_ms": 9669,
+        "text": "поселениях и публикации письменных источников. Важно понимать",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 9669,
+        "end_ms": 12892,
+        "text": "происхождение каждого материала и границы интерпретации.",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 12892,
+        "end_ms": 16116,
+        "text": "Отсутствие находки в одном месте не равняется доказательству",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 16116,
+        "end_ms": 19339,
+        "text": "полного отсутствия явления. Все конкретные научные тезисы в",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 19339,
+        "end_ms": 22562,
+        "text": "рабочем сценарии должны получить отдельную проверку. Здесь",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 22562,
+        "end_ms": 25785,
+        "text": "показаны собственные учебные схемы; они иллюстрируют вопросы, но",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 25785,
+        "end_ms": 29009,
+        "text": "ничего не доказывают сами.",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      }
+    ],
+    "db6d886fe71050bb8cdddf2329519fc4": [
+      {
+        "start_ms": 100,
+        "end_ms": 3490,
+        "text": "Теперь вернём людей в рассказ. Даже если административный центр",
+        "timing_kind": "MANUAL_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 3590,
+        "end_ms": 7180,
+        "text": "перестал работать, это ещё не описание дальнейшей судьбы каждого",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 7180,
+        "end_ms": 10770,
+        "text": "сообщества. Можно исследовать, менялись ли занятия, связи и",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 10770,
+        "end_ms": 14360,
+        "text": "места проживания. Вместо эффектной фразы «все исчезли» лучше",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 14360,
+        "end_ms": 17950,
+        "text": "задать более узкий вопрос, на который отвечают имеющиеся данные.",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 17950,
+        "end_ms": 21540,
+        "text": "Так рассказ становится менее сенсационным, но более честным. Для",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 21540,
+        "end_ms": 25130,
+        "text": "нашей условной последовательности кадров этот переход обозначен",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 25130,
+        "end_ms": 28720,
+        "text": "движением между блоками; реальных маршрутов на схеме нет.",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      }
+    ],
+    "e328bf6b79fe50e8b8306a7b67beac5e": [
+      {
+        "start_ms": 100,
+        "end_ms": 3308,
+        "text": "Перед финалом проверим уже наш видеоряд. Не создаёт ли",
+        "timing_kind": "MANUAL_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 3408,
+        "end_ms": 6817,
+        "text": "синтетическая анимация впечатление документальной съёмки? Не",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 6817,
+        "end_ms": 10225,
+        "text": "превращает ли музыка предположение в очевидность? У нас нет",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 10225,
+        "end_ms": 13634,
+        "text": "чужих фотографий, музыки или архивных кадров; короткие клипы",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 13634,
+        "end_ms": 17043,
+        "text": "собраны локально из подписанных схем. Однако даже такая схема",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 17043,
+        "end_ms": 20451,
+        "text": "может внушить лишнюю уверенность. Поэтому мы сохраняем оговорки",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 20451,
+        "end_ms": 23860,
+        "text": "в речи и субтитрах. Субтитры отредактированы вручную, но их",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 23860,
+        "end_ms": 27269,
+        "text": "синхронизацию всё равно должен проверить человек на слух.",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      }
+    ],
+    "bffedca3c99f58bb858835544623674d": [
+      {
+        "start_ms": 100,
+        "end_ms": 3252,
+        "text": "Итак, вопрос об исчезновении полезно заменить несколькими",
+        "timing_kind": "MANUAL_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 3352,
+        "end_ms": 6704,
+        "text": "точными вопросами о местах, времени, институтах и людях. Ответ",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 6704,
+        "end_ms": 10056,
+        "text": "зависит от выбранного случая и качества свидетельств. Этот",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 10056,
+        "end_ms": 13408,
+        "text": "учебный монтаж демонстрирует способ постановки задачи, а не",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 13408,
+        "end_ms": 16760,
+        "text": "завершённую научную экспертизу. Перед настоящим выпуском нужны",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 16760,
+        "end_ms": 20112,
+        "text": "проверенные источники, редакционное решение и подтверждённые",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 20112,
+        "end_ms": 23464,
+        "text": "права на материалы. Сохранённый файл и его контрольная сумма",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 23464,
+        "end_ms": 26816,
+        "text": "позволяют повторить техническую проверку, но не дают разрешения",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      },
+      {
+        "start_ms": 26816,
+        "end_ms": 30169,
+        "text": "на публикацию и не делают гипотезу фактом.",
+        "timing_kind": "ESTIMATED_CAPTION_TIMING"
+      }
+    ]
+  },
+  "brief": "UNVERIFIED editorial-training draft; original diagrams are illustrative, not historical evidence.",
+  "audio": "./ru_narration.mp3"
+}

@@ -1,0 +1,24 @@
+..............................s....................................... [  9%]
+........ [ 10%]
+..................................................... [ 17%]
+...................... [ 19%]
+................................................................ [ 28%]
+.................................................................................. [ 38%]
+................................................................................................................................... [ 55%]
+................................................................................................................................... [ 73%]
+..................................................... [ 79%]
+..................... [ 82%]
+.......................................................................................... [ 94%]
+...........................................         [100%]
+=============================== warnings summary ===============================
+../../../opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/anyio/pytest_plugin.py:14
+  /opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/anyio/pytest_plugin.py:14: PytestRemovedIn10Warning: _pytest.python.CallSpec2 has been renamed to CallSpec.
+  The CallSpec2 alias will be removed in pytest 10.
+  Update imports to use CallSpec instead.
+  See https://docs.pytest.org/en/stable/deprecations.html#callspec2-renamed
+    from _pytest.python import CallSpec2
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_editor_preview.py:280: Windows junction requires NTFS
+767 passed, 1 skipped, 1 warning, 3616 subtests passed in 269.44s (0:04:29)

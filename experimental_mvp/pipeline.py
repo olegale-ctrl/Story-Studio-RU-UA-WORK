@@ -34,7 +34,12 @@ def synthesize(*args, **kwargs):
 
 def save(path, project):
     if "scenes" in project:
+        from copy import deepcopy
+        project = deepcopy(project) if project.get("timeline") else project
         identify(project)
+        if project.get("timeline"):
+            from experimental_mvp.timeline import validate_project
+            validate_project(project)
     path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent,
                                      delete=False) as stream:
@@ -260,7 +265,12 @@ def preview_audio(project, index, workspace):
         if source.suffix.lower() not in {".mp3", ".wav"}:
             raise ValueError("Импорт озвучки поддерживает MP3 и WAV.")
         texts = [item["text"].strip() for item in project["scenes"]]
-        start, end = list(intervals(texts, duration(source, ffprobe)))[index]
+        if project.get("timeline"):
+            from experimental_mvp.timeline import measure_audio
+            entry = measure_audio(project, workspace)["scenes"][index]
+            start,end = entry["start_ms"],entry["end_ms"]
+        else:
+            start, end = list(intervals(texts, duration(source, ffprobe)))[index]
         return source, start, end - start, True
     source, entry = audio_key(project, scene, workspace / "scene-audio")
     ready = entry / "audio.wav"
@@ -285,7 +295,12 @@ def render_preview(project, index, workspace, audio):
     log = folder / "preview.log"
     (folder / "captions.srt").write_text(captions, encoding="utf-8")
     ffmpeg = executable("ffmpeg")
-    clip = render_scene(scene, index + 1, length / 1000, folder, log, ffmpeg, project.get("output_profile"))
+    profile=project.get("output_profile")
+    if project.get("timeline"):
+        from experimental_mvp.storyboard import output_profile
+        profile={**(profile or {}),"timeline_version":1,"scene_start_ms":0,
+                 "frame_count":round(length*output_profile(profile)[2]/1000)}
+    clip = render_scene(scene, index + 1, length / 1000, folder, log, ffmpeg, profile)
     command([ffmpeg, "-nostdin", "-v", "error", "-i", clip, "-ss", str(start / 1000),
              "-i", str(source), "-map", "0:v:0", "-map", "1:a:0",
              "-vf", "subtitles=captions.srt", "-t", str(length / 1000),
@@ -322,7 +337,7 @@ def render_scene(scene, index, length, folder, log, ffmpeg, profile=None, cancel
                f"fade=t=out:st={length-fade}:d={fade}")
     clip = f"scene{index:03}.mp4"
     command([ffmpeg, "-nostdin", "-v", "error", *image_args, "-an", "-vf", filters,
-             "-t", str(length), "-c:v", "libx264", "-preset", "ultrafast",
+             *( ["-frames:v", str(profile["frame_count"])] if profile and "frame_count" in profile else ["-t", str(length)]), "-c:v", "libx264", "-preset", "ultrafast",
              "-threads", "4", clip], folder, log)
     return clip
 
@@ -358,7 +373,11 @@ def check_project(project, workspace):
         length = inspect(whole, "audio", None)
         if length is not None:
             try:
-                spans = list(intervals([s["text"] for s in scenes], length))
+                if project.get("timeline"):
+                    from experimental_mvp.timeline import timing_map
+                    spans = [(s["start_ms"],s["end_ms"]) for s in timing_map(project,whole_ms=length)["scenes"]]
+                else:
+                    spans = list(intervals([s["text"] for s in scenes], length))
             except ValueError as exc:
                 issues.append((None, "audio", str(exc), False))
     overrides = project.get("captions_by_scene", {})
@@ -391,6 +410,14 @@ def check_project(project, workspace):
                 issues.append((key, "captions", "Длительность и таймкоды ожидают озвучку.", True))
         if scene.get("anchors"):
             from experimental_mvp.storyboard import validate as validate_anchors
+            if project.get("timeline"):
+                from experimental_mvp.storyboard import video_spec, VIDEOS
+                for anchor in scene["anchors"]:
+                    if anchor.get("local_asset_path") and Path(anchor["local_asset_path"]).suffix.lower() in VIDEOS:
+                        try:
+                            video_spec(anchor, True)
+                        except (ValueError,OSError,KeyError,subprocess.SubprocessError) as exc:
+                            issues.append((key,"anchors",str(exc),False))
             if length is not None:
                 for message in validate_anchors(scene, length):
                     issues.append((key, "anchors", message, False))
@@ -406,7 +433,7 @@ def check_project(project, workspace):
 
 def preview_signature(project):
     """Determine staleness without opening or transmitting media contents."""
-    selection = {k: project.get(k) for k in ("locale", "voice", "audio", "scenes", "captions_by_scene", "output_profile")}
+    selection = {k: project.get(k) for k in ("locale", "voice", "audio", "scenes", "captions_by_scene", "output_profile", "timeline")}
     sources = [project.get("audio")]
     for scene in project["scenes"]:
         sources.extend((scene.get("image"), None if project.get("audio") else scene.get("audio")))
@@ -442,6 +469,8 @@ class BuildStopped(RuntimeError):
 
 
 def build(project, workspace, notify=print, *, preview=False, cancelled=lambda: False):
+    from copy import deepcopy
+    project = deepcopy(project)
     if project.get("approved") is not True:
         raise ValueError("Сначала подтвердите локальную экспериментальную сборку; production permissions не выдаются.")
     identify(project)
@@ -479,7 +508,12 @@ def build(project, workspace, notify=print, *, preview=False, cancelled=lambda: 
                 raise ValueError("Импорт озвучки поддерживает MP3 и WAV.")
             imported = folder / ("import" + source.suffix.lower())
             shutil.copyfile(source, imported)
-            spans = list(intervals(texts, duration(imported, ffprobe)))
+            if project.get("timeline"):
+                from experimental_mvp.timeline import timing_map
+                mapped = timing_map(project, whole_ms=duration(imported, ffprobe))
+                spans = [(s["start_ms"], s["end_ms"]) for s in mapped["scenes"]]
+            else:
+                spans = list(intervals(texts, duration(imported, ffprobe)))
             audio_args = ["-i", imported.name]
             timing = "estimated_word_weighted_from_imported_audio"
         else:
@@ -507,6 +541,12 @@ def build(project, workspace, notify=print, *, preview=False, cancelled=lambda: 
                                                encoding="ascii")
             audio_args = ["-f", "concat", "-safe", "1", "-i", "speech.txt"]
             timing = "measured_scene_boundaries_estimated_cue_boundaries"
+        if project.get("timeline"):
+            from experimental_mvp.timeline import timing_map
+            if not audio:
+                mapped = timing_map(project, scene_ms={s["id"]: end-start for s,(start,end) in zip(scenes,spans)})
+                spans = [(s["start_ms"],s["end_ms"]) for s in mapped["scenes"]]
+            save(folder / "audio-timing-map.json", mapped)
         notify("Озвучка подготовлена")
         checkpoint()
         (folder / "captions.srt").write_text(render_srt(scenes, spans, project.get("captions_by_scene", {})),
@@ -516,7 +556,13 @@ def build(project, workspace, notify=print, *, preview=False, cancelled=lambda: 
         for index, (scene, (start, end)) in enumerate(zip(scenes, spans), 1):
             checkpoint()
             notify(f"Видео: сцена {index}/{len(scenes)}")
-            clips.append(render_scene(scene, index, (end - start) / 1000, folder, log, ffmpeg, project.get("output_profile"), cancelled))
+            profile = project.get("output_profile")
+            if project.get("timeline"):
+                from experimental_mvp.storyboard import output_profile
+                fps = output_profile(profile)[2]
+                profile = {**(profile or {}), "timeline_version": 1, "scene_start_ms": start,
+                           "frame_count": round(end*fps/1000)-round(start*fps/1000)}
+            clips.append(render_scene(scene, index, (end-start)/1000, folder, log, ffmpeg, profile, cancelled))
         (folder / "scenes.txt").write_text("".join(f"file '{name}'\n" for name in clips),
                                           encoding="ascii")
         checkpoint()
@@ -528,6 +574,27 @@ def build(project, workspace, notify=print, *, preview=False, cancelled=lambda: 
                  "-metadata:s:s:0", "language=" + {"ru": "rus", "uk": "ukr"}[project["locale"]],
                  "-disposition:s:0", "default", "-movflags", "+faststart", "pending.mp4"], folder, log)
         checkpoint()
+        if project.get("timeline"):
+            from experimental_mvp.storyboard import output_profile
+            measured = subprocess.run([ffprobe, "-v", "error", "-show_entries",
+                                       "format=duration:stream=codec_type,duration,nb_frames",
+                                       "-of", "json", str(folder / "pending.mp4")], capture_output=True, check=True)
+            values=json.loads(measured.stdout)
+            actual=float(values["format"]["duration"])
+            video_stream=next(s for s in values["streams"] if s["codec_type"]=="video")
+            audio_stream=next(s for s in values["streams"] if s["codec_type"]=="audio")
+            video_seconds=float(video_stream["duration"]);audio_seconds=float(audio_stream["duration"])
+            expected=spans[-1][1]/1000;fps=output_profile(project.get("output_profile"))[2]
+            tolerance=max(.1,2/fps);expected_frames=round(spans[-1][1]*fps/1000)
+            frames=int(video_stream["nb_frames"])
+            passed=(abs(actual-expected)<=tolerance and abs(video_seconds-expected)<=tolerance
+                    and abs(video_seconds-audio_seconds)<=tolerance and frames==expected_frames)
+            save(folder / "duration-check.json", {"expected_seconds":expected,"actual_seconds":actual,
+                 "video_seconds":video_seconds,"audio_seconds":audio_seconds,
+                 "video_audio_delta_seconds":abs(video_seconds-audio_seconds),
+                 "expected_frames":expected_frames,"actual_frames":frames,
+                 "tolerance_seconds":tolerance,"passed":passed})
+            if not passed:raise ValueError("Длительность/кадры MP4 не совпали с озвучкой в допустимом допуске.")
         (folder / "pending.mp4").replace(folder / "final.mp4")
         output = folder / "final.mp4"
         save(folder / "execution-evidence.json", {

@@ -55,6 +55,20 @@ def launch():
     scene_fields = {}
     buttons = []
 
+    after_ids=set()
+    def later(ms,fn):
+        def invoke():
+            after_ids.discard(token)
+            fn()
+        token=root.after(ms,invoke);after_ids.add(token)
+    def cleanup(event):
+        if event.widget is root:
+            for token in list(after_ids):
+                try:root.after_cancel(token)
+                except tk.TclError:pass
+            after_ids.clear()
+    root.bind('<Destroy>',cleanup,add='+')
+
     def button(parent, label, action):
         widget = ttk.Button(parent, text=label, command=action)
         widget.pack(side="left", padx=(0, 5))
@@ -78,7 +92,37 @@ def launch():
         editor[key].delete("1.0", "end")
         editor[key].insert("1.0", value)
 
-    def fill(value, path=None):
+    def signature():
+        from experimental_mvp.timeline_ui import content
+        return content(collect())
+
+    def leave_project():
+        panel=state.get("timeline_panel")
+        try:
+            if panel and not panel.confirm_leave():return False
+        except Exception as exc:
+            messagebox.showerror("Временная шкала",str(exc));return False
+        if state.get("saved_content") is not None and signature()!=state["saved_content"]:
+            answer=messagebox.askyesnocancel("Несохранённые изменения", "Сохранить текущий проект? «Нет» — отбросить изменения.")
+            if answer is None:return False
+            if answer:
+                try:save_project()
+                except Exception as exc:
+                    messagebox.showerror("Сохранение проекта",str(exc));return False
+        return True
+
+    def apply_edit(value):
+        old=state.get("saved_content")
+        fill(value,state["path"],force=True)
+        state["saved_content"]=old
+
+    def fill(value, path=None, *, force=False):
+        if not force and not leave_project():return
+        if not force and state.get("timeline_panel"):
+            state["timeline_panel"].editor=None
+            state["timeline_panel"].base=None
+            state["timeline_panel"].draw()
+
         topic.set(value.get("topic", ""))
         locale.set(value["locale"])
         audio.set(value.get("audio", ""))
@@ -99,6 +143,7 @@ def launch():
             status.set(f"Последний экспорт не завершён: {history[0][0].name}")
         else:
             status.set(str(path) if path else "Новый проект")
+        state["saved_content"]=signature()
 
     def collect():
         commit_scene()
@@ -179,6 +224,7 @@ def launch():
             index = scenes.index(scene)
             scenes.remove(scene)
             state["project"].get("captions_by_scene", {}).pop(scene["id"], None)
+            state["project"].get("timeline", {}).get("scene_durations_ms", {}).pop(scene["id"], None)
             approved.set(False)
             refresh(scenes[min(index, len(scenes)-1)]["id"] if scenes else None)
 
@@ -200,6 +246,7 @@ def launch():
             path = ROOT / "projects" / uuid.uuid4().hex[:12] / "project.json"
         save(path, value)
         state["path"] = path
+        state["saved_content"]=signature()
         status.set(f"Сохранено: {path}")
         return path, value
 
@@ -435,7 +482,7 @@ def launch():
         if movie:
             stale = movie[1] != preview_signature(collect())
             preview_label.set("Предпросмотр устарел" if stale else "Предпросмотр актуален")
-        root.after(500, update_preview_status)
+        later(500, update_preview_status)
 
     def progress_event(message):
         updates.put(("progress", message))
@@ -518,7 +565,7 @@ def launch():
             else:
                 status.set("Ошибка сборки")
                 messagebox.showerror("Ошибка сборки", value)
-        root.after(100, poll)
+        later(100, poll)
 
     def play():
         video = state["video"]
@@ -537,7 +584,7 @@ def launch():
     def close():
         if state["busy"]:
             messagebox.showinfo("Сборка", "Дождитесь завершения сборки.")
-        else:
+        elif leave_project():
             root.destroy()
 
     def reported(action):
@@ -552,8 +599,8 @@ def launch():
     bar.pack(fill="x", pady=(0, 10))
     for name, action in (
         ("Новый", new), ("Открыть", open_project), ("Сохранить", save_project),
-        ("Демо RU", lambda: fill(load(DEMOS / "media_hub" / "ru.json"))),
-        ("Демо UA", lambda: fill(load(DEMOS / "media_hub" / "uk.json"))),
+        ("Демо RU", lambda: fill(load(DEMOS / "timeline" / "ru.json"))),
+        ("Демо UA", lambda: fill(load(DEMOS / "timeline" / "uk.json"))),
     ):
         button(bar, name, reported(action))
     topics = ttk.Frame(shell)
@@ -643,9 +690,15 @@ def launch():
     scene_voice.trace_add("write", lambda *_: approved.set(False) if scene_voice.get() !=
                           (current() or {}).get("voice", "") else None)
     from experimental_mvp.media_ui import MediaWorkbench
-    media_workbench = MediaWorkbench(notebook, collect, lambda p: fill(p, state["path"]),
+    media_workbench = MediaWorkbench(notebook, collect, apply_edit,
                                     lambda: ROOT / "media-hub", open_local)
+    from experimental_mvp.timeline_ui import TimelinePanel
+    timeline_panel=TimelinePanel(notebook,collect,apply_edit,
+        lambda: state["path"].parent/"runs" if state["path"] else ROOT/"runs",open_local)
+    notebook.add(timeline_panel,text="Временная шкала")
+    state["timeline_panel"]=timeline_panel
+    state["saved_content"]=signature()
     root.protocol("WM_DELETE_WINDOW", close)
-    root.after(100, poll)
-    root.after(500, update_preview_status)
+    later(100, poll)
+    later(500, update_preview_status)
     root.mainloop()

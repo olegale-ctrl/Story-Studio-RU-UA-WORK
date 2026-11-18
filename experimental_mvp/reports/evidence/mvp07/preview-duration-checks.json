@@ -1,0 +1,66 @@
+[
+  {
+    "locale": "ru",
+    "mode": "anchor",
+    "actual_seconds": 7.9,
+    "expected_seconds": 7.895,
+    "tolerance_seconds": 0.1,
+    "passed": true
+  },
+  {
+    "locale": "ru",
+    "mode": "scene",
+    "actual_seconds": 23.7,
+    "expected_seconds": 23.687,
+    "tolerance_seconds": 0.1,
+    "passed": true
+  },
+  {
+    "locale": "ru",
+    "mode": "position",
+    "actual_seconds": 21.723,
+    "expected_seconds": 21.687,
+    "tolerance_seconds": 0.1,
+    "passed": true
+  },
+  {
+    "locale": "ru",
+    "mode": "project",
+    "actual_seconds": 220.248,
+    "expected_seconds": 220.248,
+    "tolerance_seconds": 0.1,
+    "passed": true
+  },
+  {
+    "locale": "uk",
+    "mode": "anchor",
+    "actual_seconds": 7.41,
+    "expected_seconds": 7.41,
+    "tolerance_seconds": 0.1,
+    "passed": true
+  },
+  {
+    "locale": "uk",
+    "mode": "scene",
+    "actual_seconds": 22.233333,
+    "expected_seconds": 22.232,
+    "tolerance_seconds": 0.1,
+    "passed": true
+  },
+  {
+    "locale": "uk",
+    "mode": "position",
+    "actual_seconds": 20.272,
+    "expected_seconds": 20.232,
+    "tolerance_seconds": 0.1,
+    "passed": true
+  },
+  {
+    "locale": "uk",
+    "mode": "project",
+    "actual_seconds": 201.033333,
+    "expected_seconds": 201.024,
+    "tolerance_seconds": 0.1,
+    "passed": true
+  }
+]

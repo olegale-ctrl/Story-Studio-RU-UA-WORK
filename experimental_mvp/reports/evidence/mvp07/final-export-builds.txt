@@ -1,0 +1,25 @@
+ru Озвучка
+ru Озвучка подготовлена
+ru Видео: сцена 1/8
+ru Видео: сцена 2/8
+ru Видео: сцена 3/8
+ru Видео: сцена 4/8
+ru Видео: сцена 5/8
+ru Видео: сцена 6/8
+ru Видео: сцена 7/8
+ru Видео: сцена 8/8
+ru Сборка MP4
+{"locale": "ru", "path": "/workspace/work/mvp07-evidence/exports/ru/run-2cfe3d0a61c6/final.mp4", "sha256": "d74305de401a91710fd7d64cd3a2748edd26bfe4f2360e56193f950acdf4555c", "duration": "220.248000", "probe_exit": 0, "decode_exit": 0, "decode_stderr_bytes": 0, "duration_check": {"expected_seconds": 220.248, "actual_seconds": 220.248, "video_seconds": 220.233333, "audio_seconds": 220.189, "video_audio_delta_seconds": 0.04433299999999463, "expected_frames": 6607, "actual_frames": 6607, "tolerance_seconds": 0.1, "passed": true}, "previews": {"anchor": "/workspace/work/mvp07-evidence/rendered/ru-previews/timeline-preview-6007950855bf/preview.mp4", "scene": "/workspace/work/mvp07-evidence/rendered/ru-previews/timeline-preview-c43bc8b5fbb5/preview.mp4", "position": "/workspace/work/mvp07-evidence/rendered/ru-previews/timeline-preview-5ec2a1d8c0f0/preview.mp4", "project": "/workspace/work/mvp07-evidence/rendered/ru-previews/movie-preview-142d60d47dc2/final.mp4"}, "preview_note": "Earlier current-project prerenders; 8 independent duration/decode checks recorded separately"}
+uk Озвучка
+uk Озвучка подготовлена
+uk Видео: сцена 1/8
+uk Видео: сцена 2/8
+uk Видео: сцена 3/8
+uk Видео: сцена 4/8
+uk Видео: сцена 5/8
+uk Видео: сцена 6/8
+uk Видео: сцена 7/8
+uk Видео: сцена 8/8
+uk Сборка MP4
+{"locale": "uk", "path": "/workspace/work/mvp07-evidence/exports/uk/run-87c6acf83e80/final.mp4", "sha256": "a2a226eba1911e1531c5e5bce0f123ab0e62c8644235b570351b8efbac5a03db", "duration": "201.033333", "probe_exit": 0, "decode_exit": 0, "decode_stderr_bytes": 0, "duration_check": {"expected_seconds": 201.024, "actual_seconds": 201.033333, "video_seconds": 201.033333, "audio_seconds": 200.954, "video_audio_delta_seconds": 0.07933299999999122, "expected_frames": 6031, "actual_frames": 6031, "tolerance_seconds": 0.1, "passed": true}, "previews": {"anchor": "/workspace/work/mvp07-evidence/rendered/uk-previews/timeline-preview-29935de2fb17/preview.mp4", "scene": "/workspace/work/mvp07-evidence/rendered/uk-previews/timeline-preview-1479c28a705f/preview.mp4", "position": "/workspace/work/mvp07-evidence/rendered/uk-previews/timeline-preview-6830a3c6d134/preview.mp4", "project": "/workspace/work/mvp07-evidence/rendered/uk-previews/movie-preview-b9eb0bda4012/final.mp4"}, "preview_note": "Earlier current-project prerenders; 8 independent duration/decode checks recorded separately"}
+FINAL_EXPORT_EXIT=0
