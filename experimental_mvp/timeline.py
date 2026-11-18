@@ -308,6 +308,19 @@ class Editor:
             a['duration_ms']+=b['duration_ms'];a['narration_excerpt']+=' '+b.get('narration_excerpt','');scene['anchors'].remove(b)
         else:raise ValueError('Неизвестная операция.')
 
+    def asset_change(self, candidate, *, expected_project):
+        """Commit a background-validated library edit with ordinary Undo/Redo."""
+        from experimental_mvp.asset_library import encoded, LibraryError
+        if encoded(self.project) != expected_project:
+            raise LibraryError('STALE_TARGET')
+        candidate = deepcopy(candidate)
+        validate_project(candidate)
+        self.undo_stack.append((deepcopy(self.project), deepcopy(self.timing)))
+        self.undo_stack = self.undo_stack[-100:]
+        self.redo_stack.clear()
+        candidate['approved'] = False
+        self.project = candidate
+
     def undo(self):
         if not self.undo_stack:return
         self.redo_stack.append((deepcopy(self.project),deepcopy(self.timing)))

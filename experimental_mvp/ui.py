@@ -704,6 +704,9 @@ def launch():
         lambda: state["path"].parent/"runs" if state["path"] else ROOT/"runs",open_local)
     notebook.add(timeline_panel,text="Временная шкала")
     state["timeline_panel"]=timeline_panel
+    from experimental_mvp.asset_ui import AssetLibraryPanel
+    library_panel = AssetLibraryPanel(notebook, collect, apply_edit, ROOT / "asset-library", timeline_panel)
+    notebook.add(library_panel, text="Asset Library")
     state["saved_content"]=signature()
     root.protocol("WM_DELETE_WINDOW", close)
     later(100, poll)

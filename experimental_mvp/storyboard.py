@@ -68,6 +68,12 @@ def validate(scene, total_ms):
         end = start + length
         if a.get('generation_mode') not in MODES or a.get('generation_status') not in STATUSES:
             errors.append(f'{key}: неизвестный режим / статус')
+        if a.get('asset_library_binding'):
+            try:
+                from experimental_mvp.asset_library import resolve_anchor
+                resolve_anchor(a)
+            except (ValueError, OSError) as exc:
+                errors.append(f'{key}: Asset Library: {exc}')
         path = a.get('local_asset_path')
         if path:
             p = Path(path).expanduser()
@@ -151,7 +157,8 @@ def video_spec(anchor, strict=True):
     """Probe actual input, do not trust project duration metadata."""
     import subprocess
     from experimental_mvp.pipeline import executable
-    source=Path(anchor['local_asset_path']).expanduser().resolve(strict=True)
+    from experimental_mvp.asset_library import resolve_anchor
+    source=resolve_anchor(anchor).expanduser().resolve(strict=True)
     probe=subprocess.run([executable('ffprobe'),'-v','error','-select_streams','v:0',
                           '-show_entries','stream=codec_type:format=duration','-of','json',str(source)],
                          capture_output=True,check=True,timeout=25)
@@ -189,7 +196,8 @@ def render(scene, index, length, folder, log, ffmpeg, command, profile=None, can
         source = anchor.get('local_asset_path')
         args = []
         if source:
-            p = Path(source).resolve(strict=True)
+            from experimental_mvp.asset_library import resolve_anchor
+            p = resolve_anchor(anchor).resolve(strict=True)
             suffix = p.suffix.lower()
             local = folder / f'anchor{index:03}_{n:03}{suffix}'
             shutil.copyfile(p, local)
@@ -198,7 +206,8 @@ def render(scene, index, length, folder, log, ffmpeg, command, profile=None, can
             args = ['-loop', '1', '-framerate', str(fps)] if suffix in IMAGES else []
             args += ['-i', local.name]
             if suffix in VIDEOS:
-                spec = video_spec({**anchor,'local_asset_path':str(local)}, strict)
+                copied = {k:v for k,v in anchor.items() if k != 'asset_library_binding'}
+                spec = video_spec({**copied,'local_asset_path':str(local)}, strict)
                 if not strict and 'short_clip_policy' not in anchor:
                     with log.open('a',encoding='utf-8') as stream:stream.write('LEGACY: implicit hold-last-frame; choose an explicit policy in timeline v1.\n')
             inputs.append({'anchor_id': anchor['anchor_id'], 'sha256': sha256(local.read_bytes()).hexdigest(),
