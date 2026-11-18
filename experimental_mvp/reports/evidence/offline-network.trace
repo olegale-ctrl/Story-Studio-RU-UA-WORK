@@ -1,0 +1,1027 @@
+14063 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14063, si_uid=1000, si_status=0, si_utime=3 /* 0.03 s */, si_stime=6 /* 0.06 s */} ---
+14071 +++ exited with 0 +++
+14065 +++ exited with 0 +++
+14069 +++ exited with 0 +++
+14070 +++ exited with 0 +++
+14072 +++ exited with 0 +++
+14066 +++ exited with 0 +++
+14067 +++ exited with 0 +++
+14068 +++ exited with 0 +++
+14064 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14064, si_uid=1000, si_status=0, si_utime=5 /* 0.05 s */, si_stime=4 /* 0.04 s */} ---
+14062 sendfile(4, 3, [0] => [1954028], 8388608) = 1954028
+14062 sendfile(4, 3, [1954028], 8388608) = 0
+14073 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14073, si_uid=1000, si_status=0, si_utime=5 /* 0.05 s */, si_stime=4 /* 0.04 s */} ---
+14062 sendfile(4, 3, [0] => [11256], 8388608) = 11256
+14062 sendfile(4, 3, [11256], 8388608)  = 0
+14087 +++ exited with 0 +++
+14086 +++ exited with 0 +++
+14088 +++ exited with 0 +++
+14083 +++ exited with 0 +++
+14093 +++ exited with 0 +++
+14085 +++ exited with 0 +++
+14079 +++ exited with 0 +++
+14084 +++ exited with 0 +++
+14094 +++ exited with 0 +++
+14080 +++ exited with 0 +++
+14081 +++ exited with 0 +++
+14082 +++ exited with 0 +++
+14092 +++ exited with 0 +++
+14090 +++ exited with 0 +++
+14091 +++ exited with 0 +++
+14089 +++ exited with 0 +++
+14075 +++ exited with 0 +++
+14076 +++ exited with 0 +++
+14077 +++ exited with 0 +++
+14078 +++ exited with 0 +++
+14074 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14074, si_uid=1000, si_status=0, si_utime=41 /* 0.41 s */, si_stime=22 /* 0.22 s */} ---
+14062 sendfile(4, 3, [0] => [11256], 8388608) = 11256
+14062 sendfile(4, 3, [11256], 8388608)  = 0
+14107 +++ exited with 0 +++
+14114 +++ exited with 0 +++
+14108 +++ exited with 0 +++
+14109 +++ exited with 0 +++
+14104 +++ exited with 0 +++
+14105 +++ exited with 0 +++
+14106 +++ exited with 0 +++
+14100 +++ exited with 0 +++
+14115 +++ exited with 0 +++
+14103 +++ exited with 0 +++
+14102 +++ exited with 0 +++
+14101 +++ exited with 0 +++
+14111 +++ exited with 0 +++
+14110 +++ exited with 0 +++
+14113 +++ exited with 0 +++
+14112 +++ exited with 0 +++
+14096 +++ exited with 0 +++
+14097 +++ exited with 0 +++
+14098 +++ exited with 0 +++
+14099 +++ exited with 0 +++
+14095 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14095, si_uid=1000, si_status=0, si_utime=46 /* 0.46 s */, si_stime=21 /* 0.21 s */} ---
+14062 sendfile(4, 3, [0] => [11256], 8388608) = 11256
+14062 sendfile(4, 3, [11256], 8388608)  = 0
+14138 +++ exited with 0 +++
+14137 +++ exited with 0 +++
+14139 +++ exited with 0 +++
+14144 +++ exited with 0 +++
+14134 +++ exited with 0 +++
+14130 +++ exited with 0 +++
+14135 +++ exited with 0 +++
+14145 +++ exited with 0 +++
+14136 +++ exited with 0 +++
+14131 +++ exited with 0 +++
+14133 +++ exited with 0 +++
+14132 +++ exited with 0 +++
+14142 +++ exited with 0 +++
+14143 +++ exited with 0 +++
+14141 +++ exited with 0 +++
+14140 +++ exited with 0 +++
+14126 +++ exited with 0 +++
+14127 +++ exited with 0 +++
+14128 +++ exited with 0 +++
+14129 +++ exited with 0 +++
+14125 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14125, si_uid=1000, si_status=0, si_utime=50 /* 0.50 s */, si_stime=17 /* 0.17 s */} ---
+14062 sendfile(4, 3, [0] => [11256], 8388608) = 11256
+14062 sendfile(4, 3, [11256], 8388608)  = 0
+14158 +++ exited with 0 +++
+14165 +++ exited with 0 +++
+14151 +++ exited with 0 +++
+14159 +++ exited with 0 +++
+14166 +++ exited with 0 +++
+14160 +++ exited with 0 +++
+14155 +++ exited with 0 +++
+14157 +++ exited with 0 +++
+14156 +++ exited with 0 +++
+14152 +++ exited with 0 +++
+14153 +++ exited with 0 +++
+14154 +++ exited with 0 +++
+14164 +++ exited with 0 +++
+14161 +++ exited with 0 +++
+14163 +++ exited with 0 +++
+14162 +++ exited with 0 +++
+14147 +++ exited with 0 +++
+14148 +++ exited with 0 +++
+14149 +++ exited with 0 +++
+14150 +++ exited with 0 +++
+14146 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14146, si_uid=1000, si_status=0, si_utime=51 /* 0.51 s */, si_stime=17 /* 0.17 s */} ---
+14062 sendfile(4, 3, [0] => [11256], 8388608) = 11256
+14062 sendfile(4, 3, [11256], 8388608)  = 0
+14180 +++ exited with 0 +++
+14179 +++ exited with 0 +++
+14186 +++ exited with 0 +++
+14181 +++ exited with 0 +++
+14176 +++ exited with 0 +++
+14178 +++ exited with 0 +++
+14177 +++ exited with 0 +++
+14187 +++ exited with 0 +++
+14173 +++ exited with 0 +++
+14175 +++ exited with 0 +++
+14174 +++ exited with 0 +++
+14172 +++ exited with 0 +++
+14183 +++ exited with 0 +++
+14182 +++ exited with 0 +++
+14185 +++ exited with 0 +++
+14184 +++ exited with 0 +++
+14168 +++ exited with 0 +++
+14169 +++ exited with 0 +++
+14170 +++ exited with 0 +++
+14171 +++ exited with 0 +++
+14167 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14167, si_uid=1000, si_status=0, si_utime=25 /* 0.25 s */, si_stime=12 /* 0.12 s */} ---
+14190 +++ exited with 0 +++
+14189 +++ exited with 0 +++
+14188 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14188, si_uid=1000, si_status=0, si_utime=6 /* 0.06 s */, si_stime=6 /* 0.06 s */} ---
+14062 sendfile(4, 3, [0] => [13083], 8388608) = 13083
+14062 sendfile(4, 3, [13083], 8388608)  = 0
+14204 +++ exited with 0 +++
+14203 +++ exited with 0 +++
+14210 +++ exited with 0 +++
+14205 +++ exited with 0 +++
+14200 +++ exited with 0 +++
+14196 +++ exited with 0 +++
+14211 +++ exited with 0 +++
+14201 +++ exited with 0 +++
+14202 +++ exited with 0 +++
+14197 +++ exited with 0 +++
+14198 +++ exited with 0 +++
+14199 +++ exited with 0 +++
+14209 +++ exited with 0 +++
+14208 +++ exited with 0 +++
+14207 +++ exited with 0 +++
+14206 +++ exited with 0 +++
+14192 +++ exited with 0 +++
+14193 +++ exited with 0 +++
+14194 +++ exited with 0 +++
+14195 +++ exited with 0 +++
+14191 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14191, si_uid=1000, si_status=0, si_utime=47 /* 0.47 s */, si_stime=18 /* 0.18 s */} ---
+14062 sendfile(4, 3, [0] => [13083], 8388608) = 13083
+14062 sendfile(4, 3, [13083], 8388608)  = 0
+14231 +++ exited with 0 +++
+14224 +++ exited with 0 +++
+14226 +++ exited with 0 +++
+14225 +++ exited with 0 +++
+14221 +++ exited with 0 +++
+14232 +++ exited with 0 +++
+14222 +++ exited with 0 +++
+14223 +++ exited with 0 +++
+14217 +++ exited with 0 +++
+14218 +++ exited with 0 +++
+14220 +++ exited with 0 +++
+14219 +++ exited with 0 +++
+14229 +++ exited with 0 +++
+14227 +++ exited with 0 +++
+14230 +++ exited with 0 +++
+14228 +++ exited with 0 +++
+14213 +++ exited with 0 +++
+14214 +++ exited with 0 +++
+14215 +++ exited with 0 +++
+14216 +++ exited with 0 +++
+14212 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14212, si_uid=1000, si_status=0, si_utime=55 /* 0.55 s */, si_stime=15 /* 0.15 s */} ---
+14062 sendfile(4, 3, [0] => [13083], 8388608) = 13083
+14062 sendfile(4, 3, [13083], 8388608)  = 0
+14245 +++ exited with 0 +++
+14252 +++ exited with 0 +++
+14246 +++ exited with 0 +++
+14247 +++ exited with 0 +++
+14238 +++ exited with 0 +++
+14253 +++ exited with 0 +++
+14244 +++ exited with 0 +++
+14243 +++ exited with 0 +++
+14242 +++ exited with 0 +++
+14241 +++ exited with 0 +++
+14240 +++ exited with 0 +++
+14239 +++ exited with 0 +++
+14249 +++ exited with 0 +++
+14250 +++ exited with 0 +++
+14248 +++ exited with 0 +++
+14251 +++ exited with 0 +++
+14234 +++ exited with 0 +++
+14235 +++ exited with 0 +++
+14236 +++ exited with 0 +++
+14237 +++ exited with 0 +++
+14233 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14233, si_uid=1000, si_status=0, si_utime=46 /* 0.46 s */, si_stime=16 /* 0.16 s */} ---
+14062 sendfile(4, 3, [0] => [13083], 8388608) = 13083
+14062 sendfile(4, 3, [13083], 8388608)  = 0
+14268 +++ exited with 0 +++
+14266 +++ exited with 0 +++
+14267 +++ exited with 0 +++
+14273 +++ exited with 0 +++
+14264 +++ exited with 0 +++
+14265 +++ exited with 0 +++
+14263 +++ exited with 0 +++
+14260 +++ exited with 0 +++
+14261 +++ exited with 0 +++
+14262 +++ exited with 0 +++
+14274 +++ exited with 0 +++
+14259 +++ exited with 0 +++
+14269 +++ exited with 0 +++
+14270 +++ exited with 0 +++
+14271 +++ exited with 0 +++
+14272 +++ exited with 0 +++
+14255 +++ exited with 0 +++
+14256 +++ exited with 0 +++
+14257 +++ exited with 0 +++
+14258 +++ exited with 0 +++
+14254 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14254, si_uid=1000, si_status=0, si_utime=53 /* 0.53 s */, si_stime=14 /* 0.14 s */} ---
+14062 sendfile(4, 3, [0] => [13083], 8388608) = 13083
+14062 sendfile(4, 3, [13083], 8388608)  = 0
+14287 +++ exited with 0 +++
+14294 +++ exited with 0 +++
+14288 +++ exited with 0 +++
+14289 +++ exited with 0 +++
+14284 +++ exited with 0 +++
+14295 +++ exited with 0 +++
+14285 +++ exited with 0 +++
+14280 +++ exited with 0 +++
+14286 +++ exited with 0 +++
+14282 +++ exited with 0 +++
+14281 +++ exited with 0 +++
+14283 +++ exited with 0 +++
+14290 +++ exited with 0 +++
+14293 +++ exited with 0 +++
+14291 +++ exited with 0 +++
+14292 +++ exited with 0 +++
+14276 +++ exited with 0 +++
+14277 +++ exited with 0 +++
+14278 +++ exited with 0 +++
+14279 +++ exited with 0 +++
+14275 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14275, si_uid=1000, si_status=0, si_utime=13 /* 0.13 s */, si_stime=7 /* 0.07 s */} ---
+14298 +++ exited with 0 +++
+14297 +++ exited with 0 +++
+14296 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14296, si_uid=1000, si_status=0, si_utime=6 /* 0.06 s */, si_stime=3 /* 0.03 s */} ---
+14062 sendfile(4, 3, [0] => [13220], 8388608) = 13220
+14062 sendfile(4, 3, [13220], 8388608)  = 0
+14318 +++ exited with 0 +++
+14311 +++ exited with 0 +++
+14313 +++ exited with 0 +++
+14312 +++ exited with 0 +++
+14308 +++ exited with 0 +++
+14310 +++ exited with 0 +++
+14309 +++ exited with 0 +++
+14304 +++ exited with 0 +++
+14319 +++ exited with 0 +++
+14305 +++ exited with 0 +++
+14306 +++ exited with 0 +++
+14307 +++ exited with 0 +++
+14315 +++ exited with 0 +++
+14317 +++ exited with 0 +++
+14316 +++ exited with 0 +++
+14314 +++ exited with 0 +++
+14300 +++ exited with 0 +++
+14301 +++ exited with 0 +++
+14302 +++ exited with 0 +++
+14303 +++ exited with 0 +++
+14299 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14299, si_uid=1000, si_status=0, si_utime=50 /* 0.50 s */, si_stime=16 /* 0.16 s */} ---
+14062 sendfile(4, 3, [0] => [13220], 8388608) = 13220
+14062 sendfile(4, 3, [13220], 8388608)  = 0
+14332 +++ exited with 0 +++
+14333 +++ exited with 0 +++
+14339 +++ exited with 0 +++
+14334 +++ exited with 0 +++
+14325 +++ exited with 0 +++
+14340 +++ exited with 0 +++
+14330 +++ exited with 0 +++
+14329 +++ exited with 0 +++
+14331 +++ exited with 0 +++
+14326 +++ exited with 0 +++
+14327 +++ exited with 0 +++
+14328 +++ exited with 0 +++
+14338 +++ exited with 0 +++
+14337 +++ exited with 0 +++
+14336 +++ exited with 0 +++
+14335 +++ exited with 0 +++
+14321 +++ exited with 0 +++
+14322 +++ exited with 0 +++
+14323 +++ exited with 0 +++
+14324 +++ exited with 0 +++
+14320 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14320, si_uid=1000, si_status=0, si_utime=45 /* 0.45 s */, si_stime=15 /* 0.15 s */} ---
+14062 sendfile(4, 3, [0] => [13220], 8388608) = 13220
+14062 sendfile(4, 3, [13220], 8388608)  = 0
+14354 +++ exited with 0 +++
+14353 +++ exited with 0 +++
+14355 +++ exited with 0 +++
+14350 +++ exited with 0 +++
+14360 +++ exited with 0 +++
+14351 +++ exited with 0 +++
+14352 +++ exited with 0 +++
+14347 +++ exited with 0 +++
+14349 +++ exited with 0 +++
+14348 +++ exited with 0 +++
+14346 +++ exited with 0 +++
+14361 +++ exited with 0 +++
+14356 +++ exited with 0 +++
+14359 +++ exited with 0 +++
+14358 +++ exited with 0 +++
+14357 +++ exited with 0 +++
+14342 +++ exited with 0 +++
+14343 +++ exited with 0 +++
+14344 +++ exited with 0 +++
+14345 +++ exited with 0 +++
+14341 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14341, si_uid=1000, si_status=0, si_utime=52 /* 0.52 s */, si_stime=14 /* 0.14 s */} ---
+14062 sendfile(4, 3, [0] => [13220], 8388608) = 13220
+14062 sendfile(4, 3, [13220], 8388608)  = 0
+14381 +++ exited with 0 +++
+14375 +++ exited with 0 +++
+14374 +++ exited with 0 +++
+14376 +++ exited with 0 +++
+14371 +++ exited with 0 +++
+14372 +++ exited with 0 +++
+14373 +++ exited with 0 +++
+14367 +++ exited with 0 +++
+14382 +++ exited with 0 +++
+14368 +++ exited with 0 +++
+14370 +++ exited with 0 +++
+14369 +++ exited with 0 +++
+14380 +++ exited with 0 +++
+14379 +++ exited with 0 +++
+14377 +++ exited with 0 +++
+14378 +++ exited with 0 +++
+14363 +++ exited with 0 +++
+14364 +++ exited with 0 +++
+14365 +++ exited with 0 +++
+14366 +++ exited with 0 +++
+14362 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14362, si_uid=1000, si_status=0, si_utime=50 /* 0.50 s */, si_stime=15 /* 0.15 s */} ---
+14062 sendfile(4, 3, [0] => [13220], 8388608) = 13220
+14062 sendfile(4, 3, [13220], 8388608)  = 0
+14396 +++ exited with 0 +++
+14395 +++ exited with 0 +++
+14397 +++ exited with 0 +++
+14402 +++ exited with 0 +++
+14392 +++ exited with 0 +++
+14393 +++ exited with 0 +++
+14394 +++ exited with 0 +++
+14388 +++ exited with 0 +++
+14403 +++ exited with 0 +++
+14389 +++ exited with 0 +++
+14390 +++ exited with 0 +++
+14391 +++ exited with 0 +++
+14401 +++ exited with 0 +++
+14399 +++ exited with 0 +++
+14398 +++ exited with 0 +++
+14400 +++ exited with 0 +++
+14384 +++ exited with 0 +++
+14385 +++ exited with 0 +++
+14386 +++ exited with 0 +++
+14387 +++ exited with 0 +++
+14383 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14383, si_uid=1000, si_status=0, si_utime=28 /* 0.28 s */, si_stime=10 /* 0.10 s */} ---
+14406 +++ exited with 0 +++
+14405 +++ exited with 0 +++
+14404 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14404, si_uid=1000, si_status=0, si_utime=6 /* 0.06 s */, si_stime=3 /* 0.03 s */} ---
+14062 sendfile(4, 3, [0] => [13226], 8388608) = 13226
+14062 sendfile(4, 3, [13226], 8388608)  = 0
+14420 +++ exited with 0 +++
+14419 +++ exited with 0 +++
+14421 +++ exited with 0 +++
+14426 +++ exited with 0 +++
+14417 +++ exited with 0 +++
+14416 +++ exited with 0 +++
+14418 +++ exited with 0 +++
+14413 +++ exited with 0 +++
+14414 +++ exited with 0 +++
+14415 +++ exited with 0 +++
+14412 +++ exited with 0 +++
+14427 +++ exited with 0 +++
+14424 +++ exited with 0 +++
+14425 +++ exited with 0 +++
+14423 +++ exited with 0 +++
+14422 +++ exited with 0 +++
+14408 +++ exited with 0 +++
+14409 +++ exited with 0 +++
+14410 +++ exited with 0 +++
+14411 +++ exited with 0 +++
+14407 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14407, si_uid=1000, si_status=0, si_utime=51 /* 0.51 s */, si_stime=10 /* 0.10 s */} ---
+14062 sendfile(4, 3, [0] => [13226], 8388608) = 13226
+14062 sendfile(4, 3, [13226], 8388608)  = 0
+14447 +++ exited with 0 +++
+14440 +++ exited with 0 +++
+14442 +++ exited with 0 +++
+14441 +++ exited with 0 +++
+14437 +++ exited with 0 +++
+14438 +++ exited with 0 +++
+14439 +++ exited with 0 +++
+14434 +++ exited with 0 +++
+14433 +++ exited with 0 +++
+14436 +++ exited with 0 +++
+14435 +++ exited with 0 +++
+14448 +++ exited with 0 +++
+14444 +++ exited with 0 +++
+14445 +++ exited with 0 +++
+14446 +++ exited with 0 +++
+14443 +++ exited with 0 +++
+14429 +++ exited with 0 +++
+14430 +++ exited with 0 +++
+14431 +++ exited with 0 +++
+14432 +++ exited with 0 +++
+14428 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14428, si_uid=1000, si_status=0, si_utime=44 /* 0.44 s */, si_stime=18 /* 0.18 s */} ---
+14062 sendfile(4, 3, [0] => [13226], 8388608) = 13226
+14062 sendfile(4, 3, [13226], 8388608)  = 0
+14468 +++ exited with 0 +++
+14462 +++ exited with 0 +++
+14461 +++ exited with 0 +++
+14463 +++ exited with 0 +++
+14458 +++ exited with 0 +++
+14459 +++ exited with 0 +++
+14460 +++ exited with 0 +++
+14456 +++ exited with 0 +++
+14455 +++ exited with 0 +++
+14457 +++ exited with 0 +++
+14454 +++ exited with 0 +++
+14469 +++ exited with 0 +++
+14464 +++ exited with 0 +++
+14467 +++ exited with 0 +++
+14466 +++ exited with 0 +++
+14465 +++ exited with 0 +++
+14450 +++ exited with 0 +++
+14451 +++ exited with 0 +++
+14452 +++ exited with 0 +++
+14453 +++ exited with 0 +++
+14449 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14449, si_uid=1000, si_status=0, si_utime=48 /* 0.48 s */, si_stime=15 /* 0.15 s */} ---
+14062 sendfile(4, 3, [0] => [13226], 8388608) = 13226
+14062 sendfile(4, 3, [13226], 8388608)  = 0
+14489 +++ exited with 0 +++
+14475 +++ exited with 0 +++
+14482 +++ exited with 0 +++
+14484 +++ exited with 0 +++
+14483 +++ exited with 0 +++
+14490 +++ exited with 0 +++
+14479 +++ exited with 0 +++
+14481 +++ exited with 0 +++
+14480 +++ exited with 0 +++
+14476 +++ exited with 0 +++
+14477 +++ exited with 0 +++
+14478 +++ exited with 0 +++
+14488 +++ exited with 0 +++
+14487 +++ exited with 0 +++
+14486 +++ exited with 0 +++
+14485 +++ exited with 0 +++
+14471 +++ exited with 0 +++
+14472 +++ exited with 0 +++
+14473 +++ exited with 0 +++
+14474 +++ exited with 0 +++
+14470 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14470, si_uid=1000, si_status=0, si_utime=51 /* 0.51 s */, si_stime=19 /* 0.19 s */} ---
+14062 sendfile(4, 3, [0] => [13226], 8388608) = 13226
+14062 sendfile(4, 3, [13226], 8388608)  = 0
+14510 +++ exited with 0 +++
+14504 +++ exited with 0 +++
+14503 +++ exited with 0 +++
+14505 +++ exited with 0 +++
+14511 +++ exited with 0 +++
+14501 +++ exited with 0 +++
+14496 +++ exited with 0 +++
+14500 +++ exited with 0 +++
+14502 +++ exited with 0 +++
+14497 +++ exited with 0 +++
+14498 +++ exited with 0 +++
+14499 +++ exited with 0 +++
+14507 +++ exited with 0 +++
+14509 +++ exited with 0 +++
+14506 +++ exited with 0 +++
+14508 +++ exited with 0 +++
+14492 +++ exited with 0 +++
+14493 +++ exited with 0 +++
+14494 +++ exited with 0 +++
+14495 +++ exited with 0 +++
+14491 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14491, si_uid=1000, si_status=0, si_utime=11 /* 0.11 s */, si_stime=9 /* 0.09 s */} ---
+14514 +++ exited with 0 +++
+14513 +++ exited with 0 +++
+14512 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14512, si_uid=1000, si_status=0, si_utime=3 /* 0.03 s */, si_stime=5 /* 0.05 s */} ---
+14062 sendfile(4, 3, [0] => [13160], 8388608) = 13160
+14062 sendfile(4, 3, [13160], 8388608)  = 0
+14529 +++ exited with 0 +++
+14527 +++ exited with 0 +++
+14528 +++ exited with 0 +++
+14534 +++ exited with 0 +++
+14535 +++ exited with 0 +++
+14520 +++ exited with 0 +++
+14524 +++ exited with 0 +++
+14525 +++ exited with 0 +++
+14526 +++ exited with 0 +++
+14521 +++ exited with 0 +++
+14523 +++ exited with 0 +++
+14522 +++ exited with 0 +++
+14533 +++ exited with 0 +++
+14532 +++ exited with 0 +++
+14530 +++ exited with 0 +++
+14531 +++ exited with 0 +++
+14516 +++ exited with 0 +++
+14517 +++ exited with 0 +++
+14518 +++ exited with 0 +++
+14519 +++ exited with 0 +++
+14515 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14515, si_uid=1000, si_status=0, si_utime=46 /* 0.46 s */, si_stime=13 /* 0.13 s */} ---
+14062 sendfile(4, 3, [0] => [13160], 8388608) = 13160
+14062 sendfile(4, 3, [13160], 8388608)  = 0
+14548 +++ exited with 0 +++
+14555 +++ exited with 0 +++
+14549 +++ exited with 0 +++
+14550 +++ exited with 0 +++
+14541 +++ exited with 0 +++
+14556 +++ exited with 0 +++
+14545 +++ exited with 0 +++
+14546 +++ exited with 0 +++
+14547 +++ exited with 0 +++
+14542 +++ exited with 0 +++
+14543 +++ exited with 0 +++
+14544 +++ exited with 0 +++
+14554 +++ exited with 0 +++
+14552 +++ exited with 0 +++
+14553 +++ exited with 0 +++
+14551 +++ exited with 0 +++
+14537 +++ exited with 0 +++
+14538 +++ exited with 0 +++
+14539 +++ exited with 0 +++
+14540 +++ exited with 0 +++
+14536 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14536, si_uid=1000, si_status=0, si_utime=51 /* 0.51 s */, si_stime=16 /* 0.16 s */} ---
+14062 sendfile(4, 3, [0] => [13160], 8388608) = 13160
+14062 sendfile(4, 3, [13160], 8388608)  = 0
+14569 +++ exited with 0 +++
+14571 +++ exited with 0 +++
+14570 +++ exited with 0 +++
+14576 +++ exited with 0 +++
+14568 +++ exited with 0 +++
+14566 +++ exited with 0 +++
+14567 +++ exited with 0 +++
+14563 +++ exited with 0 +++
+14565 +++ exited with 0 +++
+14564 +++ exited with 0 +++
+14562 +++ exited with 0 +++
+14577 +++ exited with 0 +++
+14575 +++ exited with 0 +++
+14574 +++ exited with 0 +++
+14572 +++ exited with 0 +++
+14573 +++ exited with 0 +++
+14558 +++ exited with 0 +++
+14559 +++ exited with 0 +++
+14560 +++ exited with 0 +++
+14561 +++ exited with 0 +++
+14557 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14557, si_uid=1000, si_status=0, si_utime=41 /* 0.41 s */, si_stime=17 /* 0.17 s */} ---
+14062 sendfile(4, 3, [0] => [13160], 8388608) = 13160
+14062 sendfile(4, 3, [13160], 8388608)  = 0
+14597 +++ exited with 0 +++
+14590 +++ exited with 0 +++
+14591 +++ exited with 0 +++
+14592 +++ exited with 0 +++
+14598 +++ exited with 0 +++
+14583 +++ exited with 0 +++
+14587 +++ exited with 0 +++
+14588 +++ exited with 0 +++
+14589 +++ exited with 0 +++
+14584 +++ exited with 0 +++
+14586 +++ exited with 0 +++
+14585 +++ exited with 0 +++
+14596 +++ exited with 0 +++
+14593 +++ exited with 0 +++
+14595 +++ exited with 0 +++
+14594 +++ exited with 0 +++
+14579 +++ exited with 0 +++
+14580 +++ exited with 0 +++
+14581 +++ exited with 0 +++
+14582 +++ exited with 0 +++
+14578 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14578, si_uid=1000, si_status=0, si_utime=47 /* 0.47 s */, si_stime=17 /* 0.17 s */} ---
+14062 sendfile(4, 3, [0] => [13160], 8388608) = 13160
+14062 sendfile(4, 3, [13160], 8388608)  = 0
+14611 +++ exited with 0 +++
+14613 +++ exited with 0 +++
+14612 +++ exited with 0 +++
+14618 +++ exited with 0 +++
+14608 +++ exited with 0 +++
+14609 +++ exited with 0 +++
+14610 +++ exited with 0 +++
+14605 +++ exited with 0 +++
+14606 +++ exited with 0 +++
+14607 +++ exited with 0 +++
+14604 +++ exited with 0 +++
+14619 +++ exited with 0 +++
+14617 +++ exited with 0 +++
+14616 +++ exited with 0 +++
+14615 +++ exited with 0 +++
+14614 +++ exited with 0 +++
+14600 +++ exited with 0 +++
+14601 +++ exited with 0 +++
+14602 +++ exited with 0 +++
+14603 +++ exited with 0 +++
+14599 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14599, si_uid=1000, si_status=0, si_utime=11 /* 0.11 s */, si_stime=6 /* 0.06 s */} ---
+14622 +++ exited with 0 +++
+14621 +++ exited with 0 +++
+14620 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14620, si_uid=1000, si_status=0, si_utime=4 /* 0.04 s */, si_stime=3 /* 0.03 s */} ---
+14062 sendfile(4, 3, [0] => [13040], 8388608) = 13040
+14062 sendfile(4, 3, [13040], 8388608)  = 0
+14642 +++ exited with 0 +++
+14636 +++ exited with 0 +++
+14635 +++ exited with 0 +++
+14637 +++ exited with 0 +++
+14632 +++ exited with 0 +++
+14633 +++ exited with 0 +++
+14634 +++ exited with 0 +++
+14629 +++ exited with 0 +++
+14628 +++ exited with 0 +++
+14643 +++ exited with 0 +++
+14630 +++ exited with 0 +++
+14631 +++ exited with 0 +++
+14640 +++ exited with 0 +++
+14639 +++ exited with 0 +++
+14641 +++ exited with 0 +++
+14638 +++ exited with 0 +++
+14624 +++ exited with 0 +++
+14625 +++ exited with 0 +++
+14626 +++ exited with 0 +++
+14627 +++ exited with 0 +++
+14623 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14623, si_uid=1000, si_status=0, si_utime=50 /* 0.50 s */, si_stime=11 /* 0.11 s */} ---
+14062 sendfile(4, 3, [0] => [13040], 8388608) = 13040
+14062 sendfile(4, 3, [13040], 8388608)  = 0
+14656 +++ exited with 0 +++
+14663 +++ exited with 0 +++
+14657 +++ exited with 0 +++
+14658 +++ exited with 0 +++
+14653 +++ exited with 0 +++
+14654 +++ exited with 0 +++
+14649 +++ exited with 0 +++
+14664 +++ exited with 0 +++
+14655 +++ exited with 0 +++
+14650 +++ exited with 0 +++
+14652 +++ exited with 0 +++
+14651 +++ exited with 0 +++
+14659 +++ exited with 0 +++
+14660 +++ exited with 0 +++
+14662 +++ exited with 0 +++
+14661 +++ exited with 0 +++
+14645 +++ exited with 0 +++
+14646 +++ exited with 0 +++
+14647 +++ exited with 0 +++
+14648 +++ exited with 0 +++
+14644 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14644, si_uid=1000, si_status=0, si_utime=42 /* 0.42 s */, si_stime=14 /* 0.14 s */} ---
+14062 sendfile(4, 3, [0] => [13040], 8388608) = 13040
+14062 sendfile(4, 3, [13040], 8388608)  = 0
+14677 +++ exited with 0 +++
+14678 +++ exited with 0 +++
+14684 +++ exited with 0 +++
+14670 +++ exited with 0 +++
+14679 +++ exited with 0 +++
+14685 +++ exited with 0 +++
+14674 +++ exited with 0 +++
+14675 +++ exited with 0 +++
+14676 +++ exited with 0 +++
+14671 +++ exited with 0 +++
+14672 +++ exited with 0 +++
+14673 +++ exited with 0 +++
+14683 +++ exited with 0 +++
+14682 +++ exited with 0 +++
+14680 +++ exited with 0 +++
+14681 +++ exited with 0 +++
+14666 +++ exited with 0 +++
+14667 +++ exited with 0 +++
+14668 +++ exited with 0 +++
+14669 +++ exited with 0 +++
+14665 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14665, si_uid=1000, si_status=0, si_utime=48 /* 0.48 s */, si_stime=18 /* 0.18 s */} ---
+14062 sendfile(4, 3, [0] => [13040], 8388608) = 13040
+14062 sendfile(4, 3, [13040], 8388608)  = 0
+14698 +++ exited with 0 +++
+14699 +++ exited with 0 +++
+14705 +++ exited with 0 +++
+14700 +++ exited with 0 +++
+14695 +++ exited with 0 +++
+14696 +++ exited with 0 +++
+14697 +++ exited with 0 +++
+14692 +++ exited with 0 +++
+14693 +++ exited with 0 +++
+14694 +++ exited with 0 +++
+14706 +++ exited with 0 +++
+14691 +++ exited with 0 +++
+14701 +++ exited with 0 +++
+14702 +++ exited with 0 +++
+14704 +++ exited with 0 +++
+14703 +++ exited with 0 +++
+14687 +++ exited with 0 +++
+14688 +++ exited with 0 +++
+14689 +++ exited with 0 +++
+14690 +++ exited with 0 +++
+14686 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14686, si_uid=1000, si_status=0, si_utime=40 /* 0.40 s */, si_stime=17 /* 0.17 s */} ---
+14062 sendfile(4, 3, [0] => [13040], 8388608) = 13040
+14062 sendfile(4, 3, [13040], 8388608)  = 0
+14721 +++ exited with 0 +++
+14719 +++ exited with 0 +++
+14720 +++ exited with 0 +++
+14726 +++ exited with 0 +++
+14716 +++ exited with 0 +++
+14718 +++ exited with 0 +++
+14717 +++ exited with 0 +++
+14712 +++ exited with 0 +++
+14727 +++ exited with 0 +++
+14714 +++ exited with 0 +++
+14715 +++ exited with 0 +++
+14713 +++ exited with 0 +++
+14722 +++ exited with 0 +++
+14724 +++ exited with 0 +++
+14725 +++ exited with 0 +++
+14723 +++ exited with 0 +++
+14708 +++ exited with 0 +++
+14709 +++ exited with 0 +++
+14710 +++ exited with 0 +++
+14711 +++ exited with 0 +++
+14707 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14707, si_uid=1000, si_status=0, si_utime=24 /* 0.24 s */, si_stime=12 /* 0.12 s */} ---
+14730 +++ exited with 0 +++
+14729 +++ exited with 0 +++
+14728 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14728, si_uid=1000, si_status=0, si_utime=4 /* 0.04 s */, si_stime=4 /* 0.04 s */} ---
+14062 sendfile(4, 3, [0] => [11996], 8388608) = 11996
+14062 sendfile(4, 3, [11996], 8388608)  = 0
+14744 +++ exited with 0 +++
+14750 +++ exited with 0 +++
+14743 +++ exited with 0 +++
+14736 +++ exited with 0 +++
+14751 +++ exited with 0 +++
+14745 +++ exited with 0 +++
+14740 +++ exited with 0 +++
+14741 +++ exited with 0 +++
+14742 +++ exited with 0 +++
+14737 +++ exited with 0 +++
+14738 +++ exited with 0 +++
+14739 +++ exited with 0 +++
+14747 +++ exited with 0 +++
+14748 +++ exited with 0 +++
+14749 +++ exited with 0 +++
+14746 +++ exited with 0 +++
+14732 +++ exited with 0 +++
+14733 +++ exited with 0 +++
+14734 +++ exited with 0 +++
+14735 +++ exited with 0 +++
+14731 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14731, si_uid=1000, si_status=0, si_utime=44 /* 0.44 s */, si_stime=16 /* 0.16 s */} ---
+14062 sendfile(4, 3, [0] => [11996], 8388608) = 11996
+14062 sendfile(4, 3, [11996], 8388608)  = 0
+14766 +++ exited with 0 +++
+14765 +++ exited with 0 +++
+14764 +++ exited with 0 +++
+14771 +++ exited with 0 +++
+14762 +++ exited with 0 +++
+14761 +++ exited with 0 +++
+14763 +++ exited with 0 +++
+14772 +++ exited with 0 +++
+14757 +++ exited with 0 +++
+14758 +++ exited with 0 +++
+14760 +++ exited with 0 +++
+14759 +++ exited with 0 +++
+14767 +++ exited with 0 +++
+14769 +++ exited with 0 +++
+14770 +++ exited with 0 +++
+14768 +++ exited with 0 +++
+14753 +++ exited with 0 +++
+14754 +++ exited with 0 +++
+14755 +++ exited with 0 +++
+14756 +++ exited with 0 +++
+14752 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14752, si_uid=1000, si_status=0, si_utime=50 /* 0.50 s */, si_stime=17 /* 0.17 s */} ---
+14062 sendfile(4, 3, [0] => [11996], 8388608) = 11996
+14062 sendfile(4, 3, [11996], 8388608)  = 0
+14785 +++ exited with 0 +++
+14787 +++ exited with 0 +++
+14786 +++ exited with 0 +++
+14792 +++ exited with 0 +++
+14783 +++ exited with 0 +++
+14782 +++ exited with 0 +++
+14784 +++ exited with 0 +++
+14779 +++ exited with 0 +++
+14793 +++ exited with 0 +++
+14780 +++ exited with 0 +++
+14778 +++ exited with 0 +++
+14781 +++ exited with 0 +++
+14789 +++ exited with 0 +++
+14790 +++ exited with 0 +++
+14788 +++ exited with 0 +++
+14791 +++ exited with 0 +++
+14774 +++ exited with 0 +++
+14775 +++ exited with 0 +++
+14776 +++ exited with 0 +++
+14777 +++ exited with 0 +++
+14773 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14773, si_uid=1000, si_status=0, si_utime=45 /* 0.45 s */, si_stime=19 /* 0.19 s */} ---
+14062 sendfile(4, 3, [0] => [11996], 8388608) = 11996
+14062 sendfile(4, 3, [11996], 8388608)  = 0
+14806 +++ exited with 0 +++
+14813 +++ exited with 0 +++
+14799 +++ exited with 0 +++
+14814 +++ exited with 0 +++
+14808 +++ exited with 0 +++
+14807 +++ exited with 0 +++
+14803 +++ exited with 0 +++
+14804 +++ exited with 0 +++
+14805 +++ exited with 0 +++
+14800 +++ exited with 0 +++
+14802 +++ exited with 0 +++
+14801 +++ exited with 0 +++
+14812 +++ exited with 0 +++
+14811 +++ exited with 0 +++
+14810 +++ exited with 0 +++
+14809 +++ exited with 0 +++
+14795 +++ exited with 0 +++
+14796 +++ exited with 0 +++
+14797 +++ exited with 0 +++
+14798 +++ exited with 0 +++
+14794 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14794, si_uid=1000, si_status=0, si_utime=47 /* 0.47 s */, si_stime=13 /* 0.13 s */} ---
+14062 sendfile(4, 3, [0] => [11996], 8388608) = 11996
+14062 sendfile(4, 3, [11996], 8388608)  = 0
+14829 +++ exited with 0 +++
+14827 +++ exited with 0 +++
+14828 +++ exited with 0 +++
+14834 +++ exited with 0 +++
+14824 +++ exited with 0 +++
+14825 +++ exited with 0 +++
+14826 +++ exited with 0 +++
+14820 +++ exited with 0 +++
+14835 +++ exited with 0 +++
+14821 +++ exited with 0 +++
+14822 +++ exited with 0 +++
+14823 +++ exited with 0 +++
+14832 +++ exited with 0 +++
+14830 +++ exited with 0 +++
+14833 +++ exited with 0 +++
+14831 +++ exited with 0 +++
+14816 +++ exited with 0 +++
+14817 +++ exited with 0 +++
+14818 +++ exited with 0 +++
+14819 +++ exited with 0 +++
+14815 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14815, si_uid=1000, si_status=0, si_utime=15 /* 0.15 s */, si_stime=10 /* 0.10 s */} ---
+14838 +++ exited with 0 +++
+14837 +++ exited with 0 +++
+14836 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14836, si_uid=1000, si_status=0, si_utime=4 /* 0.04 s */, si_stime=4 /* 0.04 s */} ---
+14062 sendfile(4, 3, [0] => [12969], 8388608) = 12969
+14062 sendfile(4, 3, [12969], 8388608)  = 0
+14858 +++ exited with 0 +++
+14851 +++ exited with 0 +++
+14852 +++ exited with 0 +++
+14853 +++ exited with 0 +++
+14844 +++ exited with 0 +++
+14848 +++ exited with 0 +++
+14849 +++ exited with 0 +++
+14859 +++ exited with 0 +++
+14850 +++ exited with 0 +++
+14845 +++ exited with 0 +++
+14846 +++ exited with 0 +++
+14847 +++ exited with 0 +++
+14857 +++ exited with 0 +++
+14856 +++ exited with 0 +++
+14855 +++ exited with 0 +++
+14854 +++ exited with 0 +++
+14840 +++ exited with 0 +++
+14841 +++ exited with 0 +++
+14842 +++ exited with 0 +++
+14843 +++ exited with 0 +++
+14839 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14839, si_uid=1000, si_status=0, si_utime=45 /* 0.45 s */, si_stime=13 /* 0.13 s */} ---
+14062 sendfile(4, 3, [0] => [12969], 8388608) = 12969
+14062 sendfile(4, 3, [12969], 8388608)  = 0
+14874 +++ exited with 0 +++
+14872 +++ exited with 0 +++
+14873 +++ exited with 0 +++
+14879 +++ exited with 0 +++
+14869 +++ exited with 0 +++
+14870 +++ exited with 0 +++
+14871 +++ exited with 0 +++
+14865 +++ exited with 0 +++
+14880 +++ exited with 0 +++
+14866 +++ exited with 0 +++
+14867 +++ exited with 0 +++
+14868 +++ exited with 0 +++
+14876 +++ exited with 0 +++
+14877 +++ exited with 0 +++
+14875 +++ exited with 0 +++
+14878 +++ exited with 0 +++
+14861 +++ exited with 0 +++
+14862 +++ exited with 0 +++
+14863 +++ exited with 0 +++
+14864 +++ exited with 0 +++
+14860 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14860, si_uid=1000, si_status=0, si_utime=55 /* 0.55 s */, si_stime=14 /* 0.14 s */} ---
+14062 sendfile(4, 3, [0] => [12969], 8388608) = 12969
+14062 sendfile(4, 3, [12969], 8388608)  = 0
+14900 +++ exited with 0 +++
+14894 +++ exited with 0 +++
+14893 +++ exited with 0 +++
+14895 +++ exited with 0 +++
+14890 +++ exited with 0 +++
+14891 +++ exited with 0 +++
+14892 +++ exited with 0 +++
+14887 +++ exited with 0 +++
+14886 +++ exited with 0 +++
+14888 +++ exited with 0 +++
+14889 +++ exited with 0 +++
+14901 +++ exited with 0 +++
+14898 +++ exited with 0 +++
+14899 +++ exited with 0 +++
+14896 +++ exited with 0 +++
+14897 +++ exited with 0 +++
+14882 +++ exited with 0 +++
+14883 +++ exited with 0 +++
+14884 +++ exited with 0 +++
+14885 +++ exited with 0 +++
+14881 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14881, si_uid=1000, si_status=0, si_utime=50 /* 0.50 s */, si_stime=21 /* 0.21 s */} ---
+14062 sendfile(4, 3, [0] => [12969], 8388608) = 12969
+14062 sendfile(4, 3, [12969], 8388608)  = 0
+14915 +++ exited with 0 +++
+14914 +++ exited with 0 +++
+14921 +++ exited with 0 +++
+14916 +++ exited with 0 +++
+14911 +++ exited with 0 +++
+14912 +++ exited with 0 +++
+14913 +++ exited with 0 +++
+14922 +++ exited with 0 +++
+14907 +++ exited with 0 +++
+14909 +++ exited with 0 +++
+14908 +++ exited with 0 +++
+14910 +++ exited with 0 +++
+14917 +++ exited with 0 +++
+14918 +++ exited with 0 +++
+14920 +++ exited with 0 +++
+14919 +++ exited with 0 +++
+14903 +++ exited with 0 +++
+14904 +++ exited with 0 +++
+14905 +++ exited with 0 +++
+14906 +++ exited with 0 +++
+14902 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14902, si_uid=1000, si_status=0, si_utime=45 /* 0.45 s */, si_stime=16 /* 0.16 s */} ---
+14062 sendfile(4, 3, [0] => [12969], 8388608) = 12969
+14062 sendfile(4, 3, [12969], 8388608)  = 0
+14935 +++ exited with 0 +++
+14936 +++ exited with 0 +++
+14937 +++ exited with 0 +++
+14942 +++ exited with 0 +++
+14932 +++ exited with 0 +++
+14933 +++ exited with 0 +++
+14934 +++ exited with 0 +++
+14943 +++ exited with 0 +++
+14929 +++ exited with 0 +++
+14928 +++ exited with 0 +++
+14931 +++ exited with 0 +++
+14930 +++ exited with 0 +++
+14940 +++ exited with 0 +++
+14939 +++ exited with 0 +++
+14941 +++ exited with 0 +++
+14938 +++ exited with 0 +++
+14924 +++ exited with 0 +++
+14925 +++ exited with 0 +++
+14926 +++ exited with 0 +++
+14927 +++ exited with 0 +++
+14923 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14923, si_uid=1000, si_status=0, si_utime=43 /* 0.43 s */, si_stime=13 /* 0.13 s */} ---
+14946 +++ exited with 0 +++
+14945 +++ exited with 0 +++
+14944 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14944, si_uid=1000, si_status=0, si_utime=5 /* 0.05 s */, si_stime=7 /* 0.07 s */} ---
+14955 +++ exited with 0 +++
+14952 +++ exited with 0 +++
+14949 +++ exited with 0 +++
+14954 +++ exited with 0 +++
+14951 +++ exited with 0 +++
+14953 +++ exited with 0 +++
+14956 +++ exited with 0 +++
+14958 +++ exited with 0 +++
+14957 +++ exited with 0 +++
+14950 +++ exited with 0 +++
+14948 +++ exited with 0 +++
+14959 +++ exited with 0 +++
+14947 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14947, si_uid=1000, si_status=0, si_utime=485 /* 4.85 s */, si_stime=140 /* 1.40 s */} ---
+14978 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14978, si_uid=1000, si_status=0, si_utime=3 /* 0.03 s */, si_stime=4 /* 0.04 s */} ---
+14979 +++ exited with 0 +++
+14062 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14979, si_uid=1000, si_status=0, si_utime=4 /* 0.04 s */, si_stime=5 /* 0.05 s */} ---
+14062 +++ exited with 0 +++

@@ -1,0 +1,6 @@
+TABS ['Редакторский анализ', 'Сцены', 'Длительности и тайминг', 'Сценарист LLM / вручную', 'Раскадровка', 'AI-сервисы / квоты']
+RU_SCENES 8
+BOARD_SCENES 8 ANCHORS 40
+BOARD_SAVE_REOPEN 8
+UA_SCENES 8
+GUI_ERRORS []

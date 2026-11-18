@@ -1,10 +1,12 @@
 """Tk interface for editing and producing one local project at a time."""
 import os
+import subprocess
+import sys
 from pathlib import Path
 import queue
 import threading
 import tkinter as tk
-from tkinter import filedialog, messagebox, ttk
+from tkinter import filedialog, messagebox, ttk, font
 import uuid
 
 from experimental_mvp.captions import CueError, calculated, validate
@@ -14,8 +16,20 @@ from experimental_mvp.pipeline import (DEMOS, ROOT, BuildStopped, audio_status, 
                                        identify, load, preview_audio, render_preview, save, scene_audio)
 
 
+def open_local(path):
+    if os.name == "nt":
+        os.startfile(path)
+    else:
+        subprocess.Popen(["open" if sys.platform == "darwin" else "xdg-open", str(path)])
+
+
 def launch():
     root = tk.Tk()
+    available = {name.lower() for name in font.families(root)}
+    ui_family = next((name for name in ("Segoe UI", "DejaVu Sans", "Noto Sans", "Arial")
+                      if name.lower() in available), font.nametofont("TkDefaultFont").actual("family"))
+    for name in ("TkDefaultFont", "TkTextFont", "TkMenuFont", "TkHeadingFont"):
+        font.nametofont(name).configure(family=ui_family)
     root.title("Story Studio · Экспериментальный MVP")
     root.geometry("1050x790")
     root.minsize(760, 650)
@@ -50,7 +64,7 @@ def launch():
     def text_tab(book, name):
         page = ttk.Frame(book, padding=8)
         book.add(page, text=name)
-        text = tk.Text(page, wrap="word", font=("Segoe UI", 11), undo=True)
+        text = tk.Text(page, wrap="word", font=(ui_family, 11), undo=True)
         text.pack(side="left", expand=True, fill="both")
         scroll = ttk.Scrollbar(page, command=text.yview)
         scroll.pack(side="right", fill="y")
@@ -410,7 +424,7 @@ def launch():
 
     def movie_preview():
         path, project = save_project()
-        # Local preview uses the same production confirmation and effective data as export.
+        # Local preview uses the same explicit experimental-render confirmation as export.
         signature = preview_signature(project)
         perform(lambda: (build(project, path.parent / "runs", progress_event,
                                preview=True, cancelled=stop_requested.is_set), signature),
@@ -447,7 +461,7 @@ def launch():
 
     def run():
         if not approved.get():
-            messagebox.showinfo("Редакционное решение", "Подтвердите переход к производству.")
+            messagebox.showinfo("Редакционное решение", "Подтвердите локальную экспериментальную сборку.")
             return
         try:
             path, project = save_project()
@@ -478,7 +492,7 @@ def launch():
                 state["movie"] = value
                 status.set("Предпросмотр ролика готов. В проигрывателе доступна дорожка субтитров.")
                 try:
-                    os.startfile(value[0])
+                    open_local(value[0])
                 except OSError as exc:
                     messagebox.showerror("Предпросмотр ролика", str(exc))
             elif kind == "stopped":
@@ -488,7 +502,7 @@ def launch():
                 suffix = " (приблизительные границы общей дорожки)" if approximate else ""
                 status.set(f"Предпросмотр сцены{suffix}: {path}")
                 try:
-                    os.startfile(path)
+                    open_local(path)
                 except OSError as exc:
                     messagebox.showerror("Предпросмотр сцены", str(exc))
             elif kind == "audio":
@@ -516,7 +530,7 @@ def launch():
             if history:
                 video = history[0][0] / "final.mp4"
         if video:
-            os.startfile(video)
+            open_local(video)
         else:
             messagebox.showinfo("Видео", "Сначала соберите проект.")
 
@@ -538,8 +552,8 @@ def launch():
     bar.pack(fill="x", pady=(0, 10))
     for name, action in (
         ("Новый", new), ("Открыть", open_project), ("Сохранить", save_project),
-        ("Демо RU", lambda: fill(load(DEMOS / "ru.json"))),
-        ("Демо UA", lambda: fill(load(DEMOS / "uk.json"))),
+        ("Демо RU", lambda: fill(load(DEMOS / "media_hub" / "ru.json"))),
+        ("Демо UA", lambda: fill(load(DEMOS / "media_hub" / "uk.json"))),
     ):
         button(bar, name, reported(action))
     topics = ttk.Frame(shell)
@@ -584,7 +598,7 @@ def launch():
         row = ttk.Frame(scenes_tab)
         row.pack(fill="x")
         ttk.Label(row, text=label, width=24).pack(side="left")
-        widget = tk.Text(row, height=height, wrap="word", font=("Segoe UI", 10), undo=True)
+        widget = tk.Text(row, height=height, wrap="word", font=(ui_family, 10), undo=True)
         widget.pack(side="left", fill="x", expand=True)
         scene_fields[key] = widget
         if key == "image":
@@ -603,7 +617,7 @@ def launch():
                           "Таймкоды реплик оценочные.", wraplength=920).pack(anchor="w", pady=6)
     controls = ttk.Frame(shell)
     controls.pack(fill="x")
-    ttk.Checkbutton(controls, text="Подтверждаю производство этой версии",
+    ttk.Checkbutton(controls, text="Подтверждаю локальную сборку (без production permissions)",
                     variable=approved).pack(side="left", padx=6)
     button(controls, "Субтитры сцены", reported(edit_captions))
     button(controls, "Предпросмотр сцены", reported(preview_scene))
@@ -628,6 +642,9 @@ def launch():
                                (current() or {}).get("audio", "") else None)
     scene_voice.trace_add("write", lambda *_: approved.set(False) if scene_voice.get() !=
                           (current() or {}).get("voice", "") else None)
+    from experimental_mvp.media_ui import MediaWorkbench
+    media_workbench = MediaWorkbench(notebook, collect, lambda p: fill(p, state["path"]),
+                                    lambda: ROOT / "media-hub", open_local)
     root.protocol("WM_DELETE_WINDOW", close)
     root.after(100, poll)
     root.after(500, update_preview_status)

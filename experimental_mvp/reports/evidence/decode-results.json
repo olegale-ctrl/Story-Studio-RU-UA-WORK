@@ -1,0 +1,11 @@
+{
+  "command": "ffmpeg -v error -xerror -i <video> -f null -",
+  "ru": {
+    "exit_code": 0,
+    "stderr_bytes": 0
+  },
+  "uk": {
+    "exit_code": 0,
+    "stderr_bytes": 0
+  }
+}

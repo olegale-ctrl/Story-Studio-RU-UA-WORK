@@ -1,0 +1,1138 @@
+{
+  "locale": "uk",
+  "scenes": [
+    {
+      "id": "41ad164ab87d587488920e472d0063bc",
+      "text": "Гарне відео ще не є поясненням. Уявіть, що ви побачили гучний заголовок і хочете зробити про нього ролик. Перш ніж шукати ефектні кадри, сформулюйте запитання глядача. Що саме він має зрозуміти після перегляду? У нашому прикладі ми розбираємо не сенсацію, а спосіб перевірки історії. Це навчальна редакційна послідовність, а не науковий експеримент. Спробуйте записати головне запитання одним реченням і прибрати слова, які обіцяють більше, ніж ви зможете показати.",
+      "visual": "Почніть із запитання",
+      "prompt": "Original local instructional diagram; no documentary claims",
+      "anchors": [
+        {
+          "anchor_id": "57ec375b04c75667acc8ddc88bfb3933",
+          "scene_id": "41ad164ab87d587488920e472d0063bc",
+          "start_ms": 0,
+          "duration_ms": 7000,
+          "narration_excerpt": "Гарне відео ще не є поясненням. Уявіть, що ви побачили гучний заголовок і хочете зробити про нього ролик. Перш ніж шукати ефектні кадри, сформулюйте запитання глядача. Що саме він має зрозуміти після перегляду? У нашому прикладі ми розбираємо не сенсацію, а спосіб перевірки історії. Це навчальна редакційна послідовність, а не науковий експеримент. Спробуйте записати головне запитання одним реченням і прибрати слова, які обіцяють більше, ніж ви зможете показати.",
+          "visual_description": "Почніть із запитання",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_0.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "91138495281b552a4d39a6b035ad0fd07fe48ba0f60846d8611c28229626cf74",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_0.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "91138495281b552a4d39a6b035ad0fd07fe48ba0f60846d8611c28229626cf74"
+          }
+        },
+        {
+          "anchor_id": "04d083bc9e8d500fbee3d51e8914a426",
+          "scene_id": "41ad164ab87d587488920e472d0063bc",
+          "start_ms": 7000,
+          "duration_ms": 7000,
+          "narration_excerpt": "Гарне відео ще не є поясненням. Уявіть, що ви побачили гучний заголовок і хочете зробити про нього ролик. Перш ніж шукати ефектні кадри, сформулюйте запитання глядача. Що саме він має зрозуміти після перегляду? У нашому прикладі ми розбираємо не сенсацію, а спосіб перевірки історії. Це навчальна редакційна послідовність, а не науковий експеримент. Спробуйте записати головне запитання одним реченням і прибрати слова, які обіцяють більше, ніж ви зможете показати.",
+          "visual_description": "Почніть із запитання",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_0.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "91138495281b552a4d39a6b035ad0fd07fe48ba0f60846d8611c28229626cf74",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_0.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "91138495281b552a4d39a6b035ad0fd07fe48ba0f60846d8611c28229626cf74"
+          }
+        },
+        {
+          "anchor_id": "c54b7943bd0e5d33877c0b5fbf6ed116",
+          "scene_id": "41ad164ab87d587488920e472d0063bc",
+          "start_ms": 14000,
+          "duration_ms": 7000,
+          "narration_excerpt": "Гарне відео ще не є поясненням. Уявіть, що ви побачили гучний заголовок і хочете зробити про нього ролик. Перш ніж шукати ефектні кадри, сформулюйте запитання глядача. Що саме він має зрозуміти після перегляду? У нашому прикладі ми розбираємо не сенсацію, а спосіб перевірки історії. Це навчальна редакційна послідовність, а не науковий експеримент. Спробуйте записати головне запитання одним реченням і прибрати слова, які обіцяють більше, ніж ви зможете показати.",
+          "visual_description": "Почніть із запитання",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_0.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "91138495281b552a4d39a6b035ad0fd07fe48ba0f60846d8611c28229626cf74",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_0.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "91138495281b552a4d39a6b035ad0fd07fe48ba0f60846d8611c28229626cf74"
+          }
+        },
+        {
+          "anchor_id": "2d0e2446c11e5beea8fe3ce10b84aa16",
+          "scene_id": "41ad164ab87d587488920e472d0063bc",
+          "start_ms": 21000,
+          "duration_ms": 7000,
+          "narration_excerpt": "Гарне відео ще не є поясненням. Уявіть, що ви побачили гучний заголовок і хочете зробити про нього ролик. Перш ніж шукати ефектні кадри, сформулюйте запитання глядача. Що саме він має зрозуміти після перегляду? У нашому прикладі ми розбираємо не сенсацію, а спосіб перевірки історії. Це навчальна редакційна послідовність, а не науковий експеримент. Спробуйте записати головне запитання одним реченням і прибрати слова, які обіцяють більше, ніж ви зможете показати.",
+          "visual_description": "Почніть із запитання",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_0.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "91138495281b552a4d39a6b035ad0fd07fe48ba0f60846d8611c28229626cf74",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_0.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "91138495281b552a4d39a6b035ad0fd07fe48ba0f60846d8611c28229626cf74"
+          }
+        },
+        {
+          "anchor_id": "f86fe1e974295d2896a48743ad12b42e",
+          "scene_id": "41ad164ab87d587488920e472d0063bc",
+          "start_ms": 28000,
+          "duration_ms": 277,
+          "narration_excerpt": "Гарне відео ще не є поясненням. Уявіть, що ви побачили гучний заголовок і хочете зробити про нього ролик. Перш ніж шукати ефектні кадри, сформулюйте запитання глядача. Що саме він має зрозуміти після перегляду? У нашому прикладі ми розбираємо не сенсацію, а спосіб перевірки історії. Це навчальна редакційна послідовність, а не науковий експеримент. Спробуйте записати головне запитання одним реченням і прибрати слова, які обіцяють більше, ніж ви зможете показати.",
+          "visual_description": "Почніть із запитання",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_0.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "91138495281b552a4d39a6b035ad0fd07fe48ba0f60846d8611c28229626cf74",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_0.png",
+            "prompt_fingerprint": "14721369ba1a33f1b82867f23b51452539926fba6669765038a0115027f02803",
+            "sha256": "91138495281b552a4d39a6b035ad0fd07fe48ba0f60846d8611c28229626cf74"
+          }
+        }
+      ]
+    },
+    {
+      "id": "7f07c17e675b536fb2a7097c0119d28a",
+      "text": "Тепер випишіть твердження майбутнього сценарію. Біля кожного позначте, що це: спостереження, число, припущення чи думка. Фраза «це сталося» потребує іншого підтвердження, ніж фраза «мені це здається важливим». Поки джерело не перевірене, залиште позначку «потребує перевірки». Якщо точне число не потрібне для розуміння історії, його можна прибрати. Не перетворюйте впевнений тон диктора на доказ. Глядач має розуміти, де закінчується встановлене й починається пояснення автора.",
+      "visual": "Відокремте факти від тлумачень",
+      "prompt": "Original local instructional diagram; no documentary claims",
+      "anchors": [
+        {
+          "anchor_id": "dacfb9873cb853a19f996c4005a7701c",
+          "scene_id": "7f07c17e675b536fb2a7097c0119d28a",
+          "start_ms": 0,
+          "duration_ms": 7000,
+          "narration_excerpt": "Тепер випишіть твердження майбутнього сценарію. Біля кожного позначте, що це: спостереження, число, припущення чи думка. Фраза «це сталося» потребує іншого підтвердження, ніж фраза «мені це здається важливим». Поки джерело не перевірене, залиште позначку «потребує перевірки». Якщо точне число не потрібне для розуміння історії, його можна прибрати. Не перетворюйте впевнений тон диктора на доказ. Глядач має розуміти, де закінчується встановлене й починається пояснення автора.",
+          "visual_description": "Відокремте факти від тлумачень",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_1.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "40b1be404431eaf6c852d2dbff3a607a38ca916d3adc2973d4ca74079eca76e5",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_1.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "40b1be404431eaf6c852d2dbff3a607a38ca916d3adc2973d4ca74079eca76e5"
+          }
+        },
+        {
+          "anchor_id": "c447a9db40715b91bac7848653a7630d",
+          "scene_id": "7f07c17e675b536fb2a7097c0119d28a",
+          "start_ms": 7000,
+          "duration_ms": 7000,
+          "narration_excerpt": "Тепер випишіть твердження майбутнього сценарію. Біля кожного позначте, що це: спостереження, число, припущення чи думка. Фраза «це сталося» потребує іншого підтвердження, ніж фраза «мені це здається важливим». Поки джерело не перевірене, залиште позначку «потребує перевірки». Якщо точне число не потрібне для розуміння історії, його можна прибрати. Не перетворюйте впевнений тон диктора на доказ. Глядач має розуміти, де закінчується встановлене й починається пояснення автора.",
+          "visual_description": "Відокремте факти від тлумачень",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_1.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "40b1be404431eaf6c852d2dbff3a607a38ca916d3adc2973d4ca74079eca76e5",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_1.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "40b1be404431eaf6c852d2dbff3a607a38ca916d3adc2973d4ca74079eca76e5"
+          }
+        },
+        {
+          "anchor_id": "a8eeb69f5122592c9f09a78f1ff58a4f",
+          "scene_id": "7f07c17e675b536fb2a7097c0119d28a",
+          "start_ms": 14000,
+          "duration_ms": 7000,
+          "narration_excerpt": "Тепер випишіть твердження майбутнього сценарію. Біля кожного позначте, що це: спостереження, число, припущення чи думка. Фраза «це сталося» потребує іншого підтвердження, ніж фраза «мені це здається важливим». Поки джерело не перевірене, залиште позначку «потребує перевірки». Якщо точне число не потрібне для розуміння історії, його можна прибрати. Не перетворюйте впевнений тон диктора на доказ. Глядач має розуміти, де закінчується встановлене й починається пояснення автора.",
+          "visual_description": "Відокремте факти від тлумачень",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_1.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "40b1be404431eaf6c852d2dbff3a607a38ca916d3adc2973d4ca74079eca76e5",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_1.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "40b1be404431eaf6c852d2dbff3a607a38ca916d3adc2973d4ca74079eca76e5"
+          }
+        },
+        {
+          "anchor_id": "13a84430218b5986b4110de4ed129957",
+          "scene_id": "7f07c17e675b536fb2a7097c0119d28a",
+          "start_ms": 21000,
+          "duration_ms": 5216,
+          "narration_excerpt": "Тепер випишіть твердження майбутнього сценарію. Біля кожного позначте, що це: спостереження, число, припущення чи думка. Фраза «це сталося» потребує іншого підтвердження, ніж фраза «мені це здається важливим». Поки джерело не перевірене, залиште позначку «потребує перевірки». Якщо точне число не потрібне для розуміння історії, його можна прибрати. Не перетворюйте впевнений тон диктора на доказ. Глядач має розуміти, де закінчується встановлене й починається пояснення автора.",
+          "visual_description": "Відокремте факти від тлумачень",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_1.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "40b1be404431eaf6c852d2dbff3a607a38ca916d3adc2973d4ca74079eca76e5",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_1.png",
+            "prompt_fingerprint": "1c5756c176cd985fc5062c33068df5003112c074ddf97840c09b997ef81445ca",
+            "sha256": "40b1be404431eaf6c852d2dbff3a607a38ca916d3adc2973d4ca74079eca76e5"
+          }
+        }
+      ]
+    },
+    {
+      "id": "fe056b06f7a7560a8205b0272dccefba",
+      "text": "Для ключового твердження знайдіть початковий документ, запис або дослідження. Збережіть автора, дату й точне місце, на яке посилаєтеся. Потім перевірте контекст: яке запитання вивчали, кого спостерігали та про який час ідеться. Переказ може бути корисною відправною точкою, але він не замінює перевірки оригіналу. Якщо першоджерело недоступне, прямо вкажіть це обмеження. На нашій схемі шлях від заголовка до документа показано умовно: це ілюстрація процесу, а не підтвердження конкретної події.",
+      "visual": "Поверніться до першоджерела",
+      "prompt": "Original local instructional diagram; no documentary claims",
+      "anchors": [
+        {
+          "anchor_id": "5f5ee73b6f73515b82f032258f189c6e",
+          "scene_id": "fe056b06f7a7560a8205b0272dccefba",
+          "start_ms": 0,
+          "duration_ms": 7000,
+          "narration_excerpt": "Для ключового твердження знайдіть початковий документ, запис або дослідження. Збережіть автора, дату й точне місце, на яке посилаєтеся. Потім перевірте контекст: яке запитання вивчали, кого спостерігали та про який час ідеться. Переказ може бути корисною відправною точкою, але він не замінює перевірки оригіналу. Якщо першоджерело недоступне, прямо вкажіть це обмеження. На нашій схемі шлях від заголовка до документа показано умовно: це ілюстрація процесу, а не підтвердження конкретної події.",
+          "visual_description": "Поверніться до першоджерела",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_2.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "cd9542fbb8ad6e7f181f90d89aef834ab85f8c25371f5a017e548f9104949718",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_2.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "cd9542fbb8ad6e7f181f90d89aef834ab85f8c25371f5a017e548f9104949718"
+          }
+        },
+        {
+          "anchor_id": "6eb364acf01c5a8d85c893a749d72717",
+          "scene_id": "fe056b06f7a7560a8205b0272dccefba",
+          "start_ms": 7000,
+          "duration_ms": 7000,
+          "narration_excerpt": "Для ключового твердження знайдіть початковий документ, запис або дослідження. Збережіть автора, дату й точне місце, на яке посилаєтеся. Потім перевірте контекст: яке запитання вивчали, кого спостерігали та про який час ідеться. Переказ може бути корисною відправною точкою, але він не замінює перевірки оригіналу. Якщо першоджерело недоступне, прямо вкажіть це обмеження. На нашій схемі шлях від заголовка до документа показано умовно: це ілюстрація процесу, а не підтвердження конкретної події.",
+          "visual_description": "Поверніться до першоджерела",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_2.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "cd9542fbb8ad6e7f181f90d89aef834ab85f8c25371f5a017e548f9104949718",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_2.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "cd9542fbb8ad6e7f181f90d89aef834ab85f8c25371f5a017e548f9104949718"
+          }
+        },
+        {
+          "anchor_id": "988957bb61d6599d8958d2df17351e89",
+          "scene_id": "fe056b06f7a7560a8205b0272dccefba",
+          "start_ms": 14000,
+          "duration_ms": 7000,
+          "narration_excerpt": "Для ключового твердження знайдіть початковий документ, запис або дослідження. Збережіть автора, дату й точне місце, на яке посилаєтеся. Потім перевірте контекст: яке запитання вивчали, кого спостерігали та про який час ідеться. Переказ може бути корисною відправною точкою, але він не замінює перевірки оригіналу. Якщо першоджерело недоступне, прямо вкажіть це обмеження. На нашій схемі шлях від заголовка до документа показано умовно: це ілюстрація процесу, а не підтвердження конкретної події.",
+          "visual_description": "Поверніться до першоджерела",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_2.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "cd9542fbb8ad6e7f181f90d89aef834ab85f8c25371f5a017e548f9104949718",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_2.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "cd9542fbb8ad6e7f181f90d89aef834ab85f8c25371f5a017e548f9104949718"
+          }
+        },
+        {
+          "anchor_id": "18a56daca485512fb9d2eb45a4e6904f",
+          "scene_id": "fe056b06f7a7560a8205b0272dccefba",
+          "start_ms": 21000,
+          "duration_ms": 7000,
+          "narration_excerpt": "Для ключового твердження знайдіть початковий документ, запис або дослідження. Збережіть автора, дату й точне місце, на яке посилаєтеся. Потім перевірте контекст: яке запитання вивчали, кого спостерігали та про який час ідеться. Переказ може бути корисною відправною точкою, але він не замінює перевірки оригіналу. Якщо першоджерело недоступне, прямо вкажіть це обмеження. На нашій схемі шлях від заголовка до документа показано умовно: це ілюстрація процесу, а не підтвердження конкретної події.",
+          "visual_description": "Поверніться до першоджерела",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_2.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "cd9542fbb8ad6e7f181f90d89aef834ab85f8c25371f5a017e548f9104949718",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_2.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "cd9542fbb8ad6e7f181f90d89aef834ab85f8c25371f5a017e548f9104949718"
+          }
+        },
+        {
+          "anchor_id": "9856752f62ba5a83a8f81a45bc5e4fc6",
+          "scene_id": "fe056b06f7a7560a8205b0272dccefba",
+          "start_ms": 28000,
+          "duration_ms": 278,
+          "narration_excerpt": "Для ключового твердження знайдіть початковий документ, запис або дослідження. Збережіть автора, дату й точне місце, на яке посилаєтеся. Потім перевірте контекст: яке запитання вивчали, кого спостерігали та про який час ідеться. Переказ може бути корисною відправною точкою, але він не замінює перевірки оригіналу. Якщо першоджерело недоступне, прямо вкажіть це обмеження. На нашій схемі шлях від заголовка до документа показано умовно: це ілюстрація процесу, а не підтвердження конкретної події.",
+          "visual_description": "Поверніться до першоджерела",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_2.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "cd9542fbb8ad6e7f181f90d89aef834ab85f8c25371f5a017e548f9104949718",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_2.png",
+            "prompt_fingerprint": "f5a91362ffb9fc0b65df3ac15d011836098c4cfb95b6954d31be6b849b4f4884",
+            "sha256": "cd9542fbb8ad6e7f181f90d89aef834ab85f8c25371f5a017e548f9104949718"
+          }
+        }
+      ]
+    },
+    {
+      "id": "6eed48a9690451689371207dc4717d87",
+      "text": "Окремо виділіть медичні, причинні та інші наукові твердження. Запитайте, чи дозволяє обраний матеріал зробити саме такий висновок. Збіг двох подій сам по собі не пояснює причину. Для спірного висновку запишіть альтернативне пояснення й запитання фахівцеві. У цьому навчальному ролику ми не оцінюємо лікування і не даємо професійних рекомендацій. Якщо перевірити тезу не вдалося, не маскуйте прогалину гарною графікою: скоротіть формулювання або відкладіть випуск.",
+      "visual": "Перевірте наукові твердження",
+      "prompt": "Original local instructional diagram; no documentary claims",
+      "anchors": [
+        {
+          "anchor_id": "5c4d07ac7eae5f6dbacb86f768e08909",
+          "scene_id": "6eed48a9690451689371207dc4717d87",
+          "start_ms": 0,
+          "duration_ms": 7000,
+          "narration_excerpt": "Окремо виділіть медичні, причинні та інші наукові твердження. Запитайте, чи дозволяє обраний матеріал зробити саме такий висновок. Збіг двох подій сам по собі не пояснює причину. Для спірного висновку запишіть альтернативне пояснення й запитання фахівцеві. У цьому навчальному ролику ми не оцінюємо лікування і не даємо професійних рекомендацій. Якщо перевірити тезу не вдалося, не маскуйте прогалину гарною графікою: скоротіть формулювання або відкладіть випуск.",
+          "visual_description": "Перевірте наукові твердження",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_3.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "7da66da2b7f9839c511bd3f20b76883832cd06523512b53b9cd6b1138d4b3ba2",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_3.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "7da66da2b7f9839c511bd3f20b76883832cd06523512b53b9cd6b1138d4b3ba2"
+          }
+        },
+        {
+          "anchor_id": "71118a53e4765161b8fae0584ed6fe6f",
+          "scene_id": "6eed48a9690451689371207dc4717d87",
+          "start_ms": 7000,
+          "duration_ms": 7000,
+          "narration_excerpt": "Окремо виділіть медичні, причинні та інші наукові твердження. Запитайте, чи дозволяє обраний матеріал зробити саме такий висновок. Збіг двох подій сам по собі не пояснює причину. Для спірного висновку запишіть альтернативне пояснення й запитання фахівцеві. У цьому навчальному ролику ми не оцінюємо лікування і не даємо професійних рекомендацій. Якщо перевірити тезу не вдалося, не маскуйте прогалину гарною графікою: скоротіть формулювання або відкладіть випуск.",
+          "visual_description": "Перевірте наукові твердження",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_3.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "7da66da2b7f9839c511bd3f20b76883832cd06523512b53b9cd6b1138d4b3ba2",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_3.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "7da66da2b7f9839c511bd3f20b76883832cd06523512b53b9cd6b1138d4b3ba2"
+          }
+        },
+        {
+          "anchor_id": "33880a6539f45f5ea32036bfee6afbb0",
+          "scene_id": "6eed48a9690451689371207dc4717d87",
+          "start_ms": 14000,
+          "duration_ms": 7000,
+          "narration_excerpt": "Окремо виділіть медичні, причинні та інші наукові твердження. Запитайте, чи дозволяє обраний матеріал зробити саме такий висновок. Збіг двох подій сам по собі не пояснює причину. Для спірного висновку запишіть альтернативне пояснення й запитання фахівцеві. У цьому навчальному ролику ми не оцінюємо лікування і не даємо професійних рекомендацій. Якщо перевірити тезу не вдалося, не маскуйте прогалину гарною графікою: скоротіть формулювання або відкладіть випуск.",
+          "visual_description": "Перевірте наукові твердження",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_3.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "7da66da2b7f9839c511bd3f20b76883832cd06523512b53b9cd6b1138d4b3ba2",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_3.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "7da66da2b7f9839c511bd3f20b76883832cd06523512b53b9cd6b1138d4b3ba2"
+          }
+        },
+        {
+          "anchor_id": "79392318341959cbb1b1109e79d9cc1a",
+          "scene_id": "6eed48a9690451689371207dc4717d87",
+          "start_ms": 21000,
+          "duration_ms": 5216,
+          "narration_excerpt": "Окремо виділіть медичні, причинні та інші наукові твердження. Запитайте, чи дозволяє обраний матеріал зробити саме такий висновок. Збіг двох подій сам по собі не пояснює причину. Для спірного висновку запишіть альтернативне пояснення й запитання фахівцеві. У цьому навчальному ролику ми не оцінюємо лікування і не даємо професійних рекомендацій. Якщо перевірити тезу не вдалося, не маскуйте прогалину гарною графікою: скоротіть формулювання або відкладіть випуск.",
+          "visual_description": "Перевірте наукові твердження",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_3.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "7da66da2b7f9839c511bd3f20b76883832cd06523512b53b9cd6b1138d4b3ba2",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_3.png",
+            "prompt_fingerprint": "1c5756c176cd985fc5062c33068df5003112c074ddf97840c09b997ef81445ca",
+            "sha256": "7da66da2b7f9839c511bd3f20b76883832cd06523512b53b9cd6b1138d4b3ba2"
+          }
+        }
+      ]
+    },
+    {
+      "id": "92c39a3ee7aa56df899f456861097dc5",
+      "text": "Лише тепер переходьте до розкадрування. Кожен короткий кадр має завдання: показати джерело, пояснити зв’язок або дати глядачеві паузу. Частину якорів можна заповнити власною схемою, частину фотографією, а рух залишити для справді важливого моменту. На умовній шкалі один прямокутник позначає один візуальний фрагмент. Це не замовлення платної генерації. Важливо покрити всю розповідь і не видавати ілюстрацію, створену моделлю, за документальне знімання.",
+      "visual": "Призначте кожному кадру завдання",
+      "prompt": "Original local instructional diagram; no documentary claims",
+      "anchors": [
+        {
+          "anchor_id": "59dd976953605c10847bc104e239ef8c",
+          "scene_id": "92c39a3ee7aa56df899f456861097dc5",
+          "start_ms": 0,
+          "duration_ms": 7000,
+          "narration_excerpt": "Лише тепер переходьте до розкадрування. Кожен короткий кадр має завдання: показати джерело, пояснити зв’язок або дати глядачеві паузу. Частину якорів можна заповнити власною схемою, частину фотографією, а рух залишити для справді важливого моменту. На умовній шкалі один прямокутник позначає один візуальний фрагмент. Це не замовлення платної генерації. Важливо покрити всю розповідь і не видавати ілюстрацію, створену моделлю, за документальне знімання.",
+          "visual_description": "Призначте кожному кадру завдання",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_4.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "ccd59449d1bf9bbec9e9bda05e2db47d992aef81186ba3e12a080eea13c71364",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_4.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "ccd59449d1bf9bbec9e9bda05e2db47d992aef81186ba3e12a080eea13c71364"
+          }
+        },
+        {
+          "anchor_id": "64727e9930685df3b82badc7b67f2eb4",
+          "scene_id": "92c39a3ee7aa56df899f456861097dc5",
+          "start_ms": 7000,
+          "duration_ms": 7000,
+          "narration_excerpt": "Лише тепер переходьте до розкадрування. Кожен короткий кадр має завдання: показати джерело, пояснити зв’язок або дати глядачеві паузу. Частину якорів можна заповнити власною схемою, частину фотографією, а рух залишити для справді важливого моменту. На умовній шкалі один прямокутник позначає один візуальний фрагмент. Це не замовлення платної генерації. Важливо покрити всю розповідь і не видавати ілюстрацію, створену моделлю, за документальне знімання.",
+          "visual_description": "Призначте кожному кадру завдання",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_4.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "ccd59449d1bf9bbec9e9bda05e2db47d992aef81186ba3e12a080eea13c71364",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_4.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "ccd59449d1bf9bbec9e9bda05e2db47d992aef81186ba3e12a080eea13c71364"
+          }
+        },
+        {
+          "anchor_id": "c661ee06b6b55641a450660a35aea1c5",
+          "scene_id": "92c39a3ee7aa56df899f456861097dc5",
+          "start_ms": 14000,
+          "duration_ms": 7000,
+          "narration_excerpt": "Лише тепер переходьте до розкадрування. Кожен короткий кадр має завдання: показати джерело, пояснити зв’язок або дати глядачеві паузу. Частину якорів можна заповнити власною схемою, частину фотографією, а рух залишити для справді важливого моменту. На умовній шкалі один прямокутник позначає один візуальний фрагмент. Це не замовлення платної генерації. Важливо покрити всю розповідь і не видавати ілюстрацію, створену моделлю, за документальне знімання.",
+          "visual_description": "Призначте кожному кадру завдання",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_4.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "ccd59449d1bf9bbec9e9bda05e2db47d992aef81186ba3e12a080eea13c71364",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_4.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "ccd59449d1bf9bbec9e9bda05e2db47d992aef81186ba3e12a080eea13c71364"
+          }
+        },
+        {
+          "anchor_id": "9191153557205757acc6bc28dc4a02d7",
+          "scene_id": "92c39a3ee7aa56df899f456861097dc5",
+          "start_ms": 21000,
+          "duration_ms": 3980,
+          "narration_excerpt": "Лише тепер переходьте до розкадрування. Кожен короткий кадр має завдання: показати джерело, пояснити зв’язок або дати глядачеві паузу. Частину якорів можна заповнити власною схемою, частину фотографією, а рух залишити для справді важливого моменту. На умовній шкалі один прямокутник позначає один візуальний фрагмент. Це не замовлення платної генерації. Важливо покрити всю розповідь і не видавати ілюстрацію, створену моделлю, за документальне знімання.",
+          "visual_description": "Призначте кожному кадру завдання",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_4.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "ccd59449d1bf9bbec9e9bda05e2db47d992aef81186ba3e12a080eea13c71364",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_4.png",
+            "prompt_fingerprint": "b14cd186f1fa270daa49ff6d177c44731812a56c04bd6edbe07b514b39109a9f",
+            "sha256": "ccd59449d1bf9bbec9e9bda05e2db47d992aef81186ba3e12a080eea13c71364"
+          }
+        }
+      ]
+    },
+    {
+      "id": "efd35d438ee65768b5d9ad7d6d370cd5",
+      "text": "Перед імпортом перевірте походження зображення, музики й голосу. Безкоштовне завантаження не означає дозвіл на будь-яке використання. Запишіть автора, ліцензію, дату перевірки та потрібну атрибуцію. Для матеріалу з генератора додатково перевірте умови конкретної моделі й облікового запису. Якщо права невідомі, залиште статус UNKNOWN і використайте власну нейтральну схему. Наші демонстраційні картки створені локально; чужих фотографій, музики й голосових записів у них немає. Експериментальна збірка не надає дозволу на публікацію.",
+      "visual": "Перевірте права на матеріали",
+      "prompt": "Original local instructional diagram; no documentary claims",
+      "anchors": [
+        {
+          "anchor_id": "3116789b6cc652499bb5ee61728943fb",
+          "scene_id": "efd35d438ee65768b5d9ad7d6d370cd5",
+          "start_ms": 0,
+          "duration_ms": 7000,
+          "narration_excerpt": "Перед імпортом перевірте походження зображення, музики й голосу. Безкоштовне завантаження не означає дозвіл на будь-яке використання. Запишіть автора, ліцензію, дату перевірки та потрібну атрибуцію. Для матеріалу з генератора додатково перевірте умови конкретної моделі й облікового запису. Якщо права невідомі, залиште статус UNKNOWN і використайте власну нейтральну схему. Наші демонстраційні картки створені локально; чужих фотографій, музики й голосових записів у них немає. Експериментальна збірка не надає дозволу на публікацію.",
+          "visual_description": "Перевірте права на матеріали",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_5.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "ab3ec66e026f9d8222b8cb5b32eeefdcf83a20ec3257483cdf7e6c219b7154d4",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_5.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "ab3ec66e026f9d8222b8cb5b32eeefdcf83a20ec3257483cdf7e6c219b7154d4"
+          }
+        },
+        {
+          "anchor_id": "0e858a07f08a55cc8ed8718c3d437a83",
+          "scene_id": "efd35d438ee65768b5d9ad7d6d370cd5",
+          "start_ms": 7000,
+          "duration_ms": 7000,
+          "narration_excerpt": "Перед імпортом перевірте походження зображення, музики й голосу. Безкоштовне завантаження не означає дозвіл на будь-яке використання. Запишіть автора, ліцензію, дату перевірки та потрібну атрибуцію. Для матеріалу з генератора додатково перевірте умови конкретної моделі й облікового запису. Якщо права невідомі, залиште статус UNKNOWN і використайте власну нейтральну схему. Наші демонстраційні картки створені локально; чужих фотографій, музики й голосових записів у них немає. Експериментальна збірка не надає дозволу на публікацію.",
+          "visual_description": "Перевірте права на матеріали",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_5.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "ab3ec66e026f9d8222b8cb5b32eeefdcf83a20ec3257483cdf7e6c219b7154d4",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_5.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "ab3ec66e026f9d8222b8cb5b32eeefdcf83a20ec3257483cdf7e6c219b7154d4"
+          }
+        },
+        {
+          "anchor_id": "c4e481a56e7558699720e1799d90f68c",
+          "scene_id": "efd35d438ee65768b5d9ad7d6d370cd5",
+          "start_ms": 14000,
+          "duration_ms": 7000,
+          "narration_excerpt": "Перед імпортом перевірте походження зображення, музики й голосу. Безкоштовне завантаження не означає дозвіл на будь-яке використання. Запишіть автора, ліцензію, дату перевірки та потрібну атрибуцію. Для матеріалу з генератора додатково перевірте умови конкретної моделі й облікового запису. Якщо права невідомі, залиште статус UNKNOWN і використайте власну нейтральну схему. Наші демонстраційні картки створені локально; чужих фотографій, музики й голосових записів у них немає. Експериментальна збірка не надає дозволу на публікацію.",
+          "visual_description": "Перевірте права на матеріали",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_5.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "ab3ec66e026f9d8222b8cb5b32eeefdcf83a20ec3257483cdf7e6c219b7154d4",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_5.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "ab3ec66e026f9d8222b8cb5b32eeefdcf83a20ec3257483cdf7e6c219b7154d4"
+          }
+        },
+        {
+          "anchor_id": "acd211d05de45fa9b322df28b88afd4c",
+          "scene_id": "efd35d438ee65768b5d9ad7d6d370cd5",
+          "start_ms": 21000,
+          "duration_ms": 7000,
+          "narration_excerpt": "Перед імпортом перевірте походження зображення, музики й голосу. Безкоштовне завантаження не означає дозвіл на будь-яке використання. Запишіть автора, ліцензію, дату перевірки та потрібну атрибуцію. Для матеріалу з генератора додатково перевірте умови конкретної моделі й облікового запису. Якщо права невідомі, залиште статус UNKNOWN і використайте власну нейтральну схему. Наші демонстраційні картки створені локально; чужих фотографій, музики й голосових записів у них немає. Експериментальна збірка не надає дозволу на публікацію.",
+          "visual_description": "Перевірте права на матеріали",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_5.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "ab3ec66e026f9d8222b8cb5b32eeefdcf83a20ec3257483cdf7e6c219b7154d4",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_5.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "ab3ec66e026f9d8222b8cb5b32eeefdcf83a20ec3257483cdf7e6c219b7154d4"
+          }
+        },
+        {
+          "anchor_id": "4a3d9074fb615c0c8c037c8991305dec",
+          "scene_id": "efd35d438ee65768b5d9ad7d6d370cd5",
+          "start_ms": 28000,
+          "duration_ms": 278,
+          "narration_excerpt": "Перед імпортом перевірте походження зображення, музики й голосу. Безкоштовне завантаження не означає дозвіл на будь-яке використання. Запишіть автора, ліцензію, дату перевірки та потрібну атрибуцію. Для матеріалу з генератора додатково перевірте умови конкретної моделі й облікового запису. Якщо права невідомі, залиште статус UNKNOWN і використайте власну нейтральну схему. Наші демонстраційні картки створені локально; чужих фотографій, музики й голосових записів у них немає. Експериментальна збірка не надає дозволу на публікацію.",
+          "visual_description": "Перевірте права на матеріали",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_5.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "ab3ec66e026f9d8222b8cb5b32eeefdcf83a20ec3257483cdf7e6c219b7154d4",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_5.png",
+            "prompt_fingerprint": "f5a91362ffb9fc0b65df3ac15d011836098c4cfb95b6954d31be6b849b4f4884",
+            "sha256": "ab3ec66e026f9d8222b8cb5b32eeefdcf83a20ec3257483cdf7e6c219b7154d4"
+          }
+        }
+      ]
+    },
+    {
+      "id": "9f18a8dd0a195ba7a12c701fb164c0c3",
+      "text": "Зберіть чернетку й перегляньте її повністю. Чи відповідають субтитри змісту мовлення? Чи є порожні ділянки, обірвані думки або кадри, що створюють хибне враження? Для загальної звукової доріжки межі сцен приблизні, тому їх треба перевірити на слух. Виправлення одного речення може змінити тривалість сцени: знову перевірте шкалу якорів. Технічно справний файл ще не доводить якість розповіді. Потрібен окремий редакційний перегляд, а для спірних фактів — окрема перевірка.",
+      "visual": "Перегляньте всю чернетку",
+      "prompt": "Original local instructional diagram; no documentary claims",
+      "anchors": [
+        {
+          "anchor_id": "0e0e2f8f41e656528f163b66043dd0e5",
+          "scene_id": "9f18a8dd0a195ba7a12c701fb164c0c3",
+          "start_ms": 0,
+          "duration_ms": 7000,
+          "narration_excerpt": "Зберіть чернетку й перегляньте її повністю. Чи відповідають субтитри змісту мовлення? Чи є порожні ділянки, обірвані думки або кадри, що створюють хибне враження? Для загальної звукової доріжки межі сцен приблизні, тому їх треба перевірити на слух. Виправлення одного речення може змінити тривалість сцени: знову перевірте шкалу якорів. Технічно справний файл ще не доводить якість розповіді. Потрібен окремий редакційний перегляд, а для спірних фактів — окрема перевірка.",
+          "visual_description": "Перегляньте всю чернетку",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_6.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "416f5dc38b216398b3b7dd2c95d55c63db540e4856130913041d8247681c4d95",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_6.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "416f5dc38b216398b3b7dd2c95d55c63db540e4856130913041d8247681c4d95"
+          }
+        },
+        {
+          "anchor_id": "bdb97f42788053cd86c4ae2c6458d224",
+          "scene_id": "9f18a8dd0a195ba7a12c701fb164c0c3",
+          "start_ms": 7000,
+          "duration_ms": 7000,
+          "narration_excerpt": "Зберіть чернетку й перегляньте її повністю. Чи відповідають субтитри змісту мовлення? Чи є порожні ділянки, обірвані думки або кадри, що створюють хибне враження? Для загальної звукової доріжки межі сцен приблизні, тому їх треба перевірити на слух. Виправлення одного речення може змінити тривалість сцени: знову перевірте шкалу якорів. Технічно справний файл ще не доводить якість розповіді. Потрібен окремий редакційний перегляд, а для спірних фактів — окрема перевірка.",
+          "visual_description": "Перегляньте всю чернетку",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_6.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "416f5dc38b216398b3b7dd2c95d55c63db540e4856130913041d8247681c4d95",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_6.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "416f5dc38b216398b3b7dd2c95d55c63db540e4856130913041d8247681c4d95"
+          }
+        },
+        {
+          "anchor_id": "a159a3293ff85485bced3fbac1847789",
+          "scene_id": "9f18a8dd0a195ba7a12c701fb164c0c3",
+          "start_ms": 14000,
+          "duration_ms": 7000,
+          "narration_excerpt": "Зберіть чернетку й перегляньте її повністю. Чи відповідають субтитри змісту мовлення? Чи є порожні ділянки, обірвані думки або кадри, що створюють хибне враження? Для загальної звукової доріжки межі сцен приблизні, тому їх треба перевірити на слух. Виправлення одного речення може змінити тривалість сцени: знову перевірте шкалу якорів. Технічно справний файл ще не доводить якість розповіді. Потрібен окремий редакційний перегляд, а для спірних фактів — окрема перевірка.",
+          "visual_description": "Перегляньте всю чернетку",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_6.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "416f5dc38b216398b3b7dd2c95d55c63db540e4856130913041d8247681c4d95",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_6.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "416f5dc38b216398b3b7dd2c95d55c63db540e4856130913041d8247681c4d95"
+          }
+        },
+        {
+          "anchor_id": "1f88a2ee7f115338a97a5873370fbbe8",
+          "scene_id": "9f18a8dd0a195ba7a12c701fb164c0c3",
+          "start_ms": 21000,
+          "duration_ms": 6453,
+          "narration_excerpt": "Зберіть чернетку й перегляньте її повністю. Чи відповідають субтитри змісту мовлення? Чи є порожні ділянки, обірвані думки або кадри, що створюють хибне враження? Для загальної звукової доріжки межі сцен приблизні, тому їх треба перевірити на слух. Виправлення одного речення може змінити тривалість сцени: знову перевірте шкалу якорів. Технічно справний файл ще не доводить якість розповіді. Потрібен окремий редакційний перегляд, а для спірних фактів — окрема перевірка.",
+          "visual_description": "Перегляньте всю чернетку",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_6.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "416f5dc38b216398b3b7dd2c95d55c63db540e4856130913041d8247681c4d95",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_6.png",
+            "prompt_fingerprint": "c5ccaca3078d7802caad6622029d70aee53ed256a5f569063392a983eda1615e",
+            "sha256": "416f5dc38b216398b3b7dd2c95d55c63db540e4856130913041d8247681c4d95"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c94ff36a93375a7b981cf6853907e51e",
+      "text": "Наприкінці збережіть сценарій, список джерел, зауваження й версію зібраного файла. Запишіть, хто ухвалив редакційне рішення та які обмеження залишилися. Контрольна сума допомагає відрізнити один файл від іншого, але не підтверджує правдивість його змісту. Якщо залишилися сумніви щодо фактів або прав, не вважайте експорт дозволом на випуск. Добрий результат цієї навчальної роботи — зрозуміле запитання, чесні межі знання й матеріали, походження яких ви можете пояснити. Тепер спробуйте цей порядок на власній невеликій історії.",
+      "visual": "Залиште перевірюваний слід",
+      "prompt": "Original local instructional diagram; no documentary claims",
+      "anchors": [
+        {
+          "anchor_id": "d1b797ce74eb53a0b0b280123323e615",
+          "scene_id": "c94ff36a93375a7b981cf6853907e51e",
+          "start_ms": 0,
+          "duration_ms": 7000,
+          "narration_excerpt": "Наприкінці збережіть сценарій, список джерел, зауваження й версію зібраного файла. Запишіть, хто ухвалив редакційне рішення та які обмеження залишилися. Контрольна сума допомагає відрізнити один файл від іншого, але не підтверджує правдивість його змісту. Якщо залишилися сумніви щодо фактів або прав, не вважайте експорт дозволом на випуск. Добрий результат цієї навчальної роботи — зрозуміле запитання, чесні межі знання й матеріали, походження яких ви можете пояснити. Тепер спробуйте цей порядок на власній невеликій історії.",
+          "visual_description": "Залиште перевірюваний слід",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_7.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "facb5e5ce398578da593bacea6f1623512c3c95de6bac06a900960f0d966a34f",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_7.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "facb5e5ce398578da593bacea6f1623512c3c95de6bac06a900960f0d966a34f"
+          }
+        },
+        {
+          "anchor_id": "0c04b1502fc550cf938c664a9eaab94e",
+          "scene_id": "c94ff36a93375a7b981cf6853907e51e",
+          "start_ms": 7000,
+          "duration_ms": 7000,
+          "narration_excerpt": "Наприкінці збережіть сценарій, список джерел, зауваження й версію зібраного файла. Запишіть, хто ухвалив редакційне рішення та які обмеження залишилися. Контрольна сума допомагає відрізнити один файл від іншого, але не підтверджує правдивість його змісту. Якщо залишилися сумніви щодо фактів або прав, не вважайте експорт дозволом на випуск. Добрий результат цієї навчальної роботи — зрозуміле запитання, чесні межі знання й матеріали, походження яких ви можете пояснити. Тепер спробуйте цей порядок на власній невеликій історії.",
+          "visual_description": "Залиште перевірюваний слід",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_7.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "facb5e5ce398578da593bacea6f1623512c3c95de6bac06a900960f0d966a34f",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_7.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "facb5e5ce398578da593bacea6f1623512c3c95de6bac06a900960f0d966a34f"
+          }
+        },
+        {
+          "anchor_id": "4e687fe48f545a7e9a11442e18f07d96",
+          "scene_id": "c94ff36a93375a7b981cf6853907e51e",
+          "start_ms": 14000,
+          "duration_ms": 7000,
+          "narration_excerpt": "Наприкінці збережіть сценарій, список джерел, зауваження й версію зібраного файла. Запишіть, хто ухвалив редакційне рішення та які обмеження залишилися. Контрольна сума допомагає відрізнити один файл від іншого, але не підтверджує правдивість його змісту. Якщо залишилися сумніви щодо фактів або прав, не вважайте експорт дозволом на випуск. Добрий результат цієї навчальної роботи — зрозуміле запитання, чесні межі знання й матеріали, походження яких ви можете пояснити. Тепер спробуйте цей порядок на власній невеликій історії.",
+          "visual_description": "Залиште перевірюваний слід",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_7.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "facb5e5ce398578da593bacea6f1623512c3c95de6bac06a900960f0d966a34f",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_7.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "facb5e5ce398578da593bacea6f1623512c3c95de6bac06a900960f0d966a34f"
+          }
+        },
+        {
+          "anchor_id": "71948c4c92fc5e65ab11eda7c9fe8632",
+          "scene_id": "c94ff36a93375a7b981cf6853907e51e",
+          "start_ms": 21000,
+          "duration_ms": 7000,
+          "narration_excerpt": "Наприкінці збережіть сценарій, список джерел, зауваження й версію зібраного файла. Запишіть, хто ухвалив редакційне рішення та які обмеження залишилися. Контрольна сума допомагає відрізнити один файл від іншого, але не підтверджує правдивість його змісту. Якщо залишилися сумніви щодо фактів або прав, не вважайте експорт дозволом на випуск. Добрий результат цієї навчальної роботи — зрозуміле запитання, чесні межі знання й матеріали, походження яких ви можете пояснити. Тепер спробуйте цей порядок на власній невеликій історії.",
+          "visual_description": "Залиште перевірюваний слід",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_7.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "facb5e5ce398578da593bacea6f1623512c3c95de6bac06a900960f0d966a34f",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_7.png",
+            "prompt_fingerprint": "f71068eea909e17b8eed404eded5edf36b7bd9abb6af83fe047d41a37d4e6f97",
+            "sha256": "facb5e5ce398578da593bacea6f1623512c3c95de6bac06a900960f0d966a34f"
+          }
+        },
+        {
+          "anchor_id": "81bd548775785ba387b38b3fefca8bd5",
+          "scene_id": "c94ff36a93375a7b981cf6853907e51e",
+          "start_ms": 28000,
+          "duration_ms": 1926,
+          "narration_excerpt": "Наприкінці збережіть сценарій, список джерел, зауваження й версію зібраного файла. Запишіть, хто ухвалив редакційне рішення та які обмеження залишилися. Контрольна сума допомагає відрізнити один файл від іншого, але не підтверджує правдивість його змісту. Якщо залишилися сумніви щодо фактів або прав, не вважайте експорт дозволом на випуск. Добрий результат цієї навчальної роботи — зрозуміле запитання, чесні межі знання й матеріали, походження яких ви можете пояснити. Тепер спробуйте цей порядок на власній невеликій історії.",
+          "visual_description": "Залиште перевірюваний слід",
+          "image_prompt": "Original local instructional diagram; no documentary claims",
+          "video_prompt": "Original local instructional diagram; no documentary claims",
+          "negative_prompt": "",
+          "reference_image": "",
+          "preferred_provider": "",
+          "provider_model": "",
+          "generation_mode": "IMAGE_PAN_ZOOM",
+          "generation_status": "IMPORTED",
+          "local_asset_path": "./uk_7.png",
+          "license_status": "ORIGINAL_LOCAL_DEMO",
+          "fallback_mode": "NONE",
+          "asset_sha256": "facb5e5ce398578da593bacea6f1623512c3c95de6bac06a900960f0d966a34f",
+          "provenance": {
+            "provider": "LOCAL_PROCEDURAL",
+            "original_name": "uk_7.png",
+            "prompt_fingerprint": "794248b5ca196152c966374ceda78b61ed3c747d15da518c2ec56917100dcc93",
+            "sha256": "facb5e5ce398578da593bacea6f1623512c3c95de6bac06a900960f0d966a34f"
+          }
+        }
+      ]
+    }
+  ],
+  "topic": "Проверяем историю / Перевіряємо історію",
+  "editorial_draft": {
+    "locale": "uk",
+    "editorial_assessment": "MANUAL_OFFLINE: учебный редакционный процесс, не научная верификация",
+    "audience": "Начинающие авторы / автори",
+    "hooks": [
+      "Гарне відео ще не є поясненням?",
+      "Что подтверждает ваш сценарий?"
+    ],
+    "structure": [
+      "Почніть із запитання",
+      "Відокремте факти від тлумачень",
+      "Поверніться до першоджерела",
+      "Перевірте наукові твердження",
+      "Призначте кожному кадру завдання",
+      "Перевірте права на матеріали",
+      "Перегляньте всю чернетку",
+      "Залиште перевірюваний слід"
+    ],
+    "script": "Гарне відео ще не є поясненням. Уявіть, що ви побачили гучний заголовок і хочете зробити про нього ролик. Перш ніж шукати ефектні кадри, сформулюйте запитання глядача. Що саме він має зрозуміти після перегляду? У нашому прикладі ми розбираємо не сенсацію, а спосіб перевірки історії. Це навчальна редакційна послідовність, а не науковий експеримент. Спробуйте записати головне запитання одним реченням і прибрати слова, які обіцяють більше, ніж ви зможете показати.\n\nТепер випишіть твердження майбутнього сценарію. Біля кожного позначте, що це: спостереження, число, припущення чи думка. Фраза «це сталося» потребує іншого підтвердження, ніж фраза «мені це здається важливим». Поки джерело не перевірене, залиште позначку «потребує перевірки». Якщо точне число не потрібне для розуміння історії, його можна прибрати. Не перетворюйте впевнений тон диктора на доказ. Глядач має розуміти, де закінчується встановлене й починається пояснення автора.\n\nДля ключового твердження знайдіть початковий документ, запис або дослідження. Збережіть автора, дату й точне місце, на яке посилаєтеся. Потім перевірте контекст: яке запитання вивчали, кого спостерігали та про який час ідеться. Переказ може бути корисною відправною точкою, але він не замінює перевірки оригіналу. Якщо першоджерело недоступне, прямо вкажіть це обмеження. На нашій схемі шлях від заголовка до документа показано умовно: це ілюстрація процесу, а не підтвердження конкретної події.\n\nОкремо виділіть медичні, причинні та інші наукові твердження. Запитайте, чи дозволяє обраний матеріал зробити саме такий висновок. Збіг двох подій сам по собі не пояснює причину. Для спірного висновку запишіть альтернативне пояснення й запитання фахівцеві. У цьому навчальному ролику ми не оцінюємо лікування і не даємо професійних рекомендацій. Якщо перевірити тезу не вдалося, не маскуйте прогалину гарною графікою: скоротіть формулювання або відкладіть випуск.\n\nЛише тепер переходьте до розкадрування. Кожен короткий кадр має завдання: показати джерело, пояснити зв’язок або дати глядачеві паузу. Частину якорів можна заповнити власною схемою, частину фотографією, а рух залишити для справді важливого моменту. На умовній шкалі один прямокутник позначає один візуальний фрагмент. Це не замовлення платної генерації. Важливо покрити всю розповідь і не видавати ілюстрацію, створену моделлю, за документальне знімання.\n\nПеред імпортом перевірте походження зображення, музики й голосу. Безкоштовне завантаження не означає дозвіл на будь-яке використання. Запишіть автора, ліцензію, дату перевірки та потрібну атрибуцію. Для матеріалу з генератора додатково перевірте умови конкретної моделі й облікового запису. Якщо права невідомі, залиште статус UNKNOWN і використайте власну нейтральну схему. Наші демонстраційні картки створені локально; чужих фотографій, музики й голосових записів у них немає. Експериментальна збірка не надає дозволу на публікацію.\n\nЗберіть чернетку й перегляньте її повністю. Чи відповідають субтитри змісту мовлення? Чи є порожні ділянки, обірвані думки або кадри, що створюють хибне враження? Для загальної звукової доріжки межі сцен приблизні, тому їх треба перевірити на слух. Виправлення одного речення може змінити тривалість сцени: знову перевірте шкалу якорів. Технічно справний файл ще не доводить якість розповіді. Потрібен окремий редакційний перегляд, а для спірних фактів — окрема перевірка.\n\nНаприкінці збережіть сценарій, список джерел, зауваження й версію зібраного файла. Запишіть, хто ухвалив редакційне рішення та які обмеження залишилися. Контрольна сума допомагає відрізнити один файл від іншого, але не підтверджує правдивість його змісту. Якщо залишилися сумніви щодо фактів або прав, не вважайте експорт дозволом на випуск. Добрий результат цієї навчальної роботи — зрозуміле запитання, чесні межі знання й матеріали, походження яких ви можете пояснити. Тепер спробуйте цей порядок на власній невеликій історії.",
+    "scenes": [
+      {
+        "text": "Гарне відео ще не є поясненням. Уявіть, що ви побачили гучний заголовок і хочете зробити про нього ролик. Перш ніж шукати ефектні кадри, сформулюйте запитання глядача. Що саме він має зрозуміти після перегляду? У нашому прикладі ми розбираємо не сенсацію, а спосіб перевірки історії. Це навчальна редакційна послідовність, а не науковий експеримент. Спробуйте записати головне запитання одним реченням і прибрати слова, які обіцяють більше, ніж ви зможете показати.",
+        "visual": "Почніть із запитання",
+        "prompt": "Original local instructional diagram; no documentary claims",
+        "visual_steps": [
+          "Тема",
+          "Запитання",
+          "Глядач",
+          "Завдання"
+        ]
+      },
+      {
+        "text": "Тепер випишіть твердження майбутнього сценарію. Біля кожного позначте, що це: спостереження, число, припущення чи думка. Фраза «це сталося» потребує іншого підтвердження, ніж фраза «мені це здається важливим». Поки джерело не перевірене, залиште позначку «потребує перевірки». Якщо точне число не потрібне для розуміння історії, його можна прибрати. Не перетворюйте впевнений тон диктора на доказ. Глядач має розуміти, де закінчується встановлене й починається пояснення автора.",
+        "visual": "Відокремте факти від тлумачень",
+        "prompt": "Original local instructional diagram; no documentary claims",
+        "visual_steps": [
+          "Спостереження",
+          "Число",
+          "Гіпотеза",
+          "Думка"
+        ]
+      },
+      {
+        "text": "Для ключового твердження знайдіть початковий документ, запис або дослідження. Збережіть автора, дату й точне місце, на яке посилаєтеся. Потім перевірте контекст: яке запитання вивчали, кого спостерігали та про який час ідеться. Переказ може бути корисною відправною точкою, але він не замінює перевірки оригіналу. Якщо першоджерело недоступне, прямо вкажіть це обмеження. На нашій схемі шлях від заголовка до документа показано умовно: це ілюстрація процесу, а не підтвердження конкретної події.",
+        "visual": "Поверніться до першоджерела",
+        "prompt": "Original local instructional diagram; no documentary claims",
+        "visual_steps": [
+          "Заголовок",
+          "Оригінал",
+          "Контекст",
+          "Обмеження"
+        ]
+      },
+      {
+        "text": "Окремо виділіть медичні, причинні та інші наукові твердження. Запитайте, чи дозволяє обраний матеріал зробити саме такий висновок. Збіг двох подій сам по собі не пояснює причину. Для спірного висновку запишіть альтернативне пояснення й запитання фахівцеві. У цьому навчальному ролику ми не оцінюємо лікування і не даємо професійних рекомендацій. Якщо перевірити тезу не вдалося, не маскуйте прогалину гарною графікою: скоротіть формулювання або відкладіть випуск.",
+        "visual": "Перевірте наукові твердження",
+        "prompt": "Original local instructional diagram; no documentary claims",
+        "visual_steps": [
+          "Теза",
+          "Метод",
+          "Альтернатива",
+          "Експерт"
+        ]
+      },
+      {
+        "text": "Лише тепер переходьте до розкадрування. Кожен короткий кадр має завдання: показати джерело, пояснити зв’язок або дати глядачеві паузу. Частину якорів можна заповнити власною схемою, частину фотографією, а рух залишити для справді важливого моменту. На умовній шкалі один прямокутник позначає один візуальний фрагмент. Це не замовлення платної генерації. Важливо покрити всю розповідь і не видавати ілюстрацію, створену моделлю, за документальне знімання.",
+        "visual": "Призначте кожному кадру завдання",
+        "prompt": "Original local instructional diagram; no documentary claims",
+        "visual_steps": [
+          "Мовлення",
+          "Якір",
+          "Матеріал",
+          "Покриття"
+        ]
+      },
+      {
+        "text": "Перед імпортом перевірте походження зображення, музики й голосу. Безкоштовне завантаження не означає дозвіл на будь-яке використання. Запишіть автора, ліцензію, дату перевірки та потрібну атрибуцію. Для матеріалу з генератора додатково перевірте умови конкретної моделі й облікового запису. Якщо права невідомі, залиште статус UNKNOWN і використайте власну нейтральну схему. Наші демонстраційні картки створені локально; чужих фотографій, музики й голосових записів у них немає. Експериментальна збірка не надає дозволу на публікацію.",
+        "visual": "Перевірте права на матеріали",
+        "prompt": "Original local instructional diagram; no documentary claims",
+        "visual_steps": [
+          "Автор",
+          "Ліцензія",
+          "Умови",
+          "Атрибуція"
+        ]
+      },
+      {
+        "text": "Зберіть чернетку й перегляньте її повністю. Чи відповідають субтитри змісту мовлення? Чи є порожні ділянки, обірвані думки або кадри, що створюють хибне враження? Для загальної звукової доріжки межі сцен приблизні, тому їх треба перевірити на слух. Виправлення одного речення може змінити тривалість сцени: знову перевірте шкалу якорів. Технічно справний файл ще не доводить якість розповіді. Потрібен окремий редакційний перегляд, а для спірних фактів — окрема перевірка.",
+        "visual": "Перегляньте всю чернетку",
+        "prompt": "Original local instructional diagram; no documentary claims",
+        "visual_steps": [
+          "Зміст",
+          "Субтитри",
+          "Таймінг",
+          "Правки"
+        ]
+      },
+      {
+        "text": "Наприкінці збережіть сценарій, список джерел, зауваження й версію зібраного файла. Запишіть, хто ухвалив редакційне рішення та які обмеження залишилися. Контрольна сума допомагає відрізнити один файл від іншого, але не підтверджує правдивість його змісту. Якщо залишилися сумніви щодо фактів або прав, не вважайте експорт дозволом на випуск. Добрий результат цієї навчальної роботи — зрозуміле запитання, чесні межі знання й матеріали, походження яких ви можете пояснити. Тепер спробуйте цей порядок на власній невеликій історії.",
+        "visual": "Залиште перевірюваний слід",
+        "prompt": "Original local instructional diagram; no documentary claims",
+        "visual_steps": [
+          "Сценарій",
+          "Джерела",
+          "Рішення",
+          "Версія"
+        ]
+      }
+    ],
+    "claims_to_verify": [
+      "Любые добавленные числа, медицинские и причинные утверждения требуют первоисточников"
+    ],
+    "visual_recommendations": [
+      "Оригинальные схемы этапов; без чужих материалов"
+    ],
+    "risks": [
+      "Рекомендации учебные; не универсальный стандарт проверки",
+      "Синтетическое произношение и оценочные границы сцен требуют проверки человеком"
+    ],
+    "fact_status": "UNVERIFIED",
+    "approved": false
+  },
+  "approved": false,
+  "brief": "{\n  \"locale\": \"uk\",\n  \"editorial_assessment\": \"MANUAL_OFFLINE: учебный редакционный процесс, не научная верификация\",\n  \"audience\": \"Начинающие авторы / автори\",\n  \"hooks\": [\n    \"Гарне відео ще не є поясненням?\",\n    \"Что подтверждает ваш сценарий?\"\n  ],\n  \"structure\": [\n    \"Почніть із запитання\",\n    \"Відокремте факти від тлумачень\",\n    \"Поверніться до першоджерела\",\n    \"Перевірте наукові твердження\",\n    \"Призначте кожному кадру завдання\",\n    \"Перевірте права на матеріали\",\n    \"Перегляньте всю чернетку\",\n    \"Залиште перевірюваний слід\"\n  ],\n  \"script\": \"Гарне відео ще не є поясненням. Уявіть, що ви побачили гучний заголовок і хочете зробити про нього ролик. Перш ніж шукати ефектні кадри, сформулюйте запитання глядача. Що саме він має зрозуміти після перегляду? У нашому прикладі ми розбираємо не сенсацію, а спосіб перевірки історії. Це навчальна редакційна послідовність, а не науковий експеримент. Спробуйте записати головне запитання одним реченням і прибрати слова, які обіцяють більше, ніж ви зможете показати.\\n\\nТепер випишіть твердження майбутнього сценарію. Біля кожного позначте, що це: спостереження, число, припущення чи думка. Фраза «це сталося» потребує іншого підтвердження, ніж фраза «мені це здається важливим». Поки джерело не перевірене, залиште позначку «потребує перевірки». Якщо точне число не потрібне для розуміння історії, його можна прибрати. Не перетворюйте впевнений тон диктора на доказ. Глядач має розуміти, де закінчується встановлене й починається пояснення автора.\\n\\nДля ключового твердження знайдіть початковий документ, запис або дослідження. Збережіть автора, дату й точне місце, на яке посилаєтеся. Потім перевірте контекст: яке запитання вивчали, кого спостерігали та про який час ідеться. Переказ може бути корисною відправною точкою, але він не замінює перевірки оригіналу. Якщо першоджерело недоступне, прямо вкажіть це обмеження. На нашій схемі шлях від заголовка до документа показано умовно: це ілюстрація процесу, а не підтвердження конкретної події.\\n\\nОкремо виділіть медичні, причинні та інші наукові твердження. Запитайте, чи дозволяє обраний матеріал зробити саме такий висновок. Збіг двох подій сам по собі не пояснює причину. Для спірного висновку запишіть альтернативне пояснення й запитання фахівцеві. У цьому навчальному ролику ми не оцінюємо лікування і не даємо професійних рекомендацій. Якщо перевірити тезу не вдалося, не маскуйте прогалину гарною графікою: скоротіть формулювання або відкладіть випуск.\\n\\nЛише тепер переходьте до розкадрування. Кожен короткий кадр має завдання: показати джерело, пояснити зв’язок або дати глядачеві паузу. Частину якорів можна заповнити власною схемою, частину фотографією, а рух залишити для справді важливого моменту. На умовній шкалі один прямокутник позначає один візуальний фрагмент. Це не замовлення платної генерації. Важливо покрити всю розповідь і не видавати ілюстрацію, створену моделлю, за документальне знімання.\\n\\nПеред імпортом перевірте походження зображення, музики й голосу. Безкоштовне завантаження не означає дозвіл на будь-яке використання. Запишіть автора, ліцензію, дату перевірки та потрібну атрибуцію. Для матеріалу з генератора додатково перевірте умови конкретної моделі й облікового запису. Якщо права невідомі, залиште статус UNKNOWN і використайте власну нейтральну схему. Наші демонстраційні картки створені локально; чужих фотографій, музики й голосових записів у них немає. Експериментальна збірка не надає дозволу на публікацію.\\n\\nЗберіть чернетку й перегляньте її повністю. Чи відповідають субтитри змісту мовлення? Чи є порожні ділянки, обірвані думки або кадри, що створюють хибне враження? Для загальної звукової доріжки межі сцен приблизні, тому їх треба перевірити на слух. Виправлення одного речення може змінити тривалість сцени: знову перевірте шкалу якорів. Технічно справний файл ще не доводить якість розповіді. Потрібен окремий редакційний перегляд, а для спірних фактів — окрема перевірка.\\n\\nНаприкінці збережіть сценарій, список джерел, зауваження й версію зібраного файла. Запишіть, хто ухвалив редакційне рішення та які обмеження залишилися. Контрольна сума допомагає відрізнити один файл від іншого, але не підтверджує правдивість його змісту. Якщо залишилися сумніви щодо фактів або прав, не вважайте експорт дозволом на випуск. Добрий результат цієї навчальної роботи — зрозуміле запитання, чесні межі знання й матеріали, походження яких ви можете пояснити. Тепер спробуйте цей порядок на власній невеликій історії.\",\n  \"claims_to_verify\": [\n    \"Любые добавленные числа, медицинские и причинные утверждения требуют первоисточников\"\n  ],\n  \"visual_recommendations\": [\n    \"Оригинальные схемы этапов; без чужих материалов\"\n  ],\n  \"risks\": [\n    \"Рекомендации учебные; не универсальный стандарт проверки\",\n    \"Синтетическое произношение и оценочные границы сцен требуют проверки человеком\"\n  ],\n  \"fact_status\": \"UNVERIFIED\",\n  \"approved\": false\n}",
+  "audio": "./uk_speech.mp3",
+  "mode": "MANUAL_OFFLINE",
+  "output_profile": {
+    "width": 640,
+    "height": 360,
+    "fps": 24
+  },
+  "demo_notes": "Original instructional draft, local procedural cards and eSpeak NG narration. No production permission. Estimated scene boundaries require human listening review."
+}

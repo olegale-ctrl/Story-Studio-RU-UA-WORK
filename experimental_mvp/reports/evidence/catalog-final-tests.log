@@ -1,0 +1,7 @@
+test_duration_provider_unavailable_and_no_catalog_balance (experimental_mvp.test_media_hub.PlannerTests.test_duration_provider_unavailable_and_no_catalog_balance) ... ok
+test_offline_no_account_login_refusal_unknown_and_exhausted (experimental_mvp.test_media_hub.PlannerTests.test_offline_no_account_login_refusal_unknown_and_exhausted) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.001s
+
+OK

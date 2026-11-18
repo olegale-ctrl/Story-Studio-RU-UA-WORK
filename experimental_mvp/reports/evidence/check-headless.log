@@ -1,0 +1,8 @@
+Tk: FAIL · no display name and no $DISPLAY environment variable
+  Установите Windows Python с компонентом tcl/tk and IDLE и повторите проверку.
+Python: 3.12.14
+ffmpeg: OK · ffmpeg version 7.1.5-0+deb13u1 Copyright (c) 2000-2026 the FFmpeg developers
+ffprobe: OK · ffprobe version 7.1.5-0+deb13u1 Copyright (c) 2007-2026 the FFmpeg developers
+Локальная сборка: OK · 1920×1080 H.264/AAC, mov_text/rus и предпросмотр с libass
+Edge TTS: клиент не установлен (для локального аудио допустимо)
+Онлайн-синтез: не запрошен. Для проверки: --check-edge ru или --check-edge uk.

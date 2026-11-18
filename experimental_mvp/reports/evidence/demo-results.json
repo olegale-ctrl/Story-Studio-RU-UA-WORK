@@ -1,0 +1,20 @@
+[
+  {
+    "locale": "ru",
+    "path": "/workspace/work/media-hub-evidence/demo-acceptance/ru/run-2b363ff8c6d9/final.mp4",
+    "duration": "244.291667",
+    "sha256": "d9c0e6cc24b1d5f6c72d961a4e44aac5f534e3c1870a8d2ea26dedf204672bda",
+    "decode_exit": 0,
+    "anchors": 40,
+    "probe_exit": 0
+  },
+  {
+    "locale": "uk",
+    "path": "/workspace/work/media-hub-evidence/demo-acceptance/uk/run-ef6c5555bc42/final.mp4",
+    "duration": "219.666667",
+    "sha256": "7283ee3a99aacb872c40de3423027fdf7b380187492c1e09771dd50caa845c78",
+    "decode_exit": 0,
+    "anchors": 36,
+    "probe_exit": 0
+  }
+]

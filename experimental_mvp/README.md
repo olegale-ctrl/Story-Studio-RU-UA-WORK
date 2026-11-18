@@ -54,3 +54,14 @@ CLI запускает тот же конвейер и пригоден при �
 | JianYing и CapCut | modules/render-history-video/scripts/export_jianying.py | MP4 без стороннего редактора | Совместимость CapCut International не проверена | DEFER |
 
 Код, модели, визуальные материалы, корпуса и исполняемые файлы konlu в добавления не входят. Edge TTS используется через существующий в RU/UA адаптер и отдельно устанавливаемый клиент `edge-tts`. Лицензия клиента версии 7.3.1 указывает LGPLv3 и исключение MIT для srt_composer.py. Условия сетевого сервиса действуют отдельно. Историческая копия MIT из LICENSES/ORIGINAL-MIT-LICENSE.txt не меняет CC BY-NC-SA у закреплённых снимков konlu. FFmpeg использован отдельным исполняемым файлом, который не включён в ветку. Для его распространения существенны конкретная конфигурация и лицензия сборки. См. [существующий реестр лицензий](../LICENSES/THIRD_PARTY_NOTICES.md).
+
+## MVP-05/06 + AI Media Hub (experimental)
+
+See [Windows/offline walkthrough](MVP_05_06_WINDOWS.md),
+[architecture and limitations](reports/MVP_05_06_ARCHITECTURE_AND_LIMITATIONS.md),
+[provider research](reports/AI_PROVIDER_RESEARCH_2026_11.md),
+[baseline](reports/RC02_INDEPENDENT_BASELINE.md) and
+[acceptance packet](reports/MVP_05_06_ACCEPTANCE.md).
+The RU/UA GUI demo buttons now load the complete local media-hub demonstrations.
+Media generation remains a manual official-browser/import workflow; an optional
+OpenAI-compatible LLM produces unverified drafts only. No production permissions.

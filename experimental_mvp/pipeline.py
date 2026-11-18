@@ -1,4 +1,4 @@
-"""Local experimental production, separate from Story Studio release storage."""
+"""Local experimental rendering, separate from Story Studio release storage."""
 import argparse
 from datetime import datetime, timezone
 from hashlib import sha256
@@ -56,6 +56,17 @@ def load(path):
     project = json.loads(path.read_text(encoding="utf-8-sig"))
     if "scenes" in project:
         identify(project, seed=str(path.resolve()))
+        def relative(record, field):
+            value = record.get(field)
+            if isinstance(value, str) and value.startswith("./"):
+                record[field] = str((path.parent / value).resolve())
+        relative(project, "audio")
+        for scene in project["scenes"]:
+            for field in ("audio", "image"):
+                relative(scene, field)
+            for anchor in scene.get("anchors", []):
+                for field in ("local_asset_path", "reference_image"):
+                    relative(anchor, field)
     return project
 
 
@@ -274,7 +285,7 @@ def render_preview(project, index, workspace, audio):
     log = folder / "preview.log"
     (folder / "captions.srt").write_text(captions, encoding="utf-8")
     ffmpeg = executable("ffmpeg")
-    clip = render_scene(scene, index + 1, length / 1000, folder, log, ffmpeg)
+    clip = render_scene(scene, index + 1, length / 1000, folder, log, ffmpeg, project.get("output_profile"))
     command([ffmpeg, "-nostdin", "-v", "error", "-i", clip, "-ss", str(start / 1000),
              "-i", str(source), "-map", "0:v:0", "-map", "1:a:0",
              "-vf", "subtitles=captions.srt", "-t", str(length / 1000),
@@ -283,7 +294,15 @@ def render_preview(project, index, workspace, audio):
     return folder / "preview.mp4", approximate
 
 
-def render_scene(scene, index, length, folder, log, ffmpeg):
+def render_scene(scene, index, length, folder, log, ffmpeg, profile=None, cancelled=lambda: False):
+    if scene.get("anchors"):
+        from experimental_mvp.storyboard import render
+        return render(scene, index, length, folder, log, ffmpeg, command, profile, cancelled)
+    if profile:
+        from experimental_mvp.storyboard import output_profile
+        width, height, fps = output_profile(profile)
+    else:
+        width, height, fps = 1920, 1080, 30
     colors = ["0x17365a", "0x275148", "0x603d44", "0x39466b"]
     image = scene.get("image")
     if image:
@@ -292,13 +311,13 @@ def render_scene(scene, index, length, folder, log, ffmpeg):
             raise ValueError("Используйте PNG, JPEG, WebP или BMP.")
         local = folder / f"image{index:03}{source.suffix.lower()}"
         shutil.copyfile(source, local)
-        image_args = ["-loop", "1", "-framerate", "30", "-i", local.name]
+        image_args = ["-loop", "1", "-framerate", str(fps), "-i", local.name]
     else:
         color = colors[(index - 1) % len(colors)]
-        image_args = ["-f", "lavfi", "-i", f"color=c={color}:s=1920x1080:r=30"]
+        image_args = ["-f", "lavfi", "-i", f"color=c={color}:s={width}x{height}:r={fps}"]
     fade = min(0.22, length / 3)
-    filters = ("scale=1920:1080:force_original_aspect_ratio=decrease:"
-               "force_divisible_by=2,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,"
+    filters = (f"scale={width}:{height}:force_original_aspect_ratio=decrease:"
+               f"force_divisible_by=2,pad={width}:{height}:(ow-iw)/2:(oh-ih)/2,"
                f"setsar=1,format=yuv420p,fade=t=in:d={fade},"
                f"fade=t=out:st={length-fade}:d={fade}")
     clip = f"scene{index:03}.mp4"
@@ -343,6 +362,9 @@ def check_project(project, workspace):
             except ValueError as exc:
                 issues.append((None, "audio", str(exc), False))
     overrides = project.get("captions_by_scene", {})
+    anchor_ids = [a.get("anchor_id") for s in scenes for a in s.get("anchors", [])]
+    if len(anchor_ids) != len(set(anchor_ids)):
+        issues.append((None, "anchors", "anchor_id должны быть уникальны во всём проекте.", False))
     for index, scene in enumerate(scenes, 1):
         key = scene["id"]
         if not scene["text"].strip():
@@ -367,6 +389,13 @@ def check_project(project, workspace):
                         pass
             if length is None:
                 issues.append((key, "captions", "Длительность и таймкоды ожидают озвучку.", True))
+        if scene.get("anchors"):
+            from experimental_mvp.storyboard import validate as validate_anchors
+            if length is not None:
+                for message in validate_anchors(scene, length):
+                    issues.append((key, "anchors", message, False))
+            else:
+                issues.append((key, "anchors", "Покрытие якорей ожидает длительность озвучки.", True))
         if key in overrides:
             try:
                 validate(overrides[key], length if length is not None else float("inf"), index)
@@ -377,10 +406,11 @@ def check_project(project, workspace):
 
 def preview_signature(project):
     """Determine staleness without opening or transmitting media contents."""
-    selection = {k: project.get(k) for k in ("locale", "voice", "audio", "scenes", "captions_by_scene")}
+    selection = {k: project.get(k) for k in ("locale", "voice", "audio", "scenes", "captions_by_scene", "output_profile")}
     sources = [project.get("audio")]
     for scene in project["scenes"]:
         sources.extend((scene.get("image"), None if project.get("audio") else scene.get("audio")))
+        sources.extend(a.get("local_asset_path") for a in scene.get("anchors", []))
     stamps = []
     for value in filter(None, sources):
         try:
@@ -413,7 +443,7 @@ class BuildStopped(RuntimeError):
 
 def build(project, workspace, notify=print, *, preview=False, cancelled=lambda: False):
     if project.get("approved") is not True:
-        raise ValueError("Сначала подтвердите переход к производству.")
+        raise ValueError("Сначала подтвердите локальную экспериментальную сборку; production permissions не выдаются.")
     identify(project)
     scenes = project["scenes"]
     texts = [scene["text"].strip() for scene in scenes]
@@ -486,7 +516,7 @@ def build(project, workspace, notify=print, *, preview=False, cancelled=lambda: 
         for index, (scene, (start, end)) in enumerate(zip(scenes, spans), 1):
             checkpoint()
             notify(f"Видео: сцена {index}/{len(scenes)}")
-            clips.append(render_scene(scene, index, (end - start) / 1000, folder, log, ffmpeg))
+            clips.append(render_scene(scene, index, (end - start) / 1000, folder, log, ffmpeg, project.get("output_profile"), cancelled))
         (folder / "scenes.txt").write_text("".join(f"file '{name}'\n" for name in clips),
                                           encoding="ascii")
         checkpoint()
@@ -499,6 +529,21 @@ def build(project, workspace, notify=print, *, preview=False, cancelled=lambda: 
                  "-disposition:s:0", "default", "-movflags", "+faststart", "pending.mp4"], folder, log)
         checkpoint()
         (folder / "pending.mp4").replace(folder / "final.mp4")
+        output = folder / "final.mp4"
+        save(folder / "execution-evidence.json", {
+            "mode": "EXPERIMENTAL_LOCAL_ONLY", "production_permissions": False,
+            "project_sha256": sha256((folder / "project.json").read_bytes()).hexdigest(),
+            "output_sha256": sha256(output.read_bytes()).hexdigest(),
+            "audio_inputs": [{"file": p.name, "sha256": file_digest(p)}
+                             for p in sorted([*folder.glob("import.*"), *folder.glob("speech*.wav")])],
+            "captions_sha256": file_digest(folder / "captions.srt"),
+            "tool_versions": {name: subprocess.run([executable(name), "-version"],
+                capture_output=True, text=True, check=True).stdout.splitlines()[0]
+                for name in ("ffmpeg", "ffprobe")},
+            "copied_visual_inputs": [json.loads(p.read_text(encoding="utf-8")) for p in sorted(folder.glob("anchor-inputs*.json"))],
+            "anchors": [{"anchor_id": a["anchor_id"], "sha256": a.get("asset_sha256"),
+                         "license_status": a.get("license_status", "UNKNOWN")}
+                        for scene in scenes for a in scene.get("anchors", [])]})
         save(folder / "result.json", {"status": "complete", "timing": timing})
         return folder / "final.mp4"
     except (BuildStopped, KeyboardInterrupt):

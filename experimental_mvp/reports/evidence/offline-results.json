@@ -1,0 +1,15 @@
+{
+  "command": "strace -f -e trace=network -e inject=socket:error=ENETDOWN -e inject=connect:error=ENETUNREACH python -m experimental_mvp.pipeline --project experimental_mvp/demos/media_hub/ru.json --workspace <local-output> --approve",
+  "strace_version": "6.13",
+  "build_exit_code": 0,
+  "output_sha256": "d9c0e6cc24b1d5f6c72d961a4e44aac5f534e3c1870a8d2ea26dedf204672bda",
+  "socket_calls": 0,
+  "connect_calls": 0,
+  "network_calls_policy": "socket fails ENETDOWN; connect fails ENETUNREACH in Python and traced FFmpeg children",
+  "network_namespace_attempt": {
+    "exit_code": 1,
+    "reason": "unshare -n: Operation not permitted"
+  },
+  "scope": "fault injection, not physical disconnection or production sandbox",
+  "full_decode_exit_code": 0
+}
