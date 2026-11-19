@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "production_readiness_report — PROPOSAL; no authority",
+  "description": "SP/1 diagnostic transport only; not PG, SI identity, authorization or storage publication.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "necessary_conditions_satisfied",
+    "release_allowed",
+    "status",
+    "blockers"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "SP/1-PROPOSAL"
+    },
+    "necessary_conditions_satisfied": {
+      "type": "boolean"
+    },
+    "release_allowed": {
+      "const": false
+    },
+    "status": {
+      "const": "BLOCKED_CONTRACT"
+    },
+    "blockers": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 100000
+      }
+    }
+  }
+}

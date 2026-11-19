@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "artifact_manifest — PROPOSAL; no authority",
+  "description": "SP/1 diagnostic transport only; not PG, SI identity, authorization or storage publication.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "purpose",
+    "publication_status",
+    "artifacts",
+    "evidence_refs"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "SP/1-PROPOSAL"
+    },
+    "purpose": {
+      "const": "DIAGNOSTIC_DECLARED_INPUTS_ONLY"
+    },
+    "publication_status": {
+      "const": "BLOCKED_STORAGE_CONTRACT"
+    },
+    "artifacts": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "role",
+          "path",
+          "observation"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100000
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100000
+          },
+          "observation": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "sha256",
+              "byte_length"
+            ],
+            "properties": {
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "byte_length": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "id",
+              "revision",
+              "sha256"
+            ],
+            "properties": {
+              "type": {
+                "enum": [
+                  "Angle",
+                  "AudienceHypothesis",
+                  "ChannelContext",
+                  "ClaimCheck",
+                  "ClaimItem",
+                  "CreativeAlternative",
+                  "EvaluationReport",
+                  "EvidenceItem",
+                  "Intake",
+                  "ProductionBrief",
+                  "ReviewPacket",
+                  "Risk",
+                  "Rubric",
+                  "RunRecord",
+                  "Selection",
+                  "SourceItem",
+                  "StoryIdea",
+                  "VisualRequirement"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "id",
+              "revision",
+              "content_hash"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "asset",
+                  "candidate",
+                  "claim",
+                  "genre_profile",
+                  "production",
+                  "rights_review",
+                  "scene_plan",
+                  "script",
+                  "source"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "content_hash": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

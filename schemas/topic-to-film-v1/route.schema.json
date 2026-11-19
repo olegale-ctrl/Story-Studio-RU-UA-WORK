@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "route — PROPOSAL; no authority",
+  "description": "SP/1 diagnostic transport only; not PG, SI identity, authorization or storage publication.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "route",
+    "mode",
+    "intent_sha256",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "SP/1-PROPOSAL"
+    },
+    "route": {
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    "mode": {
+      "enum": [
+        "draft",
+        "production"
+      ]
+    },
+    "intent_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "status": {
+      "const": "BLOCKED_DISPATCHER_CONTRACT"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "jobs — PROPOSAL; no authority",
+  "description": "SP/1 diagnostic transport only; not PG, SI identity, authorization or storage publication.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "source",
+    "status",
+    "accepted_job_ids",
+    "observations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "SP/1-PROPOSAL"
+    },
+    "source": {
+      "const": "NO_APPROVED_JOBSTORE_API"
+    },
+    "status": {
+      "const": "BLOCKED_JOBSTORE_CONTRACT"
+    },
+    "accepted_job_ids": {
+      "type": "array",
+      "maxItems": 0
+    },
+    "observations": {
+      "type": "array",
+      "maxItems": 0
+    }
+  }
+}

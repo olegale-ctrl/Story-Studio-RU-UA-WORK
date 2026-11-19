@@ -1,0 +1,277 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "job_intent — PROPOSAL; no authority",
+  "description": "SP/1 diagnostic transport only; not PG, SI identity, authorization or storage publication.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "policy_version",
+    "route",
+    "mode",
+    "fallback_class",
+    "inputs",
+    "requested_attestations",
+    "proposed_job_types",
+    "intent_sha256",
+    "status",
+    "blockers",
+    "accepted_job_ids"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "SP/1-PROPOSAL"
+    },
+    "policy_version": {
+      "const": "SP-REVIEW-ONLY/1"
+    },
+    "route": {
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    "mode": {
+      "enum": [
+        "draft",
+        "production"
+      ]
+    },
+    "fallback_class": {
+      "enum": [
+        "none",
+        "equivalent",
+        "degraded",
+        "placeholder"
+      ]
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "topic": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100000
+        },
+        "script": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100000
+        },
+        "plan": {
+          "type": "object",
+          "required": [
+            "locale",
+            "scenes"
+          ],
+          "properties": {
+            "locale": {
+              "enum": [
+                "ru",
+                "uk"
+              ]
+            },
+            "scenes": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "required": [
+                  "text"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000
+                  },
+                  "image": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100000
+                  }
+                }
+              }
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100000
+            }
+          }
+        },
+        "materials": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "role",
+              "path",
+              "observation"
+            ],
+            "properties": {
+              "role": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100000
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100000
+              },
+              "observation": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "sha256",
+                  "byte_length"
+                ],
+                "properties": {
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "byte_length": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "topic"
+          ],
+          "not": {
+            "anyOf": [
+              {
+                "required": [
+                  "script"
+                ]
+              },
+              {
+                "required": [
+                  "plan"
+                ]
+              },
+              {
+                "required": [
+                  "materials"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "required": [
+            "script"
+          ],
+          "not": {
+            "anyOf": [
+              {
+                "required": [
+                  "topic"
+                ]
+              },
+              {
+                "required": [
+                  "plan"
+                ]
+              },
+              {
+                "required": [
+                  "materials"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "required": [
+            "plan"
+          ],
+          "not": {
+            "anyOf": [
+              {
+                "required": [
+                  "topic"
+                ]
+              },
+              {
+                "required": [
+                  "script"
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "requested_attestations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "render",
+        "facts",
+        "rights"
+      ],
+      "properties": {
+        "render": {
+          "type": "boolean"
+        },
+        "facts": {
+          "type": "boolean"
+        },
+        "rights": {
+          "type": "boolean"
+        }
+      }
+    },
+    "proposed_job_types": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "enum": [
+          "assets.images",
+          "assets.voice",
+          "gates.technical",
+          "plan.from_script",
+          "plan.validate",
+          "render.mp4",
+          "script.draft"
+        ]
+      }
+    },
+    "intent_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "status": {
+      "const": "BLOCKED_DISPATCHER_CONTRACT"
+    },
+    "blockers": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 100000
+      }
+    },
+    "accepted_job_ids": {
+      "type": "array",
+      "maxItems": 0
+    }
+  }
+}
