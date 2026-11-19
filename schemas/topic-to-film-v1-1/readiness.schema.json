@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "readiness.schema — limited local diagnostic revision1.1",
+  "description": "SP/1.1-DIAGNOSTIC: structural shape only; mandatory semantic validation; no execution, trust, rights or release authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "policy_version",
+    "script_ready",
+    "facts_reviewed",
+    "rights_cleared",
+    "authorized_for_render",
+    "technical_pass",
+    "authorized_for_release",
+    "fallback_class",
+    "si_eligible",
+    "release_allowed",
+    "blockers",
+    "evidence_refs",
+    "artifact_bindings"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "SP/1.1-DIAGNOSTIC"
+    },
+    "policy_version": {
+      "const": "SP-DIAGNOSTIC/1.1"
+    },
+    "script_ready": {
+      "enum": [
+        "unknown",
+        "false",
+        "true"
+      ]
+    },
+    "facts_reviewed": {
+      "enum": [
+        "unknown",
+        "false",
+        "true"
+      ]
+    },
+    "rights_cleared": {
+      "enum": [
+        "unknown",
+        "false",
+        "true"
+      ]
+    },
+    "authorized_for_render": {
+      "enum": [
+        "unknown",
+        "false",
+        "true"
+      ]
+    },
+    "technical_pass": {
+      "enum": [
+        "unknown",
+        "false",
+        "true"
+      ]
+    },
+    "authorized_for_release": {
+      "enum": [
+        "unknown",
+        "false",
+        "true"
+      ]
+    },
+    "fallback_class": {
+      "enum": [
+        "none",
+        "equivalent",
+        "degraded",
+        "placeholder"
+      ]
+    },
+    "si_eligible": {
+      "enum": [
+        "unknown",
+        "false",
+        "true"
+      ]
+    },
+    "release_allowed": {
+      "const": false
+    },
+    "blockers": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 100000
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "id",
+              "revision",
+              "sha256"
+            ],
+            "properties": {
+              "type": {
+                "enum": [
+                  "Angle",
+                  "AudienceHypothesis",
+                  "ChannelContext",
+                  "ClaimCheck",
+                  "ClaimItem",
+                  "CreativeAlternative",
+                  "EvaluationReport",
+                  "EvidenceItem",
+                  "Intake",
+                  "ProductionBrief",
+                  "ReviewPacket",
+                  "Risk",
+                  "Rubric",
+                  "RunRecord",
+                  "Selection",
+                  "SourceItem",
+                  "StoryIdea",
+                  "VisualRequirement"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(?![\\s\\S])"
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "id",
+              "revision",
+              "content_hash"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "asset",
+                  "candidate",
+                  "claim",
+                  "genre_profile",
+                  "production",
+                  "rights_review",
+                  "scene_plan",
+                  "script",
+                  "source"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(?![\\s\\S])"
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "content_hash": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "artifact_bindings": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "role",
+          "path",
+          "observation"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100000
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100000
+          },
+          "observation": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "sha256",
+              "byte_length"
+            ],
+            "properties": {
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+              },
+              "byte_length": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

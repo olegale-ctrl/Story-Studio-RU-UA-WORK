@@ -24,17 +24,23 @@ def main(argv=None):
     parser.add_argument("--declare-facts-reviewed", action="store_true")
     parser.add_argument("--declare-rights-cleared", action="store_true")
     parser.add_argument("--wait", type=int, choices=range(1, 301), metavar="1..300", help="Requires approved observation API; currently blocked")
+    parser.add_argument("--contract-version", choices=("SP/1-PROPOSAL", "SP/1.1-DIAGNOSTIC"),
+                        default="SP/1-PROPOSAL", help="Explicit revision selection; default preserves historical SP/1")
     args = parser.parse_args(argv)
     try:
-        intent = prepare_intent(topic=args.topic,
+        prepare, readiness, gates = prepare_intent, initial_readiness, run_gates
+        if args.contract_version == "SP/1.1-DIAGNOSTIC":
+            from core import topic_to_film_v1_1 as diagnostic
+            prepare, readiness, gates = diagnostic.prepare_intent, diagnostic.initial_readiness, diagnostic.run_gates
+        intent = prepare(topic=args.topic,
             script=read_local(args.script, 100_000).decode("utf-8") if args.script else None,
             plan=read_json(args.plan) if args.plan else None,
             materials=read_json(args.materials) if args.materials else None,
             mode=args.mode, fallback=args.fallback, authorize_render=args.authorize_render,
             declare_facts_reviewed=args.declare_facts_reviewed,
             declare_rights_cleared=args.declare_rights_cleared)
-        result = {"intent": intent, "readiness": initial_readiness(intent),
-                  "gates": run_gates(intent["route"], plan_path=args.plan),
+        result = {"intent": intent, "readiness": readiness(intent),
+                  "gates": gates(intent["route"], plan_path=args.plan),
                   "wait_status": "BLOCKED_JOBSTORE_CONTRACT" if args.wait else "NOT_REQUESTED"}
         print(json.dumps(result, ensure_ascii=False, allow_nan=False, indent=2))
         return 3  # explicit blocked, never accepted/completed

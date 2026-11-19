@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "technical_gate_report.schema — limited local diagnostic revision1.1",
+  "description": "SP/1.1-DIAGNOSTIC: structural shape only; mandatory semantic validation; no execution, trust, rights or release authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "route",
+    "phase",
+    "status",
+    "checks",
+    "blockers",
+    "observations",
+    "technical_pass",
+    "release_allowed",
+    "not_automatically_proven"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "SP/1.1-DIAGNOSTIC"
+    },
+    "route": {
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    "phase": {
+      "enum": [
+        "intermediate",
+        "final"
+      ]
+    },
+    "status": {
+      "enum": [
+        "FAIL",
+        "BLOCKED",
+        "INTERMEDIATE_CHECKS_PASS"
+      ]
+    },
+    "checks": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "check",
+          "status",
+          "detail"
+        ],
+        "properties": {
+          "check": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100000
+          },
+          "status": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "NOT_RUN"
+            ]
+          },
+          "detail": {}
+        }
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 100000
+      }
+    },
+    "observations": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "role",
+          "sha256",
+          "byte_length"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100000
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+          },
+          "byte_length": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "technical_pass": {
+      "const": "unknown"
+    },
+    "release_allowed": {
+      "const": false
+    },
+    "not_automatically_proven": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 100000
+      }
+    }
+  }
+}

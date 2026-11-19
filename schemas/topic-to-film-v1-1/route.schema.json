@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "route.schema — limited local diagnostic revision1.1",
+  "description": "SP/1.1-DIAGNOSTIC: structural shape only; mandatory semantic validation; no execution, trust, rights or release authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "route",
+    "mode",
+    "intent_sha256",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "SP/1.1-DIAGNOSTIC"
+    },
+    "route": {
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    "mode": {
+      "enum": [
+        "draft",
+        "production"
+      ]
+    },
+    "intent_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+    },
+    "status": {
+      "const": "BLOCKED_DISPATCHER_CONTRACT"
+    }
+  }
+}
