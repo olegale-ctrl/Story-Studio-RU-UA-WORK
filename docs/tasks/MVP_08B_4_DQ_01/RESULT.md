@@ -1,3 +1,186 @@
+# DQ-01 PURE-RESUME — contract input ambiguity
+
+**Current checkpoint status: BLOCKED_CONTRACT.** Native status remains
+**NATIVE_BLOCKED_PRE_WRITE_GATE**. Date: 2026-11-20 (Europe/Kiev).
+
+This section supersedes the earlier checkpoint report preserved below.
+**Stage A is not complete and is not ready for acceptance.** The owner's
+PURE-RESUME task explicitly requires BLOCKED_CONTRACT on a contract
+contradiction; this checkpoint records the incompatible strict-input and
+positive-oracle requirements rather than inventing an acceptance rule.
+
+## Exact starting point and scope
+
+- Branch: `feat/mvp-08b-4-dq-01-native-sqlite-lab` (continued, no reset).
+- Resume base: `9729a426f50714b269d947232e07a010b61f0f84`.
+- Verified resume base tree: `bdefe8aa69d79b410d5823978375a72357aadaec`.
+- Working tree was clean before this task. No AGENTS.md was found by the
+  workspace search.
+- Unchanged authority: contract commit
+  `c15ac152258586be1ed1b57f205830edfffc9ae1`, tree
+  `19192e46ad0f3b3cc9d9bc9809d3896e1e13e639`.
+- Exactly two existing authorized files changed: `tests/test_dq01_contracts.py`
+  and this `RESULT.md`. `contracts.py` and all other code are unchanged.
+- Full diff: `git diff --binary 9729a426f50714b269d947232e07a010b61f0f84 HEAD`.
+  Final publication commit/tree and this report's self hashes are supplied in
+  the publication reply; use `git rev-parse HEAD HEAD^{tree}` to verify.
+
+## C-A01 — original ticket bytes absent from two positive case inputs
+
+Pinned source: `docs/tasks/MVP_08B_4_DQ_00/NATIVE_EVIDENCE_CONTRACT_PROPOSAL.md`.
+
+The following requirements must all be satisfied without contract changes:
+
+1. Section 7, line 131: NOT_COMMITTED requires the exact retained ticket
+   bundle, including canonical ticket and its full expected immutable closure.
+2. Section 2, line 46: `AbsenceProof.ticket_sha256` is a Digest, whereas
+   OperationTicket refs use the separately defined closed four-field Ref.
+3. Catalogue rules, line 161: only the selected case's inputs/facts are
+   available, and a missing ticket/Ack must not be borrowed from another entry.
+4. F01-P03 (lines 986 onward) and F02-P07 (1325 onward) expect proven
+   NOT_COMMITTED and namespace_barrier=false.
+
+**Observed fixture facts, computed directly from the pinned Git object:**
+
+| Case | Explicit ticket | Required ticket digest in AbsenceProof | Original ticket in inputs + typed/payload closure? | Expected outcome/barrier |
+|---|---|---|---|---|
+| F01-P01, control | TP | 07b38b65c665b6348837c7826110fa05e8bd08bf6b441508fc9648c0dae14831 | YES | NOT_COMMITTED / true |
+| F01-P02, control | TA | 4c0e03133930623d16d0f40ca977e13ffc9d46be9599b82a5227a8aaad3af14a | YES | NOT_ATTEMPTED / true |
+| F01-P03 | TRN0 | 07b38b65c665b6348837c7826110fa05e8bd08bf6b441508fc9648c0dae14831 (TP) | NO | NOT_COMMITTED / false |
+| F02-P07 | TRN | 4c0e03133930623d16d0f40ca977e13ffc9d46be9599b82a5227a8aaad3af14a (TA) | NO | NOT_COMMITTED / false |
+
+TRN0 hashes to
+`4c5190b1c469b2c1ad69896a645bdd6af6196f1033f154256684cd00ae77b6a1`;
+TRN hashes to
+`1a9d07ade8de7cb512ccaa61ca7cb5700c786a82c7e6cf10eae74fd93539ce87`.
+Neither supplies the original ticket bytes identified by its linked
+AbsenceProof. Both are phase R tickets. ProofAck references the original
+AbsenceProof; it does not add a typed reference to the missing TP/TA.
+
+The two cases assert `ticket_retained=true`. That assertion is a conditional
+fixture fact, not the missing canonical bytes or an explicit retained-bundle
+input. The TP/TA literals exist elsewhere in the catalogue, so this is **not**
+a missing repository artifact. The unresolved issue is case-local availability
+and the authorized interpretation of that assertion.
+
+An alternative interpretation is possible: treat `ticket_sha256` as a semantic
+lookup edge into an explicitly retained bundle, with `ticket_retained=true`
+asserting the bundle exists. The contract does not specify that bundle input
+or its fixture availability rule, nor explicitly authorize lookup of those
+bytes from the otherwise excluded catalogue. This checkpoint does **not**
+claim that negative R is logically impossible. It records the ambiguity that
+prevents simultaneously proving exact ticket bytes, respecting strict
+case-local inputs, and accepting these two positive outcomes without choosing
+an additional rule. A Digest lookup by itself must not manufacture custody.
+
+No missing ticket was silently supplied, no historical proof was assumed to
+be a separately trusted attestation, and no hash/schema was changed to make
+these expectations pass. Full schema/proof implementation stopped at this
+contract boundary, as instructed. This is a finding for independent review,
+not a revision to G1–G6, OD4 or CP decisions.
+
+## Reproduction and test meaning
+
+The test module now embeds all 23 exact DOC.ORACLE records from the pinned
+Markdown. The existing 58 canonical literals and all expected SHA/lengths are
+unchanged. The earlier external document verifier was not used.
+
+`_case_byte_closure` starts only from `case.inputs` and follows exact typed
+refs, including decoded DataObject payload refs, through the hash-verified
+catalogue resolver. It does not turn raw Digest strings or true facts into
+extra edges. `_missing_absence_ticket_bytes` then compares each encountered
+AbsenceProof.ticket_sha256 with the canonical OperationTickets actually
+available in that closure. These helpers are diagnostics in the authorized
+existing test file, not a new contract API.
+
+The 23 `test_document_case_byte_inputs_only` tests check byte closures and
+reproduce the missing-ticket inventory. The two positive-control and two
+negative-close finding tests distinguish available original tickets from
+phase R substitutes. Their successful assertions demonstrate the finding;
+**they are not successful semantic executions of the 23 DOC.ORACLE cases**.
+In particular, the code does not change the two official expected outcomes
+into approved negative outcomes. No test uses an oracle's case ID or expected
+answer to authorize a native proof.
+
+## Actual PURE-RESUME test runs
+
+| Suite | Python | PASS | FAIL | SKIP | Deselected | Exit | pytest time |
+|---|---|---:|---:|---:|---:|---:|---:|
+| Wire + contract-gap diagnostics | 3.10.22 | 179 | 0 | 0 | 0 | 0 | 1.49 s |
+| Wire + contract-gap diagnostics | 3.13.18 | 179 | 0 | 0 | 0 | 0 | 1.18 s |
+| Six existing PURE modules | 3.10.22 | 203 | 0 | 0 | 0 | 0 | 26.17 s |
+| Six existing PURE modules | 3.13.18 | 203 | 0 | 0 | 0 | 0 | 22.00 s |
+| Read-only SP subset | 3.10.22 | 65 + 110 subtests | 0 | 0 | 4 | 0 | 0.35 s |
+| Read-only SP subset | 3.13.18 | 65 + 110 subtests | 0 | 0 | 4 | 0 | 0.37 s |
+
+Python versions/builds and pytest 9.2.0 were measured again and match the
+historical rows below. SQLite was not queried or connected for PURE-RESUME.
+Each interpreter's three sequential suites ran under a 60 s outer timeout;
+actual command totals: **28.180 s** (3.10), **23.691 s** (3.13), both exits 0.
+No timeout, startup failure, skip or forbidden audit event occurred in these
+resume runs. `AUDIT_BLOCKED_EVENTS []` on both interpreters.
+
+The runner uses the same pre-pytest write/process/connect audit guard and
+`PYTHONDONTWRITEBYTECODE=1`, `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1`, `-B`,
+`-q -s -p no:cacheprovider -p no:tmpdir -p no:logging` as recorded below.
+SP deliberately excludes `test_missing_wav`, `test_duplicate_json_rejected`,
+`test_read_limit`, `test_symlink_rejected` because they create files. No full
+SP PASS is claimed. No JUnit/native log/cache/temp/evidence file was generated.
+Audit observation is not native syscall isolation or SQLite qualification.
+
+## Completion matrix and resolution proposals
+
+| Requested work | Current status |
+|---|---|
+| All 58 canonical byte entries / byte closures | PASS on both runtimes; 57 distinct preimages |
+| All 23 case input byte closures and ticket-availability audit | Checked; two positive cases expose C-A01 |
+| All 23 official semantic DOC.ORACLE outcomes | NOT_RUN / BLOCKED_CONTRACT; zero semantic acceptance claimed |
+| 17 closed schemas, inline/binding/role/index validation | NOT_COMPLETED; contracts.py unchanged from resume base |
+| Full CommitProof/AbsenceProof/Hold/Recovery/Ack semantics | NOT_COMPLETED / BLOCKED_CONTRACT |
+| Adversarial schema/proof/generation/foreign-binding tests | Full requested set NOT_IMPLEMENTED; prior wire/ref negatives remain |
+| Native root/runtime/SQLite/process/FI/security qualification | NOT_RUN / NATIVE_BLOCKED_PRE_WRITE_GATE |
+| Windows / production | NOT_RUN / NOT_AUTHORIZED |
+
+Possible resolution options, **PROPOSAL only**:
+
+- Explicitly add the original TP to F01-P03 and TA to F02-P07 inputs, retaining
+  their existing bytes/hashes and the strict case-local availability rule.
+- Specify a retained-ticket-bundle input and its exact byte membership, plus
+  whether ticket_sha256 is an authorized semantic lookup edge. Missing bundle
+  entries or ticket_retained=false must remain fail-closed. A true flag alone
+  must not become native qualification.
+- If historical proofs are intended to enter already qualified, define that
+  boundary and its required provenance explicitly; a public hash is not an
+  attestation or replacement for missing custody evidence.
+
+No option is selected automatically. Contract source files are outside this
+resume allowlist and were not edited. Independent review should first decide
+whether C-A01 follows the intended interpretation; if another interpretation
+is already normative, identify the exact contract text and fixture inputs.
+
+## Changed-file hashes and publication
+
+`tests/test_dq01_contracts.py`:
+Git blob SHA-1 `15c2b92f21a32a12738c62e9700ceb66bb1c1882`;
+raw SHA-256 `6b39c237dce2231e419b0c0fc57cdd0a599300b9ef88d309e2158071292e8fd4`.
+This report's final hashes are in the publication reply to avoid a self-hash
+cycle. The historical file hashes below refer only to the prior checkpoint.
+
+Only these two existing files are published. No root/DB/journal/native log,
+SQLite connection, native child, fault injection, model/provider/media call,
+CI/dependency/contract/main change, merge, release or production operation.
+No native pre-write permission was requested again or inferred.
+
+**STOP — BLOCKED_CONTRACT / NATIVE_BLOCKED_PRE_WRITE_GATE.** No Stage A-ready
+claim and no automatic continuation after publication.
+
+---
+
+# Historical checkpoint 9729a426f50714b269d947232e07a010b61f0f84
+
+The following content is preserved as the prior run record; it is not a claim
+that its counts, file hashes, status or implementation scope describe resume.
+
 # MVP-08B.4-DQ-01 — blocked pre-write gate / pure wire preparation
 
 **Status: BLOCKED_PRE_WRITE_GATE.** Date: 2026-11-20 (Europe/Kiev).
