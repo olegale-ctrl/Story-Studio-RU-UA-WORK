@@ -1,5 +1,11 @@
 # MVP-08B.4-DQ-01 — Implementation Task Proposal
 
+## RESOLVE-01 — текущая редакция
+
+**DOCS_ONLY / CONTRACT_RESOLUTION; PROPOSAL / NOT_APPROVED.** Source commit `0b61892fc4156251b19e5c529c71a6ce783b838d`, tree `7119aa23c700e484cb5c69e24063be67ddef6c6b`; дата 2026-11-20 (Europe/Kiev). Цель — DQ-F01/F02/F03. Native evidence/data draft теперь **version 2**, SQLite layout/schema/user_version остаётся **1**. Это явное versioning уточнённой ранее неутверждённой native-семантики, не изменение G1–G6/OD4 и не implementation grant. Упоминания DQ.LAB v1 в неизменённом старом OWNER_DECISION_PACKAGE — прежняя proposal-рекомендация; актуальные native правила для review задаёт эта RESOLVE-01 редакция и её exact Git SHA.
+
+Никакой SQLite/native execution не выполнялся. Canonical литералы ниже — **DOCUMENT_ARITHMETIC_ONLY**; поля profile/checks/custody являются заданными условными fixture-входами, а не измеренными native facts. Вычисление SHA локальным верификатором **не является независимой проверкой**. Реальная qualification/approval остаётся впереди.
+
 Дата: 2026-11-20 (Europe/Kiev). Режим: **DOCS_ONLY / CONTRACT_PREPARATION**.
 
 Base: `162a5ff109358625c25ff92402064d214fa50bc0`; tree: `4c4bf6405e9dec6d707a1c6928b6068222469041`. OD4-01–OD4-07 — **OWNER_APPROVED_CONTRACT_ONLY** в пределах OWNER_APPROVAL.md. Технические схемы, настройки, лимиты и будущий task в этом пакете — **PROPOSAL / NOT_APPROVED**, пока не прошли независимую проверку и требуемое согласование. Native writes, SQLite connections/files, crash processes и реализация сейчас не разрешены.
@@ -44,9 +50,9 @@ Base: `162a5ff109358625c25ff92402064d214fa50bc0`; tree: `4c4bf6405e9dec6d707a1c6
 | snapshot(expected_anchor) | ProjectionRoot + ControlRoot + SnapshotEvidence после всех integrity/custody checks |
 | close() | Закрыть только owned connection; не стирать pending/данные |
 
-Результат transport: closed `DQ.LAB.Result`, common version=1/scope DQ_PROCESS_KILL_LAB_ONLY и ровно поля `phase:INIT|OPEN|P|A|R|READ`, `mutation_id:?UUID`, `disposition:PREPARED|COMMITTED|NOT_COMMITTED|REUSED|HOLD|REJECTED`, `prepare_ref:?Ref<PrepareEvidence>`, `commit_proof_ref:?Ref<CommitProof>`, `absence_proof_ref:?Ref<AbsenceProof>`, `hold_ref:?Ref<HoldEvidence>`, `ack_ref:?Ref<ProofAck>`, `snapshot_ref:?Ref<SnapshotEvidence>`, `error:?ErrorFields` (inline поля DQ.LAB.Error без common header).
+Результат transport: closed `DQ.LAB.Result`, common version=2/scope DQ_PROCESS_KILL_LAB_ONLY и ровно поля `phase:INIT|OPEN|P|A|R|READ`, `mutation_id:?UUID`, `disposition:PREPARED|COMMITTED|NOT_COMMITTED|REUSED|HOLD|REJECTED`, `prepare_ref:?Ref<PrepareEvidence>`, `commit_proof_ref:?Ref<CommitProof>`, `absence_proof_ref:?Ref<AbsenceProof>`, `hold_ref:?Ref<HoldEvidence>`, `ack_ref:?Ref<ProofAck>`, `snapshot_ref:?Ref<SnapshotEvidence>`, `error:?ErrorFields` (inline поля DQ.LAB.Error без common header).
 
-PREPARED требует prepare_ref/snapshot_ref, не выдаёт application outcome. COMMITTED/NOT_COMMITTED требуют соответствующий proof; REUSED возвращает исходный proof/receipt history без write. HOLD требует hold_ref либо error с application_outcome=UNKNOWN, namespace_hold=true и сохранённый ticket; отсутствие DB-derived refs при outage не заполняется поддельными hashes. REJECTED preflight не является NOT_COMMITTED прежней M. После verified final negative R повтор старой M возвращает прежний NOT_COMMITTED, не повтор A. Новый storage attempt — новая явно разрешённая M; никакой автоматической замены unknown M.
+PREPARED требует prepare_ref/snapshot_ref, не выдаёт application outcome. COMMITTED/NOT_COMMITTED требуют соответствующий proof; REUSED возвращает исходный proof/receipt history без write. HOLD требует hold_ref либо error с namespace_hold=true и сохранённый ticket. application_outcome относится только к A: known A proof сохраняет COMMITTED/NOT_COMMITTED при unknown R; UNKNOWN используется, пока A не доказан; отсутствие DB-derived refs при outage не заполняется поддельными hashes. REJECTED preflight не является NOT_COMMITTED прежней M. После verified final negative R повтор старой M возвращает прежний NOT_COMMITTED, не повтор A. Новый storage attempt — новая явно разрешённая M; никакой автоматической замены unknown M.
 
 ## Предлагаемый SQLite schema layout v1
 
@@ -102,3 +108,31 @@ RESULT должен содержать actual branch/base/commit/tree (внеш�
 Owner C: exact allowlist; конкретный disposable root/platform; native writes/init/reopen/recovery/cleanup; owned spawn/kill process operations; caps и fault limits; отдельное начало программирования. Technical B: independent contract/native proof/SQLite/negative oracle review. **Ни одного из этих разрешений этот task себе не выдаёт.**
 
 STOP при неразрешённом profile/root, missing source version, идентичности/closure/atomicity contradiction, UNKNOWN без same-M recovery, неполной evidence, необходимости добавить file/dependency/реальный executor или выйти за caps. Не менять G1–G6/COMPLETED/PURE ради адаптера. После реализации — STOP для independent acceptance; не переходить автоматически к Windows/Q5/production.
+
+## RESOLVE-01 — обязательные implementation entry и tests
+
+Текущий authoritative contract snapshot для review — exact RESOLVE-01 publication commit/tree из внешнего manifest, а не старый DQ-00 native v1. Предлагаемый implementation base остаётся 162a5ff... / 4c4bf640... в полной записи выше; будущий owner task обязан закрепить обе полные пары. Allowlist ровно прежние 10 paths; он всё ещё PROPOSAL, actual root/caps/native/process grants не выданы. Никакого Native/PURE adapter coding сейчас.
+
+Native evidence/data **version 2**, physical SQLite layout/schema/user_version **1**. Ранее неутверждённый v1 уточнён явно, без изменения OD4/G1–G6 и без редактирования запрещённых этим task файлов. Старые v1 упоминания в unchanged OWNER_DECISION_PACKAGE — historical proposal, не текущая authority. Новая реализация обязана отказать при v1 ref под v2 profile.
+
+### DQ-F01 acceptance oracles
+
+Сначала pure contract tests на literal catalogue F01-P01–P03/N01–N06: exact retained ticket bundle, prepared/staged без A, qualified absence, partial members, lost ticket/coordinator и identity changes. No ticket/full closure/continuous coordinator/custody — UNKNOWN, не NOT_COMMITTED. Нельзя восстановить потерянный runtime evidence из публичного каталога fixture. **Восстановление после падения всего приложения первым DQ-01 не квалифицируется**; coordinator crash — BLOCKED_WHOLE_APPLICATION_RECOVERY.
+
+R negative closure при P absent использует exact ticket canonical input, может atomic insert RESOLVED_NOT_COMMITTED control/expected closure/Ack с pending=null при G/head compare. Никаких A rows и никакого заявления о committed P. После final negative R old M read-only; unknown M не заменяется новой.
+
+### DQ-F02 acceptance oracles
+
+В tests/test_dq01_contracts.py встроить неизменённые literal preimages/digests/ref tuples из этого proposal (или прочитать pinned Git docs как review input вне tracked paths); не создавать дополнительный fixture file в Git. Проверить все F02-P01–P07/N01–N07 и original closed schemas/role bindings/cycle detection, включая refs в payload_hex. Current external verifier не является native adapter implementation и не доказывает native PASS.
+
+Explicit generation arithmetic: P 0→1, A 1→2, R 2→3 для committed branch; prepared-negative R 1→2; unprepared-negative R 0→1. General rule pre-R G → Ack.target G+1 → post-R root/snapshot G+1. Ack/application head exact, no changing A root/sequence in R. У A-known/R-unknown сохранить known A proof и HOLD; не повторять A.
+
+R_ABSENT_FOR_TICKET: retained exact ticket_R/Ack+original A proof, fresh qualified snapshot with exact pre-R control root/head/G, pending=M (или null unprepared-negative), no expected Ack in registry/index, unchanged custody/state. Только тот же M и exact original Ack permitted; fresh Snapshot ID не разрешает recompute original Ack. Если bytes/ref missing, wrong generation/head/binding, corrupt Ack или changed roots — HOLD, no R retry.
+
+ProofAck → original pre-R proof/Snapshot/ControlRoot; only post-R ControlRoot → Ack; no Ack → post-R root/snapshot edge. Реализация с циклическим preimage или «пока нулевым digest» — FAIL/STOP.
+
+### DQ-F03 acceptance / STOP
+
+FI-01–FI-22 сохраняются, FI-07/CW-01–CW-05 из matrix обязательны. Разделять reached COMMIT call, ACK receive/loss, controlled kill in software window и qualified reopen outcome. Requested checkpoint не достигнут — NOT_RUN/BLOCKED_CHECKPOINT, не PASS, даже если соседний case успешно открыл DB. В стандартном первом lab **COMMIT_RACE_WINDOW** — только заявленная coverage; actual internal VFS/fsync checkpoint и power loss NOT_RUN/OUT_OF_SCOPE. Нужда в engine hooks/других dependencies, whole-app restart или большем scope — STOP, отдельная авторизация.
+
+Current conformance vectors/expected outcomes — locally calculated **not independently validated**. После независимой контрактной re-review нужны прежние CP grants и новая отдельная implementation authorization; этот task не запускает DQ-01.

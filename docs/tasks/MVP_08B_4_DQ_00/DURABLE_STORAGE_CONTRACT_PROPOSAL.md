@@ -1,5 +1,11 @@
 # DQ-01 — Durable Storage Contract Proposal
 
+## RESOLVE-01 — текущая редакция
+
+**DOCS_ONLY / CONTRACT_RESOLUTION; PROPOSAL / NOT_APPROVED.** Source commit `0b61892fc4156251b19e5c529c71a6ce783b838d`, tree `7119aa23c700e484cb5c69e24063be67ddef6c6b`; дата 2026-11-20 (Europe/Kiev). Цель — DQ-F01/F02/F03. Native evidence/data draft теперь **version 2**, SQLite layout/schema/user_version остаётся **1**. Это явное versioning уточнённой ранее неутверждённой native-семантики, не изменение G1–G6/OD4 и не implementation grant. Упоминания DQ.LAB v1 в неизменённом старом OWNER_DECISION_PACKAGE — прежняя proposal-рекомендация; актуальные native правила для review задаёт эта RESOLVE-01 редакция и её exact Git SHA.
+
+Никакой SQLite/native execution не выполнялся. Canonical литералы ниже — **DOCUMENT_ARITHMETIC_ONLY**; поля profile/checks/custody являются заданными условными fixture-входами, а не измеренными native facts. Вычисление SHA локальным верификатором **не является независимой проверкой**. Реальная qualification/approval остаётся впереди.
+
 Дата: 2026-11-20 (Europe/Kiev). Режим: **DOCS_ONLY / CONTRACT_PREPARATION**.
 
 Base: `162a5ff109358625c25ff92402064d214fa50bc0`; tree: `4c4bf6405e9dec6d707a1c6928b6068222469041`. OD4-01–OD4-07 — **OWNER_APPROVED_CONTRACT_ONLY** в пределах OWNER_APPROVAL.md. Технические схемы, настройки, лимиты и будущий task в этом пакете — **PROPOSAL / NOT_APPROVED**, пока не прошли независимую проверку и требуемое согласование. Native writes, SQLite connections/files, crash processes и реализация сейчас не разрешены.
@@ -85,3 +91,23 @@ Model READ_RESERVE сохраняет checkpoint/base_cursor/call_index 1..3 и 
 | Permissions/full disk/interrupted tx | SQLITE_FULL/IOERR/permission/BUSY | typed response, unchanged или UNKNOWN verified; никакого guessed rollback |
 
 Детальные ожидаемые исходы — [FAULT_INJECTION_MATRIX.md](FAULT_INJECTION_MATRIX.md). Схемы и SQL layout — native evidence и DQ_01 task. Все эти положения ещё требуют независимой проверки; implementation не начинается автоматически.
+
+## RESOLVE-01 / DQ-F01 — qualification envelope, не whole-app recovery
+
+Условный NOT_COMMITTED требует retained **полного ticket bundle** и непрерывного coordinator run плюс qualified identity/custody/complete snapshot, expected previous head/root и отсутствие **всех** A-members/links/changes/marker. Prepared/staged intent без A — допустимый положительный absence case, но не rollback P. Нет ticket/coordinator/custody — нет absence proof, даже если SQL rows/flags выглядят правдоподобно. DB/root identity mismatch или writer kill без qualified reopen дают UNKNOWN/HOLD.
+
+**Первый DQ-01 не квалифицирует восстановление после падения всего приложения.** Coordinator/run loss не чинится новым run ID или реконструкцией ticket из DB. Missing existing DB не считается empty authoritative state. Положительные и отрицательные literal vectors, включая partial members при missing marker, заданы в native v2 catalogue F01-P01–P03/N01–N06; это вычисленные документы, не native PASS.
+
+Если P отсутствовала, coordinator ticket является expected input, не DB-derived intent. После квалифицированного A absence возможна negative R closure: atomically persist expected immutable control/input closure, registry RESOLVED_NOT_COMMITTED, Ack и pending=null без application rows. Guard — exact original ticket/binding/head/control_generation и отсутствие чужого pending. Это разрешает закрыть M без заявления, что P или A committed; повтор старой M read-only.
+
+## RESOLVE-01 / DQ-F02 — P/A/R readiness
+
+Native evidence/data version **2** — текущий proposal. SQLite layout/user_version остаётся 1. P известен только по PrepareEvidence и canonical staged/control readback. A известен только по complete CommitProof/AbsenceProof; ни факт вызова COMMIT, ни ACK не заменяют proof. Namespace reservation после P не равна uncertainty: другие M блокированы, A той же M разрешён только после qualified P.
+
+Для R точные generation правила: pre-R G/h; Ack.target control_generation=G+1; ticket_R.expected_control_generation=G; post-R generation=G+1/head=h, latest_ack/exact ack index/pending clear подтверждены вместе. Known A outcome сохраняется при unknown R; HOLD не снимается. R absence проверяется fresh qualified snapshot против exact pre-R roots/head/G и expected Ack absence. Только затем same-M/exact-Ack R retry; A не повторять. Fresh Snapshot UUID не даёт права перестроить оригинальный Ack preimage.
+
+Original A proof/ack не ссылаются на post-R roots; post-R ControlRoot ссылается на Ack, который ссылается на pre-R proof/snapshot. Никакого self/cyclic hash. Любой corrupt/foreign Ack, wrong generation или stale head запрещает release/retry.
+
+## RESOLVE-01 / DQ-F03 — точка наблюдения не гарантия физической точки
+
+COMMIT_RACE_WINDOW — единственный proposed lab scope: наблюдаемый вход в вызов, controlled kill в доступном software window, ACK observation и последующий qualified reopen/proof. Не объявлять это kill внутри SQLite VFS/fsync и не приравнивать process kill к power loss. Не достигнутый requested checkpoint — NOT_RUN/BLOCKED, не PASS. Exact FI-oracles и STOP — в обновлённой FAULT_INJECTION_MATRIX.md. Ни одна из этих уточняющих proposals не даёт разрешения запускать DQ-01.

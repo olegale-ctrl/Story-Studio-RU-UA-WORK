@@ -1,51 +1,49 @@
-# MVP-08B.4-DQ-00 — Final Handoff
+# MVP-08B.4-DQ-00-RESOLVE-01 — Final Handoff
 
-Дата: 2026-11-20 (Europe/Kiev). Режим: **DOCS_ONLY / CONTRACT_PREPARATION**.
+**READY_FOR_INDEPENDENT_CONTRACT_RE_REVIEW.** Режим DOCS_ONLY / CONTRACT_RESOLUTION, 2026-11-20 (Europe/Kiev). Все native technical changes — PROPOSAL / NOT_APPROVED, implementation не разрешена.
 
-Base: `162a5ff109358625c25ff92402064d214fa50bc0`; tree: `4c4bf6405e9dec6d707a1c6928b6068222469041`. OD4-01–OD4-07 — **OWNER_APPROVED_CONTRACT_ONLY** в пределах OWNER_APPROVAL.md. Технические схемы, настройки, лимиты и будущий task в этом пакете — **PROPOSAL / NOT_APPROVED**, пока не прошли независимую проверку и требуемое согласование. Native writes, SQLite connections/files, crash processes и реализация сейчас не разрешены.
-
-## Итог и статусы
-
-**READY_FOR_INDEPENDENT_CONTRACT_REVIEW.**
-
-OD4-01–OD4-07 документально закреплены как OWNER_APPROVED_CONTRACT_ONLY; повторно не запрашиваются. Технический native storage/evidence/schema/SQLite/fault/security/task пакет подготовлен как **PROPOSAL / NOT_APPROVED**. Неустранимого противоречия с действующим PURE контрактом не заявлено; новый lab отдельно от PURE и не является его подставляемым native adapter. TB вопросы требуют независимого review; CP grants и начало programming остаются невыданными.
-
-Не выполнялись SQLite import/connection/query/DB creation, pytest/native tests, test-process spawn/kill, model/provider/render/Asset Library/save. Все текущие результаты — документационные проверки. Native qualification NOT_RUN; Windows WINDOWS_NOT_RUN.
-
-## Точная provenance
+## Exact source / publication
 
 Repository: olegale-ctrl/Story-Studio-RU-UA-WORK.
-Branch: `docs/mvp-08b-4-dq-00-contract-preparation`.
-Base commit: `162a5ff109358625c25ff92402064d214fa50bc0`.
-Base tree: `4c4bf6405e9dec6d707a1c6928b6068222469041`.
-Исходный HEAD/tree совпал с заданием, worktree был чистым. Новая worktree создана от exact base, не latest main.
+Branch: `docs/mvp-08b-4-dq-00-resolve-01`.
+Base commit: `0b61892fc4156251b19e5c529c71a6ce783b838d`.
+Base tree: `7119aa23c700e484cb5c69e24063be67ddef6c6b`.
+Исходный HEAD/tree совпал, worktree был чистым. Final commit/tree, full patch, SHA-256/Git blobs пяти changed files и проверка private-index reconstruction — во внешнем publication-manifest.json и итоговом ответе. Self hash в создающем его файле не подставляется.
 
-Final commit/tree и file Git blob/SHA-256 — во внешнем publication-manifest.json/итоговом ответе, чтобы избежать recursive self-hash. Source manifest закрепляет исходные architecture/acceptance и прочитанные PURE modules; их bytes остаются неизменными.
+## Точный разрешённый diff
 
-## Девять новых документов
+Только пять существующих Markdown:
 
-1. [OWNER_APPROVAL.md](OWNER_APPROVAL.md)
-2. [DURABLE_STORAGE_CONTRACT_PROPOSAL.md](DURABLE_STORAGE_CONTRACT_PROPOSAL.md)
-3. [SQLITE_QUALIFICATION_PROFILE.md](SQLITE_QUALIFICATION_PROFILE.md)
-4. [NATIVE_EVIDENCE_CONTRACT_PROPOSAL.md](NATIVE_EVIDENCE_CONTRACT_PROPOSAL.md)
-5. [FAULT_INJECTION_MATRIX.md](FAULT_INJECTION_MATRIX.md)
-6. [TEST_ROOT_SECURITY_CONTRACT.md](TEST_ROOT_SECURITY_CONTRACT.md)
-7. [DQ_01_IMPLEMENTATION_TASK.md](DQ_01_IMPLEMENTATION_TASK.md)
-8. [OWNER_DECISION_PACKAGE.md](OWNER_DECISION_PACKAGE.md)
-9. [FINAL_HANDOFF.md](FINAL_HANDOFF.md)
+1. [DURABLE_STORAGE_CONTRACT_PROPOSAL.md](DURABLE_STORAGE_CONTRACT_PROPOSAL.md)
+2. [NATIVE_EVIDENCE_CONTRACT_PROPOSAL.md](NATIVE_EVIDENCE_CONTRACT_PROPOSAL.md)
+3. [FAULT_INJECTION_MATRIX.md](FAULT_INJECTION_MATRIX.md)
+4. [DQ_01_IMPLEMENTATION_TASK.md](DQ_01_IMPLEMENTATION_TASK.md)
+5. [FINAL_HANDOFF.md](FINAL_HANDOFF.md)
 
-Только эти новые Markdown paths в docs/tasks/MVP_08B_4_DQ_00/. Python/tests/dependencies/CI/существующие contracts/main не изменяются. Предложенные 10 implementation paths пока не создавались.
+Новых Git files нет. OWNER_APPROVAL, SQLITE_QUALIFICATION_PROFILE, TEST_ROOT_SECURITY_CONTRACT, OWNER_DECISION_PACKAGE, Python/tests/CI/dependencies и G1–G6 не изменены. OD4-01–OD4-07 остаются OWNER_APPROVED_CONTRACT_ONLY. Уточнённый native evidence/data draft имеет version 2 в силу version policy; SQLite layout/schema/user_version остаётся 1. Old native-v1 wording в неизменённом OWNER_DECISION_PACKAGE — superseded unapproved technical recommendation; новые CP permissions по-прежнему отсутствуют.
 
-## Документационные evidence
+## Mapping замечаний
 
-Внешний пакет: supplied-task.txt, source-manifest.json, documentation-checks.json, proposed-path-checks.json, full changes.patch, publication-manifest.json, safe private-index verifier. Проверяются exact source/tree, new-files-only scope, UTF-8/fenced blocks/tables/relative links, полнота FI-01–FI-22, OD4/B/C statuses и existence/collision proposed paths на точном implementation base. SHA файлов и восстановление final tree из base+patch подтверждаются отдельно от Markdown.
+| Замечание | Resolution proposal | Canonical/check materials |
+|---|---|---|
+| DQ-F01 | Conjunctive custody/ticket/continuous coordinator/identity/complete A absence; prepared cache != apply. Whole-app recovery не квалифицируется; missing evidence => UNKNOWN/HOLD | F01-P01–P03/N01–N06; P0/C0/C1, TP/TA, PE/AP/AP0, negative close ACKN1/ACKN2, partial/identity specimens |
+| DQ-F02 | Pre-R G / exact Ack G+1 / post-R G+1; separate A-vs-R outcome; same-M/exact-Ack R retry only after qualified R absence; no pre/post hash cycle | F02-P01–P07/N01–N07, SA/CP/ACK3/TR/C3/SR/SRA, corrupt/foreign/generation/head negatives; DAG check and deliberately cyclic abstract graph rejection |
+| DQ-F03 | Observe call, ACK, software kill, unavailable internal VFS/fsync and power loss separately; only COMMIT_RACE_WINDOW coverage, missing checkpoint not PASS | FI-01–FI-22 retained; FI-07 and CW-01–CW-05 exact oracles/STOP; no native execution |
 
-Main проверяется read-only при публикации во внешнем remote-verification.json. Ранее наблюдавшийся main `a28277b4cb68a3db5da52edc598c37ce66314604` не подставляется вместо актуального read. Никакой update/merge не выполняется. GitHub CI/workflow не меняется, PR/CI execution не требуется этим DOCS_ONLY заданием.
+## Что вычислено и что не проверялось
 
-## Что должен проверить независимый reviewer
+Native proposal содержит **58 canonical entries (57 distinct preimages)** с byte lengths/SHA-256 и **23 nonhashable DOC.ORACLE cases** с точными input refs/generations/outcomes/barrier/allowed-next. Profile values DOCUMENT_FIXTURE и SQLite 3.35.0 — синтетические константы, не измерения. Альтернативные branches не выдаются за одну физическую DB history. Source literals перечисляют negative specimens, которые могут hash/shape-валидироваться, но семантически отвергаются.
 
-P/A/R не смешивают control/apply исходы; local/DB presence staged данных не A proof; все refs/preimages закрыты и ацикличны; projection/control roots исключают self-hash; unknown остаётся barrier через ACK/reopen; absence требует complete snapshot и непрерывную custody; stale-copy/restore limitations не скрыты; old M не переписывается; full key/history/slot/revision/outbox/reservation инварианты сохранены в no-executor lab; SQLite settings не объявлены квалифицированными; native proof не выдаётся за PURE или production permission.
+Внешний review packet: build_vectors.py, check_vectors.py и их outputs; canonical-vectors.json (text/UTF-8 hex/length/hash/full refs), data-payloads.json, oracle-cases.json; source-manifest.json; documentation-checks.json; findings-map.json; full changes.patch/publication-manifest и safe verifier.
 
-Особенно проверить TB-01–TB-07. Если техническая схема неприемлема, вернуть конкретную revision до реализации, а не «чинить» в коде. CP-01–CP-05 должны быть отдельно утверждены, включая root/operations/processes/caps/allowlist и exact future task. Native runtime values сейчас не измерены, placeholders не являются test profile.
+Локальный верификатор проверяет document arithmetic, closed field sets/payload shapes, actual typed ref/byte binding, graph acyclicity и declared generation/oracle consistency. Это **не Python implementation native store/adapter**, не SQLite/test-process execution и **не независимая проверка вычисленных векторов**. Ни один literal Checks=true не выдается за измеренный native факт. Native qualification/test cases NOT_RUN.
 
-**STOP после публикации.** Ожидать независимой проверки ChatGPT и отдельного разрешения владельца. Не начинать DQ-01, SQLite, native writes/fault injection, Windows adapter, реальные providers/renderer/production, merge или release.
+Проверки Markdown/links, FI-01–FI-22 completeness, future allowlist consistency, unchanged G1–G6/source blobs, diff/SHAs и main state фиксируются внешними материалами. Main читается read-only; update/merge не выполняются.
+
+## Review / STOP
+
+Независимый reviewer должен проверить mathematical preimages/digests и semantic premises каждого case отдельно от работы локального скрипта. Особое внимание: missing ticket нельзя восстановить каталогом; отсутствие marker не отсутствие A; negative unprepared closure не доказывает committed P; known A не понижается из-за unknown R; Ack не пересчитывается от fresh Snapshot; post-R root не попадает в pre-R hash chain; race-window не internal VFS/power loss.
+
+Не выявлено необходимости менять ранее утверждённые G1–G6/OD4; native proposal исправляется до их отдельной реализации. Самостоятельно закрытой независимой приёмкой DQ-F01/F02/F03 этот report не является. Windows/native storage/engine/path qualification остаются NOT_RUN; owner root/limits/process/write/allowlist/programming grants не выданы.
+
+**STOP после публикации.** Ожидать независимой контрактной re-review и отдельного решения владельца. Никаких SQLite execution/DB creation/native kill/process tests/Python implementation, merge/main update, provider/render/production или автоматического перехода к DQ-01.
