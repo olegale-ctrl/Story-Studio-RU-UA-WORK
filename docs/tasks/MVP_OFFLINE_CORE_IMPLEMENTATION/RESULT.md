@@ -53,13 +53,13 @@ No job_store.py, native lock, CLI, fixture/media file, provider client, dependen
 
 Host: Linux-6.18.57-x86_64-with-glibc2.41. Existing interpreters used, no dependency installation. System Python 3.12.14 had no pytest (`python -m pytest --version`, exit 1), so existing pytest environments were used. Test-runner/report I/O and existing SP temporary-file tests are distinct from the guarded new product/fake execution region.
 
-| Run | Python | pytest | PASS | FAIL / ERROR | SKIP | Exit | Wall seconds | Timeout |
+| Run | Python | pytest | PASS tests / subtests | FAIL / ERROR | SKIP | Exit | Wall seconds | Timeout |
 |---|---|---|---:|---:|---:|---:|---:|---|
-| pure313 | 3.13.18 | 9.2.0 | 164 | 0 / 0 | 0 | 0 | 7.138 | False |
-| pure310 | 3.10.22 | 9.2.0 | 164 | 0 / 0 | 0 | 0 | 9.14 | False |
-| sp_regressions313 | 3.13.18 | 9.2.0 | 179 | 0 / 0 | 0 | 0 | 0.415 | False |
+| pure313 | 3.13.18 | 9.2.0 | 164 / 0 | 0 / 0 | 0 | 0 | 7.138 | False |
+| pure310 | 3.10.22 | 9.2.0 | 164 / 0 | 0 / 0 | 0 | 0 | 9.14 | False |
+| sp_regressions313 | 3.13.18 | 9.2.0 | 69 / 110 | 0 / 0 | 0 | 0 | 0.415 | False |
 
-All final processes were bounded by a 60-second external watchdog; combined final invocation limit 300 seconds. No timeout occurred. The complete repository/media/model suite was NOT_RUN and is not represented by the limited SP regression count. Native Windows qualification: WINDOWS_NOT_RUN.
+All final processes were bounded by a 60-second external watchdog; combined final invocation limit 300 seconds. No timeout occurred. SP reports **69 tests passed plus 110 subtests passed** (179 JUnit records), not 179 independently collected test methods. The complete repository/media/model suite was NOT_RUN and is not represented by this limited regression count. Native Windows qualification: WINDOWS_NOT_RUN.
 
 Exact commands (absolute interpreter/log/XML paths are additionally retained in acceptance-results.json):
 
