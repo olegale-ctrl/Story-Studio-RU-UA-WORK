@@ -1,3 +1,117 @@
+# MVP-08B.3 — Independent Acceptance Fix 01 — RESULT
+
+**Current status: READY_FOR_RE_REVIEW.** Date: 2026-11-20 (Europe/Kiev).
+This records the targeted fix and Codex verification, not independent closure or owner acceptance of either finding. The prior implementation report is retained below as a clearly marked historical record; its status/counts/revisions are not the current fix results.
+
+## Exact baseline and authorization
+
+Repository: olegale-ctrl/Story-Studio-RU-UA-WORK.
+Branch: `fix/mvp-08b-3-independent-acceptance-01`.
+Base commit: `ea4df639e24950cde5f925975949751f9805a8e6`.
+Base tree: `2920839ee0588809e93c2ada149551542b734de1`.
+Tested code checkpoint: `9a01050b07482eed304ae388e886f77eb48d6ff9`.
+Checkpoint tree: `359e1cc50a52b24e696839bde5d152cf960e4b3d`.
+The final publication commit adds only this RESULT.md update to that tested checkpoint; its final commit/tree, full diff and five file blob/SHA-256 values are in the accompanying publication-manifest.json and final handoff. A final commit/tree cannot be recursively embedded into the same report file.
+
+Authorization is the owner's Independent Acceptance Fix 01 task: fix F-08B3-01 and investigate F-08B3-02 inside exactly five existing files. No full independent-review text beyond the provided finding IDs/task was supplied; this report does not invent or quote an unseen review. G1–G6, approved schemas/error vocabulary, fixed profile and limits remain unchanged. No BLOCKED_CONTRACT condition was required to implement this bounded correction.
+
+## Findings: observed before and after
+
+| Finding | Reproducer at exact base | Fixed behavior | Executed checks |
+|---|---|---|---|
+| F-08B3-01 | A has qualified acceptance; B has no generation intent. A stale-worker error for B incorrectly reports external_effect=KNOWN. | Same error for B reports NONE; foreign A receipt is not attributed to B. | 18 standalone new cases plus shared guarded no-effect case; 12-case matrix across admit/dispatch/apply_proof/resolve_commit and B=NONE/UNKNOWN/KNOWN |
+| F-08B3-02 | Typed exception after terminal COMMIT plus raw snapshot outage escapes as RuntimeError; pending is not retained, and another admission is accepted before M is resolved. | Returns HOLD / UNKNOWN_COMMIT_OUTCOME, retains M and namespace barrier; next admission remains HOLD. Only bound COMMITTED proof permits progress. | 20 standalone new cases plus shared guard; 17 COMMIT/diagnostic combinations, qualified absence, hold-port failure, no-submit/stale-write containment |
+
+`baseline-reproducer.json` and `fixed-reproducer.json` contain the actual before/after observations from separate interpreter processes loading their respective worktrees. Harness exit 0 means observations were captured; the baseline `matched=false` explicitly records failure of the required behavior, not a baseline PASS. These small reproductions use only retained Python test-model values, not a real provider or database.
+
+## What changed
+
+**Job-scoped attribution:** error paths now carry explicit job, immutable AdmissionCommand or StoreMutation identity. Classification requires an authorized, structurally consistent snapshot. NONE requires a proved not-yet-admitted key or target job without generation/outbox intent. KNOWN requires the target job's bound namespace/job/request/key/permit/generation/attempt/effect identities, matching outbox payload, verified acceptance record and qualified scripted-ledger attestation. A receipt elsewhere in the store, an unmatched target, an unattested matching record, or an intent alone cannot establish KNOWN. Unreadable, inconsistent or pending evidence yields UNKNOWN. Classification performs no store mutation or submit.
+
+**COMMIT boundary:** the exact Plan remains locally latched until complete same-mutation proof and acknowledgement. Any ordinary exception from COMMIT, including ContractError after an actual commit, is not treated as rollback. A typed pre-commit exception can return NOT_COMMITTED only after complete verified absence evidence; the typed exception alone is insufficient. COMMITTED/NOT_COMMITTED ACK strings also require a complete matching proof. Unknown/malformed/missing proof, snapshot outage or corruption keeps HOLD. Diagnostic failures cannot clear a known hold or escape in place of the required error response.
+
+**Snapshot integrity:** the current job/receipt/outbox graph and HELD-slot index must be consistent. Missing job bytes, missing receipts and contradictory slot indices are rejected rather than qualifying absence or releasing an intent. Raw snapshot/proof exceptions are contained. The local latch is a fail-closed fallback when the hold port itself is unavailable; it is not durable storage.
+
+**Faithful test model:** FakeStore retains the immutable operation intent before the unsafe boundary and keeps pending until verified proof acknowledgement, using the already-existing ports. Intent/input reference closure is retained separately from actual committed write-set members; that cache cannot prove member presence. The A10 interleaving uses independent controller facades sharing the same qualified owner/store, so the local in-flight latch does not serialize away the competing atomic uniqueness check. No mandatory case, schema guard or resource bound was removed.
+
+## Exact permitted diff
+
+Only these five existing files are modified; no new/deleted/renamed repository files:
+
+- experimental_mvp/offline_execution/controller.py
+- tests/test_offline_generation_job_controller.py
+- tests/test_offline_generation_job_faults.py
+- tests/test_offline_generation_job_no_effects.py
+- docs/tasks/MVP_OFFLINE_CORE_IMPLEMENTATION/RESULT.md
+
+contracts.py, policy.py, observer.py, simulator.py, all other tests, historical contracts, workflows and dependencies are unchanged from the pinned base. Supporting logs/scripts/packet files are outside the repository worktree. Source SHA and diff scope are checked independently of test pass counts.
+
+## Actual final verification
+
+All six pure test modules were run explicitly on each interpreter. Existing SP/Topic-to-Film regressions were also run on each interpreter. Environments were already installed; no dependencies or system settings changed. Linux-6.18.57-x86_64-with-glibc2.41; pytest 9.2.0.
+
+| Run | Python | PASS tests | PASS subtests | FAIL / ERROR | SKIP | Exit | Wall seconds | Timeout |
+|---|---|---:|---:|---:|---:|---:|---:|---|
+| pure313 | 3.13.18 | 203 | 0 | 0 / 0 | 0 | 0 | 16.362 | False |
+| pure310 | 3.10.22 | 203 | 0 | 0 / 0 | 0 | 0 | 20.175 | False |
+| sp_regressions313 | 3.13.18 | 69 | 110 | 0 / 0 | 0 | 0 | 0.416 | False |
+| sp_regressions310 | 3.10.22 | 69 | 110 | 0 / 0 | 0 | 0 | 0.466 | False |
+
+Total final harness wall time: 38.073 seconds, within 300 seconds overall and 60 seconds per process. No timeout. SP has 69 collected test methods plus 110 passing subtests (179 JUnit records), not 179 independently collected methods. Pure has 203 collected tests: all 164 baseline test identifiers are retained plus 39 new cases. No required pure test is skipped.
+
+Commands are retained verbatim in acceptance-results.json and JUnit/log pairs. Each pure command uses the appropriate existing interpreter, `-m pytest -q -p no:cacheprovider`, external 60-second watchdog, and these exact six paths:
+
+```text
+tests/test_offline_generation_job_contracts.py
+tests/test_offline_generation_job_controller.py
+tests/test_offline_generation_job_observer.py
+tests/test_offline_generation_job_simulator.py
+tests/test_offline_generation_job_faults.py
+tests/test_offline_generation_job_no_effects.py
+```
+
+Each SP command uses `tests/test_topic_to_film.py tests/test_topic_to_film_v1_1.py`. The complete repository/media/model suite was NOT_RUN. Existing SP temporary-file tests and runner log/XML I/O are outside the guarded new core execution region; no actual core filesystem/network/SQLite/model/renderer operation occurred.
+
+## Exact finding-to-test traceability
+
+The complete parameterized case names, per-interpreter PASS results and the preservation of all baseline cases are in findings-map.json and acceptance-results.json. Function families below are navigable in the allowed test files.
+
+| Finding / invariant | Tests |
+|---|---|
+| F-08B3-01: independent job statuses in four error APIs | test_F08B3_01_error_attribution_is_target_scoped (12 parameterized cases) |
+| New admission cannot inherit old active effect | test_F08B3_01_new_admission_does_not_inherit_active_foreign_effect |
+| Foreign proof cannot bind to current job | test_F08B3_01_foreign_receipt_cannot_bind_to_current_apply_proof (2 cases) |
+| Missing mutation target cannot borrow known receipt | test_F08B3_01_missing_mutation_target_is_not_foreign_known_effect |
+| Matching but unattested receipt is insufficient | test_F08B3_01_unattested_matching_receipt_does_not_establish_known |
+| Qualified no-commit admission has no foreign effect | test_F08B3_01_admit_proven_not_committed_has_no_foreign_effect |
+| F-08B3-02: COMMIT exception/ACK and diagnostic boundary matrix | test_F08B3_02_commit_exception_diagnostics_preserve_namespace_hold (17 cases) |
+| Typed exception needs complete absence proof | test_F08B3_02_typed_exception_only_proven_absence_can_report_not_committed |
+| Hold-port outage does not erase retained uncertainty | test_F08B3_02_failure_of_hold_port_does_not_clear_retained_uncertainty |
+| Pending outage cannot permit submit/stale write/release | test_F08B3_02_pending_diagnostic_failure_cannot_enable_submit_or_stale_write |
+| Both findings: forbidden effects and stale writes | test_F08B3_01_02_diagnostics_add_no_effects_or_stale_writes |
+
+The 17-case boundary matrix includes raw/typed exceptions before/after COMMIT, successful ACK followed by unavailable/corrupt snapshot, OSError/RuntimeError/typed diagnostic outages, malformed snapshot shape, missing job bytes, contradictory HELD-slot index, missing receipt index, unavailable/bad/empty proof. It asserts HOLD/UNKNOWN, physical state consistency, zero additional submit/read calls, no extra admission before resolution, barrier retention across controller replacement, and correct resolution of the same M. A physically committed terminal slot release never authorizes a new job while its outcome is unresolved.
+
+All original A01–A10 / R01–R16 / E01–E20 obligation tests remain in the full run, including active uniqueness/interleaving, lost ACK, restart, cancellation, one-attempt/read/resource caps, corrected V030 positive/old V030 negative, no native effects and stale-writer zero writes. Passing model tests do not independently close either finding.
+
+## Development checks retained
+
+The first updated full run had 163 PASS / 1 FAIL: the new in-flight latch blocked the old A10 test's reentrant invocation of the same controller. The test now models two independent facades sharing the actual store/owner, retaining the original winning/losing atomic-slot assertions. The first added controller/fault run had 58 PASS / 1 FAIL: a test expected a secondary malformed-snapshot code to replace the primary unknown COMMIT error. Its exact expectation was corrected to UNKNOWN_COMMIT_OUTCOME while retaining all HOLD, state and no-effect assertions. Later targeted runs: 70 PASS, then 74 PASS. Final full results above supersede these development counts; raw failed logs are retained. A standalone reproducer initially lacked the repository root in sys.path; the external harness import path was corrected before recording before/after evidence, without changing product code or tests.
+
+## Qualification limits and STOP
+
+No approved contract or G1–G6 expansion was required. The correction uses the same PURE schemas, ports, fake-only authority and fixed bounds. Restart guarantees remain those of the approved retained **test harness** operation registry and scripted ledger; the local latch alone is not a disk-backed or process-survival mechanism. Losing the qualified registry is not repaired by guessing (baseline R06 remains covered). No actual database crash/power-loss, native lock/clock/NTFS/Windows/reparse or TOCTOU qualification is claimed.
+
+Windows: WINDOWS_NOT_RUN. SQLite, models, provider APIs, real render, real media/Asset Library/save, production storage and production permissions: NOT_RUN / NOT_AUTHORIZED. Main, CI and dependencies remain unchanged; no merge, release or next stage.
+
+**READY_FOR_RE_REVIEW. STOP after publication.** Await independent ChatGPT review and owner decision. F-08B3-01/F-08B3-02 are implemented/verified within the qualified pure model, not self-declared independently ACCEPTED.
+
+---
+
+# Historical baseline report — reproduced from the exact pre-fix commit
+
+The following body is retained for provenance only. Its branch/status/counts/checkpoint describe MVP-08B.3 before Fix 01 and are superseded by the current report above. Raw baseline report SHA-256: `31e41c833d688e61d2a28f25718d52acccb20a1bc781014a5c25efdf9db0527d`.
+
 # MVP-08B.3 — Pure Offline GenerationJob Core — RESULT
 
 Status: **PENDING_INDEPENDENT_ACCEPTANCE**. Date: 2026-11-20 (Europe/Kiev).
