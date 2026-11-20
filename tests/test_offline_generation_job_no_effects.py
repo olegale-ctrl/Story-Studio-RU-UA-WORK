@@ -123,3 +123,34 @@ def test_sequence_overflow_and_all_profile_limits_fail_closed():
         bad=dict(cp);bad['limits']=dict(cp['limits'],**{name:value+1})
         with pytest.raises(ContractError) as exc:policy.profile(bad)
         assert exc.value.code=='PROFILE_UNQUALIFIED'
+
+
+def test_F08B3_01_02_diagnostics_add_no_effects_or_stale_writes(monkeypatch):
+    from test_offline_generation_job_controller import MultiJobLab
+    l=MultiJobLab('UNKNOWN');cold=Lab();cold.admit()
+    hits=[]
+    def forbidden(*args,**kwargs):
+        hits.append('forbidden');raise AssertionError('Forbidden effect attempted')
+    snapshot=cold.store.snapshot;commit=cold.store.commit
+    def interrupted(plan):
+        commit(plan)
+        def unavailable():raise RuntimeError('scripted diagnostic outage')
+        monkeypatch.setattr(cold.store,'snapshot',unavailable)
+        raise ContractError('CAS_CONFLICT')
+    with monkeypatch.context() as guard:
+        for obj,names in [(builtins,['open']), (io,['open']), (os,['open','system','urandom']),
+                          (socket,['socket','create_connection']), (sqlite3,['connect']),
+                          (subprocess,['Popen','run','call','check_call','check_output']),
+                          (time,['time','monotonic','sleep','perf_counter'])]:
+            for name in names:guard.setattr(obj,name,forbidden)
+        before=l.store.snapshot();submits=l.ledger.calls
+        out=l.c.apply_proof(l.job_id,0,l.mid(),dict(l.worker,lease_epoch=999),l.foreign_receipt)
+        expect_error(out,'STALE_WORKER_FENCE');assert out['error']['external_effect']=='UNKNOWN'
+        assert l.store.snapshot()==before and l.ledger.calls==submits
+        guard.setattr(cold.store,'commit',interrupted)
+        out=cold.c.cancel(cold.job_id,cold.job().value['revision'],cold.mid())
+        expect_error(out,'UNKNOWN_COMMIT_OUTCOME')
+        assert out['disposition']=='HOLD' and out['mutation_outcome']=='UNKNOWN_COMMIT_OUTCOME'
+        assert cold.store.state['pending'] and cold.c._uncertain and cold.ledger.calls==0
+    monkeypatch.setattr(cold.store,'snapshot',snapshot)
+    assert not hits

@@ -156,3 +156,139 @@ def test_A06_terminal_committed_lost_ACK_still_blocks_new_admission():
     assert len(l.store.state['jobs'])==1
     assert l.c.resolve_commit(mid)['disposition']=='APPLIED'
     assert l.c.admit(cmd,l.mid())['disposition']=='ACCEPTED'
+
+
+@pytest.mark.parametrize('boundary,exception_kind,read_fault',[
+    ('before','raw','ok'),
+    ('before','typed','oserror'),
+    ('after','raw','ok'),
+    ('after','typed','ok'),
+    ('after','typed','oserror'),
+    ('after','raw','runtime'),
+    ('after','typed','typed'),
+    ('after','raw','malformed'),
+    ('after','return','unavailable'),
+    ('after','return','corrupt'),
+    ('after','return','inspect'),
+    ('after','return','bad_proof'),
+    ('after','return','empty_proof'),
+    ('after','return','malformed'),
+    ('after','return','missing_job_bytes'),
+    ('after','return','missing_slot_index'),
+    ('after','return','missing_receipt_index'),
+])
+def test_F08B3_02_commit_exception_diagnostics_preserve_namespace_hold(
+        boundary,exception_kind,read_fault,monkeypatch):
+    l=Lab();l.admit();mid=l.mid();before=l.store.snapshot();commits=l.store.commits
+    snapshot=l.store.snapshot;commit=l.store.commit;inspect=l.store.inspect_mutation
+    def broken_snapshot():
+        if read_fault=='oserror':raise OSError('scripted unavailable snapshot')
+        if read_fault=='runtime':raise RuntimeError('scripted unavailable snapshot')
+        if read_fault=='typed':raise ContractError('STORE_UNAVAILABLE')
+        snap=snapshot()
+        if read_fault=='malformed':snap.pop('pending')
+        if read_fault=='unavailable':snap['available']=False
+        if read_fault=='corrupt':snap['integrity']=False
+        if read_fault=='missing_job_bytes':snap['objects'].pop(snap['jobs'][l.job_id]['digest'])
+        if read_fault=='missing_slot_index':
+            # The committed terminal job has a RELEASED slot; injecting an old HELD
+            # index must be rejected rather than treated as an authoritative view.
+            snap['slots']=before['slots']
+        if read_fault=='missing_receipt_index':snap['receipts'].clear()
+        return snap
+    def broken_inspect(operation):
+        if read_fault=='inspect':raise RuntimeError('scripted unavailable proof')
+        proof,objects=inspect(operation)
+        if read_fault=='empty_proof':return None,objects
+        if read_fault=='bad_proof':
+            value=proof.value;value={k:v for k,v in value.items() if k not in ('kind','version','scope')}
+            value['write_set_ref']={'kind':'PURE.AtomicWriteSet','digest':'f'*64}
+            proof=seal('CommitResolutionProof',**value);objects[proof.digest]=proof
+        return proof,objects
+    def interrupted(plan):
+        if boundary=='before':l.store.hold(plan);result=None
+        else:result=commit(plan)
+        monkeypatch.setattr(l.store,'snapshot',broken_snapshot)
+        monkeypatch.setattr(l.store,'inspect_mutation',broken_inspect)
+        if exception_kind=='raw':raise RuntimeError('scripted lost COMMIT ACK')
+        if exception_kind=='typed':raise ContractError('CAS_CONFLICT')
+        return result
+    monkeypatch.setattr(l.store,'commit',interrupted)
+    out=l.c.cancel(l.job_id,l.job().value['revision'],mid)
+    expected=('UNKNOWN_COMMIT_OUTCOME' if exception_kind!='return' else
+              'STORE_CORRUPT' if read_fault in ('corrupt','bad_proof','malformed','missing_job_bytes','missing_slot_index','missing_receipt_index') else
+              'STORE_UNAVAILABLE' if read_fault in ('unavailable','inspect') else 'UNKNOWN_COMMIT_OUTCOME')
+    # Commit exceptions remain UNKNOWN even when the secondary diagnostic also fails.
+    expect_error(out,expected)
+    assert out['disposition']=='HOLD' and out['mutation_outcome']=='UNKNOWN_COMMIT_OUTCOME'
+    assert out['error']['external_effect']=='UNKNOWN'
+    assert mid in l.store.state['pending'] and mid in l.c._uncertain
+    if boundary=='before':
+        assert l.store.state['jobs']==before['jobs'] and l.store.state['slots']==before['slots']
+        assert l.store.commits==commits
+    else:
+        job=l.store.state['objects'][l.store.state['jobs'][l.job_id]['digest']]
+        assert job.value['state']=='CANCELLED'
+        assert not l.store.state['slots'] and l.store.commits==commits+1
+    # Restore read access only. Neither that nor a controller restart resolves M.
+    monkeypatch.setattr(l.store,'snapshot',snapshot)
+    monkeypatch.setattr(l.store,'inspect_mutation',inspect)
+    monkeypatch.setattr(l.store,'commit',commit)
+    next_command=l.variant()
+    expect_error(l.c.admit(next_command,l.mid()),'UNKNOWN_COMMIT_OUTCOME')
+    l.restart();expect_error(l.c.admit(next_command,l.mid()),'UNKNOWN_COMMIT_OUTCOME')
+    assert len(l.store.state['jobs'])==1 and l.ledger.calls==l.ledger.read_calls==0
+    resolved=l.c.resolve_commit(mid)
+    if boundary=='before':
+        expect_error(resolved,'MUTATION_NOT_COMMITTED')
+        assert l.store.state['slots'] and l.job().value['state']=='DRAFT'
+    else:
+        assert resolved['disposition']=='APPLIED' and not l.store.state['slots']
+        assert l.c.admit(next_command,l.mid())['disposition']=='ACCEPTED'
+
+
+def test_F08B3_02_typed_exception_only_proven_absence_can_report_not_committed(monkeypatch):
+    l=Lab();l.admit();mid=l.mid();before=l.store.snapshot();proof_reads=[]
+    inspect=l.store.inspect_mutation
+    def no_commit(plan):
+        l.store.hold(plan)
+        raise ContractError('CAS_CONFLICT')
+    def checked(operation):
+        proof,objects=inspect(operation);proof_reads.append(proof.value['outcome'])
+        return proof,objects
+    monkeypatch.setattr(l.store,'commit',no_commit);monkeypatch.setattr(l.store,'inspect_mutation',checked)
+    out=l.c.cancel(l.job_id,l.job().value['revision'],mid);expect_error(out,'CAS_CONFLICT')
+    assert out['mutation_outcome']=='NOT_COMMITTED' and proof_reads and set(proof_reads)=={'NOT_COMMITTED'}
+    assert not l.store.state['pending'] and not l.c._uncertain
+    assert l.store.state['jobs']==before['jobs'] and l.store.state['slots']==before['slots']
+
+
+def test_F08B3_02_failure_of_hold_port_does_not_clear_retained_uncertainty(monkeypatch):
+    l=Lab();l.admit();mid=l.mid();commit=l.store.commit;hold=l.store.hold
+    def interrupted(plan):
+        commit(plan)  # FakeStore retains the operation until proof is acknowledged.
+        raise ContractError('STORE_UNAVAILABLE')
+    def unavailable_hold(plan):raise OSError('scripted hold-port outage')
+    monkeypatch.setattr(l.store,'commit',interrupted);monkeypatch.setattr(l.store,'hold',unavailable_hold)
+    out=l.c.cancel(l.job_id,l.job().value['revision'],mid)
+    expect_error(out,'UNKNOWN_COMMIT_OUTCOME')
+    assert mid in l.store.state['pending'] and mid in l.c._uncertain
+    monkeypatch.setattr(l.store,'commit',commit);monkeypatch.setattr(l.store,'hold',hold)
+    l.restart();expect_error(l.c.admit(l.variant(),l.mid()),'UNKNOWN_COMMIT_OUTCOME')
+    assert l.c.resolve_commit(mid)['disposition']=='APPLIED'
+
+
+def test_F08B3_02_pending_diagnostic_failure_cannot_enable_submit_or_stale_write(monkeypatch):
+    l=Lab();l.submitting();before=l.store.snapshot();mid=l.mid();l.store.fault='after'
+    out=l.c.cancel(l.job_id,l.job().value['revision'],mid,l.worker);expect_error(out,'UNKNOWN_COMMIT_OUTCOME')
+    snapshot=l.store.snapshot
+    def unreadable():raise RuntimeError('scripted snapshot outage')
+    monkeypatch.setattr(l.store,'snapshot',unreadable)
+    out=l.c.dispatch(l.job_id,0,l.worker);expect_error(out,'STORE_UNAVAILABLE')
+    assert out['disposition']=='HOLD' and out['mutation_outcome']=='UNKNOWN_COMMIT_OUTCOME'
+    assert out['error']['external_effect']=='UNKNOWN'
+    monkeypatch.setattr(l.store,'snapshot',snapshot)
+    pending=l.store.snapshot()
+    expect_error(l.c.apply_proof(l.job_id,0,l.mid(),dict(l.worker,lease_epoch=999),l.command),'UNKNOWN_COMMIT_OUTCOME')
+    assert l.store.snapshot()==pending and l.ledger.calls==0
+    assert len(l.store.state['jobs'])==len(before['jobs']) and l.store.state['slots']

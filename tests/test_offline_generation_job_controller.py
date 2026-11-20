@@ -58,6 +58,10 @@ class FakeStore:
         self.state['mutations'].setdefault(mid,{'intent':plan.mutation.ref,'write_set':None})
         self.state['pending'].add(mid)
     def commit(self,plan):
+        mid=plan.mutation.value['mutation_id']
+        retained=self.registry.get(mid)
+        require(retained is None or retained.mutation.ref==plan.mutation.ref,'OPERATION_ID_CONFLICT')
+        self.registry.setdefault(mid,plan)  # Retained intent before any COMMIT boundary.
         if self.hook:
             hook,self.hook=self.hook,None;hook()
         s=self.state;mid=plan.mutation.value['mutation_id'];m=plan.mutation.value
@@ -80,6 +84,7 @@ class FakeStore:
         require(plan.snapshot_generation==s['generation'],'CAS_CONFLICT')
         self.registry[mid]=plan
         s['mutations'][mid]={'intent':plan.mutation.ref,'write_set':None}
+        s['pending'].add(mid)  # Remains held until the controller verifies/ACKs proof.
         fault,self.fault=self.fault,None
         if fault=='before':return 'NOT_COMMITTED'
         if fault=='during':self.hold(plan);return 'UNKNOWN_COMMIT_OUTCOME'
@@ -105,6 +110,10 @@ class FakeStore:
         s=self.state;require(s['available'],'STORE_UNAVAILABLE');require(s['integrity'],'STORE_CORRUPT')
         require(mid in self.registry,'STORE_CORRUPT');plan=self.registry[mid]
         objects=dict(s['objects']);objects[plan.mutation.digest]=plan.mutation
+        # Intent/input closure is retained harness data, not committed members.
+        excluded={ref['digest'] for ref in plan.write_set.value['members']}|{plan.write_set.digest}
+        for rec in plan.records:
+            if rec.digest not in excluded:objects.setdefault(rec.digest,rec)
         marker=s['mutations'].get(mid,{}).get('write_set')
         if marker:
             require(marker==plan.write_set.ref and marker['digest'] in objects,'STORE_CORRUPT')
@@ -237,7 +246,10 @@ def test_A04_E15_result_available_holds_slot_and_is_not_complete():
 
 def test_A10_interleaved_candidates_atomic_single_slot():
     l=Lab();other=l.variant();winner=[]
-    l.store.hook=lambda:winner.append(l.c.admit(other,l.mid()))
+    # Independent invocations share the same qualified owner and atomic store;
+    # an in-flight call on one facade must not serialize away the competing CAS.
+    competing=Controller(l.namespace,l.objects,l.store,l.clock,l.owner,l.token,l.authority,l.simulator)
+    l.store.hook=lambda:winner.append(competing.admit(other,l.mid()))
     out=l.c.admit(l.command,l.mid());expect_error(out,'ACTIVE_INTENT_CONFLICT')
     assert winner[0]['disposition']=='ACCEPTED';assert len(l.store.state['jobs'])==len(l.store.state['receipts'])==len(l.store.state['slots'])==1
 
@@ -252,3 +264,101 @@ def test_A09_expired_historical_replay_cannot_refresh_permission():
     assert l.c.admit(l.command,l.mid())['disposition']=='REUSED'
     expect_error(l.c.dispatch(l.job_id,l.job().value['revision'],l.worker),'AUTHORIZATION_EXPIRED')
     assert l.store.snapshot()==before and l.ledger.calls==0
+
+
+class MultiJobLab(Lab):
+    """A remains confirmed; B independently has no intent, intent, or acceptance."""
+    def __init__(self,status):
+        super().__init__()
+        self.foreign_receipt=self.running()
+        self.foreign_job_id=self.job_id
+        self.owner.dead.add(self.worker['worker_id'])  # Qualified fake worker exit.
+        self.command=self.variant(101,project=True)
+        self.admit()
+        self.target_admission_mid=self.job().value['created_mutation_id']
+        if status!='NONE':
+            for target in ('AWAITING_APPROVAL','APPROVED','QUEUED'):
+                assert self.c.advance(self.job_id,self.job().value['revision'],self.mid(),target)['disposition']=='APPLIED'
+            assert self.c.claim(self.job_id,self.job().value['revision'],self.mid(),uid(201),100)['disposition']=='APPLIED'
+            self.worker=self.c.worker_token(self.job_id)
+            assert self.c.prepare_submit(self.job_id,self.job().value['revision'],self.mid(),self.worker)['disposition']=='APPLIED'
+            if status=='KNOWN':
+                receipt=self.c.dispatch(self.job_id,self.job().value['revision'],self.worker)
+                assert isinstance(receipt,Record)
+                assert self.c.apply_proof(self.job_id,self.job().value['revision'],self.mid(),self.worker,receipt)['disposition']=='APPLIED'
+        else:
+            self.worker=dict(controller=self.token,job_id=self.job_id,worker_id=uid(201),lease_epoch=1,lease_until_tick=100)
+        self.status=status
+
+
+@pytest.mark.parametrize('status',['NONE','UNKNOWN','KNOWN'])
+@pytest.mark.parametrize('operation',['admit','dispatch','apply_proof','resolve_commit'])
+def test_F08B3_01_error_attribution_is_target_scoped(status,operation,monkeypatch):
+    l=MultiJobLab(status)
+    assert l.foreign_receipt.digest in l.store.state['objects']
+    assert l.foreign_job_id!=l.job_id
+    before=l.store.snapshot();submits=l.ledger.calls;commits=l.store.commits
+    if operation=='admit':
+        # Same B key/request, different initial permit: an error for B, not A.
+        c=l.command.value;c={k:v for k,v in c.items() if k not in ('kind','version','scope')}
+        c['permit_ref']=record('BatchPermit').ref
+        command=l.add(seal('AdmissionCommand',**c))
+        out=l.c.admit(command,l.mid());expect_error(out,'IDEMPOTENCY_CONFLICT')
+    elif operation=='dispatch':
+        out=l.c.dispatch(l.job_id,0,l.worker)
+        expect_error(out,'STALE_WORKER_FENCE' if status=='NONE' else 'CAS_CONFLICT')
+    elif operation=='apply_proof':
+        out=l.c.apply_proof(l.job_id,0,l.mid(),l.worker,l.foreign_receipt)
+        expect_error(out,'STALE_WORKER_FENCE' if status=='NONE' else 'CAS_CONFLICT')
+    else:
+        def unavailable(mid):raise ContractError('STORE_UNAVAILABLE')
+        monkeypatch.setattr(l.store,'inspect_mutation',unavailable)
+        out=l.c.resolve_commit(l.target_admission_mid);expect_error(out,'STORE_UNAVAILABLE')
+    assert out['error']['external_effect']==status
+    assert l.store.snapshot()==before and l.ledger.calls==submits and l.store.commits==commits
+
+
+def test_F08B3_01_new_admission_does_not_inherit_active_foreign_effect():
+    l=MultiJobLab('KNOWN');new=l.variant(103,project=False)
+    before=l.store.snapshot();submits=l.ledger.calls
+    out=l.c.admit(new,l.mid());expect_error(out,'ACTIVE_INTENT_CONFLICT')
+    assert out['error']['external_effect']=='NONE'
+    assert l.store.snapshot()==before and l.ledger.calls==submits
+
+
+@pytest.mark.parametrize('status',['UNKNOWN','KNOWN'])
+def test_F08B3_01_foreign_receipt_cannot_bind_to_current_apply_proof(status):
+    l=MultiJobLab(status);before=l.store.snapshot();submits=l.ledger.calls
+    out=l.c.apply_proof(l.job_id,l.job().value['revision'],l.mid(),l.worker,l.foreign_receipt)
+    expect_error(out,'RESULT_BINDING_MISMATCH')
+    assert out['error']['external_effect']==status
+    assert l.store.snapshot()==before and l.ledger.calls==submits
+
+
+def test_F08B3_01_missing_mutation_target_is_not_foreign_known_effect():
+    l=MultiJobLab('KNOWN');before=l.store.snapshot()
+    out=l.c.resolve_commit(uid(99999));expect_error(out,'STORE_CORRUPT')
+    assert out['error']['external_effect']=='UNKNOWN' and l.store.snapshot()==before
+
+
+def test_F08B3_01_unattested_matching_receipt_does_not_establish_known():
+    l=MultiJobLab('UNKNOWN');payload,_=l.c._payload(l.store.snapshot(),l.job())
+    v=l.foreign_receipt.value;v={k:v for k,v in v.items() if k not in ('kind','version','scope')}
+    v.update({n:payload.value[n] for n in ('generation_operation_id','attempt_id','effect_token')})
+    v.update(payload_ref=payload.ref,provider_receipt_id=uid(901),provider_job_id=uid(902))
+    forged=seal('ProviderAcceptanceReceipt',**v)
+    l.store.state['objects'][forged.digest]=forged  # Not in qualified ledger evidence.
+    before=l.store.snapshot()
+    out=l.c.dispatch(l.job_id,0,l.worker);expect_error(out,'CAS_CONFLICT')
+    assert out['error']['external_effect']=='UNKNOWN' and l.store.snapshot()==before
+
+
+def test_F08B3_01_admit_proven_not_committed_has_no_foreign_effect():
+    l=MultiJobLab('KNOWN');command=l.variant(105,project=True);mid=l.mid()
+    before=l.store.snapshot();submits=l.ledger.calls;commits=l.store.commits
+    l.store.fault='before';out=l.c.admit(command,mid)
+    expect_error(out,'MUTATION_NOT_COMMITTED')
+    assert out['mutation_outcome']=='NOT_COMMITTED' and out['error']['external_effect']=='NONE'
+    assert l.store.state['jobs']==before['jobs'] and l.store.state['slots']==before['slots']
+    assert l.ledger.calls==submits and l.store.commits==commits
+    assert not l.store.state['pending'] and not l.c._uncertain

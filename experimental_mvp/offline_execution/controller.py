@@ -42,14 +42,59 @@ class Controller:
         self.clock=clock; self.ownership=ownership; self.token=dict(token)
         self.authority=authority; self.simulator=simulator
         self._last_tick=0
+        # A failed diagnostic/hold port must not erase an outcome already unknown.
+        # This is a controller-local latch, not a durable store implementation.
+        self._uncertain={}
+        self._namespace_pending=set()
 
-    def _view(self, allow_pending=False):
-        require(self.authority.can_read,'READ_SCOPE_DENIED')
-        snap=self.store.snapshot()
+    def _snapshot(self):
+        try:
+            snap=self.store.snapshot()
+        except ContractError:
+            raise
+        except Exception as exc:
+            raise ContractError('STORE_UNAVAILABLE') from exc
+        require(type(snap) is dict,'STORE_CORRUPT')
+        required={'available','integrity','namespace_ref','pending','objects','jobs',
+                  'receipts','outboxes','mutations','slots','sequence','generation'}
+        require(required <= snap.keys(),'STORE_CORRUPT')
+        require(type(snap['available']) is bool and type(snap['integrity']) is bool,'STORE_CORRUPT')
+        require(type(snap['pending']) in (set,frozenset),'STORE_CORRUPT')
+        require(all(type(snap[n]) is dict for n in ('objects','jobs','receipts','outboxes','mutations','slots')),'STORE_CORRUPT')
+        # An unqualified read may add a conservative hold hint, never clear one.
+        self._namespace_pending.update(snap['pending'])
         require(snap['available'],'STORE_UNAVAILABLE')
         require(snap['integrity'],'STORE_CORRUPT')
         require(snap['namespace_ref']==self.namespace.ref,'NAMESPACE_MISMATCH')
-        require(allow_pending or not snap['pending'],'UNKNOWN_COMMIT_OUTCOME')
+        try:
+            objects=snap['objects'];held={};keys=set()
+            for jid,ref in snap['jobs'].items():
+                job=objects[ref['digest']];validate_record(job,objects);j=job.value
+                require(job.ref==ref and j['kind']=='PURE.JobRecord' and j['job_id']==jid and j['namespace_ref']==self.namespace.ref,'STORE_CORRUPT')
+                slot=resolve(j['active_slot_ref'],objects);keys.add(j['key_ref']['digest'])
+                if slot['status']=='HELD':
+                    projection=tuple(slot[n] for n in ('store_id','project_id','purpose_id'))
+                    require(projection not in held,'STORE_CORRUPT');held[projection]=j['active_slot_ref']
+            require(held==snap['slots'] and keys==set(snap['receipts']),'STORE_CORRUPT')
+            for key,ref in snap['receipts'].items():
+                rec=objects[ref['digest']];validate_record(rec,objects);v=rec.value
+                require(rec.ref==ref and v['kind']=='PURE.AcceptanceReceipt' and v['key_ref']['digest']==key and v['job_id'] in snap['jobs'],'STORE_CORRUPT')
+            for oid,ref in snap['outboxes'].items():
+                rec=objects[ref['digest']];validate_record(rec,objects);v=rec.value
+                require(rec.ref==ref and v['kind']=='PURE.OutboxEnvelope' and v['outbox_id']==oid,'STORE_CORRUPT')
+                payload=resolve(v['payload_ref'],objects)
+                require(payload['job_id'] in snap['jobs'],'STORE_CORRUPT')
+                job=resolve(snap['jobs'][payload['job_id']],objects)
+                require(all(payload[n]==job[n] for n in ('job_id','namespace_ref','request_ref','key_ref','generation_operation_id','attempt_id','effect_token')),'STORE_CORRUPT')
+        except Exception as exc:
+            raise ContractError('STORE_CORRUPT') from exc
+        self._namespace_pending=set(snap['pending'])
+        return snap
+
+    def _view(self, allow_pending=False):
+        require(self.authority.can_read,'READ_SCOPE_DENIED')
+        snap=self._snapshot()
+        require(allow_pending or not (snap['pending'] or self._uncertain),'UNKNOWN_COMMIT_OUTCOME')
         return snap
 
     def _objects(self, snap, extra=()):
@@ -83,29 +128,129 @@ class Controller:
         j=job.value;key=resolve(j['key_ref'],objects)
         policy.authorize(j['initial_permit_ref'],key['batch_manifest_ref'],self.namespace.ref,self.authority,objects,now)
 
-    def _failure(self,code,operation,mutation=None):
-        effect='UNKNOWN'
+    def _effect(self,job_id=None,command=None,mutation_id=None):
+        """Classify only a fully bound target; unrelated evidence is never used."""
         try:
-            snap=self.store.snapshot()
-            if not snap['available'] or not snap['integrity']:effect='UNKNOWN'
-            elif not snap['outboxes']:effect='NONE'
-            elif any(r.value['kind']=='PURE.ProviderAcceptanceReceipt' for r in snap['objects'].values()):effect='KNOWN'
-        except ContractError:
-            pass
+            require(self.authority.can_read,'READ_SCOPE_DENIED')
+            snap=self._snapshot()
+            if snap['pending'] or self._uncertain:
+                return 'UNKNOWN'
+            objects=self._objects(snap)
+            if command is not None:
+                require(type(command) is Record and command.value['kind']=='PURE.AdmissionCommand')
+                c=command.value
+                require(c['namespace_ref']==self.namespace.ref,'NAMESPACE_MISMATCH')
+                key=resolve(c['key_ref'],objects)
+                require(key['request_ref']==c['request_ref'],'IDEMPOTENCY_CONFLICT')
+                validate_record(command,dict(objects,**{command.digest:command}))
+                old=snap['receipts'].get(c['key_ref']['digest'])
+                if old is None:
+                    return 'NONE'  # Complete history has never admitted this key.
+                receipt=resolve(old,objects)
+                require(receipt['request_ref']==c['request_ref'],'STORE_CORRUPT')
+                job_id=receipt['job_id']
+            if job_id is None and mutation_id is not None:
+                entry=snap['mutations'].get(mutation_id)
+                if entry is None:
+                    return 'UNKNOWN'  # No proved target, never borrow another job.
+                intent=resolve(entry['intent'],objects)
+                require(intent['mutation_id']==mutation_id,'STORE_CORRUPT')
+                job_id=intent['job_id']
+                if job_id is None:
+                    ws_ref=entry.get('write_set')
+                    if ws_ref is None:
+                        return 'UNKNOWN'
+                    ws=resolve(ws_ref,objects)
+                    require(ws['mutation_ref']==entry['intent'],'STORE_CORRUPT')
+                    job_id=ws['job_id']
+            if job_id is None:
+                return 'UNKNOWN'
+            ref=snap['jobs'].get(job_id)
+            if ref is None:
+                return 'UNKNOWN'  # Absence of an unbound/invalid target is not proof.
+            job=objects[ref['digest']];validate_record(job,objects);j=job.value
+            require(j['kind']=='PURE.JobRecord' and j['job_id']==job_id and j['namespace_ref']==self.namespace.ref,'STORE_CORRUPT')
+            boxes=[]
+            for box_ref in snap['outboxes'].values():
+                box=objects[box_ref['digest']]
+                payload=objects[box.value['payload_ref']['digest']]
+                if payload.value['job_id']==job_id:
+                    validate_record(box,objects)
+                    boxes.append(payload)
+            if j['generation_operation_id'] is None:
+                return 'UNKNOWN' if boxes else 'NONE'
+            if len(boxes)!=1:
+                return 'UNKNOWN'
+            payload=boxes[0];pv=payload.value
+            bindings=('job_id','namespace_ref','generation_operation_id','attempt_id',
+                      'effect_token','key_ref','request_ref')
+            require(all(pv[n]==j[n] for n in bindings) and pv['permit_ref']==j['initial_permit_ref'],'RESULT_BINDING_MISMATCH')
+            for rec in objects.values():
+                if rec.value['kind']!='PURE.ProviderAcceptanceReceipt':
+                    continue
+                if rec.value['payload_ref']!=payload.ref:
+                    continue
+                verify_receipt(rec,payload,objects)
+                if self.simulator.attests(rec,payload):
+                    return 'KNOWN'
+            return 'UNKNOWN'  # Intent/outbox is not acceptance/nonacceptance proof.
+        except Exception:
+            # Diagnostic classification must never escape or invent certainty.
+            return 'UNKNOWN'
+
+    def _failure(self,code,operation,mutation=None,*,job_id=None,command=None,mutation_id=None):
+        effect=self._effect(job_id,command,mutation_id)
         hold=code in ('UNKNOWN_COMMIT_OUTCOME','STORE_UNAVAILABLE','STORE_CORRUPT','CLOCK_UNQUALIFIED','READ_LIMIT_EXCEEDED')
+        if mutation=='UNKNOWN_COMMIT_OUTCOME':
+            hold=True
         return outcome('HOLD' if hold else 'REJECTED',mutation=mutation,
                        error=response_error(code,operation,effect,'ZERO'))
 
-    def _call(self,operation,fn):
+    def _pending(self,unknown_on_unreadable=False):
+        pending=bool(self._uncertain or self._namespace_pending)
+        try:
+            pending=pending or bool(self._snapshot()['pending'])
+        except Exception:
+            pending=pending or unknown_on_unreadable  # Never clear known uncertainty.
+        return pending
+
+    def _call(self,operation,fn,*,job_id=None,command=None,mutation_id=None):
         try:
             return fn()
         except ContractError as exc:
-            pending=False
-            try: pending=bool(self.store.snapshot()['pending'])
-            except ContractError: pass
-            return self._failure(exc.code,operation,'UNKNOWN_COMMIT_OUTCOME' if pending else None)
+            return self._failure(exc.code,operation,
+                'UNKNOWN_COMMIT_OUTCOME' if self._pending(operation=='RESOLVE_COMMIT') else None,
+                job_id=job_id,command=command,mutation_id=mutation_id)
+
+    def _hold(self,plan,code='UNKNOWN_COMMIT_OUTCOME'):
+        mid=plan.mutation.value['mutation_id']
+        self._uncertain[mid]=plan
+        try:
+            self.store.hold(plan)
+        except Exception:
+            pass  # Keep the local fail-closed latch even if the port is down.
+        return self._failure(code,'RESOLVE_COMMIT','UNKNOWN_COMMIT_OUTCOME',
+                             job_id=plan.write_set.value['job_id'],mutation_id=mid)
+
+    def _proof(self,plan):
+        self._view(allow_pending=True)
+        proof,objects=self.store.inspect_mutation(plan.mutation.value['mutation_id'])
+        require(proof is not None,'UNKNOWN_COMMIT_OUTCOME')
+        validate_record(proof,objects)
+        value=proof.value
+        require(value['namespace_ref']==self.namespace.ref and value['mutation_ref']==plan.mutation.ref,'STORE_CORRUPT')
+        if value['outcome']=='COMMITTED':
+            require(value['write_set_ref']==plan.write_set.ref,'STORE_CORRUPT')
+        return proof,objects
+
+    def _acknowledge(self,mid,proof):
+        self.store.acknowledge_resolution(mid,proof)
+        self._uncertain.pop(mid,None)
+        self._namespace_pending.discard(mid)
 
     def _commit(self,snap,mutation,members,objects,slot_action,worker=None):
+        prior=snap['mutations'].get(mutation.value['mutation_id'])
+        require(prior is None or prior['intent']==mutation.ref,'OPERATION_ID_CONFLICT')
         events=[r for r in members if r.value['kind']=='PURE.StoreEvent']
         require(len(events)==1,'STORE_CORRUPT');event=events[0].value
         seq=policy.increment(snap['sequence'])
@@ -119,25 +264,44 @@ class Controller:
         require(sum(r.value['kind']=='PURE.StoreEvent' for r in snap['objects'].values())<128,'RESOURCE_LIMIT')
         require(sum(r.value['kind']=='PURE.OutboxEnvelope' for r in snap['objects'].values())+sum(r.value['kind']=='PURE.OutboxEnvelope' for r in members)<=32,'RESOURCE_LIMIT')
         plan=Plan(mutation,ws,tuple(records.values()),snap['generation'],dict(self.token),worker,self._now())
-        # The injected store registers the stable intent before its commit boundary.
+        # Retain this exact intent until complete qualified proof, not just an ACK.
+        mid=mutation.value['mutation_id']
+        failure_context=dict(job_id=event['job_id'],mutation_id=mid)
+        if mutation.value['mutation_kind']=='ADMIT':
+            failure_context['command']=objects[mutation.value['input_ref']['digest']]
+        self._uncertain[mid]=plan
         try:
             result=self.store.commit(plan)
-        except ContractError:
-            raise
+        except ContractError as exc:
+            # A typed exception is not rollback evidence. Only a complete
+            # same-operation absence proof permits the original no-write error.
+            try:
+                proof,_=self._proof(plan)
+                if proof.value['outcome']=='NOT_COMMITTED':
+                    self._acknowledge(mid,proof)
+                    return self._failure(exc.code,'RESOLVE_COMMIT','NOT_COMMITTED',
+                                         **failure_context)
+            except Exception:
+                pass
+            return self._hold(plan)
         except Exception:
-            # Lost ACK is not rollback. The harness retains this exact plan.
-            self.store.hold(plan)
-            return self._failure('UNKNOWN_COMMIT_OUTCOME','RESOLVE_COMMIT','UNKNOWN_COMMIT_OUTCOME')
-        require(result in ('COMMITTED','NOT_COMMITTED','UNKNOWN_COMMIT_OUTCOME'),'STORE_CORRUPT')
+            return self._hold(plan)
         if result=='UNKNOWN_COMMIT_OUTCOME':
-            self.store.hold(plan)
-            return self._failure(result,'RESOLVE_COMMIT',result)
-        if result=='NOT_COMMITTED':return self._failure('MUTATION_NOT_COMMITTED','RESOLVE_COMMIT',result)
-        new=self.store.snapshot()
-        proof,proof_objects=self.store.inspect_mutation(mutation.value['mutation_id'])
-        require(proof is not None and proof.value['outcome']=='COMMITTED','STORE_CORRUPT')
-        validate_record(proof,proof_objects)
-        require(proof.value['write_set_ref']==ws.ref and proof.value['mutation_ref']==mutation.ref,'STORE_CORRUPT')
+            return self._hold(plan)
+        if result not in ('COMMITTED','NOT_COMMITTED'):
+            return self._hold(plan,'STORE_CORRUPT')
+        try:
+            proof,_=self._proof(plan)
+            require(proof.value['outcome']==result,'STORE_CORRUPT')
+            self._acknowledge(mid,proof)
+        except ContractError as exc:
+            code=exc.code if exc.code in ('STORE_UNAVAILABLE','STORE_CORRUPT','UNKNOWN_COMMIT_OUTCOME') else 'STORE_CORRUPT'
+            return self._hold(plan,code)
+        except Exception:
+            return self._hold(plan,'STORE_UNAVAILABLE')
+        if result=='NOT_COMMITTED':
+            return self._failure('MUTATION_NOT_COMMITTED','RESOLVE_COMMIT',result,
+                                 **failure_context)
         job=next(r for r in members if r.value['kind']=='PURE.JobRecord')
         receipt=next((r for r in members if r.value['kind']=='PURE.AcceptanceReceipt'),None)
         return outcome('ACCEPTED' if receipt else 'APPLIED',job,receipt,'COMMITTED')
@@ -179,7 +343,7 @@ class Controller:
             job=seal('JobRecord',job_id=job_id,created_mutation_id=mutation_id,last_mutation_id=mutation_id,
                 namespace_ref=self.namespace.ref,key_ref=c['key_ref'],request_ref=c['request_ref'],initial_permit_ref=c['permit_ref'],state='DRAFT',revision=1,cancel_requested=False,generation_operation_id=None,attempt_id=None,effect_token=None,last_event_ref=ev.ref,last_error_ref=None,result_ref=None,active_slot_ref=slot.ref,controller_incarnation=self.token['incarnation'],worker_id=None,lease_epoch=0,lease_until_tick=None,clock_epoch_id=None,provider_cursor=0,read_checkpoint=None)
             return self._commit(snap,expected,(ev,slot,receipt,job),objects,'ACQUIRE')
-        return self._call('ADMIT',run)
+        return self._call('ADMIT',run,command=command,mutation_id=mutation_id)
 
     def _change(self,snap,job,mutation_id,target,kind,input_record=None,changes=None,event_type='STATE_CHANGED',worker=None,reservation=None,extras=()):
         old=job.value;j=dict(old);j.update(changes or {});j['state']=target;j['revision']=policy.increment(old['revision']);j['last_mutation_id']=mutation_id
@@ -208,7 +372,7 @@ class Controller:
             self._permit(job,objects,now);policy.capacity(self.authority)
             permit=objects[job.value['initial_permit_ref']['digest']]
             return self._change(snap,job,mutation_id,target,'STATE_CHANGE',permit)
-        return self._call('ADMIT',run)
+        return self._call('ADMIT',run,job_id=job_id,mutation_id=mutation_id)
 
     def claim(self,job_id,revision,mutation_id,worker_id,lease_ticks):
         def run():
@@ -222,7 +386,7 @@ class Controller:
             others=[self._job(snap,i).value for i in snap['jobs'] if i!=job_id]
             require(not any(x['worker_id'] is not None and x['state'] not in TERMINAL and x['lease_until_tick']>now and not self.ownership.worker_dead(x['worker_id']) for x in others),'RESOURCE_LIMIT')
             return self._change(snap,job,mutation_id,j['state'],'CLAIM',changes=dict(controller_incarnation=self.token['incarnation'],worker_id=worker_id,lease_epoch=policy.increment(j['lease_epoch']),lease_until_tick=now+lease_ticks,clock_epoch_id=self.token['clock_epoch_id']),event_type='LEASE_CLAIMED')
-        return self._call('CLAIM',run)
+        return self._call('CLAIM',run,job_id=job_id,mutation_id=mutation_id)
 
     def worker_token(self,job_id):
         j=self._job(self._view(),job_id).value
@@ -234,7 +398,7 @@ class Controller:
             require(j['state'] in policy.CLAIM_STATES,'ILLEGAL_TRANSITION')
             require(type(lease_ticks) is int and 1<=lease_ticks<=10000 and j['lease_until_tick']<now+lease_ticks<=10000,'RESOURCE_LIMIT')
             return self._change(snap,job,mutation_id,j['state'],'RENEW',changes=dict(lease_until_tick=now+lease_ticks),event_type='LEASE_RENEWED',worker=worker)
-        return self._call('RENEW',run)
+        return self._call('RENEW',run,job_id=job_id,mutation_id=mutation_id)
 
     def prepare_submit(self,job_id,revision,mutation_id,worker):
         def run():
@@ -246,7 +410,7 @@ class Controller:
             req=resolve(j['request_ref'],objects)['request']
             payload=seal('EffectPayload',namespace_ref=self.namespace.ref,job_id=job_id,generation_operation_id=identifier(job_id+'generation'),attempt_id=identifier(job_id+'attempt'),attempt_number=1,effect_token=identifier(job_id+'effect'),key_ref=j['key_ref'],request_ref=j['request_ref'],permit_ref=j['initial_permit_ref'],fixture_id=req['provider_parameters']['fixture_id'],operation='SUBMIT_SYNTHETIC')
             return self._change(snap,job,mutation_id,'SUBMITTING','STATE_CHANGE',payload,changes={n:payload.value[n] for n in ('generation_operation_id','attempt_id','effect_token')},worker=worker)
-        return self._call('SUBMIT',run)
+        return self._call('SUBMIT',run,job_id=job_id,mutation_id=mutation_id)
 
     def _payload(self,snap,job):
         boxes=[snap['objects'][r['digest']] for r in snap['outboxes'].values() if snap['objects'][r['digest']].value['effect_token']==job.value['effect_token']]
@@ -274,7 +438,7 @@ class Controller:
             return receipt
         # Receipt is data, not an APIOutcome or write authority.
         try:return run()
-        except ContractError as exc:return self._failure(exc.code,'SUBMIT')
+        except ContractError as exc:return self._failure(exc.code,'SUBMIT','UNKNOWN_COMMIT_OUTCOME' if self._pending() else None,job_id=job_id)
 
     def apply_proof(self,job_id,revision,mutation_id,worker,receipt,extra=()):
         def run():
@@ -306,7 +470,7 @@ class Controller:
                 target='CANCELLED'
             if changes.get('provider_cursor',j['provider_cursor'])>j['provider_cursor']:changes['read_checkpoint']=None
             return self._change(snap,job,mutation_id,target,'APPLY_PROOF',receipt,changes=changes,event_type='PROOF_APPLIED',worker=worker,extras=extra)
-        return self._call('APPLY_PROOF',run)
+        return self._call('APPLY_PROOF',run,job_id=job_id,mutation_id=mutation_id)
 
     def contain_uncertainty(self,job_id,revision,mutation_id,worker):
         """SM07/SM08/SM30: retain the original effect, never infer nonacceptance."""
@@ -317,7 +481,7 @@ class Controller:
             require(target is not None,'ILLEGAL_TRANSITION')
             payload,_=self._payload(snap,job)
             return self._change(snap,job,mutation_id,target,'STATE_CHANGE',payload,worker=worker)
-        return self._call('SUBMIT',run)
+        return self._call('SUBMIT',run,job_id=job_id,mutation_id=mutation_id)
 
     def cancel(self,job_id,revision,mutation_id,worker=None):
         def run():
@@ -327,7 +491,7 @@ class Controller:
             pre=j['generation_operation_id'] is None
             target='CANCELLED' if pre else 'CANCEL_REQUESTED'
             return self._change(snap,job,mutation_id,target,'CANCEL',changes=dict(cancel_requested=True),event_type='CANCEL_REQUESTED',worker=worker)
-        return self._call('CANCEL',run)
+        return self._call('CANCEL',run,job_id=job_id,mutation_id=mutation_id)
 
     def reserve_read(self,job_id,revision,mutation_id,worker,read_kind,checkpoint_id):
         def run():
@@ -342,7 +506,7 @@ class Controller:
             cp=dict(cp,calls_used=cp['calls_used']+1)
             reservation={k:cp[k] for k in ('checkpoint_id','read_kind','base_cursor')};reservation['call_index']=cp['calls_used']
             return self._change(snap,job,mutation_id,j['state'],'READ_RESERVE',changes=dict(read_checkpoint=cp),event_type='READ_RESERVED',worker=worker,reservation=reservation)
-        return self._call('LOOKUP' if read_kind=='LOOKUP' else 'POLL',run)
+        return self._call('LOOKUP' if read_kind=='LOOKUP' else 'POLL',run,job_id=job_id,mutation_id=mutation_id)
 
     def read_reserved(self,job_id,revision,worker):
         """One scripted read per committed reservation; its fake ledger consumes it."""
@@ -353,20 +517,36 @@ class Controller:
             reservations=[r for r in snap['objects'].values() if r.value['kind']=='PURE.StoreEvent' and r.value['job_id']==job_id and r.value['read_reservation']==dict(checkpoint_id=cp['checkpoint_id'],read_kind=cp['read_kind'],call_index=cp['calls_used'],base_cursor=cp['base_cursor'])]
             require(len(reservations)==1,'STORE_CORRUPT')
             return self.simulator.read(cp['read_kind'],payload,cp['base_cursor'],self._objects(snap),now,reservations[0].ref)
-        except ContractError as exc:return self._failure(exc.code,'LOOKUP')
+        except ContractError as exc:return self._failure(exc.code,'LOOKUP','UNKNOWN_COMMIT_OUTCOME' if self._pending() else None,job_id=job_id)
 
     def resolve_commit(self,mutation_id):
         def run():
             snap=self._view(allow_pending=True)
             require(mutation_id in snap['mutations'],'STORE_CORRUPT')
-            proof,objects=self.store.inspect_mutation(mutation_id)
+            try:
+                proof,objects=self.store.inspect_mutation(mutation_id)
+            except ContractError:
+                raise
+            except Exception as exc:
+                raise ContractError('STORE_UNAVAILABLE') from exc
             require(proof is not None,'UNKNOWN_COMMIT_OUTCOME')
             validate_record(proof,objects)
             require(proof.value['namespace_ref']==self.namespace.ref and proof.value['mutation_ref']==snap['mutations'][mutation_id]['intent'],'STORE_CORRUPT')
-            self.store.acknowledge_resolution(mutation_id,proof)
-            if proof.value['outcome']=='NOT_COMMITTED':return self._failure('MUTATION_NOT_COMMITTED','RESOLVE_COMMIT','NOT_COMMITTED')
+            plan=self._uncertain.get(mutation_id)
+            if plan is not None and proof.value['outcome']=='COMMITTED':
+                require(proof.value['write_set_ref']==plan.write_set.ref,'STORE_CORRUPT')
+            try:
+                self._acknowledge(mutation_id,proof)
+            except ContractError:
+                raise
+            except Exception as exc:
+                raise ContractError('STORE_UNAVAILABLE') from exc
+            if proof.value['outcome']=='NOT_COMMITTED':
+                intent=resolve(proof.value['mutation_ref'],objects)
+                command=objects[intent['input_ref']['digest']] if intent['mutation_kind']=='ADMIT' else None
+                return self._failure('MUTATION_NOT_COMMITTED','RESOLVE_COMMIT','NOT_COMMITTED',job_id=intent['job_id'],command=command,mutation_id=mutation_id)
             ws=resolve(proof.value['write_set_ref'],objects)
             job=next(objects[x['digest']] for x in ws['members'] if x['kind']=='PURE.JobRecord')
             receipt=next((objects[x['digest']] for x in ws['members'] if x['kind']=='PURE.AcceptanceReceipt'),None)
             return outcome('ACCEPTED' if receipt else 'APPLIED',job,receipt,'COMMITTED')
-        return self._call('RESOLVE_COMMIT',run)
+        return self._call('RESOLVE_COMMIT',run,mutation_id=mutation_id)
