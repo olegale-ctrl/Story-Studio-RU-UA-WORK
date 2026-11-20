@@ -1,8 +1,7 @@
-"""DQ-01 pure wire tests. Literal source: c15ac152258586be1ed1b57f205830edfffc9ae1.
+"""DQ-01 pure wire tests. Literal source: 4a6780bf519e03ddafa5ae9d7ed0f4309bff7c89.
 
 Extracted directly from the pinned Markdown catalogue, without importing or
-executing the previous local verifier. These tests do NOT qualify native
-schemas, proof semantics, custody, or any DOC.ORACLE application outcome.
+executing the previous local verifier. Documentary schema/proof/oracle checks never qualify native custody or outcomes.
 """
 
 import hashlib
@@ -12,7 +11,8 @@ import pytest
 
 from experimental_mvp.durable_storage_lab.contracts import (
     SCOPE, MAX_INTEGER, WireError, canonical_bytes, decode_canonical,
-    typed_ref, validate_ref, verify_byte_closure,
+    typed_ref, validate_ref, verify_byte_closure, validate_schema,
+    DocumentGraph, evaluate_document_case, SCHEMAS, PAYLOADS,
 )
 
 # name, expected length, expected hash, literal canonical text; no regenerated hashes.
@@ -214,14 +214,14 @@ DOC_CASES = [
     {'expected': {'allowed_next': 'READ_ONLY_BLOCKED', 'application_outcome': 'UNKNOWN', 'control_generation': None, 'namespace_barrier': True, 'resolution_R_outcome': 'NOT_STARTED', 'rule': 'Store identity mismatch', 'uncertainty_hold': True}, 'facts': {'complete_snapshot': False, 'coordinator_continuous': True, 'custody_qualified': False, 'expected_ack_retained': True, 'ticket_retained': True}, 'finding': 'DQ-F01', 'id': 'F01-N04', 'inputs': {'expected_binding': {'digest': '0aa021446c8bf6ad6a2ae8adec531f311eabc02f7d1db551f5e246d78b228d9d', 'kind': 'DQ.LAB.RootAnchor', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'hold': {'digest': 'd8c84832c23ca9646ac0dc96b4a9c94f281f59d123d207e5269796acfc0304b6', 'kind': 'DQ.LAB.HoldEvidence', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'observed_binding': {'digest': '124dde3c024f357a89b42e7f4a1545700a4cf74d8a7bdcf4b986e0cf20d8ee7c', 'kind': 'DQ.LAB.RootAnchor', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}}},
     {'expected': {'allowed_next': 'QUALIFIED_REOPEN_INSPECT_ONLY', 'application_outcome': 'UNKNOWN', 'control_generation': None, 'namespace_barrier': True, 'resolution_R_outcome': 'NOT_STARTED', 'rule': 'Writer kill gives no commit proof by itself', 'uncertainty_hold': True}, 'facts': {'complete_snapshot': False, 'coordinator_continuous': True, 'custody_qualified': True, 'expected_ack_retained': True, 'ticket_retained': True}, 'finding': 'DQ-F01', 'id': 'F01-N05', 'inputs': {'hold': {'digest': '141d189513ee080a10e061609baa5549ba349afd1051489217e82a6c1f4dd98b', 'kind': 'DQ.LAB.HoldEvidence', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'ticket': {'digest': '4c0e03133930623d16d0f40ca977e13ffc9d46be9599b82a5227a8aaad3af14a', 'kind': 'DQ.LAB.OperationTicket', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}}},
     {'expected': {'allowed_next': 'READ_ONLY_BLOCKED', 'application_outcome': 'UNKNOWN', 'control_generation': 1, 'namespace_barrier': True, 'resolution_R_outcome': 'NOT_STARTED', 'rule': 'A-member present despite missing marker; false boolean assertions do not prove absence', 'uncertainty_hold': True}, 'facts': {'complete_snapshot': False, 'coordinator_continuous': True, 'custody_qualified': True, 'expected_ack_retained': True, 'ticket_retained': True}, 'finding': 'DQ-F01', 'id': 'F01-N06', 'inputs': {'candidate_snapshot': {'digest': '430274d6b4f3ab426e73a1d7c048b921bcf7cacc6f88d813755e2bb9937e6b98', 'kind': 'DQ.LAB.SnapshotEvidence', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'hold': {'digest': '883c9c0bb29932954055c4ffb44ab6046f3555e258b76b79b132b03e758c3e52', 'kind': 'DQ.LAB.HoldEvidence', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'rejected_absence': {'digest': '3caea28ce9a103edbbad8a8dbb40c074f026673ba01ee7b5ce93113cd39f3f91', 'kind': 'DQ.LAB.AbsenceProof', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'ticket': {'digest': '4c0e03133930623d16d0f40ca977e13ffc9d46be9599b82a5227a8aaad3af14a', 'kind': 'DQ.LAB.OperationTicket', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}}},
-    {'expected': {'allowed_next': 'OLD_M_READ_ONLY', 'application_outcome': 'NOT_COMMITTED', 'control_generation': 1, 'namespace_barrier': False, 'resolution_R_outcome': 'COMMITTED', 'rule': 'Negative R can close a never-prepared M from exact retained ticket without claiming P committed', 'uncertainty_hold': False}, 'facts': {'complete_snapshot': True, 'coordinator_continuous': True, 'custody_qualified': True, 'expected_ack_retained': True, 'ticket_retained': True}, 'finding': 'DQ-F01', 'id': 'F01-P03', 'inputs': {'absence': {'digest': '2d7659daaa09a3cde2479a7d72001c3e336c2b1cdf2e134e235ab32abaf02bc9', 'kind': 'DQ.LAB.AbsenceProof', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'ack_observed': {'digest': '379071bf39c8f7ea8115d2b9c97830ffd0e5ee409ab342d0cefacf647191a843', 'kind': 'DQ.LAB.ProofAck', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'post_snapshot': {'digest': 'ef0663d0862997715fa43b83cfd7280e28013088f5d290cc82a207694d6ed4e1', 'kind': 'DQ.LAB.SnapshotEvidence', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'ticket': {'digest': '4c5190b1c469b2c1ad69896a645bdd6af6196f1033f154256684cd00ae77b6a1', 'kind': 'DQ.LAB.OperationTicket', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}}},
+    {'expected': {'allowed_next': 'OLD_M_READ_ONLY', 'application_outcome': 'NOT_COMMITTED', 'control_generation': 1, 'namespace_barrier': False, 'resolution_R_outcome': 'COMMITTED', 'rule': 'Negative R can close a never-prepared M from exact retained ticket without claiming P committed', 'uncertainty_hold': False}, 'facts': {'complete_snapshot': True, 'coordinator_continuous': True, 'custody_qualified': True, 'expected_ack_retained': True, 'ticket_retained': True}, 'finding': 'DQ-F01', 'id': 'F01-P03', 'inputs': {'absence': {'digest': '2d7659daaa09a3cde2479a7d72001c3e336c2b1cdf2e134e235ab32abaf02bc9', 'kind': 'DQ.LAB.AbsenceProof', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'ack_observed': {'digest': '379071bf39c8f7ea8115d2b9c97830ffd0e5ee409ab342d0cefacf647191a843', 'kind': 'DQ.LAB.ProofAck', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'original_ticket': {'digest': '07b38b65c665b6348837c7826110fa05e8bd08bf6b441508fc9648c0dae14831', 'kind': 'DQ.LAB.OperationTicket', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'post_snapshot': {'digest': 'ef0663d0862997715fa43b83cfd7280e28013088f5d290cc82a207694d6ed4e1', 'kind': 'DQ.LAB.SnapshotEvidence', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'ticket': {'digest': '4c5190b1c469b2c1ad69896a645bdd6af6196f1033f154256684cd00ae77b6a1', 'kind': 'DQ.LAB.OperationTicket', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}}},
     {'expected': {'allowed_next': 'APPLY_SAME_M_ONLY', 'application_outcome': 'NOT_ATTEMPTED', 'control_generation': 1, 'namespace_barrier': True, 'resolution_R_outcome': 'NOT_STARTED', 'rule': 'P committed, A not started', 'uncertainty_hold': False}, 'facts': {'complete_snapshot': True, 'coordinator_continuous': True, 'custody_qualified': True, 'expected_ack_retained': True, 'ticket_retained': True}, 'finding': 'DQ-F02', 'id': 'F02-P01', 'inputs': {'prepare': {'digest': '53c7cf684335adfdfedbdae9183af8adbe4bc5b28a85e69e2304c3c4a7ba2ca2', 'kind': 'DQ.LAB.PrepareEvidence', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'snapshot': {'digest': 'a9042cf0cf662981e8268b28e3eab44ff8d413a2cb8928101bc10fedd6c9bae9', 'kind': 'DQ.LAB.SnapshotEvidence', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'ticket': {'digest': '4c0e03133930623d16d0f40ca977e13ffc9d46be9599b82a5227a8aaad3af14a', 'kind': 'DQ.LAB.OperationTicket', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}}},
     {'expected': {'allowed_next': 'EXACT_R_ONLY', 'application_outcome': 'COMMITTED', 'control_generation': 2, 'namespace_barrier': True, 'resolution_R_outcome': 'NOT_STARTED', 'rule': 'A proven committed, R not started', 'uncertainty_hold': False}, 'facts': {'complete_snapshot': True, 'coordinator_continuous': True, 'custody_qualified': True, 'expected_ack_retained': True, 'ticket_retained': True}, 'finding': 'DQ-F02', 'id': 'F02-P02', 'inputs': {'ack_expected': {'digest': '0ee404128e7f9edf3ae16c32efe6e4eb5cdc5c8650122e1b42eb54e00b255fae', 'kind': 'DQ.LAB.ProofAck', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'proof': {'digest': '3cfe3814f50ef2ffd353eb799aec5412ad16eb26b101d29165416d70d635c4c1', 'kind': 'DQ.LAB.CommitProof', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'snapshot': {'digest': '2c59d8302a371d81d2ca858b319f46ef7095e4b22de7b6425cee5c81db31748e', 'kind': 'DQ.LAB.SnapshotEvidence', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'ticket': {'digest': '45521f6f5b72f0a731b574c3bfe31b4616042d59e27eea3bb82efa3507d88861', 'kind': 'DQ.LAB.OperationTicket', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}}},
     {'expected': {'allowed_next': 'QUALIFIED_INSPECT_A_ONLY', 'application_outcome': 'UNKNOWN', 'control_generation': None, 'namespace_barrier': True, 'resolution_R_outcome': 'NOT_STARTED', 'rule': 'A ACK lost before qualified readback', 'uncertainty_hold': True}, 'facts': {'complete_snapshot': False, 'coordinator_continuous': True, 'custody_qualified': True, 'expected_ack_retained': True, 'ticket_retained': True}, 'finding': 'DQ-F02', 'id': 'F02-P03', 'inputs': {'hold': {'digest': '141d189513ee080a10e061609baa5549ba349afd1051489217e82a6c1f4dd98b', 'kind': 'DQ.LAB.HoldEvidence', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'ticket': {'digest': '4c0e03133930623d16d0f40ca977e13ffc9d46be9599b82a5227a8aaad3af14a', 'kind': 'DQ.LAB.OperationTicket', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}}},
     {'expected': {'allowed_next': 'QUALIFIED_INSPECT_R_ONLY', 'application_outcome': 'COMMITTED', 'control_generation': None, 'namespace_barrier': True, 'resolution_R_outcome': 'UNKNOWN', 'rule': 'R ACK lost; do not downgrade proven A or reapply it', 'uncertainty_hold': True}, 'facts': {'complete_snapshot': False, 'coordinator_continuous': True, 'custody_qualified': True, 'expected_ack_retained': True, 'ticket_retained': True}, 'finding': 'DQ-F02', 'id': 'F02-P04', 'inputs': {'ack_expected': {'digest': '0ee404128e7f9edf3ae16c32efe6e4eb5cdc5c8650122e1b42eb54e00b255fae', 'kind': 'DQ.LAB.ProofAck', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'hold': {'digest': 'd67045adb551d2ea0ce4dd3776124cf594f168b5c1ef38459fed614bb96c24c7', 'kind': 'DQ.LAB.HoldEvidence', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'proof': {'digest': '3cfe3814f50ef2ffd353eb799aec5412ad16eb26b101d29165416d70d635c4c1', 'kind': 'DQ.LAB.CommitProof', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'ticket': {'digest': '45521f6f5b72f0a731b574c3bfe31b4616042d59e27eea3bb82efa3507d88861', 'kind': 'DQ.LAB.OperationTicket', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}}},
     {'expected': {'allowed_next': 'NEXT_NEW_M_ALLOWED', 'application_outcome': 'COMMITTED', 'control_generation': 3, 'namespace_barrier': False, 'resolution_R_outcome': 'COMMITTED', 'rule': 'Qualified post-R readback matches original expected ACK', 'uncertainty_hold': False}, 'facts': {'complete_snapshot': True, 'coordinator_continuous': True, 'custody_qualified': True, 'expected_ack_retained': True, 'ticket_retained': True}, 'finding': 'DQ-F02', 'id': 'F02-P05', 'inputs': {'ack_observed': {'digest': '0ee404128e7f9edf3ae16c32efe6e4eb5cdc5c8650122e1b42eb54e00b255fae', 'kind': 'DQ.LAB.ProofAck', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'post_snapshot': {'digest': 'd93a8a4b4df65b05d0d56d3f57800e08be463cc4309106553bf0202357e8bb62', 'kind': 'DQ.LAB.SnapshotEvidence', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'proof': {'digest': '3cfe3814f50ef2ffd353eb799aec5412ad16eb26b101d29165416d70d635c4c1', 'kind': 'DQ.LAB.CommitProof', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'ticket': {'digest': '45521f6f5b72f0a731b574c3bfe31b4616042d59e27eea3bb82efa3507d88861', 'kind': 'DQ.LAB.OperationTicket', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}}},
     {'expected': {'allowed_next': 'RETRY_EXACT_R_ACK3_ONLY', 'application_outcome': 'COMMITTED', 'control_generation': 2, 'namespace_barrier': True, 'resolution_R_outcome': 'NOT_COMMITTED', 'rule': 'R absent: same pre-R C2, pending M, no ACK3; never refresh Ack preimage', 'uncertainty_hold': False}, 'facts': {'complete_snapshot': True, 'coordinator_continuous': True, 'custody_qualified': True, 'expected_ack_retained': True, 'ticket_retained': True}, 'finding': 'DQ-F02', 'id': 'F02-P06', 'inputs': {'ack_expected': {'digest': '0ee404128e7f9edf3ae16c32efe6e4eb5cdc5c8650122e1b42eb54e00b255fae', 'kind': 'DQ.LAB.ProofAck', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'fresh_snapshot': {'digest': '10aaf5ee0b08c5ae6638301ce933256f296593a2c0604d565116c52c9a108358', 'kind': 'DQ.LAB.SnapshotEvidence', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'proof': {'digest': '3cfe3814f50ef2ffd353eb799aec5412ad16eb26b101d29165416d70d635c4c1', 'kind': 'DQ.LAB.CommitProof', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'ticket': {'digest': '45521f6f5b72f0a731b574c3bfe31b4616042d59e27eea3bb82efa3507d88861', 'kind': 'DQ.LAB.OperationTicket', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}}},
-    {'expected': {'allowed_next': 'OLD_M_READ_ONLY_NEW_M_BY_GRANT', 'application_outcome': 'NOT_COMMITTED', 'control_generation': 2, 'namespace_barrier': False, 'resolution_R_outcome': 'COMMITTED', 'rule': 'Qualified negative closure; not retry A under old M', 'uncertainty_hold': False}, 'facts': {'complete_snapshot': True, 'coordinator_continuous': True, 'custody_qualified': True, 'expected_ack_retained': True, 'ticket_retained': True}, 'finding': 'DQ-F02', 'id': 'F02-P07', 'inputs': {'absence': {'digest': '19d83bcf3e9f47ac97c36c52244685e339848b5b1663a3b1e208165472ff263c', 'kind': 'DQ.LAB.AbsenceProof', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'ack_observed': {'digest': '16d866cf0096216a6f35aa9d424b8cb0089ca7874860633667042efa1ef49856', 'kind': 'DQ.LAB.ProofAck', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'post_snapshot': {'digest': '0d4d2e462414289561210fe599e8dca4b317de03583e57d07b974819526d31ae', 'kind': 'DQ.LAB.SnapshotEvidence', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'ticket': {'digest': '1a9d07ade8de7cb512ccaa61ca7cb5700c786a82c7e6cf10eae74fd93539ce87', 'kind': 'DQ.LAB.OperationTicket', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}}},
+    {'expected': {'allowed_next': 'OLD_M_READ_ONLY_NEW_M_BY_GRANT', 'application_outcome': 'NOT_COMMITTED', 'control_generation': 2, 'namespace_barrier': False, 'resolution_R_outcome': 'COMMITTED', 'rule': 'Qualified negative closure; not retry A under old M', 'uncertainty_hold': False}, 'facts': {'complete_snapshot': True, 'coordinator_continuous': True, 'custody_qualified': True, 'expected_ack_retained': True, 'ticket_retained': True}, 'finding': 'DQ-F02', 'id': 'F02-P07', 'inputs': {'absence': {'digest': '19d83bcf3e9f47ac97c36c52244685e339848b5b1663a3b1e208165472ff263c', 'kind': 'DQ.LAB.AbsenceProof', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'ack_observed': {'digest': '16d866cf0096216a6f35aa9d424b8cb0089ca7874860633667042efa1ef49856', 'kind': 'DQ.LAB.ProofAck', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'original_ticket': {'digest': '4c0e03133930623d16d0f40ca977e13ffc9d46be9599b82a5227a8aaad3af14a', 'kind': 'DQ.LAB.OperationTicket', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'post_snapshot': {'digest': '0d4d2e462414289561210fe599e8dca4b317de03583e57d07b974819526d31ae', 'kind': 'DQ.LAB.SnapshotEvidence', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'ticket': {'digest': '1a9d07ade8de7cb512ccaa61ca7cb5700c786a82c7e6cf10eae74fd93539ce87', 'kind': 'DQ.LAB.OperationTicket', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}}},
     {'expected': {'allowed_next': 'READ_ONLY_BLOCKED', 'application_outcome': 'COMMITTED', 'control_generation': 3, 'namespace_barrier': True, 'resolution_R_outcome': 'UNKNOWN', 'rule': 'Provided ACK digest is 0*64; actual bytes hash is ACK3', 'uncertainty_hold': True}, 'facts': {'complete_snapshot': False, 'coordinator_continuous': True, 'custody_qualified': True, 'expected_ack_retained': True, 'provided_ack_digest': '0000000000000000000000000000000000000000000000000000000000000000', 'ticket_retained': True}, 'finding': 'DQ-F02', 'id': 'F02-N01', 'inputs': {'ack_bytes': {'digest': '0ee404128e7f9edf3ae16c32efe6e4eb5cdc5c8650122e1b42eb54e00b255fae', 'kind': 'DQ.LAB.ProofAck', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'candidate_snapshot': {'digest': 'd93a8a4b4df65b05d0d56d3f57800e08be463cc4309106553bf0202357e8bb62', 'kind': 'DQ.LAB.SnapshotEvidence', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'ticket': {'digest': '45521f6f5b72f0a731b574c3bfe31b4616042d59e27eea3bb82efa3507d88861', 'kind': 'DQ.LAB.OperationTicket', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}}},
     {'expected': {'allowed_next': 'READ_ONLY_BLOCKED', 'application_outcome': 'COMMITTED', 'control_generation': 3, 'namespace_barrier': True, 'resolution_R_outcome': 'UNKNOWN', 'rule': 'Foreign binding cannot satisfy expected ACK3', 'uncertainty_hold': True}, 'facts': {'complete_snapshot': False, 'coordinator_continuous': True, 'custody_qualified': True, 'expected_ack_retained': True, 'ticket_retained': True}, 'finding': 'DQ-F02', 'id': 'F02-N02', 'inputs': {'ack_observed': {'digest': '9f0c7718b725338e5b4ed0674a3010bb1d0182f121dc16f69c70abaff06716c1', 'kind': 'DQ.LAB.ProofAck', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'candidate_snapshot': {'digest': 'd93a8a4b4df65b05d0d56d3f57800e08be463cc4309106553bf0202357e8bb62', 'kind': 'DQ.LAB.SnapshotEvidence', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'ticket': {'digest': '45521f6f5b72f0a731b574c3bfe31b4616042d59e27eea3bb82efa3507d88861', 'kind': 'DQ.LAB.OperationTicket', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}}},
     {'expected': {'allowed_next': 'READ_ONLY_BLOCKED', 'application_outcome': 'COMMITTED', 'control_generation': 3, 'namespace_barrier': True, 'resolution_R_outcome': 'UNKNOWN', 'rule': 'Ack target generation must be G+1=3, not 4', 'uncertainty_hold': True}, 'facts': {'complete_snapshot': False, 'coordinator_continuous': True, 'custody_qualified': True, 'expected_ack_retained': True, 'ticket_retained': True}, 'finding': 'DQ-F02', 'id': 'F02-N03', 'inputs': {'ack_observed': {'digest': '997670f6532ab868c6d7137044492458bddc02f91a5f46f12f6b3ad739652b60', 'kind': 'DQ.LAB.ProofAck', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'candidate_snapshot': {'digest': 'd93a8a4b4df65b05d0d56d3f57800e08be463cc4309106553bf0202357e8bb62', 'kind': 'DQ.LAB.SnapshotEvidence', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}, 'ticket': {'digest': '45521f6f5b72f0a731b574c3bfe31b4616042d59e27eea3bb82efa3507d88861', 'kind': 'DQ.LAB.OperationTicket', 'scope': 'DQ_PROCESS_KILL_LAB_ONLY', 'version': 2}}},
@@ -275,38 +275,398 @@ def _missing_absence_ticket_bytes(case):
     }
 
 
+
 @pytest.mark.parametrize("case", DOC_CASES, ids=[c["id"] for c in DOC_CASES])
 def test_document_case_byte_inputs_only(case):
-    # Byte integrity of all 23 cases is not semantic acceptance of their
-    # expected outcome. In particular this does not make the two gaps PASS.
     for ref in _input_refs(case["inputs"]):
         verify_byte_closure(ref, lambda r: BYTES[r["digest"]])
-    missing = _missing_absence_ticket_bytes(case)
-    print("DOC_INPUT_AUDIT", case["id"], "MISSING_ORIGINAL_TICKETS", sorted(missing))
-    expected_gaps = {
-        "F01-P03": {"07b38b65c665b6348837c7826110fa05e8bd08bf6b441508fc9648c0dae14831"},
-        "F02-P07": {"4c0e03133930623d16d0f40ca977e13ffc9d46be9599b82a5227a8aaad3af14a"},
-    }
-    # This assertion reproduces the finding, NOT a new approved oracle.
-    assert missing == expected_gaps.get(case["id"], set())
-
-
-@pytest.mark.parametrize("case_id", ["F01-P01", "F01-P02"])
-def test_retained_original_ticket_positive_controls(case_id):
-    case = next(c for c in DOC_CASES if c["id"] == case_id)
     assert not _missing_absence_ticket_bytes(case)
 
 
-@pytest.mark.parametrize("case_id", ["F01-P03", "F02-P07"])
-def test_contract_gap_negative_close_cannot_substitute_ticket_R(case_id):
-    case = next(c for c in DOC_CASES if c["id"] == case_id)
-    available = _case_byte_closure(case)
-    provided_ticket = available[case["inputs"]["ticket"]["digest"]]
-    assert provided_ticket["phase"] == "R"
-    assert _missing_absence_ticket_bytes(case)
-    assert case["facts"]["ticket_retained"] is True
-    assert case["expected"]["application_outcome"] == "NOT_COMMITTED"
-    assert case["expected"]["namespace_barrier"] is False
-    # Neither a true assertion nor ticket_R canonical bytes match the exact
-    # original ticket digest bound by the AbsenceProof.
-    assert case["inputs"]["ticket"]["digest"] not in _missing_absence_ticket_bytes(case)
+# The two inspect labels are documentary descriptions of the same pure
+# constraint: qualified inspection of A only, with no new application write.
+# Reopen is a future native procedure, not an operation executed in Stage A.
+NEXT_ACTIONS = {
+    "ACK_NEGATIVE_R_ONLY": "ACK_NEGATIVE_R",
+    "APPLY_SAME_M_OR_CLOSE_NEGATIVE": "APPLY_SAME_M_OR_CLOSE_NEGATIVE",
+    "READ_ONLY_BLOCKED": "READ_ONLY_BLOCKED",
+    "BLOCKED_WHOLE_APPLICATION_RECOVERY": "BLOCKED_WHOLE_APPLICATION_RECOVERY",
+    "QUALIFIED_REOPEN_INSPECT_ONLY": "INSPECT_A",
+    "OLD_M_READ_ONLY": "OLD_M_READ_ONLY",
+    "APPLY_SAME_M_ONLY": "APPLY_SAME_M",
+    "EXACT_R_ONLY": "EXACT_R",
+    "QUALIFIED_INSPECT_A_ONLY": "INSPECT_A",
+    "QUALIFIED_INSPECT_R_ONLY": "INSPECT_R",
+    "NEXT_NEW_M_ALLOWED": "NEXT_NEW_M",
+    "RETRY_EXACT_R_ACK3_ONLY": "RETRY_EXACT_R",
+    "OLD_M_READ_ONLY_NEW_M_BY_GRANT": "OLD_M_READ_ONLY_NEW_M_BY_GRANT",
+}
+
+
+@pytest.mark.parametrize("case", DOC_CASES, ids=[c["id"] for c in DOC_CASES])
+def test_semantic_oracle(case):
+    # No id/finding/expected/rule is given to the implementation.
+    got = evaluate_document_case(case["inputs"], case["facts"], lambda r: BYTES[r["digest"]])
+    for field in ("application_outcome", "control_generation", "namespace_barrier",
+                  "resolution_R_outcome", "uncertainty_hold"):
+        assert getattr(got, field) == case["expected"][field], (case["id"], field, got)
+    assert got.next_action == NEXT_ACTIONS[case["expected"]["allowed_next"]], (case["id"], got)
+    assert got.native_qualified is False and got.execution_authorized is False
+    assert got.native_application_outcome == "UNKNOWN"
+    print("SEMANTIC_ORACLE", case["id"], got)
+
+
+@pytest.mark.parametrize("name,size,sha,raw", VECTORS, ids=[v[0] for v in VECTORS])
+def test_all_seventeen_closed_schemas(name, size, sha, raw):
+    validate_schema(decode_canonical(raw.encode()))
+
+
+BAD_SEMANTIC = {"ACK_FOREIGN", "ACK_GEN4", "ACK_HEAD0", "C4_BAD", "SR4_BAD",
+                "PX_PARTIAL", "SX_PARTIAL", "AP_PARTIAL"}
+
+
+@pytest.mark.parametrize("name,size,sha,raw", VECTORS, ids=[v[0] for v in VECTORS])
+def test_literal_documentary_semantics(name, size, sha, raw):
+    # The catalogue contains alternative histories. Explicit all-entry roots
+    # here are only a standalone literal test, NEVER a DOC.ORACLE fallback.
+    roots = [typed_ref(x.encode()) for _, _, _, x in VECTORS]
+    graph = DocumentGraph(roots, lambda r: BYTES[r["digest"]])
+    ref = typed_ref(raw.encode())
+    if name in BAD_SEMANTIC:
+        with pytest.raises(WireError):
+            graph.validate(ref)
+    else:
+        assert graph.validate(ref) is None
+
+
+def _literal(name):
+    return json.loads(next(raw for n, _, _, raw in VECTORS if n == name))
+
+
+def _seal(record, nodes):
+    raw = canonical_bytes(record)
+    ref = typed_ref(raw)
+    nodes[ref['digest']] = raw
+    return ref
+
+
+def _graph_with(record):
+    nodes = dict(BYTES)
+    ref = _seal(record, nodes)
+    roots = [typed_ref(raw) for raw in nodes.values()]
+    return DocumentGraph(roots, lambda r: nodes[r['digest']]), ref
+
+
+@pytest.mark.parametrize('name', sorted(SCHEMAS))
+def test_closed_record_fields_cannot_be_missing_or_added(name):
+    sample = next(json.loads(raw) for _, _, _, raw in VECTORS if json.loads(raw)['kind'] == 'DQ.LAB.' + name)
+    for field in sample:
+        bad = dict(sample)
+        del bad[field]
+        with pytest.raises(WireError):
+            validate_schema(bad)
+    bad = dict(sample, extra=False)
+    with pytest.raises(WireError):
+        validate_schema(bad)
+
+
+@pytest.mark.parametrize('name', ['Q', 'B', 'S0', 'P1', 'C1'])
+def test_closed_inline_fields_and_exact_types(name):
+    import copy
+    sample = _literal(name)
+    def walk(value, path):
+        if type(value) is dict:
+            yield path
+            for k, v in value.items():
+                yield from walk(v, path + [k])
+        elif type(value) is list:
+            for k, v in enumerate(value):
+                yield from walk(v, path + [k])
+    for path in walk(sample, []):
+        bad = copy.deepcopy(sample)
+        at = bad
+        for key in path:
+            at = at[key]
+        at['unknown_inline_field'] = False
+        with pytest.raises(WireError):
+            validate_schema(bad)
+    bad = copy.deepcopy(sample)
+    bad['version'] = True
+    with pytest.raises(WireError):
+        validate_schema(bad)
+
+
+@pytest.mark.parametrize('name,field,value', [
+    ('W', 'expected_revision', True), ('W', 'resulting_revision', 0),
+    ('B', 'store_id', 'INVALID'), ('Q', 'compile_options', ['z', 'a']),
+    ('Q', 'compile_options', ['x', 'x']), ('Q', 'compile_options', ['кириллица']),
+    ('D_REQ', 'raw_sha256', 'F' * 64), ('D_JOB', 'owner_job_id', None),
+    ('P1', 'events', []), ('C1', 'pending_mutation_id', None),
+    ('ACK3', 'control_generation', 2), ('RECA', 'resolution', 'UNKNOWN'),
+    ('HA', 'outcome', 'COMMITTED'), ('AP', 'marker_present', True),
+])
+def test_schema_or_semantics_rejects_adversarial_fields(name, field, value):
+    bad = _literal(name)
+    bad[field] = value
+    with pytest.raises(WireError):
+        graph, ref = _graph_with(bad)
+        graph.validate(ref)
+
+
+@pytest.mark.parametrize('name', ['F01-P03', 'F02-P07'])
+@pytest.mark.parametrize('fault', ['missing', 'substitute_R', 'false_retention', 'false_custody', 'broken_closure'])
+def test_c_a01_original_ticket_cannot_be_reconstructed(name, fault):
+    import copy
+    case = copy.deepcopy(next(c for c in DOC_CASES if c['id'] == name))
+    nodes = dict(BYTES)
+    if fault == 'missing':
+        del case['inputs']['original_ticket']
+    elif fault == 'substitute_R':
+        case['inputs']['original_ticket'] = case['inputs']['ticket']
+    elif fault == 'false_retention':
+        case['facts']['ticket_retained'] = False
+    elif fault == 'false_custody':
+        case['facts']['custody_qualified'] = False
+    else:
+        del nodes[case['inputs']['original_ticket']['digest']]
+    got = evaluate_document_case(case['inputs'], case['facts'], lambda r: nodes[r['digest']])
+    assert got.application_outcome == 'UNKNOWN' and got.namespace_barrier and got.uncertainty_hold
+    assert got.native_qualified is False
+
+
+@pytest.mark.parametrize('name', ['F01-N01', 'F01-N02'])
+def test_true_flag_alone_never_supplies_ticket_or_custody(name):
+    import copy
+    case = copy.deepcopy(next(c for c in DOC_CASES if c['id'] == name))
+    case['facts']['ticket_retained'] = True
+    got = evaluate_document_case(case['inputs'], case['facts'], lambda r: BYTES[r['digest']])
+    assert got.application_outcome == 'UNKNOWN' and got.namespace_barrier and got.uncertainty_hold
+
+
+@pytest.mark.parametrize('fault', ['bad_shape', 'bad_bytes', 'missing_snapshot', 'bad_generation', 'foreign_binding'])
+def test_invalid_R_material_preserves_independently_valid_A(fault):
+    import copy
+    case = copy.deepcopy(next(c for c in DOC_CASES if c['id'] == 'F02-P05'))
+    nodes = dict(BYTES)
+    if fault == 'missing_snapshot':
+        del nodes[case['inputs']['post_snapshot']['digest']]
+    elif fault == 'bad_bytes':
+        nodes[case['inputs']['ack_observed']['digest']] = b'{}'
+        # Bad bytes for the retained ACK also invalidate ticket_R's closure;
+        # use an independent observed reference so the original stays intact.
+        nodes = dict(BYTES)
+        fake = dict(case['inputs']['ack_observed'], digest='0' * 64)
+        nodes[fake['digest']] = b'{}'
+        case['inputs']['ack_observed'] = fake
+    else:
+        ack = _literal('ACK3')
+        if fault == 'bad_shape': ack['extra'] = False
+        elif fault == 'bad_generation': ack['control_generation'] += 1
+        else: ack['binding_ref'] = typed_ref(canonical_bytes(_literal('B_STORE_OTHER')))
+        case['inputs']['ack_observed'] = _seal(ack, nodes)
+    got = evaluate_document_case(case['inputs'], case['facts'], lambda r: nodes[r['digest']])
+    assert got.application_outcome == 'COMMITTED'
+    assert got.namespace_barrier and got.uncertainty_hold and got.resolution_R_outcome == 'UNKNOWN'
+    assert got.native_application_outcome == 'UNKNOWN'
+
+
+@pytest.mark.parametrize('name', ['RECA', 'RECN', 'RECU'])
+def test_recovery_requires_actual_case_local_ticket(name):
+    record = _literal(name)
+    graph = DocumentGraph([typed_ref(canonical_bytes(record))], lambda r: BYTES[r['digest']])
+    with pytest.raises(WireError, match='ticket bytes missing'):
+        graph.validate(typed_ref(canonical_bytes(record)))
+
+
+def test_set_arrays_are_not_reordered_or_deduplicated():
+    for bad in [dict(_literal('W'), members=list(reversed(_literal('W')['members']))),
+                dict(_literal('W'), members=_literal('W')['members'] + [_literal('W')['members'][-1]])]:
+        with pytest.raises(WireError):
+            validate_schema(bad)
+
+
+def test_actual_wire_graph_depth_bound_is_iterative():
+    # Wire-only graph: deliberate non-schema fields avoid inventing new native
+    # records while exercising the separate low-level byte-graph guard.
+    nodes = {}; head = None
+    for _ in range(2049):
+        rec = {'kind': 'DQ.LAB.HoldEvidence', 'version': 2, 'scope': SCOPE, 'edge': head}
+        head = _seal(rec, nodes)
+    with pytest.raises(WireError, match='depth limit'):
+        verify_byte_closure(head, lambda r: nodes[r['digest']])
+
+
+def test_node_guard_and_false_hash_cycle_fail_closed(monkeypatch):
+    import experimental_mvp.durable_storage_lab.contracts as c
+    nodes = {}; head = None
+    for _ in range(3):
+        head = _seal({'kind': 'DQ.LAB.HoldEvidence', 'version': 2, 'scope': SCOPE, 'edge': head}, nodes)
+    monkeypatch.setattr(c, 'MAX_GRAPH_NODES', 2)
+    with pytest.raises(WireError, match='node limit'):
+        verify_byte_closure(head, lambda r: nodes[r['digest']])
+    fake = dict(head, digest='0' * 64)
+    raw = canonical_bytes({'kind': head['kind'], 'version': 2, 'scope': SCOPE, 'edge': fake})
+    with pytest.raises(WireError, match='identity'):
+        verify_byte_closure(fake, lambda _: raw)
+
+
+class _Timeline:
+    """In-memory DTO history only: no Store/JobStore/executor or native I/O."""
+    def __init__(self):
+        self.nodes = dict(BYTES)
+        self.head = typed_ref(canonical_bytes(_literal('MK')))
+        self.root = _literal('P1')
+        self.binding = _literal('W')['binding_ref']
+        self.job = _literal('W')['job_id']
+        self.key = _literal('W')['key_ref']
+        self.counter = 10000
+        self.checkpoint = '00000000-0000-0000-0000-000000009999'
+
+    def uid(self):
+        self.counter += 1
+        return '00000000-0000-0000-0000-' + format(self.counter, '012x')
+
+    def record(self, name, **fields):
+        return _seal(dict(kind='DQ.LAB.' + name, version=2, scope=SCOPE, **fields), self.nodes)
+
+    def data(self, role, **payload):
+        raw = canonical_bytes(payload)
+        return self.record('DataObject', binding_ref=self.binding, object_id=self.uid(), role=role,
+            owner_job_id=self.job, payload_hex=raw.hex(), byte_length=len(raw), raw_sha256=hashlib.sha256(raw).hexdigest())
+
+    def step(self, kind, call_index=1):
+        import copy
+        old = json.loads(self.nodes[self.root['jobs'][0]['job_ref']['digest']])
+        old = decode_canonical(bytes.fromhex(old['payload_hex']))
+        state = 'LAB_CHECKPOINT' if kind == 'ADVANCE_MODEL' else ('CANCELLED' if kind == 'TERMINAL_MODEL' else old['state'])
+        revision = old['revision'] + 1; mid = self.uid()
+        job = self.data('JOB', **dict(old, state=state, revision=revision))
+        event = self.data('EVENT', event_id=self.uid(), mutation_id=mid, job_id=self.job,
+                          revision_from=old['revision'], revision_to=revision, state_from=old['state'], state_to=state)
+        outbox = read = terminal = None
+        slot = _literal('W')['slot_ref']; action = 'RETAIN'; members = [job, event]
+        if kind == 'ENQUEUE_MODEL':
+            outbox = self.data('OUTBOX', outbox_id=self.uid(), job_id=self.job, effect_token=self.uid(),
+                request_ref=old['request_ref'], payload_sha256='f'*64, dispatch_allowed=False)
+            members.append(outbox)
+        elif kind == 'RESERVE_READ_MODEL':
+            read = self.data('READ_RESERVATION', reservation_id=self.uid(), job_id=self.job, checkpoint_id=self.checkpoint,
+                read_kind='MODEL_LOOKUP', base_cursor=0, call_index=call_index)
+            members.append(read)
+        elif kind == 'TERMINAL_MODEL':
+            terminal = self.data('TERMINAL_PROOF', proof_id=self.uid(), job_id=self.job, terminal_state=state,
+                reason='NO_EXECUTOR_IN_LAB', executor_effect='NONE', evidence_source='STORAGE_ONLY_POLICY')
+            slot = self.data('ACTIVE_SLOT', **dict(decode_canonical(bytes.fromhex(_literal('D_SLOT')['payload_hex'])),
+                status='RELEASED', released_at_revision=revision))
+            members += [terminal, slot]; action = 'RELEASE'
+        members.sort(key=lambda x: (x['kind'], x['digest']))
+        w = self.record('WriteSet', binding_ref=self.binding, mutation_id=mid, job_id=self.job, key_ref=self.key,
+            expected_revision=old['revision'], resulting_revision=revision, target_state=state, members=members,
+            job_ref=job, event_ref=event, receipt_ref=_literal('W')['receipt_ref'], slot_ref=slot, slot_action=action,
+            outbox_ref=outbox, read_reservation_ref=read, terminal_proof_ref=terminal)
+        intent = self.record('MutationIntent', binding_ref=self.binding, mutation_id=mid, mutation_kind=kind,
+            job_id=self.job, expected_head_ref=self.head, write_set_ref=w)
+        root = copy.deepcopy(self.root)
+        root['application_sequence'] += 1
+        root['committed_objects'] = sorted(root['committed_objects'] + members, key=lambda x: (x['kind'], x['digest']))
+        root['jobs'] = [dict(job_id=self.job, job_ref=job)]
+        for field, extra in [('events', event), ('outbox', outbox), ('read_reservations', read)]:
+            if extra is not None:
+                root[field] = sorted(root[field] + [extra], key=lambda x: (x['kind'], x['digest']))
+        root['member_links'] = sorted(root['member_links'] + [dict(mutation_id=mid, member_ref=x) for x in members],
+                                      key=lambda x: (x['mutation_id'], x['member_ref']['digest']))
+        if terminal is not None: root['active_slots'] = []
+        rootref = _seal(root, self.nodes)
+        marker = self.record('CommitMarker', binding_ref=self.binding, mutation_ref=intent, write_set_ref=w,
+            application_sequence=root['application_sequence'], previous_marker_ref=self.head, resulting_root_ref=rootref)
+        graph = DocumentGraph([marker], lambda r: self.nodes[r['digest']])
+        graph.validate(marker)
+        self.head, self.root = marker, root
+        return graph, w
+
+
+def test_all_nonadmit_transitions_and_persistent_read_history_are_pure():
+    t = _Timeline()
+    t.step('ADVANCE_MODEL')
+    t.step('ENQUEUE_MODEL')
+    for index in (1, 2, 3):
+        t.step('RESERVE_READ_MODEL', index)
+    t.step('TERMINAL_MODEL')
+    assert not t.root['active_slots'] and len(t.root['read_reservations']) == 3
+    with pytest.raises(WireError):
+        t.step('ADVANCE_MODEL')
+
+
+@pytest.mark.parametrize('bad_kind', ['duplicate_outbox', 'read_four', 'read_skip', 'duplicate_read'])
+def test_no_extra_outbox_or_reset_or_skipped_read_slots(bad_kind):
+    t = _Timeline()
+    if bad_kind == 'duplicate_outbox':
+        t.step('ENQUEUE_MODEL')
+        with pytest.raises(WireError): t.step('ENQUEUE_MODEL')
+    else:
+        t.step('RESERVE_READ_MODEL', 1)
+        if bad_kind == 'read_four':
+            t.step('RESERVE_READ_MODEL', 2); t.step('RESERVE_READ_MODEL', 3)
+        index = {'read_four': 4, 'read_skip': 3, 'duplicate_read': 1}[bad_kind]
+        with pytest.raises(WireError): t.step('RESERVE_READ_MODEL', index)
+
+
+@pytest.mark.parametrize('role', sorted(PAYLOADS))
+def test_all_nine_payloads_have_closed_fields(role):
+    t = _Timeline()
+    t.step('ENQUEUE_MODEL'); t.step('RESERVE_READ_MODEL'); t.step('TERMINAL_MODEL')
+    obj = next(json.loads(raw) for raw in t.nodes.values() if json.loads(raw)['kind'] == 'DQ.LAB.DataObject' and json.loads(raw)['role'] == role)
+    validate_schema(obj)
+    p = decode_canonical(bytes.fromhex(obj['payload_hex']))
+    for field in list(p) + ['extra']:
+        bad = dict(p)
+        if field == 'extra': bad[field] = False
+        else: del bad[field]
+        raw = canonical_bytes(bad)
+        forged = dict(obj, payload_hex=raw.hex(), byte_length=len(raw), raw_sha256=hashlib.sha256(raw).hexdigest())
+        with pytest.raises(WireError): validate_schema(forged)
+
+
+@pytest.mark.parametrize('name,field,other', [
+    ('CP', 'snapshot_ref', 'SP'), ('AP', 'snapshot_ref', 'SA'),
+    ('AP', 'ticket_sha256', None), ('HA', 'mutation_id', None),
+    ('ACK3', 'absence_proof_ref', 'AP'), ('RECA', 'absence_proof_ref', 'AP'),
+])
+def test_no_forged_commit_absence_or_mixed_resolution(name, field, other):
+    record = _literal(name)
+    record[field] = typed_ref(canonical_bytes(_literal(other))) if other else ('0' * 64 if field == 'ticket_sha256' else '00000000-0000-0000-0000-000000123456')
+    with pytest.raises(WireError):
+        graph, ref = _graph_with(record)
+        graph.validate(ref)
+
+
+def test_lost_retained_R_bundle_does_not_erase_explicit_A_proof():
+    import copy
+    case = copy.deepcopy(next(c for c in DOC_CASES if c['id'] == 'F02-P04'))
+    nodes = dict(BYTES)
+    del nodes[case['inputs']['ack_expected']['digest']]
+    case['facts']['expected_ack_retained'] = False
+    got = evaluate_document_case(case['inputs'], case['facts'], lambda r: nodes[r['digest']])
+    assert got.application_outcome == 'COMMITTED'
+    assert got.namespace_barrier and got.uncertainty_hold and got.resolution_R_outcome == 'UNKNOWN'
+    assert got.next_action != 'RETRY_EXACT_R'
+
+
+def test_graph_does_not_expose_mutable_validated_objects():
+    roots = [typed_ref(raw) for raw in BYTES.values()]
+    graph = DocumentGraph(roots, lambda r: BYTES[r['digest']])
+    ref = typed_ref(canonical_bytes(_literal('ACK3')))
+    graph.validate(ref)
+    returned = graph.get(ref)
+    returned['control_generation'] = 500
+    assert graph.get(ref)['control_generation'] == 3
+    graph.validate(ref)
+
+
+def test_semantic_decisions_ignore_no_expected_answer_and_fail_closed_on_open_inputs():
+    import copy
+    case = copy.deepcopy(next(c for c in DOC_CASES if c['id'] == 'F02-P05'))
+    case['inputs']['expected'] = case['inputs']['proof']
+    got = evaluate_document_case(case['inputs'], case['facts'], lambda r: BYTES[r['digest']])
+    assert got.application_outcome == 'UNKNOWN' and got.namespace_barrier
+    assert got.native_application_outcome == 'UNKNOWN' and not got.execution_authorized
