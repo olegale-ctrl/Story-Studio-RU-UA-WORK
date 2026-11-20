@@ -1,0 +1,153 @@
+name: DQ-01 first cloud preflight (no SQLite connection)
+
+on:
+  push:
+    branches: [experiment/dq01-cloud-lab-01]
+    paths: [.github/workflows/dq01-cloud-lab-experiment.yml]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dq01-first-cloud-preflight
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    if: github.repository == 'olegale-ctrl/Story-Studio-RU-UA-WORK' && github.event_name == 'push' && github.run_attempt == 1
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      # No checkout, setup, dependencies, repository secrets or environment.
+      # Only CI metadata artifacts may be written. No native lab root is selected.
+      - name: Read-only environment observations and closed native gate
+        timeout-minutes: 1
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 60s python3 -I -B - <<'PY'
+          import hashlib, json, os, pathlib, platform, resource, stat, sys, time
+          start = time.monotonic()
+          blocked = []
+          def deny_native(event, args):
+              if event.startswith(('sqlite3.connect', 'subprocess.Popen', 'socket.connect', 'socket.bind')) or event in ('os.fork', 'os.posix_spawn', 'os.kill', 'os.system'):
+                  blocked.append(event)
+                  raise RuntimeError('Native operation is not authorized in preflight')
+          sys.addaudithook(deny_native)
+          import sqlite3, _sqlite3
+          def read(path):
+              with open(path, 'r', encoding='utf-8') as stream:
+                  data = stream.read(65537)
+              if len(data) > 65536:
+                  raise RuntimeError('Metadata read limit')
+              return data
+          mounts = []
+          for line in read('/proc/self/mountinfo').splitlines():
+              fields = line.split(); sep = fields.index('-')
+              mounts.append(dict(id=fields[0], parent=fields[1], device=fields[2], mountpoint=fields[4],
+                                 filesystem=fields[sep+1], options=fields[5]))
+          if len(mounts) > 256:
+              raise RuntimeError('Mount metadata count limit')
+          def metadata(path):
+              result = dict(locator=path, selected_as_lab_root=False)
+              ancestors = []
+              p = pathlib.Path(path)
+              if not p.is_absolute():
+                  raise RuntimeError('Provider locator must be absolute')
+              for q in list(reversed(p.parents)) + [p]:
+                  try:
+                      s = q.lstat()
+                  except FileNotFoundError:
+                      ancestors.append(dict(path=str(q), status='MISSING'))
+                      result.update(status='MISSING', ancestors=ancestors)
+                      return result
+                  ancestors.append(dict(path=str(q), uid=s.st_uid, gid=s.st_gid, mode=oct(stat.S_IMODE(s.st_mode)),
+                                        device=s.st_dev, inode=s.st_ino, symlink=stat.S_ISLNK(s.st_mode)))
+                  if stat.S_ISLNK(s.st_mode):
+                      result.update(status='SYMLINK_COMPONENT_NOT_QUALIFIED', ancestors=ancestors)
+                      return result
+              match = max((m for m in mounts if path == m['mountpoint'] or path.startswith(m['mountpoint'].rstrip('/')+'/')),
+                          key=lambda m: len(m['mountpoint']))
+              v = os.statvfs(path)
+              result.update(status='METADATA_ONLY', physical_locator=os.path.realpath(path), ancestors=ancestors,
+                            mount=match, readonly=bool(v.f_flag & os.ST_RDONLY),
+                            available_bytes=v.f_bavail*v.f_frsize)
+              return result
+          temp = os.environ['RUNNER_TEMP']
+          workspace = os.environ['GITHUB_WORKSPACE']
+          if not os.path.isabs(temp) or not os.path.isabs(workspace):
+              raise RuntimeError('Invalid provider paths')
+          observed = {k: os.environ.get(k) for k in ('RUNNER_NAME', 'RUNNER_OS', 'RUNNER_ARCH', 'RUNNER_ENVIRONMENT',
+                       'ImageOS', 'ImageVersion', 'GITHUB_REPOSITORY', 'GITHUB_SHA', 'GITHUB_REF', 'GITHUB_RUN_ID', 'GITHUB_RUN_ATTEMPT')}
+          report = dict(
+              experiment='DQ-01-CLOUD-LAB-01', mode='READ_ONLY_PREFLIGHT_NO_SQLITE_CONNECTION',
+              implementation_base='32bc369ef66e45f1bc72d7afbef6a41688036774',
+              implementation_tree='2c1bcbfd130911c1a5619f2a784daf94c8de61e6',
+              contract_authority='4a6780bf519e03ddafa5ae9d7ed0f4309bff7c89',
+              contract_tree='e327219b1ba07de5479d167d3280ff29024f90a8',
+              runner=observed, kernel=platform.release(), architecture=platform.machine(),
+              uid=os.getuid(), gid=os.getgid(), groups=os.getgroups(), os_release=read('/etc/os-release'),
+              mounts=mounts, provider_temp=metadata(temp), workspace=metadata(workspace),
+              platform_mount_observation=metadata('/mnt'),
+              runtime=dict(python=platform.python_version(), python_build=platform.python_build(),
+                           compiler=platform.python_compiler(), executable=sys.executable,
+                           sqlite_version_attribute=sqlite3.sqlite_version,
+                           sqlite_version_info=sqlite3.sqlite_version_info,
+                           sqlite_threadsafety_attribute=sqlite3.threadsafety,
+                           sqlite_extension_origin=_sqlite3.__spec__.origin,
+                           sqlite_source_id_attribute=getattr(_sqlite3, 'sqlite_source_id', 'NOT_AVAILABLE_WITHOUT_CONNECTION'),
+                           compile_options_attribute=getattr(_sqlite3, 'compile_options', 'NOT_AVAILABLE_WITHOUT_CONNECTION')),
+              resource_observations=dict(cpu_count=os.cpu_count(), rlimit_as=resource.getrlimit(resource.RLIMIT_AS),
+                                         rlimit_fsize=resource.getrlimit(resource.RLIMIT_FSIZE),
+                                         rlimit_nofile=resource.getrlimit(resource.RLIMIT_NOFILE)),
+              resource_policy=dict(job_minutes=5, command_seconds=60, evidence_json_bytes=65536,
+                                   evidence_files=3, automatic_retries=0, native_children=0,
+                                   native_db_bytes='NOT_RUN', native_root_cap='NOT_QUALIFIED'),
+              lab_root=dict(absolute_locator=None, owner_grant='NOT_PROVIDED', qualification='NOT_QUALIFIED',
+                            purpose='DQ-01 synthetic storage lab only, pending exact root/profile approval',
+                            user_or_production_data_absence='NOT_ESTABLISHED_FOR_ANY_LAB_ROOT'),
+              gate=dict(status='BLOCKED_PRE_WRITE_GATE', root_qualified=False, profile_confirmed=False,
+                        sqlite_connection_allowed=False, smoke_status='NOT_RUN',
+                        reasons=['No exact owner-confirmed cloud lab root', 'Measured runtime profile not confirmed',
+                                 'Source ID/compile options/PRAGMA readback not qualified']),
+              evidence_policy='CI metadata output only in provider RUNNER_TEMP; never a selected native lab root',
+              audit_blocked_events=blocked, observations_elapsed_seconds=round(time.monotonic()-start, 6))
+          raw = (json.dumps(report, sort_keys=True, indent=2) + '\n').encode('utf-8')
+          if len(raw) > 65536 or time.monotonic()-start > 60:
+              raise RuntimeError('Preflight evidence/time limit')
+          # These are the explicitly requested CI evidence artifacts, not lab
+          # writes, DB initialization, a qualification probe or a root fallback.
+          out = pathlib.Path(temp) / ('dq01-preflight-evidence-' + os.environ['GITHUB_RUN_ID'])
+          out.mkdir(mode=0o700, exist_ok=False)
+          evidence = out / 'EVIDENCE.json'
+          with evidence.open('xb') as stream:
+              stream.write(raw)
+          gate = b'BLOCKED_PRE_WRITE_GATE\nSQLite smoke: NOT_RUN\nNo root selected; runtime profile unconfirmed.\n'
+          with (out / 'GATE.txt').open('xb') as stream:
+              stream.write(gate)
+          manifest = (hashlib.sha256(raw).hexdigest() + '  EVIDENCE.json\n' +
+                      hashlib.sha256(gate).hexdigest() + '  GATE.txt\n').encode('ascii')
+          with (out / 'SHA256SUMS').open('xb') as stream:
+              stream.write(manifest)
+          print(raw.decode('utf-8'))
+          print(manifest.decode('ascii'))
+          print('EXPERIMENT_STATUS=BLOCKED_PRE_WRITE_GATE; SQLITE_SMOKE=NOT_RUN')
+          PY
+      - name: Preserve bounded preflight evidence
+        id: evidence
+        timeout-minutes: 2
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2, verified Git tag
+        with:
+          name: dq01-preflight-${{ github.run_id }}
+          path: ${{ runner.temp }}/dq01-preflight-evidence-${{ github.run_id }}/
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 0
+          overwrite: false
+      - name: Report gate and evidence digest
+        shell: bash
+        run: |
+          printf '%s\n' 'DQ-01 experiment: BLOCKED_PRE_WRITE_GATE; SQLite smoke NOT_RUN.'
+          printf 'Artifact SHA-256: %s\n' '${{ steps.evidence.outputs.artifact-digest }}'
