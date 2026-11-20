@@ -1,49 +1,116 @@
-# MVP-08B.4-DQ-00-RESOLVE-01 — Final Handoff
+# DQ-00-C-A01 — Contract Resolution / Final Handoff
 
-**READY_FOR_INDEPENDENT_CONTRACT_RE_REVIEW.** Режим DOCS_ONLY / CONTRACT_RESOLUTION, 2026-11-20 (Europe/Kiev). Все native technical changes — PROPOSAL / NOT_APPROVED, implementation не разрешена.
+**READY_FOR_INDEPENDENT_C_A01_REVIEW.** DOCS_ONLY / CONTRACT_FIX.
+Дата: 2026-11-20 (Europe/Kiev). Это подготовленное исправление для независимой
+приёмки, не самостоятельно объявленная независимая приёмка C-A01.
 
-## Exact source / publication
+## Точные исходные ревизии
 
-Repository: olegale-ctrl/Story-Studio-RU-UA-WORK.
-Branch: `docs/mvp-08b-4-dq-00-resolve-01`.
-Base commit: `0b61892fc4156251b19e5c529c71a6ce783b838d`.
-Base tree: `7119aa23c700e484cb5c69e24063be67ddef6c6b`.
-Исходный HEAD/tree совпал, worktree был чистым. Final commit/tree, full patch, SHA-256/Git blobs пяти changed files и проверка private-index reconstruction — во внешнем publication-manifest.json и итоговом ответе. Self hash в создающем его файле не подставляется.
+Repository: `olegale-ctrl/Story-Studio-RU-UA-WORK`.
+Branch: `docs/mvp-08b-4-dq00-c-a01-resolution`.
+Contract base commit: `c15ac152258586be1ed1b57f205830edfffc9ae1`.
+Contract base tree: `19192e46ad0f3b3cc9d9bc9809d3896e1e13e639`.
+Finding source commit: `6190dc50bd13bbb34e0adcc57ddc219a4c5cd44d`.
+Finding source tree: `68554f3fc4f4ef560a0ce3502b58b820d5c12f5d`.
+Обе пары commit/tree проверены по Git objects. Создан отдельный чистый worktree
+от exact contract base; feature branch не checkout/reset/merge-илась.
 
-## Точный разрешённый diff
+Итоговые commit/tree и blob SHA этого handoff указаны в публикационном ответе:
+файл не содержит собственного self hash. Проверка: `git rev-parse HEAD HEAD^{tree}`.
+Точный полный diff:
+`git diff --binary c15ac152258586be1ed1b57f205830edfffc9ae1 HEAD`.
 
-Только пять существующих Markdown:
+## C-A01 и минимальное исправление
 
-1. [DURABLE_STORAGE_CONTRACT_PROPOSAL.md](DURABLE_STORAGE_CONTRACT_PROPOSAL.md)
-2. [NATIVE_EVIDENCE_CONTRACT_PROPOSAL.md](NATIVE_EVIDENCE_CONTRACT_PROPOSAL.md)
-3. [FAULT_INJECTION_MATRIX.md](FAULT_INJECTION_MATRIX.md)
-4. [DQ_01_IMPLEMENTATION_TASK.md](DQ_01_IMPLEMENTATION_TASK.md)
-5. [FINAL_HANDOFF.md](FINAL_HANDOFF.md)
+Finding: положительные F01-P03/F02-P07 ожидали закрытый отрицательный исход A,
+но explicit inputs/typed closure содержали ticket_R без исходного ticket,
+канонический hash которого требовал AbsenceProof. `ticket_retained=true`
+не определял обязательные bytes. Прежняя неоднозначность описана в finding
+source, `docs/tasks/MVP_08B_4_DQ_01/RESULT.md`.
 
-Новых Git files нет. OWNER_APPROVAL, SQLITE_QUALIFICATION_PROFILE, TEST_ROOT_SECURITY_CONTRACT, OWNER_DECISION_PACKAGE, Python/tests/CI/dependencies и G1–G6 не изменены. OD4-01–OD4-07 остаются OWNER_APPROVED_CONTRACT_ONLY. Уточнённый native evidence/data draft имеет version 2 в силу version policy; SQLite layout/schema/user_version остаётся 1. Old native-v1 wording в неизменённом OWNER_DECISION_PACKAGE — superseded unapproved technical recommendation; новые CP permissions по-прежнему отсутствуют.
+В [NATIVE_EVIDENCE_CONTRACT_PROPOSAL.md](NATIVE_EVIDENCE_CONTRACT_PROPOSAL.md):
 
-## Mapping замечаний
+- В F01-P03 добавлен только `inputs.original_ticket` — typed ref на V-TP.
+- В F02-P07 добавлен только `inputs.original_ticket` — typed ref на V-TA.
+- В разделе 9 уточнён строго case-local input set. Catalogue resolver
+  обслуживает только явные typed refs и их closure; отсутствующий input
+  нельзя восстановить global lookup, поиском по UUID/M или одним Digest.
+- Для qualified absence обязательны фактические canonical bytes исходного
+  ticket, exact typed identity/hash/closure и binding/M/исходный контекст.
+  Флаг `ticket_retained=true` сам по себе не является доказательством.
+- Ticket_R не заменяет original ticket. Добавленный input не подтверждает
+  custody/непрерывность coordinator и не отменяет остальные native checks.
 
-| Замечание | Resolution proposal | Canonical/check materials |
-|---|---|---|
-| DQ-F01 | Conjunctive custody/ticket/continuous coordinator/identity/complete A absence; prepared cache != apply. Whole-app recovery не квалифицируется; missing evidence => UNKNOWN/HOLD | F01-P01–P03/N01–N06; P0/C0/C1, TP/TA, PE/AP/AP0, negative close ACKN1/ACKN2, partial/identity specimens |
-| DQ-F02 | Pre-R G / exact Ack G+1 / post-R G+1; separate A-vs-R outcome; same-M/exact-Ack R retry only after qualified R absence; no pre/post hash cycle | F02-P01–P07/N01–N07, SA/CP/ACK3/TR/C3/SR/SRA, corrupt/foreign/generation/head negatives; DAG check and deliberately cyclic abstract graph rejection |
-| DQ-F03 | Observe call, ACK, software kill, unavailable internal VFS/fsync and power loss separately; only COMMIT_RACE_WINDOW coverage, missing checkpoint not PASS | FI-01–FI-22 retained; FI-07 and CW-01–CW-05 exact oracles/STOP; no native execution |
+| Case | Original ticket ref (kind DQ.LAB.OperationTicket, version 2, scope DQ_PROCESS_KILL_LAB_ONLY) | Исходная phase | Case-local closure |
+|---|---|---|---|
+| F01-P03 | 07b38b65c665b6348837c7826110fa05e8bd08bf6b441508fc9648c0dae14831 (V-TP) | P | TP присутствует; 20 record nodes |
+| F02-P07 | 4c0e03133930623d16d0f40ca977e13ffc9d46be9599b82a5227a8aaad3af14a (V-TA) | A | TA присутствует; 20 record nodes |
 
-## Что вычислено и что не проверялось
+Для обоих H(original_ticket) точно совпадает с AbsenceProof.ticket_sha256;
+binding и mutation_ref совпадают с proof и ticket_R. Существующие ticket_R
+refs, все остальные inputs, facts и expected outcomes сохранены.
 
-Native proposal содержит **58 canonical entries (57 distinct preimages)** с byte lengths/SHA-256 и **23 nonhashable DOC.ORACLE cases** с точными input refs/generations/outcomes/barrier/allowed-next. Profile values DOCUMENT_FIXTURE и SQLite 3.35.0 — синтетические константы, не измерения. Альтернативные branches не выдаются за одну физическую DB history. Source literals перечисляют negative specimens, которые могут hash/shape-валидироваться, но семантически отвергаются.
+## Фактически выполненные документальные проверки
 
-Внешний review packet: build_vectors.py, check_vectors.py и их outputs; canonical-vectors.json (text/UTF-8 hex/length/hash/full refs), data-payloads.json, oracle-cases.json; source-manifest.json; documentation-checks.json; findings-map.json; full changes.patch/publication-manifest и safe verifier.
+In-memory verifier запущен через `python -B` с
+`PYTHONDONTWRITEBYTECODE=1`; Python **3.12.14**, exit code **0**. Читались pinned
+Git blobs и два разрешённых Markdown; отдельные verifier/evidence/temp files
+не создавались. Старый внешний document verifier и Stage A implementation
+не запускались. Алгоритм и raw stdout находятся в execution-tool records;
+ниже перечислены проверенные assertions, а не native test результаты.
 
-Локальный верификатор проверяет document arithmetic, closed field sets/payload shapes, actual typed ref/byte binding, graph acyclicity и declared generation/oracle consistency. Это **не Python implementation native store/adapter**, не SQLite/test-process execution и **не независимая проверка вычисленных векторов**. Ни один literal Checks=true не выдается за измеренный native факт. Native qualification/test cases NOT_RUN.
+| Проверка | Фактический результат |
+|---|---|
+| 58 canonical entries | До/после совпадают точные raw UTF-8 bytes, заявленные lengths/SHA-256; повторно вычисленные lengths/hash совпадают |
+| 57 distinct preimages | Сохранены; HT/HC остаются alias одинаковых bytes |
+| Canonical encoding | Повторная C(record) совпадает с literal bytes; никаких новых preimages |
+| 23 DOC.ORACLE cases | IDs/order/структуры/facts/expected/outcomes совпали с base после удаления только двух новых inputs.original_ticket |
+| Typed refs и decoded payload refs | Exact kind/version/scope/hash resolution; исходный record DAG: 57 nodes, 230 edges, max depth 14 |
+| Циклы | Не обнаружены; новые nonhashable case inputs лишь выбирают существующие TP/TA, не меняют record DAG |
+| Два positive ticket prerequisites | Original ticket bytes доступны локально, exact hash/binding/M совпадают; ticket_R остаётся phase R |
+| F01-N01/F01-N02 | Ticket отсутствует в local closure; UNKNOWN, barrier=true, uncertainty_hold=true сохранены; lookup из соседних cases не выполняется |
+| Дополнительные in-memory negatives | Удаление original_ticket при true flag, false retention, false custody, подмена original_ticket на ticket_R не проходят documentary ticket prerequisite |
+| Native version / physical schema | DQ.LAB version 2, RootAnchor/Profile.schema_version 1, Config.user_version 1 — без изменений |
+| Allowlist / Git / Markdown | Только два существующих Markdown, без новых Git files; diff --check и относительная ссылка handoff проверены |
 
-Проверки Markdown/links, FI-01–FI-22 completeness, future allowlist consistency, unchanged G1–G6/source blobs, diff/SHAs и main state фиксируются внешними материалами. Main читается read-only; update/merge не выполняются.
+Documentary ticket prerequisite не является qualified absence: проверка
+синтетических input bytes/условных facts не устанавливает реальные custody,
+SQLite integrity или native authority. Все 23 официальных semantic DOC.ORACLE
+не объявляются исполненными Stage A тестами. Проверены их сохранность и
+указанная минимальная C-A01 коррекция, а не вся будущая реализация.
 
-## Review / STOP
+## Exact changed files и hashes
 
-Независимый reviewer должен проверить mathematical preimages/digests и semantic premises каждого case отдельно от работы локального скрипта. Особое внимание: missing ticket нельзя восстановить каталогом; отсутствие marker не отсутствие A; negative unprepared closure не доказывает committed P; known A не понижается из-за unknown R; Ack не пересчитывается от fresh Snapshot; post-R root не попадает в pre-R hash chain; race-window не internal VFS/power loss.
+Ровно два пути, оба mode 100644:
 
-Не выявлено необходимости менять ранее утверждённые G1–G6/OD4; native proposal исправляется до их отдельной реализации. Самостоятельно закрытой независимой приёмкой DQ-F01/F02/F03 этот report не является. Windows/native storage/engine/path qualification остаются NOT_RUN; owner root/limits/process/write/allowlist/programming grants не выданы.
+1. `docs/tasks/MVP_08B_4_DQ_00/NATIVE_EVIDENCE_CONTRACT_PROPOSAL.md`:
+   Git blob SHA-1 `10fce2362d1649efe0a2b47a47bf523819099bc2`;
+   raw SHA-256 `a395951c100346a96eb6249f55c097db953e1dbf3d225bc0a360893379cd0a5c`.
+   Diff: две normative paragraphs и два six-line typed refs, всего 16 добавленных строк.
+2. `docs/tasks/MVP_08B_4_DQ_00/FINAL_HANDOFF.md`: текущий handoff заменяет
+   прежний report; final blob/SHA-256 — в публикационном ответе для исключения
+   self-hash cycle.
 
-**STOP после публикации.** Ожидать независимой контрактной re-review и отдельного решения владельца. Никаких SQLite execution/DB creation/native kill/process tests/Python implementation, merge/main update, provider/render/production или автоматического перехода к DQ-01.
+Все остальные tracked paths совпадают с exact base. G1–G6, OD4 и CP decisions
+не изменяются и не расширяются. Native root/pre-write gate остаётся отдельной
+границей; этот docs fix не выдаёт новых permissions и не меняет реализацию.
+
+До публикации read-only GitHub refs: main
+`a28277b4cb68a3db5da52edc598c37ce66314604`, implementation feature
+`6190dc50bd13bbb34e0adcc57ddc219a4c5cd44d`. После push проверяются те же
+refs и точный опубликованный docs commit; результат указан в ответе.
+
+## Независимая приёмка / STOP
+
+Reviewer должен проверить exact diff, два original_ticket refs, неизменность
+58 preimages и 23 expected outcomes, case-local отсутствие ticket в negatives,
+отсутствие hash cycles и подмены custody. Исправление передаётся на независимую
+приёмку C-A01; собственный verifier не называется независимой проверкой.
+
+SQLite connections/DB/root/journal/native logs/native tests/fault injection,
+worker spawn/kill, Windows qualification, provider/render/production не
+выполнялись. Main и feature branch не изменялись; merge/release/CI отсутствуют.
+
+**STOP после публикации.** Не возвращаться к Stage A programming до независимой
+проверки C-A01. Этот пакет не утверждает STAGE_A_PURE_READY и не снимает
+NATIVE_BLOCKED_PRE_WRITE_GATE.

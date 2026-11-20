@@ -160,6 +160,10 @@ DataObject/Key → WriteSet → MutationIntent; application ProjectionRoot не 
 
 Каталог содержит 58 literal entries, 57 различных canonical preimages: HT и HC намеренно совпадают как HoldEvidence(CUSTODY_LOST), а их разные обстоятельства заданы отдельными case facts. Это alias одинаковых bytes, не разные bytes с одинаковым hash. Каталог содержит альтернативные истории (commit branch, negative close без P, negative close после P) и ошибочные specimens. Одинаковый binding/M в этих литералах не означает, что все их ControlRoot одновременно существовали в одной DB. Только inputs/facts выбранного case доступны его oracle; нельзя использовать missing ticket/Ack из другой записи каталога.
 
+**C-A01 — строго case-local inputs.** Доступные bytes каждого DOC.ORACLE ограничены его явными `inputs` и полной проверенной closure их типизированных ссылок, включая refs из decoded DataObject payload. Каталог служит только resolver для этих явных ссылок; implicit global catalogue lookup, поиск подходящего ticket по UUID/M или превращение поля Digest в дополнительный input запрещены. Для qualified absence обязательны фактические canonical bytes исходного ticket в case-local input set, проверка его typed ref/полной closure и совпадение H(ticket) с `AbsenceProof.ticket_sha256`, binding/M и соответствующим исходным phase/head/generation. В F01-P03 `original_ticket` явно указывает на V-TP; в F02-P07 — на V-TA. Поле `ticket` в этих двух cases остаётся отдельным ticket_R и не заменяет исходный ticket.
+
+`ticket_retained=true` — только условная fixture-предпосылка, не самостоятельное доказательство наличия bytes, custody или authority. Missing/mismatched original ticket, `ticket_retained=false`, потеря непрерывности coordinator, custody либо требуемых native checks запрещают qualified absence и снятие HOLD по нему. Добавленный input не доказывает custody и не заменяет остальные conjunctive prerequisites раздела 7. В отрицательных missing-ticket cases отсутствующие bytes не восстанавливаются из соседних entries даже при читаемой DB или известном digest. Эти уточнения меняют только nonhashable fixture inputs/правило доступности: все 58 canonical preimages, их lengths/SHA-256 и 23 expected outcomes неизменны; native version 2 и SQLite schema/user_version 1 сохраняются.
+
 ### V-Q — DQ.LAB.QualificationProfile
 
 Length: 1128 UTF-8 bytes. SHA-256: `3b6eecf71e4c6a0780e7ea010f067f915bb7e2577025189522beffc97304603a`.
@@ -1018,6 +1022,12 @@ Cases ниже — nonhashable DOC.ORACLE metadata, не native proof/authorizat
       "scope": "DQ_PROCESS_KILL_LAB_ONLY",
       "version": 2
     },
+    "original_ticket": {
+      "digest": "07b38b65c665b6348837c7826110fa05e8bd08bf6b441508fc9648c0dae14831",
+      "kind": "DQ.LAB.OperationTicket",
+      "scope": "DQ_PROCESS_KILL_LAB_ONLY",
+      "version": 2
+    },
     "post_snapshot": {
       "digest": "ef0663d0862997715fa43b83cfd7280e28013088f5d290cc82a207694d6ed4e1",
       "kind": "DQ.LAB.SnapshotEvidence",
@@ -1354,6 +1364,12 @@ Cases ниже — nonhashable DOC.ORACLE metadata, не native proof/authorizat
     "ack_observed": {
       "digest": "16d866cf0096216a6f35aa9d424b8cb0089ca7874860633667042efa1ef49856",
       "kind": "DQ.LAB.ProofAck",
+      "scope": "DQ_PROCESS_KILL_LAB_ONLY",
+      "version": 2
+    },
+    "original_ticket": {
+      "digest": "4c0e03133930623d16d0f40ca977e13ffc9d46be9599b82a5227a8aaad3af14a",
+      "kind": "DQ.LAB.OperationTicket",
       "scope": "DQ_PROCESS_KILL_LAB_ONLY",
       "version": 2
     },
