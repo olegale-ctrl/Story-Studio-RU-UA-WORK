@@ -38,3 +38,8 @@
 - Generated gradient PPM frames and RU/UA sample texts are new project material; user-provided local images remain user's responsibility to clear for distribution.
 - Local Silero weights and trusted PyTorch model execution remain subject to model provenance/terms; no model weights bundled. FFmpeg remains user-provided, not redistributed.
 - No new third-party Python runtime dependency in the scene/timeline/MP4 glue code.
+
+
+## 2026-11-25 — Dispatcher synthetic demo
+
+Используются только существующие собственные fake fixtures и Python test harness. pytest уже является зависимостью тестовой среды; developer-only demo требует её установки. Новых сторонних библиотек, весов, голосов, медиа или бинарников в Git не добавлено. Внешние источники EXT-01–04 остаются CANDIDATE. Новая проверка коммерческих прав не выполнялась.

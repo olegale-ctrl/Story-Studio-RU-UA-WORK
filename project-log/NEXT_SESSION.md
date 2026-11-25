@@ -1,3 +1,8 @@
+# Точка продолжения — Dispatcher Memory Scenario 01, 2026-11-25
+
+Feature branch `feat/dispatcher-memory-scenario-01`, base `8a2164c54c97ba97d7d3a321cf4084a0926dc48c`. Перед следующей задачей прочитать `docs/tasks/DISPATCHER_MEMORY_SCENARIO_01.md` и результат. Demo запускается через `python -B scripts/dispatcher_memory_demo.py` в тестовой среде с pytest. Следующий шаг — review ограниченного сценария и выбор дальнейшего mapping/store объёма. Нативный DQ gate и производственные права остаются отдельными. Реестр внешних идей закреплён в документационной линии на `28abeb1e7c061c43d997700222dfdeae307d3ce9`, перечитать перед новым заданием.
+
+
 # Next session — Sprint 26 first-video pipeline (2026-11-03)
 
 Windows Sprint 25.1 Silero Ukrainian preview verified by user: Preview ready, WAV 2.2 s, synthesis 11.2 s, RTF 5.17, playback reported working.

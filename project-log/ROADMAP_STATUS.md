@@ -1,3 +1,8 @@
+# Дополнение — Dispatcher Memory Scenario 01, 2026-11-25
+
+Готов developer-only synthetic сценарий на существующем Controller/FakeStore, статус READY_FOR_REVIEW. 215 pure тестов PASS под guard, SP — 68 PASS/1 skip на Windows Python 3.12. Приём, повтор, отмена, terminal replay и reconciliation показаны в памяти. Нативная долговечность, произвольный SP mapping, render и production допуск требуют следующих отдельных условий. Подробности — `docs/tasks/DISPATCHER_MEMORY_SCENARIO_01_RESULT.md`.
+
+
 # ROADMAP STATUS — updated Sprint 04 (2026-10-30)
 
 | Этап | Статус | Критерий | Блокер |

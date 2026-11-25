@@ -46,3 +46,10 @@ Date: 2026-10-30. Decision: report same-track overlap as warning, attach SHA-256
 - Legal gate: CC BY-NC-SA 4.0 on current upstream; historical MIT copy is not adequate evidence to green-light commercialization.
 - Sprint releases remain incremental ZIPs; each release's exact files are committed to GitHub.
 
+
+
+## 2026-11-25 — Dispatcher Memory Scenario 01
+
+По ответу владельца «начинай» на предложение первого синтетического сценария выбран base `8a2164c54c97ba97d7d3a321cf4084a0926dc48c`. Он уже содержит Controller и неизменённый SP/1.1. Задание, технические решения и allowlist — `docs/tasks/DISPATCHER_MEMORY_SCENARIO_01.md`. Результат и проверки — `docs/tasks/DISPATCHER_MEMORY_SCENARIO_01_RESULT.md`.
+
+Этот шаг сохраняет PURE_FAKE_ONLY и отдельность SP diagnostic. Выбор базы и test-only интерфейса сделан исполнителем в рамках первого ограниченного сценария. Остальные production/native решения не расширены.
