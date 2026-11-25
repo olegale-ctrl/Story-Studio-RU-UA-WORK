@@ -173,6 +173,8 @@
 
 ## 2026-11-25 — Dispatcher Memory Scenario 01
 
+Дополнение по вопросу владельца о symlink. В ограниченной среде подтверждён WinError 1314 при создании ссылки. Повтор существующего `tests.test_topic_to_film.TopicToFilmTests.test_symlink_rejected` с разрешённым доступом вне ограниченной среды — 1 PASS, 0 skips. Настоящий файловый symlink создан и отклонён read_local. Код не менялся; результат добавлен в отчёт, лог `../DISPATCHER_MEMORY_01_EVIDENCE/symlink-native.log`.
+
 По ответу владельца «начинай» на предложение первого синтетического сценария выбран base `8a2164c54c97ba97d7d3a321cf4084a0926dc48c`. Он уже содержит Controller и неизменённый SP/1.1. Задание, технические решения и allowlist — `docs/tasks/DISPATCHER_MEMORY_SCENARIO_01.md`. Результат и проверки — `docs/tasks/DISPATCHER_MEMORY_SCENARIO_01_RESULT.md`.
 
 Developer-only CLI `python -B scripts/dispatcher_memory_demo.py` использует существующий тестовый Lab с pytest. Показаны один job, replay/cancel/terminal, lost model ACK/barrier/resolve без dispatch. Новые тесты — 12 PASS. Совместно с шестью offline suites под guard — 215 PASS, запрещённых audit events нет. SP unittest — 69 методов, 1 skip (symlink unavailable). Windows Python 3.12.10. Linux/3.10/3.13 и итоговый remote CI NOT_RUN. Полные команды и логи — внешний DISPATCHER_MEMORY_01_EVIDENCE. Итоговый SHA публикуется в handoff после commit.

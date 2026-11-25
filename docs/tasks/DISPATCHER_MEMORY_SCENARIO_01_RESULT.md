@@ -26,7 +26,7 @@ Guard запускает Python -B с отключёнными внешними 
 
 Новые сценарные проверки подтверждают idempotency, terminal replay, mutation reconciliation без recommit, CAS и namespace mismatch, подмену запроса при том же ключе, отказ при отсутствии fake authority, HOLD на повреждённом fake store, неизменность golden fixtures, детерминизм, отсутствие dispatch и корректное поведение CLI. Диагностические данные SP не выдают authority для fake job.
 
-Единственный skip SP — создание symlink недоступно в текущей среде. Он сохранён как непроведённая проверка. Исходные Controller/policy/observer/simulator/contracts, core SP, схемы и fixtures не меняются. Новые тесты добавлены для сценарного входа и его ограничений.
+Единственный skip исходного SP-прогона вызван отсутствием привилегии создания symlink в ограниченной среде. Отдельная проверка причины получила WinError 1314. По вопросу владельца тест `python -m unittest tests.test_topic_to_film.TopicToFilmTests.test_symlink_rejected -v` повторён с разрешённым доступом вне ограниченной среды — 1 PASS, 0 skips, exit 0. Создан настоящий файловый symlink во временном каталоге; read_local отклонил его с ValueError. Прежний skip сохранён в исходном журнале, отдельный успешный запуск — в `symlink-native.log`. Это проверка конечной файловой ссылки, а не квалификация всех junction, ACL, родительских reparse points и TOCTOU. Исходные Controller/policy/observer/simulator/contracts, core SP, схемы и fixtures не меняются. Новые тесты добавлены для сценарного входа и его ограничений.
 
 ## Ревизии и доказательства
 
