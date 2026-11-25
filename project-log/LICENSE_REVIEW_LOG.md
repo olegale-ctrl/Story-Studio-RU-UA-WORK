@@ -38,3 +38,8 @@
 - Generated gradient PPM frames and RU/UA sample texts are new project material; user-provided local images remain user's responsibility to clear for distribution.
 - Local Silero weights and trusted PyTorch model execution remain subject to model provenance/terms; no model weights bundled. FFmpeg remains user-provided, not redistributed.
 - No new third-party Python runtime dependency in the scene/timeline/MP4 glue code.
+
+
+## 2026-11-25 — Границы актуализации
+
+В этом пакете переносится документационный реестр кандидатов с проверкой от 2026-11-08. Новый аудит коммерческих прав на компоненты и внешние сервисы не выполнялся. Сторонний код, веса, голоса, датасеты и бинарники в пакет не добавлены. Локальный FFmpeg используется для синтетических тестов. Распространение сборки FFmpeg, текущего upstream и права на модели остаются открытыми. Повторная проверка источника и условий обязательна перед выбранным заимствованием.

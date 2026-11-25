@@ -46,3 +46,8 @@ Date: 2026-10-30. Decision: report same-track overlap as warning, attach SHA-256
 - Legal gate: CC BY-NC-SA 4.0 on current upstream; historical MIT copy is not adequate evidence to green-light commercialization.
 - Sprint releases remain incremental ZIPs; each release's exact files are committed to GitHub.
 
+
+
+## 2026-11-25 — Область поручения на продолжение
+
+Источник — сообщение владельца «иди по плану и выполняй его» после плана из семи шагов в текущем чате. Выполняются актуализация отдельной рабочей копии и документации, Windows-проверки, выделение существующего исправления теста пути, аудит PR, проверка чистых SP/DQ компонентов и подготовка следующего задания. Предложения по Dispatcher/JobStore и новым интеграциям оформляются для отдельного решения владельца. Исторические OWNER decisions сохраняют свой точный объём. Сводка процесса накопления внешних идей включена в стартовые инструкции.

@@ -1,3 +1,9 @@
+# Актуальная точка продолжения — 2026-11-25
+
+Базовая ревизия `main` — `a28277b4cb68a3db5da52edc598c37ce66314604` от 2026-11-17. В неё вошли G1 pure foundation, G2 editor preview и G3.1 synthetic D1. G2/G3.1 приняты с ограничениями. D1 собирает тестовые RU/UK-видео с синтетической тишиной. Производственный допуск и готовность произвольного пользовательского фильма остаются отдельными условиями.
+
+Текущее состояние, локальные результаты Windows и разбор открытых PR собраны в [отчёте актуализации](docs/tasks/PROJECT_CONTINUATION_2026_11_25.md). Перед новым заданием выполнять [проверку реестра внешних идей](docs/architecture/EXTERNAL_IDEAS_AND_ADOPTION_REGISTER.md). Ниже сохранена историческая документация Sprint 26.
+
 # Story Studio RU/UA
 
 A Windows-first Russian/Ukrainian adaptation and substantial rework of [konlu/story-studio](https://github.com/konlu/story-studio). This is **not just a translation**: the goal is a reusable, local-first video-production pipeline with original RU/UA prompts, speech, subtitles, media assembly and verified export paths.

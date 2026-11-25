@@ -1,3 +1,11 @@
+# Точка продолжения — 2026-11-25
+
+Рабочая папка `StoryStudio_current`, база `a28277b4cb68a3db5da52edc598c37ce66314604`. Отчёт — [PROJECT_CONTINUATION_2026_11_25.md](../docs/tasks/PROJECT_CONTINUATION_2026_11_25.md).
+
+Перед следующим заданием перечитать [реестр](../docs/architecture/EXTERNAL_IDEAS_AND_ADOPTION_REGISTER.md) и сверить точные ветки и решения. Следующий ограниченный пакет — [подготовка контракта Dispatcher/JobStore](../docs/tasks/DISPATCHER_JOBSTORE_NEXT_TASK_2026_11_25.md). Его предложения требуют решений по перечисленным открытым параметрам до реализации.
+
+Новые результаты Windows, состояние PR и DQ/SP сверять по отчёту. Исторические инструкции ниже относятся к прежним этапам.
+
 # Next session — Sprint 26 first-video pipeline (2026-11-03)
 
 Windows Sprint 25.1 Silero Ukrainian preview verified by user: Preview ready, WAV 2.2 s, synthesis 11.2 s, RTF 5.17, playback reported working.

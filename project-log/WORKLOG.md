@@ -169,3 +169,10 @@
 - Validation: GitHub Actions CI pending at time of authoring; actual Windows MP4 not tested yet. User validation required before further video quality work.
 - Files: `scripts/first_video.py`, `examples/first_video_plan_ru.json`, `examples/first_video_plan_uk.json`, `tests/test_sprint26.py`, `docs/SPRINT26_FIRST_VIDEO_WINDOWS.md`, four project logs.
 - Next: verify CI; user runs real Silero end-to-end on Windows and checks exported video.
+
+
+## 2026-11-25 — Актуализация и Windows-проверка
+
+По прямому поручению владельца создана отдельная локальная копия текущего main и рабочая feature branch. Старые локальные копии сохранены. Подготовленные 45 файлов G1 имеют дерево `11af9353f1fa17ee8dccb675158aad927911612b`; соответствующие editorial/story_intelligence деревья в main совпадают с опубликованным G1. Реестр идей перенесён из отдельной ветки, gate добавлен в MASTER_PROMPT. Сводные документы обновлены с сохранением истории.
+
+Команды, результаты, оговорки, PR и следующий пакет — `docs/tasks/PROJECT_CONTINUATION_2026_11_25.md`. Ревизии текущих коммитов публикуются в финальном handoff, чтобы исключить self-reference. Логи и тестовые медиа хранятся отдельно в `../PROJECT_VALIDATION_20261125/`.
