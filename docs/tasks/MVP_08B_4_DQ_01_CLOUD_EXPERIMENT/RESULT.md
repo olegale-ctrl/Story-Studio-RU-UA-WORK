@@ -1,4 +1,16 @@
-# DQ-01 first cloud experiment — prepared run
+# DQ-01 first cloud experiment — observed result
+
+## Follow-up verification on 2026-11-25
+
+GitHub Actions [run 44784929633](https://github.com/olegale-ctrl/Story-Studio-RU-UA-WORK/actions/runs/44784929633), head `a410a7c29a5ab31c46ad97f1fa79c56ed12866bc`, completed **success** after creation on 2026-11-20 at 17:36:37 UTC. The `preflight` job and its environment-observation, evidence-preservation and gate-reporting steps all report success in the GitHub API.
+
+The pinned workflow deliberately reports **BLOCKED_PRE_WRITE_GATE / SQLITE_SMOKE=NOT_RUN**. It does not authorize a SQLite connection or choose a qualified native lab root. The observation confirms completion of the bounded workflow; native qualification and Stage B remain pending their separate conditions.
+
+The artifacts endpoint returned an empty list on 2026-11-25. The original metadata evidence bytes, their SHA256SUMS and artifact digest were unavailable for re-download through that endpoint. This follow-up does not reconstruct their hashes or assert measured filesystem/runtime facts from the job's success alone. Preserve any previously downloaded evidence separately if it exists. Actual runner measurements and an exact owner-confirmed root/profile must be reviewed before any native experiment.
+
+This follow-up changes only this report on a separate documentation branch. The original experimental branch and workflow stay at their recorded revision. No workflow rerun was requested. The preparation record below is retained as historical context and its future-tense result instructions are superseded by this observation.
+
+## Historical preparation record
 
 Experimental branch: `experiment/dq01-cloud-lab-01`.
 Exact base: `32bc369ef66e45f1bc72d7afbef6a41688036774`, tree
